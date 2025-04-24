@@ -15,8 +15,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-
-ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="robbyrussell"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -78,7 +77,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting web-search docker golang python terraform vscode)
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -110,56 +109,55 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+
+source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-export PATH="$PATH:$HOME/bin"
-# source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting web-search)
+
+
+
+export GOOGLE_GENERATIVE_AI_API_KEY="AIzaSyB-p4-hJkbg_2xe6noD-E9w4r5G2RsDQuk"
+
 
 # history setup
 HISTFILE=$HOME/.zhistory
 SAVEHIST=1000
 HISTSIZE=999
 setopt share_history
-HISTSIZE=999
-setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
 
+
+
 # completion using arrow keys (based on history)
 bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forwardy
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+bindkey '^[[B' history-search-forward
+# source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+
+
+
+
+
+
+
+
+
 
 
 
 # ---- Eza (better ls) -----
-# alias ls="eza --icons=always"
-
-
+alias ls="eza --icons=always"
 # ---- Zoxide (better cd) ----
-# eval "$(zoxide init zsh)"
-# alias cd="z"
+eval "$(zoxide init zsh)"
+alias cd="z"
 
 
-
-export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
-
-
-
-source "/opt/homebrew/opt/kube-ps1/share/kube-ps1.sh"
-PS1='$(kube_ps1)'$PS1
-
-
-source ~/.kind-completion.zsh
-
-
-
-# ---- FZF -----
-
-# Set up fzf key bindings and fuzzy completion
-eval "$(fzf --zsh)"
-
-alias c="clear"
