@@ -1,0 +1,2 @@
+nwg-dock-hyprland -i 32 -mb 10 -ml 10 -mr 10 -p bottom -f -x start
+

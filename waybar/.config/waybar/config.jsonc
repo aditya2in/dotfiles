@@ -1,6 +1,9 @@
 {
   "position": "top",
-  "modules-left": ["hyprland/workspaces"],
+  "modules-left": [
+    "hyprland/workspaces",
+    "wlr/taskbar"
+  ],
   "modules-center": ["hyprland/window"],
   "modules-right": ["network", "pulseaudio", "battery", "clock"],
   "clock": {
@@ -37,13 +40,14 @@
       },
       "on-click": "pavucontrol"
   },
-  "custom/pomo": {
-    "format": "   {}",
-    "exec": "pomodoro-cli status --format json --time-format digital",
-    "return-type": "json",
-    "on-click": "pomodoro-cli start --add 5m --notify",
-    "on-click-middle": "pomodoro-cli pause",
-    "on-click-right": "pomodoro-cli stop",
-    "interval": 1
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "icon-size": 24,
+    "on-click": "minimize",
+    "on-click-middle": "close",
+    "tooltip-format": "{title}"
   },
+
+
+
 }
