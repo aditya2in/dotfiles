@@ -2,16 +2,19 @@
   "position": "top",
   "modules-left": [
     "hyprland/workspaces",
-    "wlr/taskbar"
+    "wlr/taskbar",
+    "custom/media",
+    "tray"
   ],
   "modules-center": [
-    "hyprland/window"
+    "hyprland/window",
+    "clock"
   ],
   "modules-right": [
-    "clock",
     "battery",
     "network",
-    "pulseaudio"
+    "pulseaudio",
+    "tray"
   ],
   "clock": {
     "format": "<span foreground='#f5c2e7'>   </span>{:%a %d %H:%M}",
