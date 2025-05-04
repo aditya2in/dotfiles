@@ -9,7 +9,7 @@ type MarkdownPost = {
 };
 
 // Example usage of the MarkdownPost type
-const myPost: MarkdownPost = {
+let myPost: MarkdownPost = {
   title: "My First Markdown Post",
   slug: "my-first-post",
   date: new Date("2025-05-04"),
@@ -18,6 +18,11 @@ const myPost: MarkdownPost = {
   author: "Aditya",
 };
 
+
+
+
+
+
 console.log(myPost.title);
 console.log(myPost.tags?.[0]); // Accessing an optional property safely
 
@@ -25,7 +30,7 @@ console.log(myPost.tags?.[0]); // Accessing an optional property safely
 const anotherPost: MarkdownPost = {
   title: "Another Post",
   slug: "another-post",
-  date: new Date("2025-05-05"),
+  date: new Date("2025-05-05")
   content: "More content here.",
   author: "Aditya",
 };
