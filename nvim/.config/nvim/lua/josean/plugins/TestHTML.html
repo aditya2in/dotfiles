@@ -1,0 +1,14 @@
+<canvas
+  id="circle-canvas"
+  height="200"
+  width="200"
+  style="border: 1px solid"
+></canvas>
+<script>
+  let canvas = document.getElementById("circle-canvas");
+  let ctx = canvas.getContext("2d");
+  ctx.beginPath();
+  ctx.arc(100, 100, 80, 0, 2 * Math.PI, false);
+  ctx.fillStyle = "blue";
+  ctx.fill();
+</script>
