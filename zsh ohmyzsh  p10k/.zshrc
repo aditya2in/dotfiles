@@ -189,3 +189,15 @@ pomodoro () {
 
 alias wo="pomodoro 'work'"
 alias br="pomodoro 'break'"
+
+
+# 
+#eval "$(starship init zsh)"
+
+
+
+# Zsh auto-suggestions
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Zsh syntax highlighting
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
