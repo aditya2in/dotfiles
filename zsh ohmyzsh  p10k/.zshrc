@@ -143,6 +143,7 @@ bindkey '^[[B' history-search-forward
 
 
 PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 
 # ---- Eza (better ls) -----
@@ -224,6 +225,6 @@ alias ga="git add ."
 alias gc="git commit -v" 
 alias gp="git push origin new"
 alias gr="git remote -v"
-alias pp="pomodoro-cli start --duration "10s" "
+alias pp=" pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start --duration "10s"  "
 
 
