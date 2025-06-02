@@ -146,3 +146,8 @@ button:hover {
   padding: 0 10px; /* Adjust padding as needed */
   border-radius: 5px; /* Optional: rounded corners */
 }
+
+#custom-pomo.idle {
+  background-color: #4c566a; /* A neutral color for idle state */
+  color: #eceff4;
+}

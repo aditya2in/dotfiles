@@ -1,18 +1,18 @@
 {
   "position": "top",
+  "log-level": "trace", 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["hyprland/window"],
   "modules-right": ["custom/pomo", "network", "pulseaudio", "battery", "clock"],
 
   "custom/pomo": {
-    "format": " 🍅 {}",
-    "exec": "pomodoro-cli status --format json --time-format digital",
+    "format": "{}",
+    "exec": "~/.config/waybar/scripts/pomodoro-status.sh",
     "return-type": "json",
-    "on-click": "pomodoro-cli start --add 5m; pkill -SIGRTMIN+10 waybar",
+    "on-click": "pomodoro-cli start --add 5m --notify; pkill -SIGRTMIN+10 waybar",
     "signal": 10,
-    "return-type": "json",
-    "on-click-middle": "pomodoro-cli pause",
-    "on-click-right": "pomodoro-cli stop",
+    "on-click-middle": "pomodoro-cli pause; pkill -SIGRTMIN+10 waybar",
+    "on-click-right": "pomodoro-cli stop; pkill -SIGRTMIN+10 waybar",
     "interval": 1
   },
 
@@ -36,14 +36,14 @@
     "tooltip-format": "{time}"
   },
   "network": {
-    "format-wifi": "<span size='13000' foreground='#f5e0dc'>  </span>{essid}",
-    "format-ethernet": "<span size='13000' foreground='#f5e0dc'>󰤭  </span> Disconnected",
+    "format-wifi": "<span size='13000' foreground='#f5e0dc'>   </span>{essid}",
+    "format-ethernet": "<span size='13000' foreground='#f5e0dc'>󰤭   </span> Disconnected",
     "format-linked": "{ifname} (No IP) ",
-    "format-disconnected": "<span size='13000' foreground='#f5e0dc'>  </span>Disconnected",
+    "format-disconnected": "<span size='13000' foreground='#f5e0dc'>   </span>Disconnected",
     "tooltip-format-wifi": "Signal Strenght: {signalStrength}%"
   },
   "pulseaudio": {
-      "format": "{icon}  {volume}%",
+      "format": "{icon}   {volume}%",
       "format-muted": "",
       "format-icons": {
           "default": ["", "", " "]
@@ -51,4 +51,3 @@
       "on-click": "pavucontrol"
   }
 }
-
