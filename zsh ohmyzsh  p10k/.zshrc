@@ -77,7 +77,6 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -113,13 +112,12 @@ source $ZSH/oh-my-zsh.sh
 #MAC
 #source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-#ARCH but no use as installed seperately from outside
-#source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting web-search)
+
+
+
+
+
 
 
 
@@ -140,19 +138,11 @@ setopt hist_verify
 # completion using arrow keys (based on history)
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
-# source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+
 
 
 
 PATH="$HOME/.cargo/bin:$PATH"
-
-
-
-
-
-
 
 
 # ---- Eza (better ls) -----
@@ -162,7 +152,6 @@ eval "$(zoxide init zsh)"
 alias cd="z"
 
 
-source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # Set preferred editor for command-line tools
 export EDITOR="nvim"
@@ -190,14 +179,41 @@ pomodoro () {
 alias wo="pomodoro 'work'"
 alias br="pomodoro 'break'"
 
-
-# 
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+################################################################
+## Starship 
 #eval "$(starship init zsh)"
 
+##ARCH but no use as installed seperately from outside
+#source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting web-search)
+# To customize prompt, run `p9k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p9k.zsh ]] || source ~/.p10k.zsh
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+source ~/.p10k.zsh
+
+
+
+# source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
 
 # Zsh auto-suggestions
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-
 # Zsh syntax highlighting
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
