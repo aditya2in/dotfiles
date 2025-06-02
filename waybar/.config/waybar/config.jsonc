@@ -2,7 +2,20 @@
   "position": "top",
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["hyprland/window"],
-  "modules-right": ["network", "pulseaudio", "battery", "clock"],
+  "modules-right": ["custom/pomo", "network", "pulseaudio", "battery", "clock"],
+
+  "custom/pomo": {
+    "format": " 🍅 {}",
+    "exec": "pomodoro-cli status --format json --time-format digital",
+    "return-type": "json",
+    "on-click": "pomodoro-cli start --add 5m; pkill -SIGRTMIN+10 waybar",
+    "signal": 10,
+    "return-type": "json",
+    "on-click-middle": "pomodoro-cli pause",
+    "on-click-right": "pomodoro-cli stop",
+    "interval": 1
+  },
+
   "clock": {
     "format": "<span foreground='#f5c2e7'>   </span>{:%a %d %H:%M}",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"

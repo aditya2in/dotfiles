@@ -217,3 +217,9 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
+#alias
+alias c="clear"
+alias gs="git status"
+alias ga="git add ."
+alias gc="git commit -m "automatic commit" "
+alias gp="git push origin new"
