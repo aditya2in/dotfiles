@@ -68,13 +68,13 @@ if [ $jq_parse_success -eq 0 ] && [ -n "$pomodoro_json_parsed" ]; then
     icon_char=""
     case "$status_class_val" in
         "running")
-            icon_char=" " # Timer/running icon
+            icon_char="🚀 🚀  " # Timer/running icon
             ;;
         "paused")
-            icon_char=" " # Pause icon
+            icon_char="  " # Pause icon
             ;;
         "finished")
-            icon_char=" " # Checkmark/completed icon
+            icon_char="     " # Checkmark/completed icon
             ;;
         "idle")
             icon_char=" " # Circle for idle/stopped
