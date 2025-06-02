@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.cargo/bin:$PATH"
 # Define a log file for this script for detailed debugging
 LOG_FILE="/tmp/pomodoro_status_script.log"
 # Clear the log file at the start of each execution (optional, for fresh logs)

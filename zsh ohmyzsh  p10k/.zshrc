@@ -221,6 +221,9 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 alias c="clear"
 alias gs="git status"
 alias ga="git add ."
-alias gc="git commit -m "automatic commit" "
+alias gc="git commit -v" 
 alias gp="git push origin new"
 alias gr="git remote -v"
+alias pp="pomodoro-cli start --duration "10s" "
+
+
