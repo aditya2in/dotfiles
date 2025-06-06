@@ -1,0 +1,5 @@
+# This directory is a Syncthing folder marker.
+# Do not delete.
+
+folderID: sglvm-knqhj
+created: 2025-06-06T13:48:17+05:30

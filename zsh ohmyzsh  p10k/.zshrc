@@ -109,8 +109,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-#MAC
-#source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 
 
@@ -121,7 +119,6 @@ source $ZSH/oh-my-zsh.sh
 
 
 
-export GOOGLE_GENERATIVE_AI_API_KEY="AIzaSyB-p4-hJkbg_2xe6noD-E9w4r5G2RsDQuk"
 
 
 # history setup
@@ -133,18 +130,9 @@ setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
 
-
-
 # completion using arrow keys (based on history)
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
-
-
-
-
-PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-
 
 # ---- Eza (better ls) -----
 alias ls="eza --icons=always"
@@ -152,33 +140,9 @@ alias ls="eza --icons=always"
 eval "$(zoxide init zsh)"
 alias cd="z"
 
-
-
 # Set preferred editor for command-line tools
 export EDITOR="nvim"
 export VISUAL="nvim"
-
-
-
-
-# study stream aliases
-# Requires https://github.com/caarlos0/timer to be installed. spd-say should ship with your distro
-
-declare -A pomo_options
-pomo_options["work"]="45"
-pomo_options["break"]="10"
-
-pomodoro () {
-  if [ -n "$1" -a -n "${pomo_options["$1"]}" ]; then
-  val=$1
-  echo $val | lolcat
-  timer ${pomo_options["$val"]}m
-  spd-say "'$val' session done"
-  fi
-}
-
-alias wo="pomodoro 'work'"
-alias br="pomodoro 'break'"
 
 ##############################################################################################
 ##############################################################################################
@@ -189,6 +153,9 @@ alias br="pomodoro 'break'"
 ################################################################
 ## Starship 
 #eval "$(starship init zsh)"
+
+#MAC
+#source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 ##ARCH but no use as installed seperately from outside
 #source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -225,6 +192,42 @@ alias ga="git add ."
 alias gc="git commit -v" 
 alias gp="git push origin new"
 alias gr="git remote -v"
-alias pp=" pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start --duration "10s"  "
+alias pp=" pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start --duration "25m"  "
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
+##############################################################################################
 
+
+
+PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+
+
+# study stream aliases
+# Requires https://github.com/caarlos0/timer to be installed. spd-say should ship with your distro
+# declare -A pomo_options
+# pomo_options["work"]="45"
+# pomo_options["break"]="10"
+#
+# pomodoro () {
+#   if [ -n "$1" -a -n "${pomo_options["$1"]}" ]; then
+#   val=$1
+#   echo $val | lolcat
+#   timer ${pomo_options["$val"]}m
+#   spd-say "'$val' session done"
+#   fi
+# }
+#
+# alias wo="pomodoro 'work'"
+# alias br="pomodoro 'break'"
+
+
+
+#export GOOGLE_GENERATIVE_AI_API_KEY="AIzaSyB-p4-hJkbg_2xe6noD-E9w4r5G2RsDQuk"
 
