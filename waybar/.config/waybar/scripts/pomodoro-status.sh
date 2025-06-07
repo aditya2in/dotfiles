@@ -1,21 +1,9 @@
 #!/bin/bash
-set -x # Add this line for debugging
 export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.cargo/bin:$PATH"
 # Define a log file for this script for detailed debugging
 LOG_FILE="/tmp/pomodoro_status_script.log"
 # Clear the log file at the start of each execution (optional, for fresh logs)
 # echo "" > "$LOG_FILE" # Uncomment if you want to clear log on every run
-
-# --- NEW: Define paths for sound files and Zenity variables ---
-FINISHED_SOUND_PATH="$HOME/.config/waybar/sounds/finished_sound.mp3"
-START_WORK_SOUND_PATH="$HOME/.config/waybar/sounds/start_sound.mp3"
-BREAK_DURATION_MINUTES=5 # 5 minutes break
-POMODORO_CLI_COMMAND="pomodoro-cli" # Use the direct command, assuming it's in PATH
-
-# Zenity constants
-ZENITY_WINDOW_TITLE="Pomodoro Alert"
-ZENITY_ICON_PATH="/usr/share/icons/Adwaita/scalable/actions/alarm-symbolic.svg" # A generic icon, change if you have a better one
-# --- END NEW ---
 
 # Function to generate JSON for idle/error state with an icon
 generate_idle_json() {
@@ -28,107 +16,10 @@ generate_idle_json() {
     }'
 }
 
-# --- NEW: Function to handle the finished state, including sounds and popups ---
-handle_finished_state() {
-    echo "$(date): Pomodoro FINISHED state detected. Triggering break sequence." >> "$LOG_FILE"
-
-    # Play continuous sound for 5 seconds in the background
-    # We use `mpv --no-video --loop --end=+5 "$FINISHED_SOUND_PATH"`
-    # `pgrep mpv` finds the mpv process, `xargs kill` kills it.
-    pkill mpv 2>/dev/null # Ensure no previous mpv is running
-    mpv --no-video --loop --end=+5 "$FINISHED_SOUND_PATH" &
-    MPV_PID=$! # Capture the PID of the mpv process
-
-    echo "$(date): Started finished sound with PID: $MPV_PID" >> "$LOG_FILE"
-
-    # Ensure mpv is killed if script exits
-    trap "kill $MPV_PID 2>/dev/null; exit" EXIT
-
-    # Stop the current pomodoro-cli timer if it's still somehow 'finished'
-    # This ensures a clean state before the break
-    "$POMODORO_CLI_COMMAND" stop &>/dev/null
-
-    # Show "BREAK TIME" popup with countdown
-    # Zenity progress bar simulates a countdown
-    (
-        echo "0"
-        echo "# BREAK TIME"
-        for (( i=0; i<=$BREAK_DURATION_MINUTES*60; i++ )); do
-            current_progress=$(( (i * 100) / ($BREAK_DURATION_MINUTES * 60) ))
-            remaining_seconds=$(( ($BREAK_DURATION_MINUTES * 60) - i ))
-            minutes=$(( remaining_seconds / 60 ))
-            seconds=$(( remaining_seconds % 60 ))
-            printf "%d\n# Time remaining: %02d:%02d\n" "$current_progress" "$minutes" "$seconds" || break
-            sleep 1
-        done
-        echo "100"
-    ) | zenity --progress \
-        --title="$ZENITY_WINDOW_TITLE" \
-        --text="Take a well-deserved break." \
-        --percentage=0 \
-        --pulsate \
-        --auto-close \
-        --no-cancel \
-        --width=400 \
-        --height=150 \
-        --window-icon="$ZENITY_ICON_PATH" \
-        --extra-button="Skip Break" \
-        --hide-text # This will make the progress bar the main focus
-
-    # Capture Zenity exit code and button click
-    ZENITY_EXIT_CODE=$?
-    echo "$(date): Zenity Break popup exited with code: $ZENITY_EXIT_CODE" >> "$LOG_FILE"
-
-    # Kill the sound after the break popup is dismissed/timed out
-    kill $MPV_PID 2>/dev/null
-    echo "$(date): Killed finished sound (PID: $MPV_PID)." >> "$LOG_FILE"
-
-    # Handle "Skip Break" button
-    if [ "$ZENITY_EXIT_CODE" -eq 1 ]; then # Zenity returns 1 for extra buttons (first one)
-        echo "$(date): Break skipped by user." >> "$LOG_FILE"
-    else
-        echo "$(date): Break time completed." >> "$LOG_FILE"
-    fi
-
-    # Show "START WORK" popup
-    # Use Zenity --question for a single button to click
-    zenity --question \
-        --title="$ZENITY_WINDOW_TITLE" \
-        --text="Break is over. Ready to start working?" \
-        --width=300 \
-        --height=100 \
-        --window-icon="$ZENITY_ICON_PATH" \
-        --ok-label="Start Work" \
-        --cancel-label="" \
-        --hide-cancel # Hides the cancel button
-
-    START_WORK_CHOICE=$?
-    echo "$(date): Zenity Start Work popup exited with code: $START_WORK_CHOICE" >> "$LOG_FILE"
-
-    if [ "$START_WORK_CHOICE" -eq 0 ]; then # Zenity returns 0 for OK/accept
-        echo "$(date): User clicked 'Start Work'. Starting new pomodoro." >> "$LOG_FILE"
-        # Play start work sound
-        mpv --no-video --end=+2 "$START_WORK_SOUND_PATH" &>/dev/null &
-
-        # Start a new pomodoro session (25m default)
-        "$POMODORO_CLI_COMMAND" start --add 25m --notify &>/dev/null
-
-        # Trigger Waybar update to reflect new running state
-        pkill -SIGRTMIN+10 waybar
-    else
-        echo "$(date): User closed 'Start Work' popup unexpectedly or chose cancel (though hidden)." >> "$LOG_FILE"
-        # If the user closes the window without clicking "Start Work", it might leave
-        # pomodoro-cli in a stopped state. We could potentially loop here or
-        # just leave it stopped and they'd have to manually start.
-        # For this setup, we'll assume "Start Work" is always clicked or the cycle breaks.
-    fi
-}
-# --- END NEW ---
-
 # 1. Capture raw output from pomodoro-cli, handling potential errors and timeouts
 #    2>/tmp/pomodoro_cli_stderr.log redirects stderr of pomodoro-cli to a file.
 #    timeout 2s prevents the command from hanging indefinitely.
-pomodoro_raw_cli_output=$(timeout 2s "$POMODORO_CLI_COMMAND" status --format json --time-format digital 2>/tmp/pomodoro_cli_stderr.log)
+pomodoro_raw_cli_output=$(timeout 2s pomodoro-cli status --format json --time-format digital 2>/tmp/pomodoro_cli_stderr.log)
 cli_exit_code=$? # Capture the exit code of the last command (timeout)
 
 # Log the raw output from pomodoro-cli for debugging
@@ -146,7 +37,6 @@ echo "$(date): Extracted JSON string: \"$json_string\"" >> "$LOG_FILE"
 # Default to failure for parsing
 jq_parse_success=1
 pomodoro_json_parsed=""
-status_class_val="idle" # Initialize status_class_val to 'idle'
 
 # 3. Try to parse the extracted string with jq
 if [ -n "$json_string" ] && echo "$json_string" | jq -e . > /dev/null 2>&1; then
@@ -155,11 +45,6 @@ if [ -n "$json_string" ] && echo "$json_string" | jq -e . > /dev/null 2>&1; then
     pomodoro_json_parsed=$(echo "$json_string" | jq -c '.')
     jq_parse_success=0
     echo "$(date): jq parsed successfully." >> "$LOG_FILE"
-
-    # --- NEW: Extract status_class_val here immediately after parsing ---
-    status_class_val=$(echo "$pomodoro_json_parsed" | jq -r '.class // "idle"')
-    # --- END NEW ---
-
 else
     echo "$(date): jq failed to parse extracted string or string was empty." >> "$LOG_FILE"
 fi
@@ -170,7 +55,7 @@ if [ $jq_parse_success -eq 0 ] && [ -n "$pomodoro_json_parsed" ]; then
     # Provide default values using // in case fields are missing or null.
     status_text_val=$(echo "$pomodoro_json_parsed" | jq -r '.text // "pomodoro"')
     tooltip_val=$(echo "$pomodoro_json_parsed" | jq -r '.tooltip // "Pomodoro timer is idle"')
-    # status_class_val is already extracted above
+    status_class_val=$(echo "$pomodoro_json_parsed" | jq -r '.class // "idle"')
     percentage=$(echo "$pomodoro_json_parsed" | jq -r '.percentage // 0')
 
     # Validate that 'percentage' is a number. If not, default to 0.
@@ -183,21 +68,13 @@ if [ $jq_parse_success -eq 0 ] && [ -n "$pomodoro_json_parsed" ]; then
     icon_char=""
     case "$status_class_val" in
         "running")
-            icon_char="🚀 🚀 🚀 " # Timer/running icon
+            icon_char="🚀 🚀 🚀  " # Timer/running icon
             ;;
         "paused")
             icon_char=" " # Pause icon
             ;;
         "finished")
-            icon_char="   " # Checkmark/completed icon
-            # --- NEW: Call the handler for finished state ---
-            handle_finished_state
-            # After handling the finished state, we output an idle state to Waybar
-            # while the popups are active, or re-run the script for updated status.
-            # For simplicity, we'll output an idle state here until a new session starts.
-            # This prevents Waybar from showing "finished" indefinitely.
-            echo "$(generate_idle_json)"
-            exit 0 # Exit the script here, as handle_finished_state takes over the cycle
+            icon_char="      " # Checkmark/completed icon
             ;;
         "idle")
             icon_char=" " # Circle for idle/stopped
