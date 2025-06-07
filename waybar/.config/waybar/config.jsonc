@@ -10,7 +10,7 @@
     "format": "{}",
     "exec": "~/.config/waybar/scripts/pomodoro-status.sh",
     "return-type": "json",
-    "on-click": "pomodoro-cli start --add 5m --notify; pkill -SIGRTMIN+10 waybar",
+    "on-click": "pomodoro-cli start --add 25m --notify; pkill -SIGRTMIN+10 waybar",
     "signal": 10,
     "on-click-middle": "pomodoro-cli pause; pkill -SIGRTMIN+10 waybar",
     "on-click-right": "pomodoro-cli stop; pkill -SIGRTMIN+10 waybar",
