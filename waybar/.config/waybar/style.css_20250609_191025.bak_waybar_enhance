@@ -54,68 +54,20 @@ window#waybar {
 
 /* --- Module specific styling --- */
 #workspaces button {
-  padding: 0 10px; /* Slightly more padding for better spacing */
-  background-color: @surface0; /* Light background for default button */
-  color: @subtext0; /* Default icon color */
-  border-radius: 5px; /* Rounded corners for individual buttons */
-  margin: 0 3px; /* Space between buttons */
-  transition: all 0.3s ease-in-out; /* Smooth transitions for visual changes */
-  font-size: 18px; /* Make icons larger for better visibility */
-  min-width: 30px; /* Ensure buttons have a minimum width */
-}
-
-#workspaces button:hover {
-  background-color: @surface1; /* Darker background on hover */
-  color: @text; /* Brighter text on hover */
+  padding: 0 5px;
+  background-color: transparent;
+  color: @subtext0;
+  border-bottom: 3px solid transparent;
 }
 
 #workspaces button.active {
-  background-color: @blue; /* Bright blue for active workspace */
-  color: @crust; /* Dark text on blue for contrast */
-  border-radius: 5px;
-  box-shadow: 0 0 5px @blue; /* Subtle glow for active */
+  color: @lavender;
+  border-bottom: 3px solid @lavender;
 }
 
-#workspaces button.occupied {
-  background-color: @surface2; /* Darker background for occupied but not active */
-  color: @text; /* Brighter text/icon for occupied */
-}
-
-#workspaces button.urgent {
-  background-color: @red; /* Red for urgent (attention needed) */
-  color: @text; /* White text on red */
-  animation-name: blink;
-  animation-duration: 0.5s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-}
-
-/* Optional: Styling for empty workspaces if you want them distinct */
-#workspaces button.empty {
-  background-color: @mantle; /* Slightly darker background for empty */
-  color: @overlay0; /* Faded color for empty icons */
-}
-
-/* Keyframe animation for urgent workspaces */
-@keyframes blink {
-  to {
-    background-color: @maroon;
-    color: @flamingo;
-  }
-}
-
-#window {
-  /* NEW/MODIFIED: Style for hyprland/window */
-  margin-left: 10px; /* Small gap after workspaces */
-  padding: 0 10px; /* Padding for the window title text */
-  background-color: @surface0; /* Consistent background */
-  color: @text; /* Text color */
-  border-radius: 5px; /* Rounded corners */
-  font-weight: bold; /* Make the window title stand out a bit */
-  /* max-width: 300px; */ /* Uncomment and adjust if you want to truncate long titles */
-  /* overflow: hidden; */
-  /* text-overflow: ellipsis; */
+#workspaces button:hover {
+  background-color: @surface0;
+  color: @text;
 }
 
 /* 🍅 Pomodoro Module Styling (Consolidated & Cleaned) */

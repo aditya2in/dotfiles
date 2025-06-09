@@ -3,60 +3,15 @@
   "position": "top",
   "log-level": "trace",
   "exclusive": true,
-
-  "modules-left": [
-    "hyprland/workspaces",
-    "hyprland/window"
-  ],
-  "modules-center": [],
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["hyprland/window"],
   "modules-right": ["custom/pomo", "network", "pulseaudio", "battery", "clock"],
-
-  // Module Definitions
-  "hyprland/workspaces": { // MODIFIED BLOCK FOR NUMBERS AND ICONS
-    "format": "{name} {icon}", // Changed to show workspace number AND icon
-    "format-tooltip": "{name}: {windows}",
-    "format-icons": { // KEEP THIS BLOCK for icons to be available
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "",
-      "6": "",
-      "7": "",
-      "8": "",
-      "9": "",
-      "10": "",
-      "active": "",
-      "default": ""
-    },
-    "persistent_workspaces": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": [],
-      "9": [],
-      "10": []
-    },
-    "all-outputs": true,
-    "on-scroll-up": "hyprctl dispatch workspace e+1",
-    "on-scroll-down": "hyprctl dispatch workspace e-1"
-  },
-
-  "hyprland/window": {
-    "format": "{}",
-    "separate-outputs": true,
-    "max-length": 50
-  },
 
   "custom/pomo": {
     "format": "{}",
     "exec": "~/.config/waybar/scripts/pomodoro-status.sh",
     "return-type": "json",
-    "on-click": "echo \"WORK\" > /tmp/.pomo_timer_type; pomodoro-cli start --notify",
+    "on-click": "echo \"WORK\" > /tmp/.pomo_timer_type; pomodoro-cli start  --notify",
     "on-click-middle": "pomodoro-cli pause",
     "on-click-right": "pomodoro-cli stop",
     "interval": 1
@@ -89,11 +44,11 @@
     "tooltip-format-wifi": "Signal Strenght: {signalStrength}%"
   },
   "pulseaudio": {
-    "format": "{icon}   {volume}%",
-    "format-muted": "",
-    "format-icons": {
-      "default": ["", "", " "]
-    },
-    "on-click": "pavucontrol"
+      "format": "{icon}   {volume}%",
+      "format-muted": "",
+      "format-icons": {
+          "default": ["", "", " "]
+      },
+      "on-click": "pavucontrol"
   }
 }
