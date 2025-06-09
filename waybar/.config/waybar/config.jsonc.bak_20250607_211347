@@ -1,7 +1,7 @@
 {
   "position": "top",
-  "log-level": "trace",  
-  "exclusive": true,  
+  "log-level": "trace", 
+  "exclusive": true, 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["hyprland/window"],
   "modules-right": ["custom/pomo", "network", "pulseaudio", "battery", "clock"],
@@ -10,9 +10,10 @@
     "format": "{}",
     "exec": "~/.config/waybar/scripts/pomodoro-status.sh",
     "return-type": "json",
-    "on-click": "echo \"WORK\" > /tmp/.pomo_timer_type; pomodoro-cli start --add 25m --notify",
-    "on-click-middle": "pomodoro-cli pause",
-    "on-click-right": "pomodoro-cli stop",
+    "on-click": "echo \"WORK\" > /tmp/.pomo_timer_type; pomodoro-cli start --add 25m --notify; pkill -SIGRTMIN+10 waybar",
+    "signal": 10,
+    "on-click-middle": "pomodoro-cli pause; pkill -SIGRTMIN+10 waybar",
+    "on-click-right": "pomodoro-cli stop; pkill -SIGRTMIN+10 waybar",
     "interval": 1
   },
 
