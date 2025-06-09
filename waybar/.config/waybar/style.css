@@ -20,7 +20,7 @@ window#waybar {
   border-radius: 10px; /* Rounded corners for the entire bar */
 }
 
-/* --- Color definitions (example, adjust to your theme) --- */
+/* --- Color definitions (Catppuccin Macchiato Palette) --- */
 @define-color base #1e1e2e;
 @define-color mantle #181825;
 @define-color crust #11111b;
@@ -52,7 +52,7 @@ window#waybar {
 @define-color blue #89b4fa;
 @define-color lavender #b4befe;
 
-/* --- Module specific styling (example) --- */
+/* --- Module specific styling --- */
 #workspaces button {
   padding: 0 5px;
   background-color: transparent;
@@ -70,62 +70,60 @@ window#waybar {
   color: @text;
 }
 
+/* 🍅 Pomodoro Module Styling (Consolidated & Cleaned) */
 #custom-pomo {
-  padding: 0 10px; /* Adjust padding as needed */
-  border-radius: 5px; /* Optional: rounded corners */
+  font-family:
+    "MesloLGS NF", monospace; /* Ensure this matches your Nerd Font */
+  font-size: 14px; /* Adjust as needed for readability */
+  padding: 0 10px; /* Padding on left and right */
+  margin: 0 0px; /* No margin on left and right */
+  color: @text; /* Default text color (e.g., Catppuccin Macchiato text) */
+  background-color: transparent; /* Ensure background is transparent by default */
+  border-radius: 5px; /* Optional: rounded corners for the module itself */
   min-width: 120px; /* Ensure enough width for the text */
-  /* text-align: center; */
   transition-property: background-color, color, border-bottom;
   transition-duration: 0.3s;
 }
 
-/* Existing states, if you want to keep them */
+/* Styling for different Pomodoro states based on the 'class' output by the script */
+
+/* MODIFIED BY GEMINI 2025-06-09: Darker background for idle/stopped state */
 #custom-pomo.idle {
-  background-color: @surface0; /* A neutral color for idle state */
-  color: @overlay0;
-  border-bottom: 2px solid @overlay0;
+  background-color: @mantle; /* Dark background from palette */
+  color: @subtext0; /* Ensure text is readable */
+  border-bottom: 2px solid @overlay0; /* Subtle border for idle */
 }
 
+/* MODIFIED BY GEMINI 2025-06-09: Darker background for paused state */
 #custom-pomo.paused {
-  background-color: @peach; /* Orange/Yellow for paused */
-  color: @base;
-  border-bottom: 2px solid @peach;
+  background-color: @mantle; /* Dark background from palette, same as idle for consistency */
+  color: @peach; /* Use a distinct color for the text/icon to show it's paused */
+  border-bottom: 2px solid @peach; /* Border matches the text color */
+}
+
+/* MODIFIED BY GEMINI 2025-06-09: Use specific classes for work/break as assigned by script */
+#custom-pomo.work {
+  background-color: @green; /* Green for active work */
+  color: @base; /* Dark text on green for contrast */
+  border-bottom: 2px solid @green;
+}
+
+#custom-pomo.break {
+  background-color: @blue; /* Blue for break */
+  color: @base; /* Dark text on blue for contrast */
+  border-bottom: 2px solid @blue;
 }
 
 #custom-pomo.finished {
   background-color: @red; /* Red for finished (briefly seen) */
-  color: @text;
+  color: @text; /* White text on red */
   border-bottom: 2px solid @red;
 }
 
-/* --- NEW: Specific states for WORK and BREAK times --- */
-#custom-pomo.work-time {
-  background-color: @green; /* Green for active work */
-  color: @base; /* Black text on green */
-  border-bottom: 2px solid @green;
+/* Optional: Add a subtle border or background highlight on hover if desired */
+#custom-pomo:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Slight darkening on hover */
 }
-
-#custom-pomo.break-time {
-  background-color: @blue; /* Blue for break */
-  color: @base; /* Black text on blue */
-  border-bottom: 2px solid @blue;
-}
-
-/* --- NEW: Specific states for paused WORK and BREAK times --- */
-#custom-pomo.work-paused {
-  background-color: @peach; /* Orange/Yellow for paused WORK */
-  color: @base;
-  border-bottom: 2px solid @peach;
-  opacity: 0.8; /* Slightly dim it to show it's paused */
-}
-
-#custom-pomo.break-paused {
-  background-color: @lavender; /* Lighter blue/purple for paused BREAK */
-  color: @base;
-  border-bottom: 2px solid @lavender;
-  opacity: 0.8; /* Slightly dim it to show it's paused */
-}
-/* --- END NEW --- */
 
 /* Add other modules here if you have them, e.g.: */
 #clock,
@@ -152,42 +150,4 @@ window#waybar {
 
 #custom-powermenu:hover {
   background-color: @maroon;
-}
-/* 🍅 Pomodoro Module Styling */
-#custom-pomo {
-  font-family:
-    "MesloLGS NF", monospace; /* Ensure this matches your Nerd Font */
-  font-size: 14px; /* Adjust as needed for readability */
-  padding: 0 10px; /* Padding on left and right */
-  margin: 0 0px; /* No margin on left and right */
-  color: #f5e0dc; /* Default text color (e.g., Catppuccin Macchiato text) */
-  background-color: transparent; /* Ensure background is transparent */
-}
-
-/* Styling for different Pomodoro states based on the 'class' output by the script */
-
-#custom-pomo.idle {
-  color: #89b4fa; /* Blue for idle state */
-}
-
-#custom-pomo.work {
-  color: #a6e3a1; /* Green for work state */
-  /* You can add more styles here if needed, e.g., border, font-weight */
-}
-
-#custom-pomo.break {
-  color: #f9e2af; /* Yellow for break state */
-}
-
-#custom-pomo.finished {
-  color: #fab387; /* Orange for finished state */
-}
-
-/* Optional: Add a subtle border or background highlight on hover if desired */
-#custom-pomo:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Slight darkening on hover */
-}
-/* Styling for Pomodoro paused state */
-#custom-pomo.paused {
-  color: #bdae93; /* A muted or greyish color for paused, e.g., Catppuccin Macchiato Overlay2 */
 }

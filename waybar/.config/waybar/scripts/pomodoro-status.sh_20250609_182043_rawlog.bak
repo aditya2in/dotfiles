@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Define absolute paths for commands
+# These paths were identified from your 'which' command outputs
 POMODORO_CLI="/home/aditya/.cargo/bin/pomodoro-cli"
 JQ_PATH="/usr/bin/jq"
 
@@ -8,44 +9,27 @@ JQ_PATH="/usr/bin/jq"
 # Log the PATH seen by the script when Waybar executes it
 echo "DEBUG: PATH = $PATH" > /tmp/waybar_pomo_debug.log 2>&1
 # Log any stderr from pomodoro-cli or jq to the same file
+# This helps capture "command not found" errors or other execution failures
 exec 2>> /tmp/waybar_pomo_debug.log
 # --- DEBUGGING END ---
 
 
-# Attempt to get pomodoro-cli status in JSON format
-# Capture stdout and stderr, and the exit status.
-# Using a temporary file for cleaner error handling.
-temp_output_file=$(mktemp)
-"$POMODORO_CLI" status --format json --time-format digital > "$temp_output_file" 2>&1
-pomodoro_cli_exit_status=$?
+# Get pomodoro-cli status in JSON format
+# Use the absolute path for pomodoro-cli
+# Removed 2>/dev/null here to capture any stderr from pomodoro-cli in the debug log
+pomodoro_json=$("$POMODORO_CLI" status --format json --time-format digital)
 
-raw_pomodoro_cli_output=$(cat "$temp_output_file")
-rm "$temp_output_file" # Clean up the temporary file
-
-# Write the captured raw output to debug log for inspection
-echo "RAW_POMODORO_CLI_OUTPUT:" >> /tmp/waybar_pomo_debug.log
-echo "$raw_pomodoro_cli_output" >> /tmp/waybar_pomo_debug.log
-echo "POMODORO_CLI_EXIT_STATUS: $pomodoro_cli_exit_status" >> /tmp/waybar_pomo_debug.log
-
-
-# Check if pomodoro-cli failed (non-zero exit status)
-# OR if its output is empty OR if its output is not valid JSON.
-# This ensures that we ONLY proceed with valid JSON from pomodoro-cli.
-if [ "$pomodoro_cli_exit_status" -ne 0 ] || \
-   [ -z "$raw_pomodoro_cli_output" ] || \
-   ! echo "$raw_pomodoro_cli_output" | "$JQ_PATH" . > /dev/null 2>&1; then
-
-    # If any of the above conditions are true, pomodoro-cli output is unusable.
-    # Output a default "Pomodoro not running" JSON for Waybar.
-    # IMPORTANT: Use jq -c . here to ensure compact output for Waybar.
-    printf '{"text": "", "tooltip": "Pomodoro not running", "class": "paused", "percentage": 0}\n' | "$JQ_PATH" -c .
+# Check if pomodoro_json is empty or invalid (e.g., if pomodoro-cli isn't running or failed)
+# Use the absolute path for jq here for validation
+if [ -z "$pomodoro_json" ] || ! echo "$pomodoro_json" | "$JQ_PATH" . > /dev/null 2>&1; then
+    # Output an empty JSON object or a default state for Waybar
+    # This ensures Waybar always receives valid JSON, even if the primary command fails
+    printf '{"text": "", "tooltip": "Pomodoro not running", "class": "paused", "percentage": 0}\n'
     exit 0
 fi
 
-# If we reach here, raw_pomodoro_cli_output is valid JSON from a successful pomodoro-cli call.
-pomodoro_json="$raw_pomodoro_cli_output"
-
 # Parse the JSON and extract relevant fields
+# Use the absolute path for jq for all parsing operations
 text=$(echo "$pomodoro_json" | "$JQ_PATH" -r '.text // "00:00"')
 tooltip_raw=$(echo "$pomodoro_json" | "$JQ_PATH" -r '.tooltip // "No info"')
 class=$(echo "$pomodoro_json" | "$JQ_PATH" -r '.class // "paused"')
@@ -68,7 +52,7 @@ tooltip=$(printf "%b" "$tooltip_raw")
 
 # Construct the final JSON output for Waybar
 # IMPORTANT: Use printf "%s" and pipe through iconv -c for maximum cleanliness
-# Add -c to the final jq call to ensure compact output.
+# Use the absolute path for jq for the final JSON construction and pretty-printing
 printf "%s" "$(
     "$JQ_PATH" -n \
         --arg text "$text" \
@@ -76,4 +60,4 @@ printf "%s" "$(
         --arg class "$class" \
         --argjson percentage "$percentage" \
         '{text: $text, tooltip: $tooltip, class: $class, percentage: $percentage}'
-)" | iconv -f UTF-8 -t UTF-8 -c | "$JQ_PATH" -c .
+)" | iconv -f UTF-8 -t UTF-8 -c | "$JQ_PATH" .

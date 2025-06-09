@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Get pomodoro-cli status in JSON format
+pomodoro_json=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
+
+# Check if pomodoro_json is empty or invalid (e.g., if pomodoro-cli isn't running)
+if [ -z "$pomodoro_json" ]; then
+    # Output an empty JSON object or a default state for Waybar
+    # Ensure this is valid JSON for Waybar to parse without error.
+    printf '{"text": "", "tooltip": "Pomodoro not running", "class": "paused", "percentage": 0}\n'
+    exit 0
+fi
+
+# Parse the JSON and extract relevant fields
+# We'll build the Waybar JSON output here
+# Using the `jq -c` flag to ensure single-line output for better pipe handling
+# and then pipe it through iconv for sanitization.
+
+# Extract values, handling potential nulls gracefully
+text=$(echo "$pomodoro_json" | jq -r '.text // "00:00"')
+tooltip_raw=$(echo "$pomodoro_json" | jq -r '.tooltip // "No info"')
+class=$(echo "$pomodoro_json" | jq -r '.class // "paused"')
+percentage=$(echo "$pomodoro_json" | jq -r '.percentage // 0')
+
+# Customize text and tooltip for Waybar
+if [[ "$class" == "running" ]]; then
+    text="🍅 $text"
+    class="work" # Change to 'work' class for better styling distinction
+elif [[ "$class" == "paused" ]]; then
+    text="⏸️ $text"
+elif [[ "$class" == "break" ]]; then
+    text="☕ $text"
+elif [[ "$class" == "long-break" ]]; then
+    text="🏖️ $text"
+fi
+
+# Reformat tooltip to handle newlines
+tooltip=$(echo -e "$tooltip_raw")
+
+# Construct the final JSON output for Waybar
+# IMPORTANT: Use printf and iconv to ensure clean output
+printf "%s" "$(
+    jq -n \
+        --arg text "$text" \
+        --arg tooltip "$tooltip" \
+        --arg class "$class" \
+        --argjson percentage "$percentage" \
+        '{text: $text, tooltip: $tooltip, class: $class, percentage: $percentage}'
+)" | iconv -f UTF-8 -t UTF-8 -c | jq . # The jq . at the end pretty-prints, which is fine for Waybar
