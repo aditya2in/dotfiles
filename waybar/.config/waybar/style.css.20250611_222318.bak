@@ -147,15 +147,15 @@ window#waybar {
 }
 
 #custom-pomo.work {
-  background-color: @mantle; /* Dark background, similar to paused */
-  color: @green; /* Bright green text for active work */
-  border-bottom: 2px solid @green; /* Matching green border */
+  background-color: @green; /* Green for active work */
+  color: @base; /* Dark text on green for contrast */
+  border-bottom: 2px solid @green;
 }
 
 #custom-pomo.break {
-  background-color: @lavender; /* Light background for break */
-  color: @crust; /* Dark text for contrast on light background */
-  border-bottom: 2px solid @lavender;
+  background-color: @blue; /* Blue for break */
+  color: @base; /* Dark text on blue for contrast */
+  border-bottom: 2px solid @blue;
 }
 
 #custom-pomo.finished {
@@ -194,24 +194,4 @@ window#waybar {
 
 #custom-powermenu:hover {
   background-color: @maroon;
-}
-
-/* --- NEW: Highly visible styling for STOPPED Pomodoro --- */
-#custom-pomo.stopped {
-  background-color: @red; /* A bright, alarming red */
-  color: @text; /* White text on red for high contrast */
-  border-bottom: 2px solid @text; /* White border for emphasis */
-  font-weight: bold; /* Make the text bold */
-  animation: attention-blink 1.5s ease-in-out infinite alternate; /* Gentle pulsing effect */
-  box-shadow: 0 0 8px @red; /* Subtle glow to catch the eye */
-}
-
-/* Keyframe animation for the stopped state */
-@keyframes attention-blink {
-  from {
-    background-color: @red;
-  }
-  to {
-    background-color: @maroon;
-  } /* Slightly darker red for the pulse */
 }

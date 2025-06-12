@@ -192,7 +192,8 @@ alias ga="git add ."
 alias gc="git commit -v" 
 alias gp="git push origin new"
 alias gr="git remote -v"
-alias pp=" pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start --duration "25m"  "
+alias ww="pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start --duration "25m";  echo \"WORK\" > /tmp/.pomo_timer_type;"
+
 alias ta="tmux attach-session -t ArchSession "
 alias td="tmux detach"
 ##############################################################################################

@@ -39,7 +39,7 @@ if [ "$pomodoro_cli_exit_status" -ne 0 ] || \
     # If any of the above conditions are true, pomodoro-cli output is unusable.
     # Output a default "Pomodoro not running" JSON for Waybar.
     # IMPORTANT: Use jq -c . here to ensure compact output for Waybar.
-    printf '{"text": "STOPPED 🛑", "tooltip": "Pomodoro timer is stopped. Click to start!", "class": "stopped", "percentage": 0}\n' | "$JQ_PATH" -c .
+    printf '{"text": "", "tooltip": "Pomodoro not running", "class": "paused", "percentage": 0}\n' | "$JQ_PATH" -c .
     exit 0
 fi
 

@@ -195,23 +195,3 @@ window#waybar {
 #custom-powermenu:hover {
   background-color: @maroon;
 }
-
-/* --- NEW: Highly visible styling for STOPPED Pomodoro --- */
-#custom-pomo.stopped {
-  background-color: @red; /* A bright, alarming red */
-  color: @text; /* White text on red for high contrast */
-  border-bottom: 2px solid @text; /* White border for emphasis */
-  font-weight: bold; /* Make the text bold */
-  animation: attention-blink 1.5s ease-in-out infinite alternate; /* Gentle pulsing effect */
-  box-shadow: 0 0 8px @red; /* Subtle glow to catch the eye */
-}
-
-/* Keyframe animation for the stopped state */
-@keyframes attention-blink {
-  from {
-    background-color: @red;
-  }
-  to {
-    background-color: @maroon;
-  } /* Slightly darker red for the pulse */
-}

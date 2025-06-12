@@ -4,13 +4,13 @@
 POMODORO_CLI="/home/aditya/.cargo/bin/pomodoro-cli"
 JQ_PATH="/usr/bin/jq"
 
-# Redirect all subsequent stderr from the script to the debug log file.
-# This is useful for capturing errors from pomodoro-cli or jq.
-# IMPORTANT: This line was commented out in the previous fix; uncommenting it
-# or ensuring stderr redirection for specific commands is useful for debugging.
-# For now, let's keep it commented if you don't need continuous stderr logging to the file.
-# If you want stderr of the entire script to go to the log, uncomment this:
-# exec 2>> /tmp/waybar_pomo_debug.log
+# --- DEBUGGING START ---
+# Log the PATH seen by the script when Waybar executes it
+echo "DEBUG: PATH = $PATH" > /tmp/waybar_pomo_debug.log 2>&1
+# Log any stderr from pomodoro-cli or jq to the same file
+exec 2>> /tmp/waybar_pomo_debug.log
+# --- DEBUGGING END ---
+
 
 # Attempt to get pomodoro-cli status in JSON format
 # Capture stdout and stderr, and the exit status.
@@ -22,8 +22,7 @@ pomodoro_cli_exit_status=$?
 raw_pomodoro_cli_output=$(cat "$temp_output_file")
 rm "$temp_output_file" # Clean up the temporary file
 
-# Write the captured raw output to debug log for inspection.
-# These lines ONLY write to the file and do NOT print to stdout.
+# Write the captured raw output to debug log for inspection
 echo "RAW_POMODORO_CLI_OUTPUT:" >> /tmp/waybar_pomo_debug.log
 echo "$raw_pomodoro_cli_output" >> /tmp/waybar_pomo_debug.log
 echo "POMODORO_CLI_EXIT_STATUS: $pomodoro_cli_exit_status" >> /tmp/waybar_pomo_debug.log
@@ -33,13 +32,13 @@ echo "POMODORO_CLI_EXIT_STATUS: $pomodoro_cli_exit_status" >> /tmp/waybar_pomo_d
 # OR if its output is empty OR if its output is not valid JSON.
 # This ensures that we ONLY proceed with valid JSON from pomodoro-cli.
 if [ "$pomodoro_cli_exit_status" -ne 0 ] || \
-    [ -z "$raw_pomodoro_cli_output" ] || \
-    ! echo "$raw_pomodoro_cli_output" | "$JQ_PATH" . > /dev/null 2>&1; then
+   [ -z "$raw_pomodoro_cli_output" ] || \
+   ! echo "$raw_pomodoro_cli_output" | "$JQ_PATH" . > /dev/null 2>&1; then
 
     # If any of the above conditions are true, pomodoro-cli output is unusable.
     # Output a default "Pomodoro not running" JSON for Waybar.
     # IMPORTANT: Use jq -c . here to ensure compact output for Waybar.
-    printf '{"text": "STOPPED 🛑", "tooltip": "Pomodoro timer is stopped. Click to start!", "class": "stopped", "percentage": 0}\n' | "$JQ_PATH" -c .
+    printf '{"text": "", "tooltip": "Pomodoro not running", "class": "paused", "percentage": 0}\n' | "$JQ_PATH" -c .
     exit 0
 fi
 
@@ -54,14 +53,14 @@ percentage=$(echo "$pomodoro_json" | "$JQ_PATH" -r '.percentage // 0')
 
 # Customize text and tooltip for Waybar based on class
 if [[ "$class" == "running" ]]; then
-    text="Work 🍅 $text"
+    text="🍅 $text"
     class="work" # Change to 'work' class for better styling distinction in Waybar
 elif [[ "$class" == "paused" ]]; then
-    text="Paused ⏸️ $text"
+    text="⏸️ $text"
 elif [[ "$class" == "break" ]]; then
-    text="Break ☕ $text"
+    text="☕ $text"
 elif [[ "$class" == "long-break" ]]; then
-    text="Long Break 🏖️ $text"
+    text="🏖️ $text"
 fi
 
 # Reformat tooltip to handle newlines (printf "%b" interprets backslash escapes like \n)
@@ -71,10 +70,10 @@ tooltip=$(printf "%b" "$tooltip_raw")
 # IMPORTANT: Use printf "%s" and pipe through iconv -c for maximum cleanliness
 # Add -c to the final jq call to ensure compact output.
 printf "%s" "$(
-    "$JQ_PATH" -n -c \
+    "$JQ_PATH" -n \
         --arg text "$text" \
         --arg tooltip "$tooltip" \
         --arg class "$class" \
         --argjson percentage "$percentage" \
         '{text: $text, tooltip: $tooltip, class: $class, percentage: $percentage}'
-)"
+)" | iconv -f UTF-8 -t UTF-8 -c | "$JQ_PATH" -c .
