@@ -196,6 +196,9 @@ alias ww="pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start
 
 alias ta="tmux attach-session -t ArchSession "
 alias td="tmux detach"
+
+
+
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
@@ -210,8 +213,10 @@ alias td="tmux detach"
 
 PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
-
-
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
+# Add ~/.local/bin to PATH for user-specific executables
+export PATH="$HOME/.local/bin:$PATH"
 # study stream aliases
 # Requires https://github.com/caarlos0/timer to be installed. spd-say should ship with your distro
 # declare -A pomo_options

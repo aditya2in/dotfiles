@@ -1,0 +1,167 @@
+#!/bin/bash
+
+# Path to the pomodoro-cli executable
+POMODORO_CLI="pomodoro-cli"
+
+# Path to the centralized logger script (for detailed activity logs)
+POMODORO_LOGGER_SCRIPT="$HOME/.config/waybar/scripts/pomodoro-logger.sh"
+
+# Path to the current state file (for Waybar's fast retrieval)
+CURRENT_STATE_FILE="$HOME/.local/share/pomodoro/current_state.txt"
+
+# Ensure the state file exists and is initialized
+ensure_state_file_exists() {
+    mkdir -p "$(dirname "$CURRENT_STATE_FILE")"
+    if [[ ! -f "$CURRENT_STATE_FILE" ]]; then
+        echo "0" > "$CURRENT_STATE_FILE" # Initial session count
+        echo "off" >> "$CURRENT_STATE_FILE" # Initial state
+        chmod 664 "$CURRENT_STATE_FILE" # Ensure proper permissions
+        "$POMODORO_LOGGER_SCRIPT" "INIT" "current_state.txt initialized: session 0, state off."
+    fi
+}
+
+# Read current state and session count from file
+read_state() {
+    ensure_state_file_exists
+    # Use array for robustness and better separation of values
+    mapfile -t state_info < "$CURRENT_STATE_FILE"
+    CURRENT_SESSION_COUNT="${state_info[0]:-0}" # Default to 0 if empty
+    CURRENT_INFERRED_STATE="${state_info[1]:-off}" # Default to 'off' if empty
+}
+
+# Write new state and session count to file
+write_state() {
+    local new_session_count="$1"
+    local new_inferred_state="$2"
+    echo "$new_session_count" > "$CURRENT_STATE_FILE"
+    echo "$new_inferred_state" >> "$CURRENT_STATE_FILE"
+    chmod 664 "$CURRENT_STATE_FILE" # Maintain permissions
+    "$POMODORO_LOGGER_SCRIPT" "STATE_UPDATED_FILE" "File update: Session $new_session_count, State $new_inferred_state"
+}
+
+# --- CHECK FOR ESSENTIAL COMMANDS ---
+if ! command -v "$POMODORO_CLI" &>/dev/null; then
+    "$POMODORO_LOGGER_SCRIPT" "ERROR" "pomodoro-cli not found in PATH."
+    exit 1
+fi
+if [[ ! -x "$POMODORO_LOGGER_SCRIPT" ]]; then
+    echo "Error: pomodoro-logger.sh not found or not executable. Path: $POMODORO_LOGGER_SCRIPT" >&2
+    exit 1
+fi
+# --- END CHECK ---
+
+CMD="$1" # The command to pass to pomodoro-cli (e.g., start, stop, pause)
+
+# Log the action before execution
+"$POMODORO_LOGGER_SCRIPT" "COMMAND_EXEC" "Waybar action received: '$CMD'"
+
+# Get current state from file before executing command to determine state changes
+read_state
+OLD_SESSION_COUNT="$CURRENT_SESSION_COUNT"
+OLD_INFERRED_STATE="$CURRENT_INFERRED_STATE"
+
+# Execute the pomodoro-cli command
+"$POMODORO_CLI" "$CMD" 2>/dev/null & # Run in background to not block Waybar. No need to capture output.
+
+# --- State Inference and Logging Logic ---
+NEW_INFERRED_STATE="$OLD_INFERRED_STATE" # Assume no change initially
+INCREMENT_SESSION_COUNT=false
+
+case "$CMD" in
+    "start")
+        # If we were 'off' or 'break', starting means a new work session.
+        # If we were 'paused' and now 'start', it's a resume, not a new session count.
+        if [[ "$OLD_INFERRED_STATE" == "off" || "$OLD_INFERRED_STATE" == "break" ]]; then
+            NEW_INFERRED_STATE="work"
+            INCREMENT_SESSION_COUNT=true
+            "$POMODORO_LOGGER_SCRIPT" "SESSION_START" "Work session initiated (from $OLD_INFERRED_STATE)."
+        elif [[ "$OLD_INFERRED_STATE" == "paused" ]]; then
+            NEW_INFERRED_STATE="work" # Assume resuming work, not break.
+            "$POMODORO_LOGGER_SCRIPT" "SESSION_RESUME" "Session resumed from pause (was $OLD_INFERRED_STATE)."
+        else
+            "$POMODORO_LOGGER_SCRIPT" "ACTION_INFO" "Start command issued while state was '$OLD_INFERRED_STATE'. Assuming continued work."
+            NEW_INFERRED_STATE="work"
+        fi
+        ;;
+    "stop")
+        # Stop can happen from work, break, or paused. It always leads to 'off'.
+        if [[ "$OLD_INFERRED_STATE" == "work" ]]; then
+            "$POMODORO_LOGGER_SCRIPT" "SESSION_END" "Work session manually stopped."
+        elif [[ "$OLD_INFERRED_STATE" == "break" ]]; then
+            "$POMODORO_LOGGER_SCRIPT" "BREAK_END" "Break session manually stopped."
+        elif [[ "$OLD_INFERRED_STATE" == "paused" ]]; then
+            "$POMODORO_LOGGER_SCRIPT" "PAUSE_END" "Paused session manually stopped."
+        fi
+        NEW_INFERRED_STATE="off"
+        ;;
+    "pause")
+        if [[ "$OLD_INFERRED_STATE" == "work" || "$OLD_INFERRED_STATE" == "break" ]]; then
+            "$POMODORO_LOGGER_SCRIPT" "SESSION_PAUSED" "Session paused (was $OLD_INFERRED_STATE)."
+            NEW_INFERRED_STATE="paused"
+        else
+            "$POMODORO_LOGGER_SCRIPT" "ACTION_INFO" "Pause command issued while state was '$OLD_INFERRED_STATE'. No change."
+        fi
+        ;;
+    "break")
+        if [[ "$OLD_INFERRED_STATE" == "work" ]]; then
+            "$POMODORO_LOGGER_SCRIPT" "SESSION_END" "Work session completed, starting break."
+            NEW_INFERRED_STATE="break"
+        elif [[ "$OLD_INFERRED_STATE" == "paused" ]]; then
+            "$POMODORO_LOGGER_SCRIPT" "PAUSE_END_BREAK" "Paused session ended, starting break."
+            NEW_INFERRED_STATE="break"
+        elif [[ "$OLD_INFERRED_STATE" == "break" ]]; then
+            "$POMODORO_LOGGER_SCRIPT" "ACTION_INFO" "Break command issued while already in break. No change."
+        else
+            "$POMODORO_LOGGER_SCRIPT" "BREAK_START_MANUAL" "Break session manually started (from $OLD_INFERRED_STATE)."
+            NEW_INFERRED_STATE="break"
+        fi
+        ;;
+    "resume"|"toggle-pause") # Assuming 'resume' is effectively un-pausing, leading back to 'work'
+        if [[ "$OLD_INFERRED_STATE" == "paused" ]]; then
+            "$POMODORO_LOGGER_SCRIPT" "SESSION_RESUMED" "Session resumed from pause."
+            NEW_INFERRED_STATE="work" # Assume resuming work
+        elif [[ "$OLD_INFERRED_STATE" == "off" ]]; then
+             "$POMODORO_LOGGER_SCRIPT" "ACTION_INFO" "Resume/toggle-pause command issued while off. Assuming start."
+             NEW_INFERRED_STATE="work"
+             INCREMENT_SESSION_COUNT=true
+        else
+            "$POMODORO_LOGGER_SCRIPT" "ACTION_INFO" "Resume/toggle-pause command issued from '$OLD_INFERRED_STATE'. No effective change."
+        fi
+        ;;
+    *)
+        "$POMODORO_LOGGER_SCRIPT" "UNKNOWN_COMMAND" "Received unknown command: '$CMD'"
+        exit 1
+        ;;
+esac
+
+# Update session count if a new work session started today
+if $INCREMENT_SESSION_COUNT; then
+    # We need to consider daily reset for session count.
+    # To simplify, we'll reset daily and only count 'today's' sessions.
+    # If a previous session was counted yesterday, and today is a new day,
+    # reset session count.
+    # This requires adding a date to the current_state.txt or checking system date.
+    # For now, let's just increment and assume pomodoro-status will manage daily reset.
+    # A more robust solution would be to save date in current_state.txt.
+
+    # Instead of sophisticated date logic here, we will rely on pomodoro-status.sh
+    # to handle the daily reset if it needs to count *today's* sessions.
+    # The session_count in current_state.txt will now just be a running total for the active life of the file.
+    # We'll adjust the logic in pomodoro-status.sh to truly count daily.
+    # So, for now, let's keep session count increment simpler here:
+    NEW_SESSION_COUNT=$((OLD_SESSION_COUNT + 1))
+    "$POMODORO_LOGGER_SCRIPT" "COUNT_INCREMENT" "Session count incremented: $OLD_SESSION_COUNT -> $NEW_SESSION_COUNT"
+else
+    NEW_SESSION_COUNT="$OLD_SESSION_COUNT"
+fi
+
+# Only write to file if the inferred state has actually changed or if session count incremented
+if [[ "$NEW_INFERRED_STATE" != "$OLD_INFERRED_STATE" ]] || $INCREMENT_SESSION_COUNT ; then
+    write_state "$NEW_SESSION_COUNT" "$NEW_INFERRED_STATE"
+    "$POMODORO_LOGGER_SCRIPT" "STATE_CHANGE_DETECTED" "Inferred state changed: $OLD_INFERRED_STATE -> $NEW_INFERRED_STATE. Session: $NEW_SESSION_COUNT."
+else
+    "$POMODORO_LOGGER_SCRIPT" "STATE_NO_CHANGE" "Inferred state and session count remain: $NEW_INFERRED_STATE ($NEW_SESSION_COUNT)."
+fi
+
+# Exit status doesn't matter for Waybar's on-click, as the command runs in background.
+exit 0

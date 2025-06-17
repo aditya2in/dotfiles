@@ -1,80 +1,153 @@
 #!/bin/bash
 
-# Define absolute paths for commands
-POMODORO_CLI="/home/aditya/.cargo/bin/pomodoro-cli"
-JQ_PATH="/usr/bin/jq"
+# --- Source common utilities and configurations ---
+source "/home/aditya/.config/waybar/scripts/pomodoro-utils.sh"
 
-# Redirect all subsequent stderr from the script to the debug log file.
-# This is useful for capturing errors from pomodoro-cli or jq.
-# IMPORTANT: This line was commented out in the previous fix; uncommenting it
-# or ensuring stderr redirection for specific commands is useful for debugging.
-# For now, let's keep it commented if you don't need continuous stderr logging to the file.
-# If you want stderr of the entire script to go to the log, uncomment this:
-# exec 2>> /tmp/waybar_pomo_debug.log
+# --- Main Logic ---
 
-# Attempt to get pomodoro-cli status in JSON format
-# Capture stdout and stderr, and the exit status.
-# Using a temporary file for cleaner error handling.
-temp_output_file=$(mktemp)
-"$POMODORO_CLI" status --format json --time-format digital > "$temp_output_file" 2>&1
-pomodoro_cli_exit_status=$?
+pomodoro_cli_status_json="$("$POMODORO_CLI" status --format json --time-format digital 2>/dev/null | head -n 1 | tr -d '\n')"
+cli_time="00:00"
+cli_class="finished" # Default if pomodoro-cli is not running or provides no output
 
-raw_pomodoro_cli_output=$(cat "$temp_output_file")
-rm "$temp_output_file" # Clean up the temporary file
-
-# Write the captured raw output to debug log for inspection.
-# These lines ONLY write to the file and do NOT print to stdout.
-echo "RAW_POMODORO_CLI_OUTPUT:" >> /tmp/waybar_pomo_debug.log
-echo "$raw_pomodoro_cli_output" >> /tmp/waybar_pomo_debug.log
-echo "POMODORO_CLI_EXIT_STATUS: $pomodoro_cli_exit_status" >> /tmp/waybar_pomo_debug.log
-
-
-# Check if pomodoro-cli failed (non-zero exit status)
-# OR if its output is empty OR if its output is not valid JSON.
-# This ensures that we ONLY proceed with valid JSON from pomodoro-cli.
-if [ "$pomodoro_cli_exit_status" -ne 0 ] || \
-    [ -z "$raw_pomodoro_cli_output" ] || \
-    ! echo "$raw_pomodoro_cli_output" | "$JQ_PATH" . > /dev/null 2>&1; then
-
-    # If any of the above conditions are true, pomodoro-cli output is unusable.
-    # Output a default "Pomodoro not running" JSON for Waybar.
-    # IMPORTANT: Use jq -c . here to ensure compact output for Waybar.
-    printf '{"text": "STOPPED 🛑", "tooltip": "Pomodoro timer is stopped. Click to start!", "class": "stopped", "percentage": 0}\n' | "$JQ_PATH" -c .
-    exit 0
+if [[ -n "$pomodoro_cli_status_json" ]]; then
+    cli_time=$(echo "$pomodoro_cli_status_json" | "$JQ_PATH" -r '.time // "00:00"')
+    cli_class=$(echo "$pomodoro_cli_status_json" | "$JQ_PATH" -r '.class // "finished"')
+    log_message SCRIPT_DEBUG "Raw pomodoro-cli status: $pomodoro_cli_status_json"
 fi
 
-# If we reach here, raw_pomodoro_cli_output is valid JSON from a successful pomodoro-cli call.
-pomodoro_json="$raw_pomodoro_cli_output"
+# --- Determine cycle state (current session type and count) ---
+# Read directly from CYCLE_STATE_FILE without calling action.sh as that causes new processes
+current_cycle_state_json=$(read_cycle_state 2>/dev/null || echo '{}') # No action.sh call needed here, utils handles it.
+if [[ -z "$current_cycle_state_json" || "$current_cycle_state_json" == "null" ]]; then
+    log_message ERROR "Failed to read cycle state from utils. Defaulting to finished."
+    cycle_session_type="finished"
+    work_sessions_completed=0
+    total_pomodoros_done=0
+    last_reset_date=""
+else
+    cycle_session_type=$(echo "$current_cycle_state_json" | "$JQ_PATH" -r '.current_session_type // "finished"' 2> >(log_message ERROR "jq error for cycle_session_type from file: $(cat)"))
+    work_sessions_completed=$(echo "$current_cycle_state_json" | "$JQ_PATH" -r '.work_sessions_completed // 0' 2> >(log_message ERROR "jq error for work_sessions_completed from file: $(cat)"))
+    total_pomodoros_done=$(echo "$current_cycle_state_json" | "$JQ_PATH" -r '.total_pomodoros_done // 0' 2> >(log_message ERROR "jq error for total_pomodoros_done from file: $(cat)"))
+    last_reset_date=$(echo "$current_cycle_state_json" | "$JQ_PATH" -r '.last_reset_date // ""' 2> >(log_message ERROR "jq error for last_reset_date from file: $(cat)"))
+fi
+log_message SCRIPT_DEBUG "pomodoro-status.sh: Read cycle_session_type from file: '$cycle_session_type', work_sessions_completed: '$work_sessions_completed', total_pomodoros_done: '$total_pomodoros_done', last_reset_date: '$last_reset_date'"
 
-# Parse the JSON and extract relevant fields
-text=$(echo "$pomodoro_json" | "$JQ_PATH" -r '.text // "00:00"')
-tooltip_raw=$(echo "$pomodoro_json" | "$JQ_PATH" -r '.tooltip // "No info"')
-class=$(echo "$pomodoro_json" | "$JQ_PATH" -r '.class // "paused"')
-percentage=$(echo "$pomodoro_json" | "$JQ_PATH" -r '.percentage // 0')
-
-# Customize text and tooltip for Waybar based on class
-if [[ "$class" == "running" ]]; then
-    text="Work 🍅 $text"
-    class="work" # Change to 'work' class for better styling distinction in Waybar
-elif [[ "$class" == "paused" ]]; then
-    text="Paused ⏸️ $text"
-elif [[ "$class" == "break" ]]; then
-    text="Break ☕ $text"
-elif [[ "$class" == "long-break" ]]; then
-    text="Long Break 🏖️ $text"
+# Check if pomodoro-cli reports 'finished' but our internal cycle state implies a transition is due
+if [[ "$cli_class" == "finished" ]]; then
+    # if cycle_session_type is 'stopped' or 'reset', it means user manually stopped/reset, don't auto-trigger
+    if [[ "$cycle_session_type" != "finished" && "$cycle_session_type" != "stopped" && "$cycle_session_type" != "reset" ]]; then
+        log_message SCRIPT_DEBUG "CLI is finished, but cycle state says '$cycle_session_type' was active. Triggering next session via action script."
+        # Use nohup to ensure it runs independently and doesn't block Waybar or status updates
+        nohup "/home/aditya/.config/waybar/scripts/pomodoro-action.sh" trigger_next_session >/dev/null 2>&1 &
+        # Immediately set display to reflect a "transitioning" or "finished" state to avoid stale display
+        # This will be updated by action.sh once the trigger is complete
+        display_status="transitioning" # Internal temporary status for Waybar display
+    fi
 fi
 
-# Reformat tooltip to handle newlines (printf "%b" interprets backslash escapes like \n)
-tooltip=$(printf "%b" "$tooltip_raw")
+# Read the current display state from our custom file (which is set by action.sh)
+current_display_state_json=$(read_display_state)
+display_status_from_file=$(echo "$current_display_state_json" | "$JQ_PATH" -r '.status // "finished"') # Default to "finished" if not set
+log_message SCRIPT_DEBUG "pomodoro-status.sh: Read display_status from file: '$display_status_from_file'"
 
-# Construct the final JSON output for Waybar
-# IMPORTANT: Use printf "%s" and pipe through iconv -c for maximum cleanliness
-# Add -c to the final jq call to ensure compact output.
-printf "%s" "$(
-    "$JQ_PATH" -n -c \
-        --arg text "$text" \
-        --arg tooltip "$tooltip" \
-        --arg class "$class" \
-        --argjson percentage "$percentage" \
-        '{text: $text, tooltip: $tooltip, class: $class, percentage: $percentage}'
-)"
+
+# Default values for output
+text=""
+tooltip=""
+class=""
+icon=""
+color=""
+percentage=0 # Always default percentage to 0 as it's not dynamically calculated yet
+
+# Determine what to display based on pomodoro-cli's status AND our custom display_state
+if [[ "$cli_class" == "running" ]]; then
+    # pomodoro-cli is actively running a timer
+    # Use the cycle_session_type determined above
+    case "$cycle_session_type" in
+        work)
+            text="[[${total_pomodoros_done}]] Work 🍅 $cli_time ($work_sessions_completed/$SESSIONS_BEFORE_LONG_BREAK)"
+            tooltip="Current work session. Focus time!"
+            class="work"
+            icon="🍅"
+            color="#FAB387" # Peach
+            ;;
+        short_break)
+            text="[[${total_pomodoros_done}]] Break ☕ $cli_time ($work_sessions_completed/$SESSIONS_BEFORE_LONG_BREAK)"
+            tooltip="Enjoy your short break!"
+            class="break"
+            icon="☕"
+            color="#F5C2E7" # Mauve
+            ;;
+        long_break)
+            text="[[${total_pomodoros_done}]] Long Break 🏖️ $cli_time ($work_sessions_completed/$SESSIONS_BEFORE_LONG_BREAK)"
+            tooltip="Time for a long, relaxing break!"
+            class="long-break"
+            icon="🏖️"
+            color="#89B4FA" # Sky
+            ;;
+        *) # Fallback if cycle_session_type is unexpected or not yet set
+            text="[[${total_pomodoros_done}]] Running ▶️ $cli_time"
+            tooltip="Pomodoro timer is active."
+            class="running"
+            icon="▶️"
+            color="#A6E3A1" # Green
+            ;;
+    esac
+    # Update display_state to reflect running status immediately if it's not already
+    if [[ "$display_status_from_file" != "running_work" && "$display_status_from_file" != "running" ]]; then
+        log_message DEBUG "pomodoro-status.sh: CLI running, display state '$display_status_from_file', updating to 'running'."
+        new_display_state=$(echo '{}' | "$JQ_PATH" --arg status "running" '.status = $status')
+        echo "$new_display_state" | "$JQ_PATH" -c . > "${DISPLAY_STATE_FILE}.tmp" && mv "${DISPLAY_STATE_FILE}.tmp" "$DISPLAY_STATE_FILE"
+    fi
+
+elif [[ "$cli_class" == "finished" ]]; then
+    # pomodoro-cli reports "finished" (no session running)
+    # Now, check our custom display_state (from file) to differentiate stopped/reset/finished naturally
+    case "$display_status_from_file" in
+        stopped)
+            text="[[${total_pomodoros_done}]] STOPPED 🛑 ($work_sessions_completed/$SESSIONS_BEFORE_LONG_BREAK)"
+            tooltip="Pomodoro manually stopped. Click to restart."
+            class="stopped"
+            icon="🛑"
+            color="#F38BA8" # Red
+            ;;
+        reset) # This means the reset command was explicitly used. (X/4) is 0, Total is preserved.
+            text="[[${total_pomodoros_done}]] 00:00 🔄 (0/$SESSIONS_BEFORE_LONG_BREAK)"
+            tooltip="Pomodoro current cycle reset. Click to start a new work session."
+            class="reset"
+            icon="🔄"
+            color="#F9E2AF" # Yellow
+            ;;
+        ready_to_start) # For when a break finishes and it's ready for next work
+            text="[[${total_pomodoros_done}]] Ready ✅ ($work_sessions_completed/$SESSIONS_BEFORE_LONG_BREAK)"
+            tooltip="Break finished. Click to start next work session."
+            class="ready"
+            icon="✅"
+            color="#A6E3A1" # Green
+            ;;
+        transitioning) # Acknowledge the temporary state while action.sh is working
+            text="[[${total_pomodoros_done}]] Transitioning..."
+            tooltip="Session ended, transitioning to next phase."
+            class="transitioning"
+            icon="⏳"
+            color="#CBA6F7" # Lavender
+            ;;
+        *) # Default to finished if display_status is anything else (e.g., "finished" or uninitialized)
+            text="[[${total_pomodoros_done}]] Finished ✅ ($work_sessions_completed/$SESSIONS_BEFORE_LONG_BREAK)"
+            tooltip="Pomodoro session completed. Click to start a new work session."
+            class="finished"
+            icon="✅"
+            color="#A6E3A1" # Green
+            ;;
+    esac
+fi
+
+printf '{"text": "%s", "tooltip": "%s", "class": "%s", "icon": "%s", "alt": "%s", "percentage": %d, "markup": "pango"}\n' \
+    "$text" \
+    "$tooltip" \
+    "$class" \
+    "$icon" \
+    "${text}" \
+    "$percentage"
+
+exit 0
