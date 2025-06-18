@@ -187,6 +187,9 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 ##############################################################################################
 #alias
 alias c="clear"
+alias e="exit"
+#alias dd="sh nerd-dictation.sh"
+alias dd="~/dotfiles/scripts/nerd-dictation.sh"
 alias gs="git status"
 alias ga="git add ."
 alias gc="git commit -v" 
@@ -196,8 +199,7 @@ alias ww="pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start
 
 alias ta="tmux attach-session -t ArchSession "
 alias td="tmux detach"
-
-
+alias tt="tmux"
 
 ##############################################################################################
 ##############################################################################################
