@@ -11,7 +11,7 @@
   ],
   "modules-center": [],
   "modules-right": [
-    "custom/pomodoro",
+    "custom/pomo",
     "cpu",
     "custom/memory",
     "temperature",
@@ -40,19 +40,16 @@
 
   "hyprland/window": { "format": "{}", "max-length": 50 },
   
-  "custom/pomodoro": {
-    "format": "{}",
-    "interval": 1, 
-    "exec": "pomodoro_manager.sh status",
-    "return-type": "json", 
-    "tooltip": true,
-    "on-click": "pomodoro_manager.sh start",
-    "on-click-right": "pomodoro_manager.sh stop",
-    "on-click-middle": "pomodoro_manager.sh pause || pomodoro_manager.sh resume",
-    "on-scroll-up": "pomodoro_manager.sh reset",
-    "on-scroll-down": "pomodoro_manager.sh reset"  
+  "custom/pomo": {
+    "format": "{text}",
+    "tooltip": "{tooltip}",
+    "exec": "~/.config/waybar/scripts/pomodoro-status.sh",
+    "return-type": "json",
+    "on-click": "~/.config/waybar/scripts/pomodoro-action.sh start",
+    "on-click-right": "~/.config/waybar/scripts/pomodoro-action.sh stop",
+    "on-click-middle": "~/.config/waybar/scripts/pomodoro-action.sh reset",
+    "interval": 1
   },
-
   "cpu": {
     "format": "<span foreground='#fab387'>󰍛</span> {usage}%",
     "tooltip-format": "CPU: {usage}% | Avg: {avg_frequency}GHz",

@@ -189,7 +189,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 alias c="clear"
 alias e="exit"
 #alias dd="sh nerd-dictation.sh"
-alias dd="~/dotfiles/scripts/nerd-dictation.sh"
+alias dd="~/dotfiles/scripts/toggle_nerd_dictation.sh"
 alias gs="git status"
 alias ga="git add ."
 alias gc="git commit -v" 
@@ -240,4 +240,5 @@ export PATH="$HOME/.local/bin:$PATH"
 
 
 #export GOOGLE_GENERATIVE_AI_API_KEY="AIzaSyB-p4-hJkbg_2xe6noD-E9w4r5G2RsDQuk"
-
+# Pomodoro CLI Manager
+export PATH="$HOME/.config/pomodoro_cli:$PATH"

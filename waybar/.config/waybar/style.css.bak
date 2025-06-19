@@ -128,37 +128,3 @@ window#waybar {
     background-color: @maroon;
   }
 }
-
-/* ~/.config/waybar/style.css */
-
-#custom-pomodoro {
-  color: #ffffff; /* White text */
-  background-color: #2e3440; /* Dark background */
-  padding: 0 10px;
-  margin: 0 5px;
-  border-radius: 10px;
-  font-family: "MesloLGS NF", monospace; /* Use your preferred Nerd Font */
-  font-weight: bold;
-  font-size: 14px;
-  border: 1px solid #4c566a; /* Subtle border */
-}
-
-#custom-pomodoro.running {
-  background-color: #a3be8c; /* Green for running */
-  color: #2e3440;
-}
-
-#custom-pomodoro.paused {
-  background-color: #ebcb8b; /* Yellow for paused */
-  color: #2e3440;
-}
-
-#custom-pomodoro.break {
-  background-color: #8fbcbb; /* Teal for breaks */
-  color: #2e3440;
-}
-
-#custom-pomodoro.long-break {
-  background-color: #b48ead; /* Purple for long breaks */
-  color: #2e3440;
-}
