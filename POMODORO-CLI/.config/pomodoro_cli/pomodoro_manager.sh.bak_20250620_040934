@@ -205,25 +205,25 @@ display_break_block() {
     echo "DEBUG: display_break_block: DISPLAY=$DISPLAY, XAUTHORITY=$XAUTHORITY, DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >&2
     
     # Construct the message for the block, dynamically including the break duration
-    # Using printf for block_message to ensure newlines are handled correctly and explicitly.
-    # This will prevent yad from misinterpreting the string as a file or other special format.
-    block_message=$(printf "Time to get up and go to relax and take a break!\n\nThis break is for %s.\n\nRest, come back after your break." "$break_duration_text")
+    # Ensure block_message is treated as a single argument for yad --text
+    local break_duration_text=$(parse_duration_to_minutes_or_seconds "$duration_seconds")
+    local block_message="Time to get up and go to relax and take a break!\n\nThis break is for ${break_duration_text}.\n\nRest, come back after your break."
 
     # Use a unique name for the window to prevent conflicts or accidental closing
     local window_name="pomodoro-break-block-$(date +%s%N)"
 
-    # Launch yad with improved options for a truly blocking, full-screen, large-text window.
-    # `--text-info` for multi-line text, `--no-buttons` to remove interaction,
-    # `--no-escape` for literal newlines, `--wrap` for long lines, `--justification=center`
-    # Removed --window-icon as it's not strictly necessary and can sometimes cause issues.
-    yad --text-info --no-buttons --no-escape --wrap --justification=center \
-        --text="$block_message" \
+    # Launch yad with full-screen, undecorated, no-buttons, and a timeout
+    # Using `--text="$block_message"` to ensure the message is passed as one string.
+    # Increased font size for better visibility.
+    yad --text="$block_message" \
         --title="Pomodoro Break Time!" \
         --name="$window_name" \
-        --skip-taskbar --undecorated --full --fixed --on-top --center \
+        --skip-taskbar --undecorated --full --fixed --no-buttons \
         --timeout="$duration_seconds" \
+        --center --on-top \
         --background="#2e3440" --fore="#eceff4" \
-        --font="Noto Sans Bold 96" # Further increased font size for maximum impact
+        --font="Noto Sans Bold 72" \
+        --window-icon="dialog-information"
 }
 
 
@@ -574,8 +574,7 @@ cmd_cleanup() {
 
     # Remove state, lock, and PID files for a fresh start (but PRESERVE DAILY_LOG_FILE)
     rm -f "$HOME/.config/pomodoro_cli/pomodoro_state.json"
-    # The line below is intentionally commented out to preserve the daily log file.
-    # rm -f "$HOME/.config/pomodoro_cli/pomodoro_daily_log.txt"
+    # OLD (commented out for your reference): rm -f "$HOME/.config/pomodoro_cli/pomodoro_daily_log.txt"
     rm -f "$HOME/.config/pomodoro_cli/pomodoro_lock"
     rm -f "$HOME/.config/pomodoro_cli/pomodoro_daemon.pid"
     echo "Cleanup: State, lock, and PID files removed. Daily log file preserved." >&2
@@ -637,7 +636,7 @@ case "$1" in
     cleanup)
         cmd_cleanup
         ;;
-    quick-start)
+    quick-start) # <--- NEW COMMAND ADDED HERE
         cmd_quick_start
         ;;
     run-display-block)
