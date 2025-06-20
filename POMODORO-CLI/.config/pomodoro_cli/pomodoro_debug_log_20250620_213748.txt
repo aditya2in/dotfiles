@@ -1,0 +1,75 @@
+----------------------------------------------------
+Starting Pomodoro Debug Sequence Log
+Log file location: /home/aditya/.config/pomodoro_cli/pomodoro_debug_log_20250620_213748.txt
+Timestamp: Fri Jun 20 09:37:48 PM IST 2025
+----------------------------------------------------
+
+>>> Step 1: Running 'debug-toggle' to ensure debugging is OFF
+--- Output from debug-toggle (OFF) ---
+DEBUG: read_state: Using STATE_FILE: '/home/aditya/.config/pomodoro_cli/pomodoro_state.json'
+DEBUG: read_state: Raw jq output for .debug_enabled: 'true'
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='2', current_cycle='2', last_date='2025-06-20', debug_enabled='true'
+Pomodoro debugging turned OFF.
+
+>>> Step 2: Checking content of state file after debug-toggle (OFF)
+--- Content of /home/aditya/.config/pomodoro_cli/pomodoro_state.json ---
+{
+  "status": "Stopped",
+  "session_type": "None",
+  "total_pomodoro_cycles_today": 2,
+  "current_session_in_cycle": 2,
+  "last_run_date": "2025-06-20",
+  "debug_enabled": false
+}
+
+>>> Step 3: Running 'debug-toggle' to ensure debugging is ON
+--- Output from debug-toggle (ON) ---
+DEBUG: read_state: Using STATE_FILE: '/home/aditya/.config/pomodoro_cli/pomodoro_state.json'
+DEBUG: read_state: Raw jq output for .debug_enabled: 'true'
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='2', current_cycle='2', last_date='2025-06-20', debug_enabled='true'
+Pomodoro debugging turned OFF.
+
+>>> Step 4: Checking content of state file after debug-toggle (ON)
+--- Content of /home/aditya/.config/pomodoro_cli/pomodoro_state.json ---
+{
+  "status": "Stopped",
+  "session_type": "None",
+  "total_pomodoro_cycles_today": 2,
+  "current_session_in_cycle": 2,
+  "last_run_date": "2025-06-20",
+  "debug_enabled": false
+}
+
+>>> Step 5: Running 'status' command to observe debug output
+--- Output from status command ---
+DEBUG: read_state: Using STATE_FILE: '/home/aditya/.config/pomodoro_cli/pomodoro_state.json'
+DEBUG: read_state: Raw jq output for .debug_enabled: 'true'
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='2', current_cycle='2', last_date='2025-06-20', debug_enabled='true'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '2'
+DEBUG: _current_session_in_cycle: '2'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): ' 🛑 🛑 🛑  [[2]] Stopped/None 00:00 (2/4)'
+DEBUG: About to call jq -nc with above arguments.
+{"text":" 🛑 🛑 🛑  [[2]] Stopped/None 00:00 (2/4)","class":"stopped","tooltip":"Finished","percentage":0.0,"total_pomodoro_cycles_today":2,"current_session_in_cycle":2}
+
+>>> Step 6: Waiting 2 seconds and re-checking state file...
+--- Final Content of /home/aditya/.config/pomodoro_cli/pomodoro_state.json ---
+{
+  "status": "Stopped",
+  "session_type": "None",
+  "total_pomodoro_cycles_today": 2,
+  "current_session_in_cycle": 2,
+  "last_run_date": "2025-06-20",
+  "debug_enabled": false
+}
+
+----------------------------------------------------
+Pomodoro Debug Sequence Log Finished
+Log saved to: /home/aditya/.config/pomodoro_cli/pomodoro_debug_log_20250620_213748.txt
+----------------------------------------------------
