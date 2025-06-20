@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # -----------------------------------------------------------------------------
@@ -16,18 +17,12 @@ LOCK_FILE="$POMODORO_DIR/pomodoro_lock"
 # PID file for the daemon process
 DAEMON_PID_FILE="$POMODORO_DIR/pomodoro_daemon.pid"
 
-# --- NEW: Obsidian Configuration ---
-# Based on your vault folder /home/aditya/obsidian, the vault name is likely "obsidian"
-OBSIDIAN_VAULT_NAME="obsidian" # <--- CONFIRM/REPLACE with your actual Obsidian vault name (e.g., "My Notes")
-OBSIDIAN_BREAK_NOTE_PATH="POMODORO BREAK FILE.md" # <--- IMPORTANT: This is the file you provided
-# ----------------------------------
-
 # Session Durations for direct use with pomodoro-cli's --duration flag.
 # Use "Xs" for X seconds, "Xm" for X minutes.
 # For testing purposes, set all to 10 seconds ("10s").
 WORK_DURATION="10s"
 SHORT_BREAK_DURATION="10s" # Adjust these for your actual break times
-LONG_BREAK_DURATION="10s" # Adjust these for your actual break times
+LONG_BREAK_DURATION="10s"  # Adjust these for your actual break times
 
 # These variables hold our script's internal state.
 # They are declared globally (without 'local') so they can be accessed by all functions.
@@ -61,7 +56,7 @@ release_lock() {
 # for CREATING a default state file when explicitly told by read_state.
 initialize_state_file() {
     echo "DEBUG: Initializing Pomodoro state file with default values..." >&2
-    # Create the directory if it's not exist
+    # Create the directory if it doesn't exist
     mkdir -p "$(dirname "$STATE_FILE")" || { echo "Error: Could not create directory for state file: $(dirname "$STATE_FILE")" >&2; exit 1; }
     jq -n \
         --arg status "Stopped" \
@@ -128,7 +123,7 @@ write_state() {
 # This function assumes global state variables (_last_run_date, _total_pomodoro_cycles_today,
 # _current_session_in_cycle) hold the values from the day that just ended.
 log_daily_summary() {
-    # Create the directory for the log file if it's not exist
+    # Create the directory for the log file if it doesn't exist
     mkdir -p "$(dirname "$DAILY_LOG_FILE")" || { echo "Error: Could not create directory for log file: $(dirname "$DAILY_LOG_FILE")" >&2; return 1; }
 
     # Format the log entry: Log date, then values for the day that *just ended*
@@ -194,87 +189,41 @@ parse_duration_to_minutes_or_seconds() {
     fi
 }
 
-# NEW: URL-encodes a string for use in URIs (e.g., for Obsidian links).
-urlencode() {
-    local string="$1"
-    local length="${#string}"
-    local url_encoded=""
-    for (( i=0; i<length; i++ )); do
-        local c="${string:i:1}"
-        case "$c" in
-            [a-zA-Z0-9.~_-]) url_encoded+="$c" ;;
-            *) printf -v c_encoded '%%%02X' "'$c"
-               url_encoded+="$c_encoded" ;;
-        esac
-    done
-    echo "$url_encoded"
-}
-
-# Displays a full-screen blocking message during breaks using swaylock.
+# Displays a full-screen blocking message during breaks.
 # Takes duration in seconds as argument, followed by DISPLAY, XAUTHORITY, DBUS_SESSION_BUS_ADDRESS.
 display_break_block() {
     local duration_seconds="$1"
-    local display_var="$2"      # Passed from start_session
-    local xauthority_var="$3"   # Passed from start_session
-    local dbus_address_var="$4" # Passed from start_session
+    local display_var="$2"
+    local xauthority_var="$3"
+    local dbus_address_var="$4"
 
-    # Explicitly set environment variables for swaylock to connect to the correct display
-    # While swaylock is Wayland native, passing these ensures consistency and might help XWayland compatibility if any part needs it.
+    # Explicitly set environment variables for yad to connect to the correct display
     export DISPLAY="$display_var"
     export XAUTHORITY="$xauthority_var"
     export DBUS_SESSION_BUS_ADDRESS="$dbus_address_var"
 
     echo "DEBUG: display_break_block: DISPLAY=$DISPLAY, XAUTHORITY=$XAUTHORITY, DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >&2
     
-    local break_duration_text=$(parse_duration_to_minutes_or_seconds "$duration_seconds")
-    
-    # Define the message content with Pango markup for large, centered text
-    # Using a very large font size (e.g., 200) for maximum impact on screen.
-    local pango_message_content="<span font_desc='Noto Sans Bold 200' foreground='#eceff4'>Time to get up and go to relax and take a break!</span>\n\n"
-    pango_message_content+="<span font_desc='Noto Sans Bold 100' foreground='#eceff4'>This break is for ${break_duration_text}.</span>\n\n"
-    pango_message_content+="<span font_desc='Noto Sans Bold 100' foreground='#eceff4'>Rest, come back after your break.</span>"
+    # Construct the message for the block, dynamically including the break duration
+    # Using printf for block_message to ensure newlines are handled correctly and explicitly.
+    # This will prevent yad from misinterpreting the string as a file or other special format.
+    block_message=$(printf "Time to get up and go to relax and take a break!\n\nThis break is for %s.\n\nRest, come back after your break." "$break_duration_text")
 
-    # Temporary image file for the message
-    local temp_image="/tmp/pomodoro_break_message_$(date +%s%N).png"
+    # Use a unique name for the window to prevent conflicts or accidental closing
+    local window_name="pomodoro-break-block-$(date +%s%N)"
 
-    echo "DEBUG: Generating temporary image for swaylock: $temp_image" >&2
-
-    # Generate the PNG image with the message using pango-view
-    # -o: output file, --font: font description, --markup: enable pango markup
-    # --width, --height: ensure a large enough canvas for the text
-    # --background: make it transparent for layering on swaylock
-    # FIX: Quoted 'rgba(0,0,0,0)' to prevent shell syntax error.
-    pango-view --markup --text="$pango_message_content" \
-        -o "$temp_image" \
-        --width=1920 --height=1080 --background='rgba(0,0,0,0)' >/dev/null 2>&1
-
-    if [ ! -f "$temp_image" ]; then
-        echo "Error: Failed to generate temporary image for break block. Swaylock will use default background." >&2
-        # Fallback for swaylock if image generation fails (it will use its default config)
-        swaylock --daemonize >/dev/null 2>&1 &
-    else
-        echo "DEBUG: Launching swaylock with custom image." >&2
-        # Launch swaylock with the generated image as background
-        # --daemonize: run in background
-        # --image: specify the background image
-        # You might need to configure swaylock further (e.g., blur, indicators) via its config file
-        swaylock --image "$temp_image" --daemonize >/dev/null 2>&1 &
-    fi
-
-    # Get the PID of the last background command (swaylock)
-    local swaylock_pid=$!
-
-    echo "DEBUG: Swaylock launched with PID: $swaylock_pid. Sleeping for "$duration_seconds" seconds." >&2
-
-    # Wait for the duration
-    sleep "$duration_seconds"
-
-    echo "DEBUG: Attempting to kill swaylock (PID: "$swaylock_pid")." >&2
-    # Kill swaylock to unlock the screen
-    kill -TERM "$swaylock_pid" 2>/dev/null
-    # Clean up the temporary image file
-    rm -f "$temp_image"
-    echo "DEBUG: Swaylock killed and temporary image removed." >&2
+    # Launch yad with improved options for a truly blocking, full-screen, large-text window.
+    # `--text-info` for multi-line text, `--no-buttons` to remove interaction,
+    # `--no-escape` for literal newlines, `--wrap` for long lines, `--justification=center`
+    # Removed --window-icon as it's not strictly necessary and can sometimes cause issues.
+    yad --text-info --no-buttons --no-escape --wrap --justification=center \
+        --text="$block_message" \
+        --title="Pomodoro Break Time!" \
+        --name="$window_name" \
+        --skip-taskbar --undecorated --full --fixed --on-top --center \
+        --timeout="$duration_seconds" \
+        --background="#2e3440" --fore="#eceff4" \
+        --font="Noto Sans Bold 96" # Further increased font size for maximum impact
 }
 
 
@@ -302,23 +251,24 @@ start_session() {
 
     send_notification "$notify_title" "$notify_msg"
 
-    # Handle break-specific actions
+    # NEW: Trigger fullscreen block if it's a break session
     if [ "$type" == "Break" ] || [ "$type" == "Long Break" ]; then
-        echo "DEBUG: Triggering break action for $type: Switching to Workspace 2 and Opening Obsidian note." >&2
+        echo "DEBUG: Triggering fullscreen block for $type." >&2
+        local duration_seconds=$(parse_duration_to_seconds "$duration_str")
 
-        # Switch to Workspace 2 first
-        # This assumes hyprctl is in your PATH and configured for your Hyprland session.
-        hyprctl dispatch workspace 2
-        echo "DEBUG: Switched to Workspace 2." >&2
+        # Capture essential environment variables from the current interactive session
+        local current_display="$DISPLAY"
+        local current_xauthority="$XAUTHORITY"
+        local current_dbus_address="$DBUS_SESSION_BUS_ADDRESS"
 
-        # Construct the Obsidian URI for the specific note
-        local obsidian_uri="obsidian://open?vault=$(urlencode "$OBSIDIAN_VAULT_NAME")&file=$(urlencode "$OBSIDIAN_BREAK_NOTE_PATH")"
-        echo "DEBUG: Obsidian URI: $obsidian_uri" >&2
+        echo "DEBUG: start_session: Captured DISPLAY=$current_display, XAUTHORITY=$current_xauthority, DBUS_SESSION_BUS_ADDRESS=$current_dbus_address" >&2
 
-        # Open the Obsidian note. 'xdg-open' is commonly used on Linux to open URIs/files with default apps.
-        # Ensure 'xdg-open' is available and configured to handle 'obsidian://' links.
-        nohup xdg-open "$obsidian_uri" >/tmp/pomodoro_obsidian_output.log 2>&1 &
-        echo "DEBUG: Obsidian note launched via xdg-open." >&2
+        if [ "$duration_seconds" -gt 0 ]; then
+            # Run the block in the background, explicitly passing environment variables.
+            # We now call the script itself to execute the display_break_block function in a new process.
+            nohup "$0" run-display-block "$duration_seconds" "$current_display" "$current_xauthority" "$current_dbus_address" >/tmp/pomodoro_yad_output.log 2>&1 &
+            echo "DEBUG: Fullscreen block launched via script invocation with duration $duration_seconds seconds." >&2
+        fi
     fi
 
     echo "$notify_msg" >&2 # Ensure this informational message goes to stderr
@@ -346,7 +296,7 @@ handle_transition() {
             start_session "Long Break" "$LONG_BREAK_DURATION" "Long Break Time!" "Enjoy your $(parse_duration_to_minutes_or_seconds "$(parse_duration_to_seconds "$LONG_BREAK_DURATION")") long break!"
         else
             # It's time for a Short Break
-            start_session "Break" "$SHORT_BREAK_DURATION" "Take a $(parse_duration_to_minutes_or_seconds "$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")") break."
+            start_session "Break" "$SHORT_BREAK_DURATION" "Short Break Time!" "Take a $(parse_duration_to_minutes_or_seconds "$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")") break."
         fi
     elif [ "$_session_type" == "Break" ] || [ "$_session_type" == "Long Break" ]; then
         # This branch: Break session just finished. Do NOT automatically start Work.
@@ -473,22 +423,8 @@ cmd_status() {
     read_state
     reset_daily_counts # Daily reset check for status display
 
-    # Capture raw output from pomodoro-cli, including any non-JSON prefix like "Time is up!".
-    # Redirect stderr to /dev/null to prevent any unexpected error messages from pomodoro-cli.
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-
-    # Extract only the JSON part from the raw output.
-    # This sed command finds the first occurrence of '{' and prints everything from that point onwards.
-    # This handles cases where "Time is up!" is on the same line or precedes the JSON.
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-
-    # Add a check to ensure pcli_json is valid JSON before proceeding.
-    # If it's not valid, default it to an empty JSON object to prevent 'jq' errors downstream.
-    if ! echo "$pcli_json" | jq -e . >/dev/null 2>&1; then
-        echo "DEBUG: Failed to parse pomodoro-cli output as JSON. Raw output was: '$raw_pcli_output'" >&2
-        echo "DEBUG: Attempted JSON extraction resulted in: '$pcli_json'" >&2
-        pcli_json='{}' # Fallback to empty JSON if extraction or validation fails
-    fi
+    # Get pomodoro-cli's JSON output (captures stdout, redirects stderr)
+    local pcli_json=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
 
     local time_text="00:00"
     local tooltip_text="No timer running."
@@ -527,31 +463,8 @@ cmd_status() {
     # Always use _current_session_in_cycle for display, as it holds the correct value
     local current_cycle_display="${_current_session_in_cycle}/4"
 
-    # Determine the icon based on status and session type
-    local icon=""
-    case "$_status" in
-        "Stopped")
-            icon=" 🛑 🛑 🛑  " # Stop sign emoji for stopped state
-            ;;
-        "Paused")
-            icon="⏸️⏸️⏸️ " # Pause button emoji for paused state
-            ;;
-        "Running")
-            case "$_session_type" in
-                "Work")
-                    icon="⚡ ⚡ ⚡ " # High voltage/energy for work
-                    ;;
-                "Break")
-                    icon="☕ ☕ ☕ " # Coffee cup for short break
-                    ;;
-                "Long Break")
-                    icon="🏖️ 🏖️ 🏖️  " # Beach for long break
-                    ;;
-            esac
-            ;;
-    esac
 
-    local full_text="${icon}[[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} ${time_text} (${current_cycle_display})"
+    local full_text="[[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} ${time_text} (${current_cycle_display})"
 
     # --- DEBUGGING OUTPUT TO STDERR ---
     echo "DEBUG: pcli_json: '$pcli_json'" >&2
@@ -596,22 +509,8 @@ cmd_daemon() {
         reset_daily_counts # Ensure daily reset even if daemon runs continuously
 
         if [ "$_status" == "Running" ]; then
-            # Capture raw output from pomodoro-cli, including any non-JSON prefix like "Time is up!".
-            # Redirect stderr to /dev/null to prevent any unexpected error messages from pomodoro-cli.
-            local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-
-            # Extract only the JSON part from the raw output.
-            # This sed command finds the first occurrence of '{' and prints everything from that point onwards.
-            # This handles cases where "Time is up!" is on the same line or precedes the JSON.
-            local pcli_status_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-
-            # Add a check to ensure pcli_status_json is valid JSON before proceeding.
-            # If it's not valid, default it to an empty JSON object to prevent 'jq' errors downstream.
-            if ! echo "$pcli_status_json" | jq -e . >/dev/null 2>&1; then
-                echo "DEBUG: Failed to parse pomodoro-cli output as JSON in daemon. Raw output was: '$raw_pcli_output'" >&2
-                echo "DEBUG: Attempted JSON extraction resulted in: '$pcli_status_json'" >&2
-                pcli_status_json='{}' # Fallback to empty JSON if extraction or validation fails
-            fi
+            # Get pomodoro-cli's JSON output
+            local pcli_status_json=$(pomodoro-cli status --format json 2>/dev/null)
 
             # --- NEW DEBUGGING FOR DAEMON'S INTERNAL STATUS CHECK ---
             echo "DEBUG: Daemon loop: Raw pcli_json: '$pcli_status_json'" >&2
@@ -669,13 +568,9 @@ cmd_cleanup() {
     killall pomodoro-cli 2>/dev/null || true
     echo "Cleanup: pomodoro-cli instances killed." >&2
 
-    # Kill any lingering yad windows (if any still exist from previous runs)
+    # Kill any lingering yad windows (important for visual cleanup)
     killall yad 2>/dev/null || true
     echo "Cleanup: Yad windows killed." >&2
-
-    # Kill any lingering swaylock instances (important for the new approach)
-    killall swaylock 2>/dev/null || true
-    echo "Cleanup: Swaylock instances killed." >&2
 
     # Remove state, lock, and PID files for a fresh start (but PRESERVE DAILY_LOG_FILE)
     rm -f "$HOME/.config/pomodoro_cli/pomodoro_state.json"
@@ -685,11 +580,9 @@ cmd_cleanup() {
     rm -f "$HOME/.config/pomodoro_cli/pomodoro_daemon.pid"
     echo "Cleanup: State, lock, and PID files removed. Daily log file preserved." >&2
 
-    # Also clear temporary log files and the new temporary image file
+    # Also clear the temporary yad output log (useful for debugging)
     rm -f /tmp/pomodoro_yad_output.log
-    rm -f /tmp/pomodoro_break_message_*.png # Remove any generated message images
-    rm -f /tmp/pomodoro_obsidian_output.log # NEW: Clean up Obsidian output log
-    echo "Cleanup: Temporary log and image files cleared." >&2
+    echo "Cleanup: /tmp/pomodoro_yad_output.log cleared." >&2
 
     # Optionally, restart Waybar if you're experiencing display issues (uncomment if needed)
     # killall waybar &>/dev/null && waybar &
@@ -705,14 +598,7 @@ cmd_quick_start() {
     cmd_cleanup # Use the robust cleanup
     sleep 1 # Give cleanup a moment
     
-    # Kill and restart Waybar (NEW ADDITION)
-    echo "Restarting Waybar..." >&2
-    killall waybar &>/dev/null || true # Kill all existing Waybar instances, suppress errors
-    sleep 1 # Give Waybar a moment to terminate
-    waybar & # Start Waybar in the background
-    echo "Waybar restarted." >&2
-    sleep 1 # Give Waybar a moment to initialize
-    
+    # Start daemon in background, redirecting its output to log file
     nohup "$0" daemon > /tmp/pomodoro_daemon_output.log 2>&1 &
     echo "Pomodoro daemon launched in background." >&2
     sleep 2 # Give daemon time to fully initialize
@@ -755,8 +641,6 @@ case "$1" in
         cmd_quick_start
         ;;
     run-display-block)
-        # This case is no longer actively used by start_session for breaks,
-        # but kept for completeness in case it's called elsewhere or for debug.
         display_break_block "$2" "$3" "$4" "$5"
         ;;
     *)

@@ -61,7 +61,7 @@ release_lock() {
 # for CREATING a default state file when explicitly told by read_state.
 initialize_state_file() {
     echo "DEBUG: Initializing Pomodoro state file with default values..." >&2
-    # Create the directory if it's not exist
+    # Create the directory if it doesn't exist
     mkdir -p "$(dirname "$STATE_FILE")" || { echo "Error: Could not create directory for state file: $(dirname "$STATE_FILE")" >&2; exit 1; }
     jq -n \
         --arg status "Stopped" \
@@ -128,7 +128,7 @@ write_state() {
 # This function assumes global state variables (_last_run_date, _total_pomodoro_cycles_today,
 # _current_session_in_cycle) hold the values from the day that just ended.
 log_daily_summary() {
-    # Create the directory for the log file if it's not exist
+    # Create the directory for the log file if it doesn't exist
     mkdir -p "$(dirname "$DAILY_LOG_FILE")" || { echo "Error: Could not create directory for log file: $(dirname "$DAILY_LOG_FILE")" >&2; return 1; }
 
     # Format the log entry: Log date, then values for the day that *just ended*
@@ -264,12 +264,12 @@ display_break_block() {
     # Get the PID of the last background command (swaylock)
     local swaylock_pid=$!
 
-    echo "DEBUG: Swaylock launched with PID: $swaylock_pid. Sleeping for "$duration_seconds" seconds." >&2
+    echo "DEBUG: Swaylock launched with PID: $swaylock_pid. Sleeping for $duration_seconds seconds." >&2
 
     # Wait for the duration
     sleep "$duration_seconds"
 
-    echo "DEBUG: Attempting to kill swaylock (PID: "$swaylock_pid")." >&2
+    echo "DEBUG: Attempting to kill swaylock (PID: $swaylock_pid)." >&2
     # Kill swaylock to unlock the screen
     kill -TERM "$swaylock_pid" 2>/dev/null
     # Clean up the temporary image file
@@ -459,7 +459,7 @@ cmd_reset() {
             "session_type": $session_type,
             "total_pomodoro_cycles_today": ($total_cycles | tonumber),
             "current_session_in_cycle": ($current_cycle | tonumber),
-            "last_run_date": $last_date
+            "last_run_date": $last_run_date
         }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
     release_lock # Release lock after this explicit write
     echo "DEBUG: cmd_reset: State written to file (via inline jq)." >&2
@@ -473,22 +473,8 @@ cmd_status() {
     read_state
     reset_daily_counts # Daily reset check for status display
 
-    # Capture raw output from pomodoro-cli, including any non-JSON prefix like "Time is up!".
-    # Redirect stderr to /dev/null to prevent any unexpected error messages from pomodoro-cli.
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-
-    # Extract only the JSON part from the raw output.
-    # This sed command finds the first occurrence of '{' and prints everything from that point onwards.
-    # This handles cases where "Time is up!" is on the same line or precedes the JSON.
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-
-    # Add a check to ensure pcli_json is valid JSON before proceeding.
-    # If it's not valid, default it to an empty JSON object to prevent 'jq' errors downstream.
-    if ! echo "$pcli_json" | jq -e . >/dev/null 2>&1; then
-        echo "DEBUG: Failed to parse pomodoro-cli output as JSON. Raw output was: '$raw_pcli_output'" >&2
-        echo "DEBUG: Attempted JSON extraction resulted in: '$pcli_json'" >&2
-        pcli_json='{}' # Fallback to empty JSON if extraction or validation fails
-    fi
+    # Get pomodoro-cli's JSON output (captures stdout, redirects stderr)
+    local pcli_json=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
 
     local time_text="00:00"
     local tooltip_text="No timer running."
@@ -527,31 +513,8 @@ cmd_status() {
     # Always use _current_session_in_cycle for display, as it holds the correct value
     local current_cycle_display="${_current_session_in_cycle}/4"
 
-    # Determine the icon based on status and session type
-    local icon=""
-    case "$_status" in
-        "Stopped")
-            icon=" 🛑 🛑 🛑  " # Stop sign emoji for stopped state
-            ;;
-        "Paused")
-            icon="⏸️⏸️⏸️ " # Pause button emoji for paused state
-            ;;
-        "Running")
-            case "$_session_type" in
-                "Work")
-                    icon="⚡ ⚡ ⚡ " # High voltage/energy for work
-                    ;;
-                "Break")
-                    icon="☕ ☕ ☕ " # Coffee cup for short break
-                    ;;
-                "Long Break")
-                    icon="🏖️ 🏖️ 🏖️  " # Beach for long break
-                    ;;
-            esac
-            ;;
-    esac
 
-    local full_text="${icon}[[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} ${time_text} (${current_cycle_display})"
+    local full_text="[[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} ${time_text} (${current_cycle_display})"
 
     # --- DEBUGGING OUTPUT TO STDERR ---
     echo "DEBUG: pcli_json: '$pcli_json'" >&2
@@ -596,22 +559,8 @@ cmd_daemon() {
         reset_daily_counts # Ensure daily reset even if daemon runs continuously
 
         if [ "$_status" == "Running" ]; then
-            # Capture raw output from pomodoro-cli, including any non-JSON prefix like "Time is up!".
-            # Redirect stderr to /dev/null to prevent any unexpected error messages from pomodoro-cli.
-            local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-
-            # Extract only the JSON part from the raw output.
-            # This sed command finds the first occurrence of '{' and prints everything from that point onwards.
-            # This handles cases where "Time is up!" is on the same line or precedes the JSON.
-            local pcli_status_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-
-            # Add a check to ensure pcli_status_json is valid JSON before proceeding.
-            # If it's not valid, default it to an empty JSON object to prevent 'jq' errors downstream.
-            if ! echo "$pcli_status_json" | jq -e . >/dev/null 2>&1; then
-                echo "DEBUG: Failed to parse pomodoro-cli output as JSON in daemon. Raw output was: '$raw_pcli_output'" >&2
-                echo "DEBUG: Attempted JSON extraction resulted in: '$pcli_status_json'" >&2
-                pcli_status_json='{}' # Fallback to empty JSON if extraction or validation fails
-            fi
+            # Get pomodoro-cli's JSON output
+            local pcli_status_json=$(pomodoro-cli status --format json 2>/dev/null)
 
             # --- NEW DEBUGGING FOR DAEMON'S INTERNAL STATUS CHECK ---
             echo "DEBUG: Daemon loop: Raw pcli_json: '$pcli_status_json'" >&2
@@ -713,6 +662,7 @@ cmd_quick_start() {
     echo "Waybar restarted." >&2
     sleep 1 # Give Waybar a moment to initialize
     
+    # Start daemon in background, redirecting its output to log file
     nohup "$0" daemon > /tmp/pomodoro_daemon_output.log 2>&1 &
     echo "Pomodoro daemon launched in background." >&2
     sleep 2 # Give daemon time to fully initialize

@@ -1,0 +1,396 @@
+Performing initial cleanup and restarting Waybar...
+Performing comprehensive Pomodoro CLI cleanup...
+Cleanup: Daemon stopped.
+Cleanup: pomodoro-cli instances killed.
+Cleanup: Yad windows killed.
+Cleanup: Swaylock instances killed.
+Cleanup: State, lock, and PID files removed. Daily log file preserved.
+Cleanup: Temporary log and image files cleared.
+Comprehensive cleanup complete.
+Waybar restarted. Please ensure your pomodoro daemon is started (e.g., via 'quick-start') before proceeding with monitoring.
+----------------------------------------------------
+
+
+--> IMPORTANT NEXT STEP <--
+Please run your **'/home/aditya/.config/pomodoro_cli/pomodoro_manager.sh quick-start'** or **'/home/aditya/.config/pomodoro_cli/pomodoro_manager.sh start'** command
+in a **separate terminal** *now* to begin a Pomodoro session that this script will monitor.
+This script will wait for 10 seconds before starting the first log capture.
+---------------------------
+
+[2025-06-20 13:58:44.947] [info] Using configuration file /home/aditya/.config/waybar/config.jsonc
+[2025-06-20 13:58:44.950] [info] Discovered appearance 'dark'
+[2025-06-20 13:58:44.950] [info] Using CSS file /home/aditya/.config/waybar/style.css
+[2025-06-20 13:58:44.958] [info] Hyprland IPC starting
+[2025-06-20 13:58:44.959] [info] Loading persistent workspaces from Hyprland workspace rules
+[2025-06-20 13:58:44.968] [warning] No batteries.
+[2025-06-20 13:58:45.037] [info] Loading persistent workspaces from Hyprland workspace rules
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+[2025-06-20 13:58:45.057] [warning] No batteries.
+[2025-06-20 13:58:45.102] [info] Loading persistent workspaces from Hyprland workspace rules
+[2025-06-20 13:58:45.111] [warning] No batteries.
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+[2025-06-20 13:58:45.509] [info] Bar configured (width: 1920, height: 30) for output: DP-1
+[2025-06-20 13:58:45.509] [info] Bar configured (width: 1920, height: 30) for output: DP-2
+[2025-06-20 13:58:45.509] [info] Bar configured (width: 1080, height: 30) for output: DP-3
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: State file missing, empty or invalid JSON. Attempting to re-initialize.
+DEBUG: Initializing Pomodoro state file with default values...
+DEBUG: State file initialized.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+
+--- LOG CAPTURE AT: 2025-06-20 13:58:54 ---
+---------------------------------
+--- 1. CURRENT POMODORO STATUS OUTPUT ---
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '0'
+DEBUG: _current_session_in_cycle: '0'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[0]] Stopped/None 00:00 (0/4)'
+DEBUG: About to call jq -nc with above arguments.
+{"text":"[[0]] Stopped/None 00:00 (0/4)","class":"stopped","tooltip":"Finished","percentage":0.0,"total_pomodoro_cycles_today":0,"current_session_in_cycle":0}
+
+--- 2. POMODORO STATE FILE CONTENT (/home/aditya/.config/pomodoro_cli/pomodoro_state.json) ---
+{
+  "status": "Stopped",
+  "session_type": "None",
+  "total_pomodoro_cycles_today": 0,
+  "current_session_in_cycle": 0,
+  "last_run_date": "2025-06-20"
+}
+
+--- 3. DAEMON LOG SNIPPET (LAST 20 LINES from /tmp/pomodoro_daemon_output.log) ---
+DEBUG: Pomodoro daemon started. Monitoring sessions...
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='0', current_cycle='0', last_date='2025-06-20'
+
+--- END OF LOG CAPTURE AT: 2025-06-20 13:58:54 ---
+-------------------------------------
+
+
+--- LOG CAPTURE AT: 2025-06-20 13:59:24 ---
+---------------------------------
+--- 1. CURRENT POMODORO STATUS OUTPUT ---
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: _status: 'Stopped'
+DEBUG: _session_type: 'None'
+DEBUG: _total_pomodoro_cycles_today: '1'
+DEBUG: _current_session_in_cycle: '1'
+DEBUG: time_text: '00:00'
+DEBUG: tooltip_text: 'Finished'
+DEBUG: class_name: 'stopped'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[1]] Stopped/None 00:00 (1/4)'
+DEBUG: About to call jq -nc with above arguments.
+{"text":"[[1]] Stopped/None 00:00 (1/4)","class":"stopped","tooltip":"Finished","percentage":0.0,"total_pomodoro_cycles_today":1,"current_session_in_cycle":1}
+
+--- 2. POMODORO STATE FILE CONTENT (/home/aditya/.config/pomodoro_cli/pomodoro_state.json) ---
+{
+  "status": "Stopped",
+  "session_type": "None",
+  "total_pomodoro_cycles_today": 1,
+  "current_session_in_cycle": 1,
+  "last_run_date": "2025-06-20"
+}
+
+--- 3. DAEMON LOG SNIPPET (LAST 20 LINES from /tmp/pomodoro_daemon_output.log) ---
+DEBUG: read_state: Loaded state: status='Running', session_type='Break', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: Daemon loop: Raw pcli_json: '{"text":"00:03","tooltip":"Running\nLeft: 00:03\nElapsed: 00:07 ","class":"running","percentage":30.0}'
+DEBUG: Daemon loop: Parsed pcli_status_class: 'running'
+DEBUG: read_state: Loaded state: status='Running', session_type='Break', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: Daemon loop: Raw pcli_json: '{"text":"00:02","tooltip":"Running\nLeft: 00:02\nElapsed: 00:08 ","class":"running","percentage":20.0}'
+DEBUG: Daemon loop: Parsed pcli_status_class: 'running'
+DEBUG: read_state: Loaded state: status='Running', session_type='Break', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: Daemon loop: Raw pcli_json: '{"text":"00:01","tooltip":"Running\nLeft: 00:01\nElapsed: 00:09 ","class":"running","percentage":10.0}'
+DEBUG: Daemon loop: Parsed pcli_status_class: 'running'
+DEBUG: read_state: Loaded state: status='Running', session_type='Break', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: Daemon loop: Raw pcli_json: '{"text":"00:00","tooltip":"Running\nLeft: 00:00\nElapsed: 00:10 ","class":"running","percentage":0.0}'
+DEBUG: Daemon loop: Parsed pcli_status_class: 'running'
+DEBUG: read_state: Loaded state: status='Running', session_type='Break', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: Daemon loop: Raw pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: Daemon loop: Parsed pcli_status_class: 'finished'
+DEBUG: Daemon detected pomodoro-cli 'finished' class. Triggering transition.
+DEBUG: read_state: Loaded state: status='Running', session_type='Break', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: write_state: Saved state: status='Stopped', session_type='None', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+Break finished. Please start your next Work session manually.
+DEBUG: read_state: Loaded state: status='Stopped', session_type='None', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+
+--- END OF LOG CAPTURE AT: 2025-06-20 13:59:24 ---
+-------------------------------------
+
+
+--- LOG CAPTURE AT: 2025-06-20 13:59:55 ---
+---------------------------------
+--- 1. CURRENT POMODORO STATUS OUTPUT ---
+DEBUG: read_state: Loaded state: status='Running', session_type='Break', total_cycles='2', current_cycle='2', last_date='2025-06-20'
+DEBUG: pcli_json: '{"text":"00:10","tooltip":"Running\nLeft: 00:10\nElapsed: 00:00 ","class":"running","percentage":100.0}'
+DEBUG: _status: 'Running'
+DEBUG: _session_type: 'Break'
+DEBUG: _total_pomodoro_cycles_today: '2'
+DEBUG: _current_session_in_cycle: '2'
+DEBUG: time_text: '00:10'
+DEBUG: tooltip_text: 'Running
+Left: 00:10
+Elapsed: 00:00 '
+DEBUG: class_name: 'running break'
+DEBUG: percentage_val (before final tonumber): '0.0'
+DEBUG: full_text (final display string): '[[2]] Running/Break 00:10 (2/4)'
+DEBUG: About to call jq -nc with above arguments.
+{"text":"[[2]] Running/Break 00:10 (2/4)","class":"running break","tooltip":"Running\nLeft: 00:10\nElapsed: 00:00 ","percentage":100.0,"total_pomodoro_cycles_today":2,"current_session_in_cycle":2}
+
+--- 2. POMODORO STATE FILE CONTENT (/home/aditya/.config/pomodoro_cli/pomodoro_state.json) ---
+{
+  "status": "Running",
+  "session_type": "Break",
+  "total_pomodoro_cycles_today": 2,
+  "current_session_in_cycle": 2,
+  "last_run_date": "2025-06-20"
+}
+
+--- 3. DAEMON LOG SNIPPET (LAST 20 LINES from /tmp/pomodoro_daemon_output.log) ---
+DEBUG: read_state: Loaded state: status='Running', session_type='Work', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: Daemon loop: Raw pcli_json: '{"text":"00:00","tooltip":"Running\nLeft: 00:00\nElapsed: 00:10 ","class":"running","percentage":0.0}'
+DEBUG: Daemon loop: Parsed pcli_status_class: 'running'
+DEBUG: read_state: Loaded state: status='Running', session_type='Work', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: Daemon loop: Raw pcli_json: 'Time is up!
+{"text":"00:-1","tooltip":"Running\nLeft: 00:-1\nElapsed: 00:11 ","class":"running","percentage":-10.0}'
+jq: parse error: Invalid numeric literal at line 1, column 5
+DEBUG: Daemon loop: Parsed pcli_status_class: ''
+DEBUG: read_state: Loaded state: status='Running', session_type='Work', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: Daemon loop: Raw pcli_json: '{"text":"00:00","tooltip":"Finished","class":"finished","percentage":0.0}'
+DEBUG: Daemon loop: Parsed pcli_status_class: 'finished'
+DEBUG: Daemon detected pomodoro-cli 'finished' class. Triggering transition.
+DEBUG: read_state: Loaded state: status='Running', session_type='Work', total_cycles='1', current_cycle='1', last_date='2025-06-20'
+DEBUG: write_state: Saved state: status='Running', session_type='Break', total_cycles='2', current_cycle='2', last_date='2025-06-20'
+DEBUG: Triggering break action for Break: Switching to Workspace 2 and Opening Obsidian note.
+ok
+DEBUG: Switched to Workspace 2.
+DEBUG: Obsidian URI: obsidian://open?vault=obsidian&file=POMODORO%20BREAK%20FILE.md
+DEBUG: Obsidian note launched via xdg-open.
+
+
+--- END OF LOG CAPTURE AT: 2025-06-20 13:59:55 ---
+-------------------------------------
+
+
+--- Logging script terminated ---
+Final log file saved to: [1;32m/home/aditya/.config/pomodoro_cli/pomodoro_continuous_debug_log_20250620_135842.txt[0m
+Please upload this .txt file for analysis.

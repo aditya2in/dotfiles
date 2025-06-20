@@ -3,7 +3,7 @@
   border: none;
   border-radius: 0;
   font-family: "MesloLGS NF", monospace;
-  font-size: 14px; /* Slightly increased global font size for better readability */
+  font-size: 13px; /* Slightly smaller font for a slimmer bar */
   min-height: 0;
 }
 
@@ -11,7 +11,6 @@ window#waybar {
   background-color: rgba(30, 30, 46, 0.9);
   color: #cdd6f4;
   border-radius: 8px;
-  min-height: 30px; /* Increased overall bar height */
 }
 
 /* --- Color definitions (Catppuccin Macchiato Palette) --- */
@@ -30,9 +29,7 @@ window#waybar {
 @define-color green #a6e3a1;
 @define-color lavender #b4befe;
 @define-color yellow #f9e2af;
-@define-color mauve #cba6f7;
-@define-color orange #ffb86c;
-@define-color attention-red #FF0000; /* NEW: Pure red for high-attention breaks */
+@define-color mauve #cba6f7; /* Adding mauve for more color options if needed */
 
 /* --- Module specific styling --- */
 #workspaces button {
@@ -95,20 +92,21 @@ window#waybar {
 
 /* --- Pomodoro Module Specifics --- */
 #custom-pomodoro {
+  /* CHANGED from #custom-pomo */
   /* General styling for the module */
   padding: 0 10px;
   margin: 3px 3px;
   border-radius: 5px;
   font-weight: bold;
-  font-size: 16px; /* Increased font size for the module */
-  min-width: 120px;
+  min-width: 150px; /* Give it a consistent width */
   transition: all 0.3s ease-in-out; /* Smooth transitions for color changes */
   background-color: @mantle; /* A neutral background */
   color: @subtext0; /* A neutral text color */
 }
 
 #custom-pomodoro.stopped {
-  background-color: @red; /* Pinkish red for stopped */
+  /* CHANGED from #custom-pomo.stopped */
+  background-color: @red;
   color: @text;
   border-bottom: 2px solid @red;
   font-weight: bold;
@@ -128,14 +126,16 @@ window#waybar {
   }
 }
 
-/* #custom-pomodoro.paused { */
-/*   background-color: @orange;  Changed from @yellow for more distinct pause */
-/*   color: @base; */
-/*   border-bottom: 2px solid @orange; */
-/*   box-shadow: 0 0 5px @orange; */
-/* } */
-/**/
+#custom-pomodoro.paused {
+  /* CHANGED from #custom-pomo.paused */
+  background-color: @yellow;
+  color: @base;
+  border-bottom: 2px solid @yellow;
+  box-shadow: 0 0 5px @yellow;
+}
+
 #custom-pomodoro.running.work {
+  /* CHANGED from #custom-pomo.running.work */
   background-color: @green;
   color: @base;
   border-bottom: 2px solid @green;
@@ -143,27 +143,31 @@ window#waybar {
 }
 
 #custom-pomodoro.running.break {
-  background-color: @attention-red; /* Pure red for break */
-  color: @text; /* High contrast text */
-  border-bottom: 2px solid @attention-red;
-  box-shadow: 0 0 15px @attention-red; /* More intense shadow */
+  /* CHANGED from #custom-pomo.running.break */
+  background-color: @lavender;
+  color: @crust;
+  border-bottom: 2px solid @lavender;
+  box-shadow: 0 0 5px @lavender;
 }
 
 #custom-pomodoro.running.long-break {
-  background-color: @attention-red; /* Pure red for long break */
-  color: @text; /* High contrast text */
-  border-bottom: 2px solid @attention-red;
-  box-shadow: 0 0 15px @attention-red; /* More intense shadow */
+  /* CHANGED from #custom-pomo.running.long-break */
+  background-color: @blue;
+  color: @crust;
+  border-bottom: 2px solid @blue;
+  box-shadow: 0 0 5px @blue;
 }
 
 /* Styling for the bracketed text parts using Pango markup */
 #custom-pomodoro span.pomo-total {
+  /* CHANGED from #custom-pomo span.pomo-total */
   color: @subtext0;
   font-weight: normal;
   opacity: 0.8;
 }
 
 #custom-pomodoro span.pomo-cycle {
+  /* CHANGED from #custom-pomo span.pomo-cycle */
   color: @subtext0;
   font-weight: normal;
   opacity: 0.8;

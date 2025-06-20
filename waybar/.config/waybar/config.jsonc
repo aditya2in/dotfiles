@@ -9,9 +9,11 @@
     "hyprland/workspaces",
     "hyprland/window"
   ],
-  "modules-center": [],
+  "modules-center": [ 
+    "custom/pomodoro"
+  ],
+
   "modules-right": [
-    "custom/pomodoro",
     "cpu",
     "custom/memory",
     "temperature",
@@ -47,10 +49,7 @@
     "return-type": "json", 
     "tooltip": true,
     "on-click": "pomodoro_manager.sh start",
-    "on-click-right": "pomodoro_manager.sh stop",
-    "on-click-middle": "pomodoro_manager.sh pause || pomodoro_manager.sh resume",
-    "on-scroll-up": "pomodoro_manager.sh reset",
-    "on-scroll-down": "pomodoro_manager.sh reset"  
+    "on-click-right": "pomodoro_manager.sh stop"
   },
 
   "cpu": {
