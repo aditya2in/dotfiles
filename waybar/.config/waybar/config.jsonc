@@ -45,11 +45,11 @@
   "custom/pomodoro": {
     "format": "{}",
     "interval": 1, 
-    "exec": "pomodoro_manager.sh status",
+    "exec": "~/.config/pomodoro_cli/pomodoro_manager.sh status", 
     "return-type": "json", 
     "tooltip": true,
-    "on-click": "pomodoro_manager.sh start",
-    "on-click-right": "pomodoro_manager.sh stop"
+    "on-click": "~/.config/pomodoro_cli/pomodoro_manager.sh start",
+    "on-click-right": "~/.config/pomodoro_cli/pomodoro_manager.sh stop"
   },
 
   "cpu": {

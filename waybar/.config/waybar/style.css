@@ -1,9 +1,8 @@
-/* --- General Waybar styling --- */
 * {
   border: none;
   border-radius: 0;
   font-family: "MesloLGS NF", monospace;
-  font-size: 14px; /* Slightly increased global font size for better readability */
+  font-size: 14px;
   min-height: 0;
 }
 
@@ -11,10 +10,9 @@ window#waybar {
   background-color: rgba(30, 30, 46, 0.9);
   color: #cdd6f4;
   border-radius: 8px;
-  min-height: 30px; /* Increased overall bar height */
+  min-height: 30px;
 }
 
-/* --- Color definitions (Catppuccin Macchiato Palette) --- */
 @define-color base #1e1e2e;
 @define-color mantle #181825;
 @define-color crust #11111b;
@@ -32,9 +30,8 @@ window#waybar {
 @define-color yellow #f9e2af;
 @define-color mauve #cba6f7;
 @define-color orange #ffb86c;
-@define-color attention-red #FF0000; /* NEW: Pure red for high-attention breaks */
+@define-color attention-red #FF0000;
 
-/* --- Module specific styling --- */
 #workspaces button {
   padding: 0 8px;
   background-color: @surface0;
@@ -77,7 +74,6 @@ window#waybar {
   font-weight: bold;
 }
 
-/* --- General styling for right-side modules --- */
 #clock,
 #battery,
 #cpu,
@@ -93,28 +89,52 @@ window#waybar {
   border-radius: 5px;
 }
 
-/* --- Pomodoro Module Specifics --- */
-#custom-pomodoro {
-  /* General styling for the module */
-  padding: 0 10px;
-  margin: 3px 3px;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 16px; /* Increased font size for the module */
-  min-width: 120px;
-  transition: all 0.3s ease-in-out; /* Smooth transitions for color changes */
-  background-color: @mantle; /* A neutral background */
-  color: @subtext0; /* A neutral text color */
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 5px @green;
+  }
+  50% {
+    box-shadow: 0 0 15px @green;
+  }
+  100% {
+    box-shadow: 0 0 5px @green;
+  }
 }
 
-#custom-pomodoro.stopped {
-  background-color: @red; /* Pinkish red for stopped */
-  color: @text;
-  border-bottom: 2px solid @red;
-  font-weight: bold;
-  animation: attention-blink 1.5s ease-in-out infinite alternate;
-  box-shadow: 0 0 15px @red;
-  border-radius: 8px;
+@keyframes pulse-lavender {
+  0% {
+    box-shadow: 0 0 5px @lavender;
+  }
+  50% {
+    box-shadow: 0 0 15px @lavender;
+  }
+  100% {
+    box-shadow: 0 0 5px @lavender;
+  }
+}
+
+@keyframes pulse-blue {
+  0% {
+    box-shadow: 0 0 5px @blue;
+  }
+  50% {
+    box-shadow: 0 0 15px @blue;
+  }
+  100% {
+    box-shadow: 0 0 5px @blue;
+  }
+}
+
+@keyframes pulse-orange {
+  0% {
+    box-shadow: 0 0 5px @orange;
+  }
+  50% {
+    box-shadow: 0 0 15px @orange;
+  }
+  100% {
+    box-shadow: 0 0 5px @orange;
+  }
 }
 
 @keyframes attention-blink {
@@ -128,35 +148,59 @@ window#waybar {
   }
 }
 
-/* #custom-pomodoro.paused { */
-/*   background-color: @orange;  Changed from @yellow for more distinct pause */
-/*   color: @base; */
-/*   border-bottom: 2px solid @orange; */
-/*   box-shadow: 0 0 5px @orange; */
-/* } */
-/**/
+#custom-pomodoro {
+  padding: 0 10px;
+  margin: 3px 3px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 120px;
+  transition: all 0.3s ease-in-out;
+  background-color: @mantle;
+  color: @subtext0;
+}
+
+#custom-pomodoro.stopped {
+  background-color: #f38ba8;
+  color: #cdd6f4;
+  border-bottom: 2px solid #f38ba8;
+  font-weight: bold;
+  animation: attention-blink 1.5s ease-in-out infinite alternate;
+  border-radius: 8px;
+}
+
+#custom-pomodoro.paused {
+  background-color: #ffb86c;
+  color: #1e1e2e;
+  border-bottom: 2px solid #ffb86c;
+  animation: pulse-orange 2s ease-in-out infinite alternate;
+  border-radius: 5px;
+}
+
 #custom-pomodoro.running.work {
-  background-color: @green;
-  color: @base;
-  border-bottom: 2px solid @green;
-  box-shadow: 0 0 5px @green;
+  background-color: #a6e3a1;
+  color: #1e1e2e;
+  border-bottom: 2px solid #a6e3a1;
+  animation: pulse-green 2s ease-in-out infinite;
+  border-radius: 5px;
 }
 
 #custom-pomodoro.running.break {
-  background-color: @attention-red; /* Pure red for break */
-  color: @text; /* High contrast text */
-  border-bottom: 2px solid @attention-red;
-  box-shadow: 0 0 15px @attention-red; /* More intense shadow */
+  background-color: #b4befe;
+  color: #1e1e2e;
+  border-bottom: 2px solid #b4befe;
+  animation: pulse-lavender 2s ease-in-out infinite;
+  border-radius: 5px;
 }
 
 #custom-pomodoro.running.long-break {
-  background-color: @attention-red; /* Pure red for long break */
-  color: @text; /* High contrast text */
-  border-bottom: 2px solid @attention-red;
-  box-shadow: 0 0 15px @attention-red; /* More intense shadow */
+  background-color: #89b4fa;
+  color: #1e1e2e;
+  border-bottom: 2px solid #89b4fa;
+  animation: pulse-blue 2s ease-in-out infinite;
+  border-radius: 5px;
 }
 
-/* Styling for the bracketed text parts using Pango markup */
 #custom-pomodoro span.pomo-total {
   color: @subtext0;
   font-weight: normal;

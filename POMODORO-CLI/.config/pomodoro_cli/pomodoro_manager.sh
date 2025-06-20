@@ -25,9 +25,9 @@ OBSIDIAN_BREAK_NOTE_PATH="POMODORO BREAK FILE.md" # <--- IMPORTANT: This is the 
 # Session Durations for direct use with pomodoro-cli's --duration flag.
 # Use "Xs" for X seconds, "Xm" for X minutes.
 # For testing purposes, set all to 10 seconds ("10s").
-WORK_DURATION="10s"
-SHORT_BREAK_DURATION="10s" # Adjust these for your actual break times
-LONG_BREAK_DURATION="10s" # Adjust these for your actual break times
+WORK_DURATION="25m"
+SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
+LONG_BREAK_DURATION="30m" # Adjust these for your actual break times
 
 # These variables hold our script's internal state.
 # They are declared globally (without 'local') so they can be accessed by all functions.
@@ -36,18 +36,11 @@ _session_type=""
 _total_pomodoro_cycles_today=0
 _current_session_in_cycle=0
 _last_run_date=""
-_debug_enabled=true # NEW: Default to true (enabled)
+
 
 # -----------------------------------------------------------------------------
 # Utility Functions
 # -----------------------------------------------------------------------------
-
-# NEW FUNCTION: debug_echo - Conditionally prints debug messages
-debug_echo() {
-    if $_debug_enabled; then
-        echo "DEBUG: $@" >&2
-    fi
-}
 
 # Function to acquire a lock to prevent multiple instances
 acquire_lock() {
@@ -67,7 +60,7 @@ release_lock() {
 # Initializes the state file with default values. This function is now only responsible
 # for CREATING a default state file when explicitly told by read_state.
 initialize_state_file() {
-    debug_echo "Initializing Pomodoro state file with default values..."
+    echo "DEBUG: Initializing Pomodoro state file with default values..." >&2
     # Create the directory if it's not exist
     mkdir -p "$(dirname "$STATE_FILE")" || { echo "Error: Could not create directory for state file: $(dirname "$STATE_FILE")" >&2; exit 1; }
     jq -n \
@@ -76,16 +69,14 @@ initialize_state_file() {
         --arg total_cycles "0" \
         --arg current_cycle "0" \
         --arg last_date "$(date +%Y-%m-%d)" \
-        --argjson debug_enabled "true" \
         '{
             "status": $status,
             "session_type": $session_type,
             "total_pomodoro_cycles_today": ($total_cycles | tonumber),
             "current_session_in_cycle": ($current_cycle | tonumber),
-            "last_run_date": $last_date,
-            "debug_enabled": $debug_enabled
+            "last_run_date": $last_date
         }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
-    debug_echo "State file initialized."
+    echo "DEBUG: State file initialized." >&2
 }
 
 # Reads the current state from the JSON file into shell variables.
@@ -93,7 +84,7 @@ read_state() {
     acquire_lock # Acquire lock for this operation
     # Check if the state file exists, is not empty, or contains valid JSON
     if [ ! -f "$STATE_FILE" ] || [ ! -s "$STATE_FILE" ] || ! jq -e . >/dev/null 2>&1 < "$STATE_FILE"; then
-        debug_echo "read_state: State file missing, empty or invalid JSON. Attempting to re-initialize."
+        echo "DEBUG: read_state: State file missing, empty or invalid JSON. Attempting to re-initialize." >&2
         initialize_state_file # Call the new initialization function
         # After initialization, the state file now exists with default zeros, so we can read it.
     fi
@@ -104,26 +95,8 @@ read_state() {
     _total_pomodoro_cycles_today=$(jq -r '.total_pomodoro_cycles_today' "$STATE_FILE")
     _current_session_in_cycle=$(jq -r '.current_session_in_cycle' "$STATE_FILE")
     _last_run_date=$(jq -r '.last_run_date' "$STATE_FILE")
-    # Removed: _debug_enabled=$(jq -r '.debug_enabled // true' "$STATE_FILE") # This line caused previous issue.
 
-    # NEW LOGIC: Read debug_enabled explicitly, then handle defaulting in Bash
-    local raw_debug_enabled=$(jq -r '.debug_enabled' "$STATE_FILE")
-    debug_echo "read_state: Raw jq output for .debug_enabled: '$raw_debug_enabled'" # Updated debug
-
-    if [ "$raw_debug_enabled" == "true" ]; then
-        _debug_enabled=true
-    elif [ "$raw_debug_enabled" == "false" ]; then
-        _debug_enabled=false
-    else
-        # Default to true if value is null, empty, or anything unexpected from jq
-        debug_echo "read_state: .debug_enabled was '$raw_debug_enabled' (not 'true' or 'false'). Defaulting to true."
-        _debug_enabled=true
-    fi
-
-    # NEW DEBUG LINE: Verify the STATE_FILE path being used
-    debug_echo "read_state: Using STATE_FILE: '$STATE_FILE'"
-
-    debug_echo "read_state: Loaded state: status='$_status', session_type='$_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$_last_run_date', debug_enabled='$_debug_enabled'"
+    echo "DEBUG: read_state: Loaded state: status='$_status', session_type='$_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$_last_run_date'" >&2
 
     release_lock # Release lock after this operation
     return 0
@@ -140,16 +113,14 @@ write_state() {
         --arg total_cycles "$_total_pomodoro_cycles_today" \
         --arg current_cycle "$_current_session_in_cycle" \
         --arg last_date "$_last_run_date" \
-        --argjson debug_enabled "$_debug_enabled" \
         '{
             "status": $status,
             "session_type": $session_type,
             "total_pomodoro_cycles_today": ($total_cycles | tonumber),
             "current_session_in_cycle": ($current_cycle | tonumber),
-            "last_run_date": $last_date, # FIXED: Changed $last_run_date to $last_date
-            "debug_enabled": $debug_enabled
+            "last_run_date": $last_date
         }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
-    debug_echo "write_state: Saved state: status='$_status', session_type='$_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$_last_run_date', debug_enabled='$_debug_enabled'"
+    echo "DEBUG: write_state: Saved state: status='$_status', session_type='$_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$_last_run_date'" >&2
     release_lock # Release lock after this operation
 }
 
@@ -161,9 +132,9 @@ log_daily_summary() {
     mkdir -p "$(dirname "$DAILY_LOG_FILE")" || { echo "Error: Could not create directory for log file: $(dirname "$DAILY_LOG_FILE")" >&2; return 1; }
 
     # Format the log entry: Log date, then values for the day that *just ended*
-    local log_entry="[$(date +%Y-%m-%d %H:%M:%S)] Daily Summary for $_last_run_date: Total Pomodoros: $_total_pomodoro_cycles_today, Last Cycle Progress: ${_current_session_in_cycle}/4"
+    local log_entry="[$(date "+%Y-%m-%d %H:%M:%S")] Daily Summary for $_last_run_date: Total Pomodoros: $_total_pomodoro_cycles_today, Last Cycle Progress: ${_current_session_in_cycle}/4"
     echo "$log_entry" >> "$DAILY_LOG_FILE"
-    debug_echo "Logged daily summary for $_last_run_date to $DAILY_LOG_FILE"
+    echo "DEBUG: Logged daily summary for $_last_run_date to $DAILY_LOG_FILE" >&2
 }
 
 
@@ -171,9 +142,9 @@ log_daily_summary() {
 reset_daily_counts() {
     local today=$(date +%Y-%m-%d)
     if [ "$_last_run_date" != "$today" ]; then
-        debug_echo "New day detected. Logging previous day's summary before resetting counts."
+        echo "DEBUG: New day detected. Logging previous day's summary before resetting counts." >&2
         log_daily_summary # <--- NEW: Call logging function HERE
-        debug_echo "Resetting daily counts for new day."
+        echo "DEBUG: Resetting daily counts for new day." >&2
         _total_pomodoro_cycles_today=0
         _current_session_in_cycle=0 # This will still reset on a new day, which is probably desired behavior.
         _last_run_date="$today"
@@ -219,7 +190,7 @@ parse_duration_to_minutes_or_seconds() {
     if [ "$total_seconds" -ge 60 ] && [ "$((total_seconds % 60))" -eq 0 ]; then
         echo "$((total_seconds / 60)) minutes"
     else
-        echo "$total_seconds seconds"
+        echo "$total_seconds" seconds
     fi
 }
 
@@ -235,7 +206,7 @@ urlencode() {
             *) printf -v c_encoded '%%%02X' "'$c"
                url_encoded+="$c_encoded" ;;
         esac
-    done
+    done # <--- FIX: Changed '}' to 'done' here
     echo "$url_encoded"
 }
 
@@ -253,7 +224,7 @@ display_break_block() {
     export XAUTHORITY="$xauthority_var"
     export DBUS_SESSION_BUS_ADDRESS="$dbus_address_var"
 
-    debug_echo "display_break_block: DISPLAY=$DISPLAY, XAUTHORITY=$XAUTHORITY, DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS"
+    echo "DEBUG: display_break_block: DISPLAY=$DISPLAY, XAUTHORITY=$XAUTHORITY, DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >&2
     
     local break_duration_text=$(parse_duration_to_minutes_or_seconds "$duration_seconds")
     
@@ -266,7 +237,7 @@ display_break_block() {
     # Temporary image file for the message
     local temp_image="/tmp/pomodoro_break_message_$(date +%s%N).png"
 
-    debug_echo "Generating temporary image for swaylock: $temp_image"
+    echo "DEBUG: Generating temporary image for swaylock: "$temp_image"" >&2
 
     # Generate the PNG image with the message using pango-view
     # -o: output file, --font: font description, --markup: enable pango markup
@@ -282,7 +253,7 @@ display_break_block() {
         # Fallback for swaylock if image generation fails (it will use its default config)
         swaylock --daemonize >/dev/null 2>&1 &
     else
-        debug_echo "Launching swaylock with custom image."
+        echo "DEBUG: Launching swaylock with custom image." >&2
         # Launch swaylock with the generated image as background
         # --daemonize: run in background
         # --image: specify the background image
@@ -293,17 +264,17 @@ display_break_block() {
     # Get the PID of the last background command (swaylock)
     local swaylock_pid=$!
 
-    debug_echo "Swaylock launched with PID: $swaylock_pid. Sleeping for "$duration_seconds" seconds."
+    echo "DEBUG: Swaylock launched with PID: "$swaylock_pid". Sleeping for "$duration_seconds" seconds." >&2
 
     # Wait for the duration
     sleep "$duration_seconds"
 
-    debug_echo "Attempting to kill swaylock (PID: "$swaylock_pid")."
+    echo "DEBUG: Attempting to kill swaylock (PID: "$swaylock_pid")." >&2
     # Kill swaylock to unlock the screen
     kill -TERM "$swaylock_pid" 2>/dev/null
     # Clean up the temporary image file
     rm -f "$temp_image"
-    debug_echo "Swaylock killed and temporary image removed."
+    echo "DEBUG: Swaylock killed and temporary image removed." >&2
 }
 
 
@@ -333,21 +304,21 @@ start_session() {
 
     # Handle break-specific actions
     if [ "$type" == "Break" ] || [ "$type" == "Long Break" ]; then
-        debug_echo "Triggering break action for $type: Switching to Workspace 2 and Opening Obsidian note."
+        echo "DEBUG: Triggering break action for "$type": Switching to Workspace 2 and Opening Obsidian note." >&2
 
         # Switch to Workspace 2 first
         # This assumes hyprctl is in your PATH and configured for your Hyprland session.
         hyprctl dispatch workspace 2
-        debug_echo "Switched to Workspace 2."
+        echo "DEBUG: Switched to Workspace 2." >&2
 
         # Construct the Obsidian URI for the specific note
         local obsidian_uri="obsidian://open?vault=$(urlencode "$OBSIDIAN_VAULT_NAME")&file=$(urlencode "$OBSIDIAN_BREAK_NOTE_PATH")"
-        debug_echo "Obsidian URI: $obsidian_uri"
+        echo "DEBUG: Obsidian URI: "$obsidian_uri"" >&2
 
         # Open the Obsidian note. 'xdg-open' is commonly used on Linux to open URIs/files with default apps.
         # Ensure 'xdg-open' is available and configured to handle 'obsidian://' links.
         nohup xdg-open "$obsidian_uri" >/tmp/pomodoro_obsidian_output.log 2>&1 &
-        debug_echo "Obsidian note launched via xdg-open."
+        echo "DEBUG: Obsidian note launched via xdg-open." >&2
     fi
 
     echo "$notify_msg" >&2 # Ensure this informational message goes to stderr
@@ -390,7 +361,7 @@ handle_transition() {
         echo "Break finished. Please start your next Work session manually." >&2 # Debug/info to terminal
     else
         # This branch is hit if handle_transition is called unexpectedly when _session_type is "None"
-        debug_echo "Warning: handle_transition called with unexpected session_type: $_session_type. Setting to stopped."
+        echo "Warning: handle_transition called with unexpected session_type: "$_session_type". Setting to stopped." >&2
         _status="Stopped"
         _session_type="None"
         write_state
@@ -407,7 +378,7 @@ cmd_start() {
     read_state
     reset_daily_counts # Check for new day before starting
     if [ "$_status" == "Running" ]; then
-        echo "Pomodoro is already running. Current session: $_session_type." >&2 # Redirected to stderr
+        echo "Pomodoro is already running. Current session: "$_session_type"." >&2 # Redirected to stderr
         return 0
     fi
     start_session "Work" "$WORK_DURATION" "Pomodoro Started!" "Time to focus for $(parse_duration_to_minutes_or_seconds "$(parse_duration_to_seconds "$WORK_DURATION")")."
@@ -423,7 +394,7 @@ cmd_pause() {
     pomodoro-cli pause >/dev/null 2>/dev/null
     _status="Paused"
     write_state
-    send_notification "Pomodoro Paused" "Current session: $_session_type."
+    send_notification "Pomodoro Paused" "Current session: "$_session_type"."
     echo "Pomodoro paused." >&2 # Redirected to stderr
 }
 
@@ -437,7 +408,7 @@ cmd_resume() {
     pomodoro-cli resume >/dev/null 2>/dev/null
     _status="Running"
     write_state
-    send_notification "Pomodoro Resumed" "Current session: $_session_type."
+    send_notification "Pomodoro Resumed" "Current session: "$_session_type"."
     echo "Pomodoro resumed." >&2 # Redirected to stderr
 }
 
@@ -458,10 +429,10 @@ cmd_stop() {
 
 # Command to reset the Pomodoro timer and state to default "Stopped" values, but preserves counts.
 cmd_reset() {
-    debug_echo "cmd_reset: Starting reset command."
+    echo "DEBUG: cmd_reset: Starting reset command." >&2
     read_state # Load existing counts from state file into global variables
 
-    debug_echo "cmd_reset: State after read_state: total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle'"
+    echo "DEBUG: cmd_reset: State after read_state: total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"'" >&2
 
     pomodoro-cli reset >/dev/null 2>/dev/null
 
@@ -472,7 +443,7 @@ cmd_reset() {
     local new_session_type="None"
     local new_last_run_date=$(date +%Y-%m-%d)
 
-    debug_echo "cmd_reset: Values to write: status='$new_status', session_type='$new_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$new_last_run_date', debug_enabled='$_debug_enabled'"
+    echo "DEBUG: cmd_reset: Values to write: status='"$new_status"', session_type='"$new_session_type"', total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"', last_date='"$new_last_run_date"'" >&2
 
     # Perform the state write directly here, explicitly passing all required values.
     # This avoids potential issues with global variables implicitly changing before write_state.
@@ -483,17 +454,15 @@ cmd_reset() {
         --arg total_cycles "$_total_pomodoro_cycles_today" \
         --arg current_cycle "$_current_session_in_cycle" \
         --arg last_date "$new_last_run_date" \
-        --argjson debug_enabled "$_debug_enabled" \
         '{
             "status": $status,
             "session_type": $session_type,
             "total_pomodoro_cycles_today": ($total_cycles | tonumber),
             "current_session_in_cycle": ($current_cycle | tonumber),
-            "last_run_date": $last_date, # FIXED: Changed $last_run_date to $last_date
-            "debug_enabled": $debug_enabled
+            "last_run_date": $last_run_date
         }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
     release_lock # Release lock after this explicit write
-    debug_echo "cmd_reset: State written to file (via inline jq)."
+    echo "DEBUG: cmd_reset: State written to file (via inline jq)." >&2
 
     send_notification "Pomodoro Reset" "Timer and current session have been reset to Stopped. Counts are preserved."
     echo "Pomodoro timer and session status have been reset. Counts are preserved." >&2
@@ -516,30 +485,25 @@ cmd_status() {
     # Add a check to ensure pcli_json is valid JSON before proceeding.
     # If it's not valid, default it to an empty JSON object to prevent 'jq' errors downstream.
     if ! echo "$pcli_json" | jq -e . >/dev/null 2>&1; then
-        debug_echo "Failed to parse pomodoro-cli output as JSON. Raw output was: '$raw_pcli_output'"
-        debug_echo "Attempted JSON extraction resulted in: '$pcli_json'"
+        echo "DEBUG: Failed to parse pomodoro-cli output as JSON. Raw output was: '"$raw_pcli_output"'" >&2
+        echo "DEBUG: Attempted JSON extraction resulted in: '"$pcli_json"'" >&2
         pcli_json='{}' # Fallback to empty JSON if extraction or validation fails
     fi
 
+    # Initialize with default values
     local time_text="00:00"
-    local tooltip_text="No timer running."
-    local class_name="stopped" # Default
-    local percentage_val="0" # Initialize as string "0" for jq argument
+    local tooltip_text="No timer running. Click to start work." # More descriptive default tooltip
+    local class_name="stopped" # Default class
+    local percentage_val="0" # Initialize for jq
 
-    if [[ -n "$pcli_json" ]]; then
-        # pomodoro-cli is running, extract its info
-        time_text=$(echo "$pcli_json" | jq -r '.text')
-        tooltip_text=$(echo "$pcli_json" | jq -r '.tooltip')
-        # Safely extract percentage, defaulting to 0 if null or missing.
-        # Convert to a number explicitly to handle cases where it might be "" or "null".
+    # First, handle the pomodoro-cli output if it's running
+    if [[ -n "$pcli_json" && "$pcli_json" != "{}" ]]; then
+        time_text=$(echo "$pcli_json" | jq -r '.text // "00:00"') # Use // to provide default
+        tooltip_text=$(echo "$pcli_json" | jq -r '.tooltip // "No timer running."')
         percentage_val=$(echo "$pcli_json" | jq -r '.percentage // 0 | tonumber // 0')
-        # Ensure percentage_val is not empty string, just in case (belt-and-suspenders)
-        if [ -z "$percentage_val" ]; then
-            percentage_val="0"
-        fi
     fi
 
-    # Determine Waybar class based on our script's state
+    # Then, determine Waybar class based on our script's internal state
     if [ "$_status" == "Running" ]; then
         if [ "$_session_type" == "Work" ]; then
             class_name="running work"
@@ -552,7 +516,10 @@ cmd_status() {
         class_name="paused"
     elif [ "$_status" == "Stopped" ]; then
         class_name="stopped"
-        time_text="00:00" # Ensure 00:00 when explicitly stopped
+        # When stopped, override time_text and tooltip_text for clarity
+        time_text="00:00"
+        tooltip_text="Pomodoro is stopped. Click to start work."
+        percentage_val="0" # Reset percentage when stopped
     fi
 
     # Always use _current_session_in_cycle for display, as it holds the correct value
@@ -585,17 +552,17 @@ cmd_status() {
     local full_text="${icon}[[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} ${time_text} (${current_cycle_display})"
 
     # --- DEBUGGING OUTPUT TO STDERR ---
-    debug_echo "pcli_json: '$pcli_json'"
-    debug_echo "_status: '$_status'"
-    debug_echo "_session_type: '$_session_type'"
-    debug_echo "_total_pomodoro_cycles_today: '$_total_pomodoro_cycles_today'"
-    debug_echo "_current_session_in_cycle: '$_current_session_in_cycle'"
-    debug_echo "time_text: '$time_text'"
-    debug_echo "tooltip_text: '$tooltip_text'"
-    debug_echo "class_name: '$class_name'"
-    debug_echo "percentage_val (before final tonumber): '0.0'"
-    debug_echo "full_text (final display string): '$full_text'"
-    debug_echo "About to call jq -nc with above arguments."
+    echo "DEBUG: pcli_json: '"$pcli_json"'" >&2
+    echo "DEBUG: _status: '"$_status"'" >&2
+    echo "DEBUG: _session_type: '"$_session_type"'" >&2
+    echo "DEBUG: _total_pomodoro_cycles_today: '"$_total_pomodoro_cycles_today"'" >&2
+    echo "DEBUG: _current_session_in_cycle: '"$_current_session_in_cycle"'" >&2
+    echo "DEBUG: time_text: '"$time_text"'" >&2
+    echo "DEBUG: tooltip_text: '"$tooltip_text"'" >&2
+    echo "DEBUG: class_name: '"$class_name"'" >&2
+    echo "DEBUG: percentage_val: '"$percentage_val"'" >&2 # Corrected to show the value
+    echo "DEBUG: full_text (final display string): '"$full_text"'" >&2
+    echo "DEBUG: About to call jq -nc with above arguments." >&2
     # --- END DEBUGGING OUTPUT ---
 
     # Final JSON output for Waybar. This MUST use jq -nc for single-line output.
@@ -620,7 +587,7 @@ cmd_daemon() {
 
     echo $$ > "$DAEMON_PID_FILE" # Store current PID
 
-    debug_echo "Pomodoro daemon started. Monitoring sessions..."
+    echo "DEBUG: Pomodoro daemon started. Monitoring sessions..." >&2
     # Loop indefinitely to check the timer
     while true; do
         read_state # Always read the latest state
@@ -639,13 +606,13 @@ cmd_daemon() {
             # Add a check to ensure pcli_status_json is valid JSON before proceeding.
             # If it's not valid, default it to an empty JSON object to prevent 'jq' errors downstream.
             if ! echo "$pcli_status_json" | jq -e . >/dev/null 2>&1; then
-                debug_echo "Failed to parse pomodoro-cli output as JSON in daemon. Raw output was: '$raw_pcli_output'"
-                debug_echo "Attempted JSON extraction resulted in: '$pcli_status_json'"
+                echo "DEBUG: Failed to parse pomodoro-cli output as JSON in daemon. Raw output was: '"$raw_pcli_output"'" >&2
+                echo "DEBUG: Attempted JSON extraction resulted in: '"$pcli_status_json"'" >&2
                 pcli_status_json='{}' # Fallback to empty JSON if extraction or validation fails
             fi
 
             # --- NEW DEBUGGING FOR DAEMON'S INTERNAL STATUS CHECK ---
-            debug_echo "Daemon loop: Raw pcli_json: '$pcli_status_json'"
+            echo "DEBUG: Daemon loop: Raw pcli_json: '"$pcli_status_json"'" >&2
             # --- END NEW DEBUGGING ---
 
             local pcli_status_class="unknown" # Default if parsing fails or no output
@@ -656,15 +623,15 @@ cmd_daemon() {
                 pcli_status_class=$(echo "$pcli_status_json" | jq -r '.class // "unknown"')
             fi
             # --- NEW DEBUGGING FOR DAEMON'S INTERNAL PARSED CLASS ---
-            debug_echo "Daemon loop: Parsed pcli_status_class: '$pcli_status_class'"
+            echo "DEBUG: Daemon loop: Parsed pcli_status_class: '"$pcli_status_class"'" >&2
             # --- END NEW DEBUGGING ---
 
             # Check if pomodoro-cli has finished its timer based on its 'class'
             if [[ "$pcli_status_class" == "finished" ]]; then
-                debug_echo "Daemon detected pomodoro-cli 'finished' class. Triggering transition."
+                echo "DEBUG: Daemon detected pomodoro-cli 'finished' class. Triggering transition." >&2
                 handle_transition
             elif [[ "$pcli_status_class" == "stopped" ]]; then # Also check for 'stopped' class, as a fallback
-                debug_echo "Daemon detected pomodoro-cli 'stopped' class while script state is 'Running'. Triggering transition."
+                echo "DEBUG: Daemon detected pomodoro-cli 'stopped' class while script state is 'Running'. Triggering transition." >&2
                 handle_transition
             fi
         fi
@@ -677,10 +644,10 @@ cmd_stop_daemon() {
     if [ -f "$DAEMON_PID_FILE" ]; then
         local pid=$(cat "$DAEMON_PID_FILE")
         if kill -TERM "$pid" 2>/dev/null; then
-            echo "Pomodoro daemon (PID: $pid) stopped." >&2
+            echo "Pomodoro daemon (PID: "$pid") stopped." >&2
             rm -f "$DAEMON_PID_FILE"
         else
-            echo "Failed to stop daemon (PID: $pid). It might not be running or permission denied." >&2
+            echo "Failed to stop daemon (PID: "$pid"). It might not be running or permission denied." >&2
         fi
     else
         echo "Pomodoro daemon not running (PID file not found)." >&2
@@ -732,100 +699,29 @@ cmd_cleanup() {
 
 # Command to quickly reset, start daemon, and start a new work session.
 cmd_quick_start() {
-    echo "Performing quick start: Restarting Waybar, starting daemon, then starting work session..." >&2
-    # Removed: cmd_cleanup # User requested to remove this from quick-start
-    sleep 1 # Give cleanup a moment (now a generic initial sleep)
+    echo "Performing quick start: Stopping old daemon, restarting Waybar, starting new daemon, then starting work session..." >&2
     
-    # Kill and restart Waybar (NEW ADDITION)
-    echo "Restarting Waybar..." >&2
+    # Stop the custom daemon if running
+    ~/.config/pomodoro_cli/pomodoro_manager.sh stop-daemon &>/dev/null
+    echo "Quick Start: Old daemon stopped." >&2
+
+    # Kill and restart Waybar
+    echo "Quick Start: Restarting Waybar..." >&2
     killall waybar &>/dev/null || true # Kill all existing Waybar instances, suppress errors
     sleep 1 # Give Waybar a moment to terminate
     waybar & # Start Waybar in the background
-    echo "Waybar restarted." >&2
+    echo "Quick Start: Waybar restarted." >&2
     sleep 1 # Give Waybar a moment to initialize
     
+    # Start daemon in background, redirecting its output to log file
     nohup "$0" daemon > /tmp/pomodoro_daemon_output.log 2>&1 &
-    echo "Pomodoro daemon launched in background." >&2
+    echo "Quick Start: Pomodoro daemon launched in background." >&2
     sleep 2 # Give daemon time to fully initialize
     
     cmd_start # Start the first work session
     echo "Quick start sequence complete." >&2
 }
 
-# NEW FUNCTION: Toggles the debugging output.
-cmd_debug_toggle() {
-    read_state # Load current state, including _debug_enabled
-    if $_debug_enabled; then
-        _debug_enabled=false
-        echo "Pomodoro debugging turned OFF." >&2
-        send_notification "Pomodoro Debugging" "Debugging is now OFF."
-    else
-        _debug_enabled=true
-        echo "Pomodoro debugging turned ON." >&2
-        send_notification "Pomodoro Debugging" "Debugging is now ON."
-    fi
-    write_state # Save the updated debug preference
-}
-
-# NEW FUNCTION: cmd_run_debug_suite - Runs a comprehensive debugging sequence
-cmd_run_debug_suite() {
-    # Define the path to your pomodoro_manager.sh script (this script itself)
-    local current_script="$0"
-    local state_file_path="$STATE_FILE" # Use the defined STATE_FILE path from the script's config
-
-    # Define the output log file name with a timestamp
-    local log_file="pomodoro_debug_log_$(date +%Y%m%d_%H%M%S).txt"
-
-    # --- Start Logging ---
-    echo "----------------------------------------------------" | tee -a "$log_file"
-    echo "Starting Pomodoro Debug Sequence Log" | tee -a "$log_file"
-    echo "Log file location: $(pwd)/$log_file" | tee -a "$log_file"
-    echo "Timestamp: $(date)" | tee -a "$log_file"
-    echo "----------------------------------------------------" | tee -a "$log_file"
-    echo "" | tee -a "$log_file"
-
-    echo ">>> Step 1: Running 'debug-toggle' to ensure debugging is OFF" | tee -a "$log_file"
-    echo "--- Output from debug-toggle (OFF) ---" | tee -a "$log_file"
-    "$current_script" debug-toggle 2>&1 | tee -a "$log_file"
-    echo "" | tee -a "$log_file"
-
-    echo ">>> Step 2: Checking content of state file after debug-toggle (OFF)" | tee -a "$log_file"
-    echo "--- Content of $state_file_path ---" | tee -a "$log_file"
-    cat "$state_file_path" 2>&1 | tee -a "$log_file"
-    echo "" | tee -a "$log_file"
-
-    echo ">>> Step 3: Running 'debug-toggle' to ensure debugging is ON" | tee -a "$log_file"
-    echo "--- Output from debug-toggle (ON) ---" | tee -a "$log_file"
-    "$current_script" debug-toggle 2>&1 | tee -a "$log_file"
-    echo "" | tee -a "$log_file"
-
-    echo ">>> Step 4: Checking content of state file after debug-toggle (ON)" | tee -a "$log_file"
-    echo "--- Content of $state_file_path ---" | tee -a "$log_file"
-    cat "$state_file_path" 2>&1 | tee -a "$log_file"
-    echo "" | tee -a "$log_file"
-
-    echo ">>> Step 5: Running 'status' command to observe debug output" | tee -a "$log_file"
-    echo "--- Output from status command ---" | tee -a "$log_file"
-    "$current_script" status 2>&1 | tee -a "$log_file"
-    echo "" | tee -a "$log_file"
-
-    # Add a short delay and then check the state file one last time to confirm final debug_enabled state
-    echo ">>> Step 6: Waiting 2 seconds and re-checking state file..." | tee -a "$log_file"
-    sleep 2
-    echo "--- Final Content of $state_file_path ---" | tee -a "$log_file"
-    cat "$state_file_path" 2>&1 | tee -a "$log_file"
-    echo "" | tee -a "$log_file"
-
-    echo "----------------------------------------------------" | tee -a "$log_file"
-    echo "Pomodoro Debug Sequence Log Finished" | tee -a "$log_file"
-    echo "Log saved to: $(pwd)/$log_file" | tee -a "$log_file"
-    echo "----------------------------------------------------" | tee -a "$log_file"
-    
-    # Inform the user about the log file location
-    send_notification "Debug Suite Complete" "Debug log saved to $(pwd)/$log_file"
-    echo "Debug sequence complete. Please upload the log file: $(pwd)/$log_file" >&2
-}
-# --- END NEW FUNCTION ---
 
 # Main script logic: parse arguments
 case "$1" in
@@ -859,19 +755,13 @@ case "$1" in
     quick-start)
         cmd_quick_start
         ;;
-    debug-toggle) # NEW: Add debug-toggle command
-        cmd_debug_toggle
-        ;;
-    run-debug-suite) # NEW: Add debug suite command
-        cmd_run_debug_suite
-        ;;
     run-display-block)
         # This case is no longer actively used by start_session for breaks,
         # but kept for completeness in case it's called elsewhere or for debug.
         display_break_block "$2" "$3" "$4" "$5"
         ;;
     *)
-        echo "Usage: $0 {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|debug-toggle|run-debug-suite}" >&2
+        echo "Usage: "$0" {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start}" >&2
         exit 1
         ;;
 esac
