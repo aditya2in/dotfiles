@@ -336,3 +336,5 @@
 2025-06-21 02:01:54 - Pomodoro Session Finished: Type=Work, Cycle=1, Total Today=1
 2025-06-21 02:01:55 - Pomodoro Session Finished: Type=Work, Cycle=1, Total Today=1
 2025-06-21 02:01:55 - Pomodoro Session Finished: Type=Break, Cycle=1, Total Today=1
+[2025-06-21 11:01:19] Daily Summary for null: Total Pomodoros: null, Last Cycle Progress: null/4
+[2025-06-21 11:02:18] Daily Summary for : Total Pomodoros: , Last Cycle Progress: /4

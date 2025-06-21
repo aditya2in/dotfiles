@@ -28,6 +28,7 @@ ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
+alias tt="tmux" # Removed the hidden character 
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment one of the following lines to change the auto-update behavior
@@ -190,6 +191,7 @@ alias c="clear"
 alias e="exit"
 #alias dd="sh nerd-dictation.sh"
 alias dd="~/dotfiles/scripts/toggle_nerd_dictation.sh"
+
 alias gs="git status"
 alias ga="git add ."
 alias gc="git commit -v" 
@@ -199,8 +201,13 @@ alias ww="pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start
 
 alias ta="tmux attach-session -t ArchSession "
 alias td="tmux detach"
-alias tt="tmux"
+alias tt="tmux" 
 
+alias ppp="sh ~/.config/pomodoro_cli/pomodoro_manager.sh quick-start"
+alias ppc="sh ~/.config/pomodoro_cli/pomodoro_manager.sh cleanup"
+alias pp="sh ~/.config/pomodoro_cli/pomodoro_manager.sh start"
+alias pr="sh ~/.config/pomodoro_cli/pomodoro_manager.sh reset"
+alias ps="sh ~/.config/pomodoro_cli/pomodoro_manager.sh stop"
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
