@@ -1,0 +1,8 @@
+🚀 Script will capture logs into: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/current_routine.txt
+Starting Routine retrieval for 2025-06-22 at Sun Jun 22 05:24:54 AM IST 2025
+--------------------------------------------------------
+--------------------------------------------------------
+MUSCLE MEMORY // [[Touch Typing]]
+--------------------------------------------------------
+Script finished at Sun Jun 22 05:24:54 AM IST 2025
+Output captured in: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/current_routine.txt

@@ -25,9 +25,6 @@ CURRENT_ROUTINE_FILE="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/curre
 OBSIDIAN_VAULT_NAME="obsidian" # <--- CONFIRM/REPLACE with your actual Obsidian vault name (e.g., "My Notes")
 OBSIDIAN_BREAK_NOTE_PATH="POMODORO BREAK FILE.md" # <--- IMPORTANT: This is the file you provided
 # ----------------------------------
-# --- NEW: Markdown Log Configuration ---
-MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Analysis.md"
-# -----------------------------------------
 
 # Session Durations for direct use with pomodoro-cli's --duration flag.
 # Use "Xs" for X seconds, "Xm" for X minutes.
@@ -156,18 +153,7 @@ reset_daily_counts() {
     local today=$(date +%Y-%m-%d)
     if [ "$_last_run_date" != "$today" ]; then
         echo "DEBUG: New day detected. Logging previous day's summary before resetting counts." >&2
-        log_daily_summary # <--- NEW: Call existing logging function HERE
-
-        # NEW: Log to Markdown for daily reset event
-        log_session_event \
-            "Daily_Summary" \
-            "Idle" \
-            "0" \
-            "0" \
-            "0" \
-            "Stopped" \
-            "Daily reset - summary of previous day logged."
-
+        log_daily_summary # <--- NEW: Call logging function HERE
         echo "DEBUG: Resetting daily counts for new day." >&2
         _total_pomodoro_cycles_today=0
         _current_session_in_cycle=0 # This will still reset on a new day, which is probably desired behavior.
@@ -216,40 +202,6 @@ parse_duration_to_minutes_or_seconds() {
     else
         echo "$total_seconds" seconds
     fi
-}
-
-# NEW: Logs a detailed session event to the Markdown file.
-# Arguments: Event_Type, Session_Type, Planned_Duration_Seconds, Actual_Duration_Seconds,
-#            Remaining_Time_Seconds, Current_Status_After_Event, Notes/Reason
-log_session_event() {
-    local event_type="$1"
-    local session_type="$2"
-    local planned_duration_sec="$3"
-    local actual_duration_sec="$4"
-    local remaining_time_sec="$5"
-    local status_after_event="$6"
-    local notes_reason="$7"
-
-    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
-    local session_id=$(date "+%Y%m%d%H%M%S") # Simple unique ID
-    local routine_name="$_current_routine_name" # Use the globally updated routine name
-    local total_pomodoros="$_total_pomodoro_cycles_today"
-    local cycle_progress="${_current_session_in_cycle}/4"
-
-    # Create the directory for the log file if it doesn't exist
-    mkdir -p "$(dirname "$MARKDOWN_LOG_FILE")" || { echo "Error: Could not create directory for Markdown log file: $(dirname "$MARKDOWN_LOG_FILE")" >&2; return 1; }
-
-    # Check if file exists and is empty or has only a title, then add header and separator
-    if [ ! -f "$MARKDOWN_LOG_FILE" ] || [ ! -s "$MARKDOWN_LOG_FILE" ] || ! grep -q "|---" "$MARKDOWN_LOG_FILE"; then
-        echo "# Pomodoro Session History" > "$MARKDOWN_LOG_FILE"
-        echo "" >> "$MARKDOWN_LOG_FILE" # Add a blank line for readability
-        echo "| Session_ID | Event_Timestamp | Event_Type | Session_Type | Routine_Name | Planned_Duration_Sec | Actual_Duration_Sec | Remaining_Time_Sec | Status_After_Event | Total_Pomodoros_Today | Current_Cycle_Progress | Notes/Reason |" >> "$MARKDOWN_LOG_FILE"
-        echo "|:----------:|:-----------------:|:----------:|:------------:|:------------:|:--------------------:|:-------------------:|:--------------------:|:------------------:|:---------------------:|:----------------------:|:-------------|" >> "$MARKDOWN_LOG_FILE"
-    fi
-
-    # Append the new data row
-    echo "| "$session_id" | "$timestamp" | "$event_type" | "$session_type" | "$routine_name" | "$planned_duration_sec" | "$actual_duration_sec" | "$remaining_time_sec" | "$status_after_event" | "$total_pomodoros" | "$cycle_progress" | "$notes_reason" |" >> "$MARKDOWN_LOG_FILE"
-    echo "DEBUG: Logged session event to "$MARKDOWN_LOG_FILE": "$event_type" for "$session_type"" >&2
 }
 
 # NEW: URL-encodes a string for use in URIs (e.g., for Obsidian links).
@@ -354,16 +306,6 @@ start_session() {
     _session_type="$type"
     write_state
 
-    # Log the start of the session
-    log_session_event \
-        "Start" \
-        "$type" \
-        "$(parse_duration_to_seconds "$duration_str")" \
-        "0" \
-        "$(parse_duration_to_seconds "$duration_str")" \
-        "Running" \
-        "User or auto-initiated session."
-
     # Start pomodoro-cli with the specified duration
     # Redirect stderr to /dev/null to prevent any unexpected output from pomodoro-cli
     nohup pomodoro-cli start --duration "$duration_str" >/dev/null 2>/dev/null &
@@ -404,31 +346,8 @@ handle_transition() {
         unit_label="seconds"
     fi
 
-    # Retrieve current pomodoro-cli status for actual elapsed/remaining time
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local actual_duration_at_finish=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
-    local remaining_duration_at_finish=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-
-    # Planned duration of the session that just finished
-    local planned_duration_of_finished_session_sec=0
-    case "$_session_type" in
-        "Work") planned_duration_of_finished_session_sec="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_of_finished_session_sec="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_of_finished_session_sec="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
     if [ "$_session_type" == "Work" ]; then
-        # Log the completion of the Work session
-        log_session_event \
-            "End (Completed)" \
-            "Work" \
-            "$planned_duration_of_finished_session_sec" \
-            "$actual_duration_at_finish" \
-            "$remaining_duration_at_finish" \
-            "Running" \
-            "Work session completed, transitioning to break."
-
+        # This branch: Work session just finished. Automatically start a Break.
         _total_pomodoro_cycles_today=$((_total_pomodoro_cycles_today + 1))
         _current_session_in_cycle=$((_current_session_in_cycle + 1))
 
@@ -440,16 +359,8 @@ handle_transition() {
             start_session "Break" "$SHORT_BREAK_DURATION" "Take a $(parse_duration_to_minutes_or_seconds "$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")") break."
         fi
     elif [ "$_session_type" == "Break" ] || [ "$_session_type" == "Long Break" ]; then
-        # Log the completion of the Break session
-        log_session_event \
-            "End (Completed)" \
-            "$_session_type" \
-            "$planned_duration_of_finished_session_sec" \
-            "$actual_duration_at_finish" \
-            "$remaining_duration_at_finish" \
-            "Stopped" \
-            "Break completed, awaiting manual work start."
-
+        # This branch: Break session just finished. Do NOT automatically start Work.
+        # Instead, set state to Stopped/None and notify user to manually start Work.
         if [ "$_current_session_in_cycle" -eq 4 ]; then
             _current_session_in_cycle=0 # Reset cycle count after the long break, preparing for next set of 4
         fi
@@ -465,15 +376,6 @@ handle_transition() {
         _session_type="None"
         write_state
         send_notification "Pomodoro Session Ended" "No new session started automatically. Use 'start' to begin."
-        # Log this unexpected state change
-        log_session_event \
-            "End (Cancelled)" \
-            "None" \
-            "0" \
-            "0" \
-            "0" \
-            "Stopped" \
-            "Unexpected transition to 'None' session type."
     fi
 }
 
@@ -525,34 +427,9 @@ cmd_pause() {
         echo "Pomodoro is not running. Cannot pause." >&2 # Redirected to stderr
         return 0
     fi
-
-    # Get current status for elapsed/remaining time before pausing
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local elapsed_on_pause=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
-    local remaining_on_pause=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-    
-    local planned_duration_sec_on_pause=0
-    case "$_session_type" in
-        "Work") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
     pomodoro-cli pause >/dev/null 2>/dev/null
     _status="Paused"
     write_state
-
-    # Log the pause event
-    log_session_event \
-        "Paused" \
-        "$_session_type" \
-        "$planned_duration_sec_on_pause" \
-        "$elapsed_on_pause" \
-        "$remaining_on_pause" \
-        "Paused" \
-        "User manually paused session."
-
     send_notification "Pomodoro Paused" "Current session: "$_session_type"."
     echo "Pomodoro paused." >&2 # Redirected to stderr
 }
@@ -564,34 +441,9 @@ cmd_resume() {
         echo "Pomodoro is not paused. Cannot resume." >&2 # Redirected to stderr
         return 0
     fi
-
-    # Retrieve remaining time from pomodoro-cli or stored state (if available)
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local remaining_on_resume=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-
-    local planned_duration_sec_on_resume=0
-    case "$_session_type" in
-        "Work") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
-
     pomodoro-cli resume >/dev/null 2>/dev/null
     _status="Running"
     write_state
-
-    # Log the resume event
-    log_session_event \
-        "Resumed" \
-        "$_session_type" \
-        "$planned_duration_sec_on_resume" \
-        "0" \
-        "$remaining_on_resume" \
-        "Running" \
-        "User manually resumed session."
-
     send_notification "Pomodoro Resumed" "Current session: "$_session_type"."
     echo "Pomodoro resumed." >&2 # Redirected to stderr
 }
@@ -603,36 +455,10 @@ cmd_stop() {
         echo "Pomodoro is already stopped." >&2 # Redirected to stderr
         return 0
     fi
-
-    # Get current status for elapsed/remaining time before stopping
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local elapsed_on_stop=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
-    local remaining_on_stop=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-
-    local session_type_at_stop="$_session_type" # Capture before it's set to None
-    local planned_duration_sec_at_stop=0
-    case "$session_type_at_stop" in
-        "Work") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
     pomodoro-cli stop >/dev/null 2>/dev/null
     _status="Stopped"
     _session_type="None" # Reset session type on full stop
     write_state
-
-    # Log the stop event
-    log_session_event \
-        "End (Stopped)" \
-        "$session_type_at_stop" \
-        "$planned_duration_sec_at_stop" \
-        "$elapsed_on_stop" \
-        "$remaining_on_stop" \
-        "Stopped" \
-        "User manually stopped session."
-
     send_notification "Pomodoro Stopped" "Pomodoro timer has been stopped."
     echo "Pomodoro stopped." >&2 # Redirected to stderr
 }
@@ -641,20 +467,6 @@ cmd_stop() {
 cmd_reset() {
     echo "DEBUG: cmd_reset: Starting reset command." >&2
     read_state # Load existing counts from state file into global variables
-
-    # Get current status for elapsed/remaining time before reset (if any session was running)
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local elapsed_on_reset=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
-    local remaining_on_reset=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-
-    local session_type_at_reset="$_session_type" # Capture before it's set to None
-    local planned_duration_sec_at_reset=0
-    case "$session_type_at_reset" in
-        "Work") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
 
     echo "DEBUG: cmd_reset: State after read_state: total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"'" >&2
 
@@ -682,21 +494,11 @@ cmd_reset() {
             "status": $status,
             "session_type": $session_type,
             "total_pomodoro_cycles_today": ($total_cycles | tonumber),
-            "current_session_in_cycle": ($current_cycle | tonumber),
+            "current_session_in_cycle": ($current_session_in_cycle | tonumber),
             "last_run_date": $last_run_date
         }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
     release_lock # Release lock after this explicit write
     echo "DEBUG: cmd_reset: State written to file (via inline jq)." >&2
-
-    # Log the reset event
-    log_session_event \
-        "End (Cancelled)" \
-        "$session_type_at_reset" \
-        "$planned_duration_sec_at_reset" \
-        "$elapsed_on_reset" \
-        "$remaining_on_reset" \
-        "Stopped" \
-        "User manually reset session. Counts preserved."
 
     send_notification "Pomodoro Reset" "Timer and current session have been reset to Stopped. Counts are preserved."
     echo "Pomodoro timer and session status have been reset. Counts are preserved." >&2
@@ -908,27 +710,7 @@ cmd_cleanup() {
     killall swaylock 2>/dev/null || true
     echo "Cleanup: Swaylock instances killed." >&2
 
-    # Capture current state before cleanup for logging purposes if a session was active
-    local current_session_type_on_cleanup="$_session_type"
-    local planned_duration_sec_on_cleanup=0
-    case "$current_session_type_on_cleanup" in
-        "Work") planned_duration_sec_on_cleanup="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_on_cleanup="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_on_cleanup="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
-    # Attempt to get actual elapsed/remaining only if a session was running/paused
-    local elapsed_on_cleanup=0
-    local remaining_on_cleanup=0
-    if [[ "$_status" == "Running" || "$_status" == "Paused" ]]; then
-        local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-        local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-        elapsed_on_cleanup=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
-        remaining_on_cleanup=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-    fi
-
-
-    # Remove state, lock, and PID files for a fresh start (but PRESERVE DAILY_LOG_FILE and MARKDOWN_LOG_FILE)
+    # Remove state, lock, and PID files for a fresh start (but PRESERVE DAILY_LOG_FILE)
     rm -f "$HOME/.config/pomodoro_cli/pomodoro_state.json"
     # The line below is intentionally commented out to preserve the daily log file.
     # rm -f "$HOME/.config/pomodoro_cli/pomodoro_daily_log.txt"
@@ -941,16 +723,6 @@ cmd_cleanup() {
     rm -f /tmp/pomodoro_break_message_*.png # Remove any generated message images
     rm -f /tmp/pomodoro_obsidian_output.log # NEW: Clean up Obsidian output log
     echo "Cleanup: Temporary log and image files cleared." >&2
-
-    # Log the cleanup event (after most cleanup actions, but before potential Waybar restart)
-    log_session_event \
-        "System_Cleanup" \
-        "$current_session_type_on_cleanup" \
-        "$planned_duration_sec_on_cleanup" \
-        "$elapsed_on_cleanup" \
-        "$remaining_on_cleanup" \
-        "Stopped" \
-        "Comprehensive cleanup initiated. Session (if any) cancelled."
 
     # Optionally, restart Waybar if you're experiencing display issues (uncomment if needed)
     # killall waybar &>/dev/null && waybar &

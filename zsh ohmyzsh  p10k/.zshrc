@@ -249,3 +249,4 @@ export PATH="$HOME/.local/bin:$PATH"
 #export GOOGLE_GENERATIVE_AI_API_KEY="AIzaSyB-p4-hJkbg_2xe6noD-E9w4r5G2RsDQuk"
 # Pomodoro CLI Manager
 export PATH="$HOME/.config/pomodoro_cli:$PATH"
+export PATH="/home/aditya/.config/pomodoro_cli/RoutineTaskSubTaskScripts:$PATH"
