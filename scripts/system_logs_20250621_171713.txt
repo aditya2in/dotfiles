@@ -1,0 +1,760 @@
+--- System Log Extraction Start: 20250621_171713 ---
+
+--- Kernel Messages (dmesg) ---
+-------------------------------
+dmesg: read kernel buffer failed: Operation not permitted
+
+--- End Kernel Messages ---
+
+--- Systemd Journal Logs (journalctl --since "7 hours ago") ---
+--------------------------------------------------------------------------------
+Jun 21 10:17:42 archlinux /usr/lib/gdm-wayland-session[623]: dbus-daemon[623]: [session uid=120 pid=623 pidfd=5] Failed to activate service 'org.freedesktop.secrets': timed out (service_start_timeout=120000ms)
+Jun 21 10:18:48 archlinux gdm-password][1105]: gkr-pam: unable to locate daemon control file
+Jun 21 10:18:48 archlinux gdm-password][1105]: gkr-pam: stashed password to try later in open session
+Jun 21 10:18:48 archlinux gdm-password][1105]: pam_unix(gdm-password:session): session opened for user aditya(uid=1000) by aditya(uid=0)
+Jun 21 10:18:48 archlinux systemd-logind[499]: New session 3 of user aditya.
+Jun 21 10:18:48 archlinux systemd[1]: Created slice User Slice of UID 1000.
+Jun 21 10:18:48 archlinux systemd[1]: Starting User Runtime Directory /run/user/1000...
+Jun 21 10:18:48 archlinux systemd[1]: Finished User Runtime Directory /run/user/1000.
+Jun 21 10:18:48 archlinux systemd[1]: Starting User Manager for UID 1000...
+Jun 21 10:18:48 archlinux (systemd)[1117]: pam_warn(systemd-user:setcred): function=[pam_sm_setcred] flags=0x8002 service=[systemd-user] terminal=[] user=[aditya] ruser=[<unknown>] rhost=[<unknown>]
+Jun 21 10:18:48 archlinux (systemd)[1117]: pam_unix(systemd-user:session): session opened for user aditya(uid=1000) by aditya(uid=0)
+Jun 21 10:18:48 archlinux systemd-logind[499]: New session 4 of user aditya.
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on #, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on Optional,, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on but, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on good, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on if, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on ydotool, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on depends, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on on, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on Wayland, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on being, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:7: Failed to add dependency on up, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:8: Failed to add dependency on #, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:8: Failed to add dependency on Optional,, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:8: Failed to add dependency on same, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: /home/aditya/.config/systemd/user/ydotool.service:8: Failed to add dependency on reason, ignoring: Invalid argument
+Jun 21 10:18:48 archlinux systemd[1117]: Queued start job for default target Main User Target.
+Jun 21 10:18:48 archlinux systemd[1117]: Created slice User Application Slice.
+Jun 21 10:18:48 archlinux systemd[1117]: Created slice User Core Session Slice.
+Jun 21 10:18:48 archlinux systemd[1117]: Started Submitting pending crash events (file monitor).
+Jun 21 10:18:48 archlinux systemd[1117]: Cleanup lingering KCrash metadata was skipped because of an unmet condition check (ConditionPathExistsGlob=/home/aditya/.cache/kcrash-metadata/*.ini).
+Jun 21 10:18:48 archlinux systemd[1117]: Submitting pending crash events was skipped because of an unmet condition check (ConditionPathExistsGlob=/home/aditya/.cache/drkonqi/sentry-envelopes/*).
+Jun 21 10:18:48 archlinux systemd[1117]: Reached target Paths.
+Jun 21 10:18:48 archlinux systemd[1117]: Reached target Timers.
+Jun 21 10:18:48 archlinux systemd[1117]: Starting D-Bus User Message Bus Socket...
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on GnuPG network certificate management daemon.
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on Socket to launch DrKonqi for a systemd-coredump crash.
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on GNOME Keyring daemon.
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on GnuPG cryptographic agent and passphrase cache (access for web browsers).
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on GnuPG cryptographic agent and passphrase cache (restricted).
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on GnuPG cryptographic agent (ssh-agent emulation).
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on GnuPG cryptographic agent and passphrase cache.
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on GnuPG public key management service.
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on p11-kit server.
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on PipeWire PulseAudio.
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on PipeWire Multimedia System Sockets.
+Jun 21 10:18:48 archlinux systemd[1117]: Listening on D-Bus User Message Bus Socket.
+Jun 21 10:18:48 archlinux systemd[1117]: Reached target Sockets.
+Jun 21 10:18:48 archlinux systemd[1117]: Starting D-Bus User Message Bus...
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Service file '/usr/share//dbus-1/services/org.kde.dolphin.FileManager1.service' is not named after the D-Bus name 'org.freedesktop.FileManager1'.
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Ignoring duplicate name 'org.freedesktop.FileManager1' in service file '/usr/share//dbus-1/services/org.kde.dolphin.FileManager1.service'
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Policy to allow eavesdropping in /usr/share/dbus-1/session.conf +31: Eavesdropping is deprecated and ignored
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Policy to allow eavesdropping in /usr/share/dbus-1/session.conf +33: Eavesdropping is deprecated and ignored
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Service file '/usr/share//dbus-1/services/org.kde.kscreen.service' is not named after the D-Bus name 'org.kde.KScreen'.
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Service file '/usr/share//dbus-1/services/org.kde.plasma.Notifications.service' is not named after the D-Bus name 'org.freedesktop.Notifications'.
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Service file '/usr/share//dbus-1/services/org.knopwob.dunst.service' is not named after the D-Bus name 'org.freedesktop.Notifications'.
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Ignoring duplicate name 'org.freedesktop.Notifications' in service file '/usr/share//dbus-1/services/org.knopwob.dunst.service'
+Jun 21 10:18:48 archlinux systemd[1117]: Started D-Bus User Message Bus.
+Jun 21 10:18:48 archlinux systemd[1117]: Reached target Basic System.
+Jun 21 10:18:48 archlinux systemd[1117]: Cleanup lingering KCrash metadata was skipped because of an unmet condition check (ConditionPathExistsGlob=/home/aditya/.cache/kcrash-metadata/*.ini).
+Jun 21 10:18:48 archlinux systemd[1]: Started User Manager for UID 1000.
+Jun 21 10:18:48 archlinux systemd[1117]: Started Nerd Dictation Daemon.
+Jun 21 10:18:48 archlinux systemd[1]: Started Session 3 of User aditya.
+Jun 21 10:18:48 archlinux systemd[1117]: Started PipeWire Multimedia Service.
+Jun 21 10:18:48 archlinux systemd[1117]: Started Multimedia Service Session Manager.
+Jun 21 10:18:48 archlinux dbus-broker-launch[1127]: Ready
+Jun 21 10:18:48 archlinux systemd[1117]: Started PipeWire PulseAudio.
+Jun 21 10:18:48 archlinux systemd[1117]: Starting Update XDG user dir configuration...
+Jun 21 10:18:48 archlinux systemd[1117]: Started ydotool daemon.
+Jun 21 10:18:48 archlinux systemd[1117]: Started GNOME Keyring daemon.
+Jun 21 10:18:48 archlinux systemd[1117]: Finished Update XDG user dir configuration.
+Jun 21 10:18:48 archlinux systemd[1117]: Reached target Main User Target.
+Jun 21 10:18:48 archlinux systemd[1117]: Startup finished in 257ms.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 7 threads of 4 processes of 1 users.
+Jun 21 10:18:48 archlinux gnome-keyring-daemon[1136]: gnome-keyring-daemon: no process capabilities, insecure memory might get used
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 7 threads of 4 processes of 1 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 7 threads of 4 processes of 1 users.
+Jun 21 10:18:48 archlinux kernel: input: ydotoold virtual device as /devices/virtual/input/input29
+Jun 21 10:18:48 archlinux gnome-keyring-daemon[1136]: GNOME_KEYRING_CONTROL=/run/user/1000/keyring
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Successfully made thread 1130 of process 1130 owned by '1000' high priority at nice level -11.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 8 threads of 5 processes of 2 users.
+Jun 21 10:18:48 archlinux gdm-password][1105]: gkr-pam: unlocked login keyring
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Successfully made thread 1143 of process 1130 owned by '1000' RT at priority 20.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 9 threads of 5 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 9 threads of 5 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 9 threads of 5 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 9 threads of 5 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 9 threads of 5 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 9 threads of 5 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 9 threads of 5 processes of 2 users.
+Jun 21 10:18:48 archlinux systemd-logind[499]: Watching system buttons on /dev/input/event18 (ydotoold virtual device)
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Successfully made thread 1132 of process 1132 owned by '1000' high priority at nice level -11.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 10 threads of 6 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Successfully made thread 1133 of process 1133 owned by '1000' high priority at nice level -11.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 11 threads of 7 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Successfully made thread 1151 of process 1133 owned by '1000' RT at priority 20.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 12 threads of 7 processes of 2 users.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Successfully made thread 1155 of process 1132 owned by '1000' RT at priority 20.
+Jun 21 10:18:48 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:48 archlinux wireplumber[1132]: wp-device: SPA handle 'api.libcamera.enum.manager' could not be loaded; is it installed?
+Jun 21 10:18:48 archlinux wireplumber[1132]: s-monitors-libcamera: PipeWire's libcamera SPA plugin is missing or broken. Some camera types may not be supported.
+Jun 21 10:18:48 archlinux kernel: rfkill: input handler enabled
+Jun 21 10:18:48 archlinux gsd-media-keys[797]: Unable to get default sink
+Jun 21 10:18:48 archlinux gsd-media-keys[797]: Unable to get default source
+Jun 21 10:18:50 archlinux wireplumber[1132]: spa.bluez5: BlueZ system service is not available
+Jun 21 10:18:52 archlinux systemd[1117]: Starting User preferences database...
+Jun 21 10:18:52 archlinux systemd[1117]: Started User preferences database.
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1180]: xkbcommon: ERROR: [XKB-595] Unrecognized RMLVO option "numlock:on" was ignored
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1778]: The XKEYBOARD keymap compiler (xkbcomp) reports:
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1778]: > Warning:          Could not resolve keysym XF86RefreshRateToggle
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1778]: > Warning:          Could not resolve keysym XF86Accessibility
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1778]: > Warning:          Could not resolve keysym XF86DoNotDisturb
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1778]: Errors from xkbcomp are not fatal to the X server
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1779]: The XKEYBOARD keymap compiler (xkbcomp) reports:
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1779]: > Warning:          Unsupported maximum keycode 708, clipping.
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1779]: >                   X11 cannot support keycodes above 255.
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1779]: > Warning:          Could not resolve keysym XF86RefreshRateToggle
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1779]: > Warning:          Could not resolve keysym XF86Accessibility
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1779]: > Warning:          Could not resolve keysym XF86DoNotDisturb
+Jun 21 10:18:52 archlinux /usr/lib/gdm-wayland-session[1779]: Errors from xkbcomp are not fatal to the X server
+Jun 21 10:18:54 archlinux /usr/lib/gdm-wayland-session[1810]: syntax error: line 1 of stdin
+Jun 21 10:18:54 archlinux /usr/lib/gdm-wayland-session[1810]: Errors encountered in stdin; not compiled.
+Jun 21 10:18:54 archlinux /usr/lib/gdm-wayland-session[1771]: [xwayland ei] Setup failed: No such file or directory
+Jun 21 10:18:54 archlinux /usr/lib/gdm-wayland-session[1771]: [xwayland ei] EI setup failed
+Jun 21 10:18:54 archlinux kernel: logitech-hidpp-device 0003:046D:4069.0009: HID++ 4.5 device connected.
+Jun 21 10:18:55 archlinux logid[557]: [INFO] Device found: Wireless Mouse MX Master 2S on /dev/hidraw2:1
+Jun 21 10:18:55 archlinux systemd[1117]: Starting Accessibility services bus...
+Jun 21 10:18:55 archlinux systemd[1117]: Started Accessibility services bus.
+Jun 21 10:18:55 archlinux dbus-broker-launch[1827]: Ready
+Jun 21 10:18:55 archlinux systemd[1117]: Starting Virtual filesystem service...
+Jun 21 10:18:55 archlinux systemd[1117]: Started Virtual filesystem service.
+Jun 21 10:18:56 archlinux systemd[1117]: Starting Portal service...
+Jun 21 10:18:56 archlinux systemd[1117]: Starting sandboxed app permission store...
+Jun 21 10:18:56 archlinux systemd[1117]: Started sandboxed app permission store.
+Jun 21 10:18:56 archlinux systemd[1117]: Starting flatpak document portal service...
+Jun 21 10:18:57 archlinux systemd[1117]: Started flatpak document portal service.
+Jun 21 10:18:57 archlinux systemd[1117]: Starting Portal service (GTK/GNOME implementation)...
+Jun 21 10:18:57 archlinux systemd[1117]: Created slice Slice /app/dbus-:1.20-org.a11y.atspi.Registry.
+Jun 21 10:18:57 archlinux systemd[1117]: Started dbus-:1.20-org.a11y.atspi.Registry@0.service.
+Jun 21 10:18:57 archlinux systemd[1117]: Started Portal service (GTK/GNOME implementation).
+Jun 21 10:18:57 archlinux at-spi2-registryd[1920]: SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux systemd[1117]: Starting Portal service (Hyprland implementation)...
+Jun 21 10:18:57 archlinux systemd[1117]: Started Portal service (Hyprland implementation).
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux rtkit-daemon[668]: Supervising 13 threads of 7 processes of 2 users.
+Jun 21 10:18:57 archlinux systemd[1117]: Started Portal service.
+Jun 21 10:18:58 archlinux gnome-shell[636]: Connection to xwayland lost
+Jun 21 10:18:58 archlinux gnome-shell[636]: Xwayland terminated, exiting since it was mandatory
+Jun 21 10:18:58 archlinux gnome-shell[636]: JS ERROR: Gio.IOErrorEnum: Xwayland exited unexpectedly
+                                            @resource:///org/gnome/shell/ui/init.js:21:20
+Jun 21 10:18:58 archlinux gnome-shell[636]: Execution of main.js threw exception: Module resource:///org/gnome/shell/ui/init.js threw an exception
+Jun 21 10:18:58 archlinux systemd[1]: run-user-120-doc.mount: Deactivated successfully.
+Jun 21 10:18:58 archlinux systemd-logind[499]: Session 1 logged out. Waiting for processes to exit.
+Jun 21 10:18:58 archlinux xdg-document-po[1018]: Error releasing name org.freedesktop.portal.Documents: The connection is closed
+Jun 21 10:18:58 archlinux polkitd[579]: Unregistered Authentication Agent for unix-session:1 (system bus name :1.19, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 10:18:58 archlinux systemd[1]: session-1.scope: Deactivated successfully.
+Jun 21 10:18:58 archlinux systemd[1]: session-1.scope: Consumed 4.853s CPU time, 741.9M memory peak.
+Jun 21 10:18:58 archlinux systemd-logind[499]: Removed session 1.
+Jun 21 10:18:59 archlinux gdm[556]: Gdm: Child process -615 was already dead.
+Jun 21 10:19:02 archlinux dbus-broker-launch[487]: Activation request for 'org.bluez' failed: The systemd unit 'dbus-org.bluez.service' could not be found.
+Jun 21 10:19:02 archlinux kernel: warning: `ThreadPoolForeg' uses wireless extensions which will stop working for Wi-Fi 7 hardware; use nl80211
+Jun 21 10:19:02 archlinux gnome-keyring-daemon[1136]: asked to register item /org/freedesktop/secrets/collection/login/1, but it's already registered
+Jun 21 10:19:02 archlinux gnome-keyring-d[1136]: asked to register item /org/freedesktop/secrets/collection/login/1, but it's already registered
+Jun 21 10:19:04 archlinux systemd[1117]: Started app-org.chromium.Chromium-1791.scope.
+Jun 21 10:19:09 archlinux systemd[1]: Stopping User Manager for UID 120...
+Jun 21 10:19:09 archlinux systemd[604]: Activating special unit Exit the Session...
+Jun 21 10:19:09 archlinux systemd[604]: Stopped target Main User Target.
+Jun 21 10:19:09 archlinux systemd[604]: Stopping GNOME Keyring daemon...
+Jun 21 10:19:09 archlinux systemd[604]: Stopping PipeWire PulseAudio...
+Jun 21 10:19:09 archlinux systemd[604]: Stopped GNOME Keyring daemon.
+Jun 21 10:19:09 archlinux systemd[604]: Stopped PipeWire PulseAudio.
+Jun 21 10:19:09 archlinux systemd[604]: Stopping Multimedia Service Session Manager...
+Jun 21 10:19:09 archlinux systemd[604]: Stopped Multimedia Service Session Manager.
+Jun 21 10:19:09 archlinux systemd[604]: Stopping PipeWire Multimedia Service...
+Jun 21 10:19:09 archlinux systemd[604]: Stopped PipeWire Multimedia Service.
+Jun 21 10:19:09 archlinux systemd[604]: Stopped target Basic System.
+Jun 21 10:19:09 archlinux systemd[604]: Stopped target Paths.
+Jun 21 10:19:09 archlinux systemd[604]: Stopped Submitting pending crash events (file monitor).
+Jun 21 10:19:09 archlinux systemd[604]: Stopped target Sockets.
+Jun 21 10:19:09 archlinux systemd[604]: Stopped target Timers.
+Jun 21 10:19:09 archlinux systemd[604]: Closed GnuPG network certificate management daemon.
+Jun 21 10:19:09 archlinux systemd[604]: Closed GNOME Keyring daemon.
+Jun 21 10:19:09 archlinux systemd[604]: Closed GnuPG cryptographic agent and passphrase cache (access for web browsers).
+Jun 21 10:19:09 archlinux systemd[604]: Closed GnuPG cryptographic agent and passphrase cache (restricted).
+Jun 21 10:19:09 archlinux systemd[604]: Closed GnuPG cryptographic agent (ssh-agent emulation).
+Jun 21 10:19:09 archlinux systemd[604]: Closed GnuPG cryptographic agent and passphrase cache.
+Jun 21 10:19:09 archlinux systemd[604]: Closed GnuPG public key management service.
+Jun 21 10:19:09 archlinux systemd[604]: Closed p11-kit server.
+Jun 21 10:19:09 archlinux systemd[604]: Closed PipeWire PulseAudio.
+Jun 21 10:19:09 archlinux systemd[604]: Closed PipeWire Multimedia System Sockets.
+Jun 21 10:19:09 archlinux dbus-broker[620]: Dispatched 401 messages @ 5(±8)μs / message.
+Jun 21 10:19:09 archlinux systemd[604]: Stopping D-Bus User Message Bus...
+Jun 21 10:19:09 archlinux systemd[604]: Stopped D-Bus User Message Bus.
+Jun 21 10:19:09 archlinux systemd[604]: Removed slice User Core Session Slice.
+Jun 21 10:19:09 archlinux systemd[604]: Closed D-Bus User Message Bus Socket.
+Jun 21 10:19:09 archlinux systemd[604]: Removed slice User Application Slice.
+Jun 21 10:19:09 archlinux systemd[604]: Reached target Shutdown.
+Jun 21 10:19:09 archlinux systemd[604]: Finished Exit the Session.
+Jun 21 10:19:09 archlinux systemd[604]: Reached target Exit the Session.
+Jun 21 10:19:09 archlinux systemd-logind[499]: Removed session 2.
+Jun 21 10:19:09 archlinux (sd-pam)[606]: pam_unix(systemd-user:session): session closed for user gdm
+Jun 21 10:19:09 archlinux systemd[1]: user@120.service: Deactivated successfully.
+Jun 21 10:19:09 archlinux systemd[1]: Stopped User Manager for UID 120.
+Jun 21 10:19:09 archlinux systemd[1]: Stopping User Runtime Directory /run/user/120...
+Jun 21 10:19:09 archlinux systemd[1]: run-user-120.mount: Deactivated successfully.
+Jun 21 10:19:09 archlinux systemd[1]: user-runtime-dir@120.service: Deactivated successfully.
+Jun 21 10:19:09 archlinux systemd[1]: Stopped User Runtime Directory /run/user/120.
+Jun 21 10:19:09 archlinux systemd[1]: Removed slice User Slice of UID 120.
+Jun 21 10:19:09 archlinux systemd[1]: user-120.slice: Consumed 5.697s CPU time, 774.1M memory peak.
+Jun 21 10:19:33 archlinux chrome[1791]: [1791:2321:0621/101933.121826:INFO:chrome/browser/extensions/extension_garbage_collector.cc:184] Garbage collection for extensions on file thread is complete.
+Jun 21 10:21:28 archlinux systemd[1117]: Started tmux child pane 11091 launched by process 10887.
+Jun 21 10:21:28 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:21:28 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:21:29 archlinux systemd[1117]: Started tmux child pane 11320 launched by process 10887.
+Jun 21 10:21:29 archlinux systemd[1117]: Started tmux child pane 11368 launched by process 10887.
+Jun 21 10:21:29 archlinux systemd[1117]: Started tmux child pane 11431 launched by process 10887.
+Jun 21 10:21:29 archlinux systemd[1117]: Started tmux child pane 11498 launched by process 10887.
+Jun 21 10:21:29 archlinux systemd[1117]: Started tmux child pane 11582 launched by process 10887.
+Jun 21 10:21:29 archlinux systemd[1117]: Started tmux child pane 11660 launched by process 10887.
+Jun 21 10:21:29 archlinux systemd[1117]: Started tmux child pane 11744 launched by process 10887.
+Jun 21 10:21:30 archlinux systemd[1117]: Started tmux child pane 11835 launched by process 10887.
+Jun 21 10:21:30 archlinux systemd[1117]: Started tmux child pane 11910 launched by process 10887.
+Jun 21 10:21:30 archlinux systemd[1117]: Started tmux child pane 11993 launched by process 10887.
+Jun 21 10:21:30 archlinux systemd[1117]: Started tmux child pane 12078 launched by process 10887.
+Jun 21 10:21:30 archlinux systemd[1117]: Started tmux child pane 12161 launched by process 10887.
+Jun 21 10:21:30 archlinux systemd[1117]: Started tmux child pane 12238 launched by process 10887.
+Jun 21 10:21:30 archlinux systemd[1117]: Started tmux child pane 12309 launched by process 10887.
+Jun 21 10:21:58 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:24:01 archlinux systemd[1117]: Starting Virtual filesystem service - disk device monitor...
+Jun 21 10:24:01 archlinux systemd[1]: Starting Disk Manager...
+Jun 21 10:24:01 archlinux udisksd[29791]: udisks daemon version 2.10.1 starting
+Jun 21 10:24:01 archlinux kernel: nvme nvme0: using unchecked data buffer
+Jun 21 10:24:01 archlinux systemd[1]: Started Disk Manager.
+Jun 21 10:24:01 archlinux udisksd[29791]: Acquired the name org.freedesktop.UDisks2 on the system message bus
+Jun 21 10:24:01 archlinux systemd[1117]: Started Virtual filesystem service - disk device monitor.
+Jun 21 10:24:01 archlinux systemd[1117]: Starting Virtual filesystem service - Media Transfer Protocol monitor...
+Jun 21 10:24:01 archlinux systemd[1117]: Started Virtual filesystem service - Media Transfer Protocol monitor.
+Jun 21 10:24:01 archlinux systemd[1117]: Starting Virtual filesystem service - digital camera monitor...
+Jun 21 10:24:01 archlinux systemd[1117]: Started Virtual filesystem service - digital camera monitor.
+Jun 21 10:24:01 archlinux systemd[1117]: Starting Virtual filesystem service - GNOME Online Accounts monitor...
+Jun 21 10:24:01 archlinux systemd[1117]: Created slice Slice /app/dbus-:1.1-org.gnome.OnlineAccounts.
+Jun 21 10:24:01 archlinux systemd[1117]: Started dbus-:1.1-org.gnome.OnlineAccounts@0.service.
+Jun 21 10:24:01 archlinux goa-daemon[29841]: goa-daemon version 3.54.3 starting
+Jun 21 10:24:01 archlinux systemd[1117]: Created slice Slice /app/dbus-:1.1-org.gnome.Identity.
+Jun 21 10:24:01 archlinux systemd[1117]: Started dbus-:1.1-org.gnome.Identity@0.service.
+Jun 21 10:24:01 archlinux systemd[1117]: Started Virtual filesystem service - GNOME Online Accounts monitor.
+Jun 21 10:24:01 archlinux systemd[1117]: Starting Virtual filesystem service - Apple File Conduit monitor...
+Jun 21 10:24:01 archlinux systemd[1117]: Started Virtual filesystem service - Apple File Conduit monitor.
+Jun 21 10:24:02 archlinux systemd[1117]: Created slice User Background Tasks Slice.
+Jun 21 10:24:02 archlinux systemd[1117]: Starting Virtual filesystem metadata service...
+Jun 21 10:24:02 archlinux systemd[1117]: Starting Tracker file system data miner...
+Jun 21 10:24:02 archlinux systemd[1117]: Created slice Slice /app/dbus-:1.1-org.gnome.NautilusPreviewer.
+Jun 21 10:24:02 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:24:02 archlinux systemd[1117]: Started dbus-:1.1-org.gnome.NautilusPreviewer@0.service.
+Jun 21 10:24:02 archlinux systemd[1117]: Started Virtual filesystem metadata service.
+Jun 21 10:24:02 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:24:02 archlinux systemd[1117]: Started Tracker file system data miner.
+Jun 21 10:24:02 archlinux gvfsd[30020]: 2025-06-21 10:24:02,827:wsdd WARNING(pid 30020): no interface given, using all interfaces
+Jun 21 10:24:13 archlinux systemd[1117]: dbus-:1.1-org.gnome.NautilusPreviewer@0.service: Consumed 544ms CPU time, 143.7M memory peak.
+Jun 21 10:24:20 archlinux systemd[1117]: app-org.chromium.Chromium-1791.scope: Consumed 13.330s CPU time, 266.4M memory peak.
+Jun 21 10:24:32 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:28:17 archlinux polkitd[579]: Registered Authentication Agent for unix-process:57532:77076 (system bus name :1.94 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 10:28:17 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:57532:77076 (system bus name :1.94, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 10:30:04 archlinux hyprlock[57539]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 10:30:29 archlinux systemd[1]: Starting Cleanup of Temporary Directories...
+Jun 21 10:30:29 archlinux systemd[1]: systemd-tmpfiles-clean.service: Deactivated successfully.
+Jun 21 10:30:29 archlinux systemd[1]: Finished Cleanup of Temporary Directories.
+Jun 21 10:31:11 archlinux systemd[1117]: Started tmux child pane 77686 launched by process 10887.
+Jun 21 10:31:11 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:31:11 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:31:48 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:37:07 archlinux systemd[1117]: tmux-spawn-2e7c66aa-45da-48fd-80f6-846f02f5fa93.scope: Consumed 5min 33.815s CPU time, 32.8M memory peak.
+Jun 21 10:37:27 archlinux systemd[1117]: Started tmux child pane 94767 launched by process 10887.
+Jun 21 10:37:27 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:37:27 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:37:57 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:38:18 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:38:19 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:38:49 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:40:13 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:40:13 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:40:49 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:44:18 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:44:18 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:44:53 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:47:56 archlinux polkitd[579]: Registered Authentication Agent for unix-process:165065:194940 (system bus name :1.115 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 10:47:56 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:165065:194940 (system bus name :1.115, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 10:49:09 archlinux hyprlock[165077]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 10:49:24 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 10:52:35 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 10:52:35 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:52:35 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:53:31 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:53:40 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:53:40 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:54:10 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:54:23 archlinux gnome-keyring-daemon[1136]: asked to register item /org/freedesktop/secrets/collection/login/1, but it's already registered
+Jun 21 10:54:23 archlinux gnome-keyring-d[1136]: asked to register item /org/freedesktop/secrets/collection/login/1, but it's already registered
+Jun 21 10:54:23 archlinux systemd[1117]: Started app-org.chromium.Chromium-205985.scope.
+Jun 21 10:54:53 archlinux chrome[205985]: [205985:206035:0621/105453.606017:INFO:chrome/browser/extensions/extension_garbage_collector.cc:184] Garbage collection for extensions on file thread is complete.
+Jun 21 10:55:58 archlinux systemd[1117]: tmux-spawn-56741431-24cc-4d76-98dd-88a0ed46d6ce.scope: Consumed 7min 20.366s CPU time, 47.4M memory peak.
+Jun 21 10:56:04 archlinux systemd[1117]: tmux-spawn-6534fedc-73ab-4770-8217-9b37f91b1173.scope: Consumed 3.494s CPU time, 33.2M memory peak.
+Jun 21 10:56:05 archlinux systemd[1117]: Started tmux child pane 218216 launched by process 10887.
+Jun 21 10:56:06 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:56:06 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:56:41 archlinux systemd[1117]: Started tmux child pane 222680 launched by process 10887.
+Jun 21 10:57:03 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 10:57:15 archlinux systemd[1117]: tmux-spawn-132b84f3-35c5-4941-ac5a-89dffe342af1.scope: Consumed 19.796s CPU time, 33.6M memory peak.
+Jun 21 10:57:44 archlinux systemd[1117]: Started tmux child pane 230051 launched by process 10887.
+Jun 21 10:58:14 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:58:40 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:58:40 archlinux systemd[1]: Started Hostname Service.
+Jun 21 10:59:34 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 10:59:46 archlinux xdg-desktop-por[1910]: ../gtk/gdk/gdkwindow.c:1451Subsurface windows can only be used on Wayland
+Jun 21 10:59:46 archlinux kernel: xdg-desktop-por[1910]: segfault at 18 ip 00007f62f8498224 sp 00007ffdeafea3c8 error 4 in libgdk-3.so.0.2417.32[44224,7f62f8471000+82000] likely on CPU 4 (core 4, socket 0)
+Jun 21 10:59:46 archlinux kernel: Code: 00 48 8b 80 c0 01 00 00 48 85 c0 74 09 ff e0 0f 1f 80 00 00 00 00 c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa <48> 8b 47 18 48 85 f6 74 13 48 8b 56 18 48 8b 0a 48 39 08 74 07 c3
+Jun 21 10:59:46 archlinux xdg-desktop-por[1910]: gtk_widget_register_window: assertion 'GDK_IS_WINDOW (window)' failed
+Jun 21 10:59:46 archlinux systemd-coredump[234364]: Process 1910 (xdg-desktop-por) of user 1000 terminated abnormally with signal 11/SEGV, processing...
+Jun 21 10:59:46 archlinux systemd[1]: Created slice Slice /system/drkonqi-coredump-processor.
+Jun 21 10:59:46 archlinux systemd[1]: Created slice Slice /system/systemd-coredump.
+Jun 21 10:59:46 archlinux systemd[1]: Started Process Core Dump (PID 234364/UID 0).
+Jun 21 10:59:46 archlinux systemd[1]: Started Pass systemd-coredump journal entries to relevant user for potential DrKonqi handling.
+Jun 21 10:59:46 archlinux systemd-coredump[234365]: Process 1910 (xdg-desktop-por) of user 1000 dumped core.
+                                                    
+                                                    Stack trace of thread 1910:
+                                                    #0  0x00007f62f8498224 gdk_window_set_transient_for (libgdk-3.so.0 + 0x44224)
+                                                    #1  0x00007f62f81c5706 n/a (libgtk-3.so.0 + 0x5c5706)
+                                                    #2  0x00007f62f81c5947 n/a (libgtk-3.so.0 + 0x5c5947)
+                                                    #3  0x00007f62f809195b n/a (libgtk-3.so.0 + 0x49195b)
+                                                    #4  0x00007f62f8091c7d gtk_popover_set_relative_to (libgtk-3.so.0 + 0x491c7d)
+                                                    #5  0x00007f62f8562dea n/a (libgobject-2.0.so.0 + 0x22dea)
+                                                    #6  0x00007f62f85636f3 n/a (libgobject-2.0.so.0 + 0x236f3)
+                                                    #7  0x00007f62f85658fb g_object_new_valist (libgobject-2.0.so.0 + 0x258fb)
+                                                    #8  0x00007f62f8565d00 g_object_new (libgobject-2.0.so.0 + 0x25d00)
+                                                    #9  0x00007f62f7fb59ea n/a (libgtk-3.so.0 + 0x3b59ea)
+                                                    #10 0x00007f62f7fb5fff n/a (libgtk-3.so.0 + 0x3b5fff)
+                                                    #11 0x00007f62f7eb8a6b n/a (libgtk-3.so.0 + 0x2b8a6b)
+                                                    #12 0x00007f62f855183a g_closure_invoke (libgobject-2.0.so.0 + 0x1183a)
+                                                    #13 0x00007f62f857042b n/a (libgobject-2.0.so.0 + 0x3042b)
+                                                    #14 0x00007f62f8571c5b n/a (libgobject-2.0.so.0 + 0x31c5b)
+                                                    #15 0x00007f62f8572709 g_signal_emit_valist (libgobject-2.0.so.0 + 0x32709)
+                                                    #16 0x00007f62f85727c4 g_signal_emit (libgobject-2.0.so.0 + 0x327c4)
+                                                    #17 0x00007f62f81ad67e n/a (libgtk-3.so.0 + 0x5ad67e)
+                                                    #18 0x00007f62f802ed75 n/a (libgtk-3.so.0 + 0x42ed75)
+                                                    #19 0x00007f62f802fb2b gtk_main_do_event (libgtk-3.so.0 + 0x42fb2b)
+                                                    #20 0x00007f62f847b1b7 n/a (libgdk-3.so.0 + 0x271b7)
+                                                    #21 0x00007f62f84d9bf0 n/a (libgdk-3.so.0 + 0x85bf0)
+                                                    #22 0x00007f62f87ca87d n/a (libglib-2.0.so.0 + 0x5e87d)
+                                                    #23 0x00007f62f87cbcd7 n/a (libglib-2.0.so.0 + 0x5fcd7)
+                                                    #24 0x00007f62f87cc097 g_main_loop_run (libglib-2.0.so.0 + 0x60097)
+                                                    #25 0x00005639d7ea5275 n/a (/usr/lib/xdg-desktop-portal-gtk + 0xb275)
+                                                    #26 0x00007f62f7a0a6b5 n/a (libc.so.6 + 0x276b5)
+                                                    #27 0x00007f62f7a0a769 __libc_start_main (libc.so.6 + 0x27769)
+                                                    #28 0x00005639d7ea53f5 n/a (/usr/lib/xdg-desktop-portal-gtk + 0xb3f5)
+                                                    
+                                                    Stack trace of thread 232819:
+                                                    #0  0x00007f62f7af9eed syscall (libc.so.6 + 0x116eed)
+                                                    #1  0x00007f62f87fa7ae g_cond_wait (libglib-2.0.so.0 + 0x8e7ae)
+                                                    #2  0x00007f62f8791e7d n/a (libglib-2.0.so.0 + 0x25e7d)
+                                                    #3  0x00007f62f8791eed g_async_queue_pop (libglib-2.0.so.0 + 0x25eed)
+                                                    #4  0x00007f62f75bd92c n/a (libpangoft2-1.0.so.0 + 0xd92c)
+                                                    #5  0x00007f62f880283c n/a (libglib-2.0.so.0 + 0x9683c)
+                                                    #6  0x00007f62f7a787eb n/a (libc.so.6 + 0x957eb)
+                                                    #7  0x00007f62f7afc18c n/a (libc.so.6 + 0x11918c)
+                                                    
+                                                    Stack trace of thread 233980:
+                                                    #0  0x00007f62f7af9eed syscall (libc.so.6 + 0x116eed)
+                                                    #1  0x00007f62f87fb73e g_cond_wait_until (libglib-2.0.so.0 + 0x8f73e)
+                                                    #2  0x00007f62f8791e47 n/a (libglib-2.0.so.0 + 0x25e47)
+                                                    #3  0x00007f62f8791fbf g_async_queue_timeout_pop (libglib-2.0.so.0 + 0x25fbf)
+                                                    #4  0x00007f62f8804020 n/a (libglib-2.0.so.0 + 0x98020)
+                                                    #5  0x00007f62f880283c n/a (libglib-2.0.so.0 + 0x9683c)
+                                                    #6  0x00007f62f7a787eb n/a (libc.so.6 + 0x957eb)
+                                                    #7  0x00007f62f7afc18c n/a (libc.so.6 + 0x11918c)
+                                                    
+                                                    Stack trace of thread 1915:
+                                                    #0  0x00007f62f7af9eed syscall (libc.so.6 + 0x116eed)
+                                                    #1  0x00007f62f87fa7ae g_cond_wait (libglib-2.0.so.0 + 0x8e7ae)
+                                                    #2  0x00007f62f8791e7d n/a (libglib-2.0.so.0 + 0x25e7d)
+                                                    #3  0x00007f62f88033f7 n/a (libglib-2.0.so.0 + 0x973f7)
+                                                    #4  0x00007f62f880283c n/a (libglib-2.0.so.0 + 0x9683c)
+                                                    #5  0x00007f62f7a787eb n/a (libc.so.6 + 0x957eb)
+                                                    #6  0x00007f62f7afc18c n/a (libc.so.6 + 0x11918c)
+                                                    
+                                                    Stack trace of thread 1919:
+                                                    #0  0x00007f62f7a80e22 n/a (libc.so.6 + 0x9de22)
+                                                    #1  0x00007f62f7a74fda n/a (libc.so.6 + 0x91fda)
+                                                    #2  0x00007f62f7a75024 n/a (libc.so.6 + 0x92024)
+                                                    #3  0x00007f62f7aef5a6 ppoll (libc.so.6 + 0x10c5a6)
+                                                    #4  0x00007f62f87cbe04 n/a (libglib-2.0.so.0 + 0x5fe04)
+                                                    #5  0x00007f62f87cbee5 g_main_context_iteration (libglib-2.0.so.0 + 0x5fee5)
+                                                    #6  0x00007f62f66362fe n/a (libdconfsettings.so + 0x62fe)
+                                                    #7  0x00007f62f880283c n/a (libglib-2.0.so.0 + 0x9683c)
+                                                    #8  0x00007f62f7a787eb n/a (libc.so.6 + 0x957eb)
+                                                    #9  0x00007f62f7afc18c n/a (libc.so.6 + 0x11918c)
+                                                    
+                                                    Stack trace of thread 1916:
+                                                    #0  0x00007f62f7a80e22 n/a (libc.so.6 + 0x9de22)
+                                                    #1  0x00007f62f7a74fda n/a (libc.so.6 + 0x91fda)
+                                                    #2  0x00007f62f7a75024 n/a (libc.so.6 + 0x92024)
+                                                    #3  0x00007f62f7aef5a6 ppoll (libc.so.6 + 0x10c5a6)
+                                                    #4  0x00007f62f87cbe04 n/a (libglib-2.0.so.0 + 0x5fe04)
+                                                    #5  0x00007f62f87cbee5 g_main_context_iteration (libglib-2.0.so.0 + 0x5fee5)
+                                                    #6  0x00007f62f87cbf32 n/a (libglib-2.0.so.0 + 0x5ff32)
+                                                    #7  0x00007f62f880283c n/a (libglib-2.0.so.0 + 0x9683c)
+                                                    #8  0x00007f62f7a787eb n/a (libc.so.6 + 0x957eb)
+                                                    #9  0x00007f62f7afc18c n/a (libc.so.6 + 0x11918c)
+                                                    
+                                                    Stack trace of thread 1918:
+                                                    #0  0x00007f62f7a80e22 n/a (libc.so.6 + 0x9de22)
+                                                    #1  0x00007f62f7a74fda n/a (libc.so.6 + 0x91fda)
+                                                    #2  0x00007f62f7a75024 n/a (libc.so.6 + 0x92024)
+                                                    #3  0x00007f62f7aef5a6 ppoll (libc.so.6 + 0x10c5a6)
+                                                    #4  0x00007f62f87cbe04 n/a (libglib-2.0.so.0 + 0x5fe04)
+                                                    #5  0x00007f62f87cc097 g_main_loop_run (libglib-2.0.so.0 + 0x60097)
+                                                    #6  0x00007f62f86b64a4 n/a (libgio-2.0.so.0 + 0x1174a4)
+                                                    #7  0x00007f62f880283c n/a (libglib-2.0.so.0 + 0x9683c)
+                                                    #8  0x00007f62f7a787eb n/a (libc.so.6 + 0x957eb)
+                                                    #9  0x00007f62f7afc18c n/a (libc.so.6 + 0x11918c)
+                                                    ELF object binary architecture: AMD x86-64
+Jun 21 10:59:46 archlinux systemd[1]: systemd-coredump@0-234364-0.service: Deactivated successfully.
+Jun 21 10:59:46 archlinux systemd[1]: systemd-coredump@0-234364-0.service: Consumed 360ms CPU time, 95.3M memory peak.
+Jun 21 10:59:46 archlinux systemd[1117]: xdg-desktop-portal-gtk.service: Main process exited, code=dumped, status=11/SEGV
+Jun 21 10:59:46 archlinux systemd[1117]: xdg-desktop-portal-gtk.service: Failed with result 'core-dump'.
+Jun 21 10:59:46 archlinux systemd[1117]: xdg-desktop-portal-gtk.service: Consumed 3.844s CPU time, 15.5M memory peak.
+Jun 21 10:59:46 archlinux xdg-desktop-por[1862]: Backend call failed: Remote peer disconnected
+Jun 21 10:59:46 archlinux drkonqi-coredump-processor[234366]: "/usr/lib/xdg-desktop-portal-gtk" 1910 "/var/lib/systemd/coredump/core.xdg-desktop-por.1000.a747342a27d24631a66f8475de67abf1.1910.1750483786000000.zst"
+Jun 21 10:59:46 archlinux systemd[1]: drkonqi-coredump-processor@0-234364-0.service: Deactivated successfully.
+Jun 21 10:59:46 archlinux systemd[1]: drkonqi-coredump-processor@0-234364-0.service: Consumed 162ms CPU time, 168.1M memory peak.
+Jun 21 10:59:47 archlinux systemd[1117]: Started Launch DrKonqi for a systemd-coredump crash (PID 234366/UID 0).
+Jun 21 10:59:47 archlinux drkonqi-coredump-launcher[234395]: Unable to find file for pid 1910 expected at "kcrash-metadata/xdg-desktop-portal-gtk.a747342a27d24631a66f8475de67abf1.1910.ini"
+Jun 21 10:59:47 archlinux drkonqi-coredump-launcher[234395]: Nothing handled the dump :O
+Jun 21 10:59:51 archlinux systemd[1117]: Starting Portal service (GTK/GNOME implementation)...
+Jun 21 10:59:51 archlinux systemd[1117]: Started Portal service (GTK/GNOME implementation).
+Jun 21 10:59:52 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 10:59:52 archlinux systemd[1117]: Started dbus-:1.1-org.gnome.NautilusPreviewer@1.service.
+Jun 21 10:59:52 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:00:22 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:00:29 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:00:29 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:00:49 archlinux systemd[1117]: tmux-spawn-7eb34073-56e0-40bd-8187-bf8caad67a6f.scope: Consumed 21.693s CPU time, 28.4M memory peak.
+Jun 21 11:01:31 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:01:40 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:01:40 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:01:42 archlinux systemd[1117]: Started tmux child pane 248622 launched by process 10887.
+Jun 21 11:02:13 archlinux systemd[1117]: tmux-spawn-31c6e029-4429-4f9c-9dcb-b46a89e30300.scope: Consumed 28.015s CPU time, 33.5M memory peak.
+Jun 21 11:02:31 archlinux systemd[1117]: Started tmux child pane 254460 launched by process 10887.
+Jun 21 11:03:03 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:03:13 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:03:13 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:04:42 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:04:47 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:04:47 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:05:17 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:05:43 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:05:43 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:06:40 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:08:47 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:08:47 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:08:55 archlinux systemd[1117]: tmux-spawn-78432825-62f1-4126-8578-10217b50a28e.scope: Consumed 2min 33.404s CPU time, 33.5M memory peak.
+Jun 21 11:09:29 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:11:08 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:11:08 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:11:16 archlinux systemd[1117]: Started tmux child pane 313983 launched by process 10887.
+Jun 21 11:11:22 archlinux systemd[1117]: tmux-spawn-fc1d5331-8cbd-4c1c-84ae-cb93aa5f76ba.scope: Consumed 52.296s CPU time, 34.4M memory peak.
+Jun 21 11:11:38 archlinux systemd[1117]: Started tmux child pane 317110 launched by process 10887.
+Jun 21 11:11:48 archlinux systemd[1117]: tmux-spawn-554eba61-5a60-4c45-b1d7-580b614f3434.scope: Consumed 10.309s CPU time, 33.4M memory peak.
+Jun 21 11:11:55 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 319224: Could not fstatat ns/pid: Not a directory
+Jun 21 11:12:03 archlinux systemd[1117]: Started tmux child pane 320429 launched by process 10887.
+Jun 21 11:12:07 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 320937: Could not fstatat ns/pid: Not a directory
+Jun 21 11:12:40 archlinux systemd[1117]: tmux-spawn-89ddc4ce-6e7a-4b7f-813d-73d79c797dec.scope: Consumed 30.942s CPU time, 108M memory peak.
+Jun 21 11:12:53 archlinux systemd[1117]: Started tmux child pane 326825 launched by process 10887.
+Jun 21 11:12:56 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 327223: Could not fstatat ns/pid: Not a directory
+Jun 21 11:13:44 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:13:44 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:13:44 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:14:21 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 337489: Could not fstatat ns/pid: Not a directory
+Jun 21 11:14:26 archlinux nerd-dictation[337927]: Error: DISPLAY environment variable is empty. Is there an Xorg or other X server running? You can try setting 'export DISPLAY=:0' and trying again.
+Jun 21 11:14:26 archlinux nerd-dictation[337927]: Failed creating new xdo instance.
+Jun 21 11:14:26 archlinux nerd-dictation[1129]: Traceback (most recent call last):
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 1983, in <module>
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     main()
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ~~~~^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 1979, in main
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     args.func(args)
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ~~~~~~~~~^^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 1844, in <lambda>
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     func=lambda args: main_begin(
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:                       ~~~~~~~~~~^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         path_to_cookie=args.path_to_cookie,
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ...<20 lines>...
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         vosk_grammar_file=args.vosk_grammar_file,
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ),
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 1445, in main_begin
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     found_any = text_from_vosk_pipe(
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         vosk_model_dir=vosk_model_dir,
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ...<12 lines>...
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         vosk_grammar_file=vosk_grammar_file,
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     )
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 1233, in text_from_vosk_pipe
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     json_text, json_text_partial_prev = rec_handle_fn_wrapper_from_partial_result(json_text_partial_prev)
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 1092, in rec_handle_fn_wrapper_from_partial_result
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     handle_fn_wrapper(text, True)
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 1050, in handle_fn_wrapper
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     handle_fn(len(text_prev) - match, text_curr[match:])
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 158, in simulate_typing_with_xdotool
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     run_command_or_exit_on_failure(
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         [
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         ^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ...<5 lines>...
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         ]
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:         ^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     )
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/bin/nerd-dictation", line 50, in run_command_or_exit_on_failure
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     subprocess.check_output(cmd)
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/lib/python3.13/subprocess.py", line 472, in check_output
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:            ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:                **kwargs).stdout
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:                ^^^^^^^^^
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:   File "/usr/lib/python3.13/subprocess.py", line 577, in run
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:     raise CalledProcessError(retcode, process.args,
+Jun 21 11:14:26 archlinux nerd-dictation[1129]:                              output=stdout, stderr=stderr)
+Jun 21 11:14:26 archlinux nerd-dictation[1129]: subprocess.CalledProcessError: Command '['xdotool', 'type', '--clearmodifiers', '--', 'no i want']' returned non-zero exit status 1.
+Jun 21 11:14:26 archlinux nerd-dictation[1160]: write() failed: Broken pipe
+Jun 21 11:14:26 archlinux systemd[1117]: nerd-dictation.service: Main process exited, code=exited, status=1/FAILURE
+Jun 21 11:14:26 archlinux systemd[1117]: nerd-dictation.service: Failed with result 'exit-code'.
+Jun 21 11:14:26 archlinux systemd[1117]: nerd-dictation.service: Consumed 8min 23.800s CPU time, 3G memory peak.
+Jun 21 11:14:31 archlinux systemd[1117]: nerd-dictation.service: Scheduled restart job, restart counter is at 1.
+Jun 21 11:14:31 archlinux systemd[1117]: Started Nerd Dictation Daemon.
+Jun 21 11:14:33 archlinux nerd-dictation[338885]: No text found in the audio
+Jun 21 11:14:33 archlinux systemd[1117]: nerd-dictation.service: Consumed 1.712s CPU time, 1.5G memory peak.
+Jun 21 11:15:09 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:18:24 archlinux polkitd[579]: Registered Authentication Agent for unix-process:364510:377723 (system bus name :1.245 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 11:18:24 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:364510:377723 (system bus name :1.245, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 11:23:09 archlinux hyprlock[364517]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 11:23:54 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:23:54 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:23:58 archlinux systemd[1117]: tmux-spawn-ae91af5c-4178-476b-9f2c-0930e65bdfcb.scope: Consumed 3min 33.766s CPU time, 106.1M memory peak.
+Jun 21 11:24:12 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 403796: Could not fstatat ns/pid: Not a directory
+Jun 21 11:24:14 archlinux systemd[1117]: Started tmux child pane 404125 launched by process 10887.
+Jun 21 11:24:36 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 407100: Could not fstatat ns/pid: Not a directory
+Jun 21 11:24:48 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 408694: Could not fstatat ns/pid: Not a directory
+Jun 21 11:24:54 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:25:08 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 11:25:08 archlinux systemd[1]: Started Hostname Service.
+Jun 21 11:25:40 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 415234: Could not fstatat ns/pid: Not a directory
+Jun 21 11:26:18 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 419792: Could not fstatat ns/pid: Not a directory
+Jun 21 11:26:49 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 11:40:51 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=0 signal=-71 noise=9999 txrate=0
+Jun 21 11:42:41 archlinux polkitd[579]: Registered Authentication Agent for unix-process:535989:523427 (system bus name :1.275 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 11:42:41 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:535989:523427 (system bus name :1.275, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 11:42:48 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=1 signal=-62 noise=9999 txrate=0
+Jun 21 11:52:38 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 11:52:38 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 11:54:32 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=0 signal=-72 noise=9999 txrate=0
+Jun 21 11:59:24 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=1 signal=-63 noise=9999 txrate=0
+Jun 21 12:01:14 archlinux kernel: perf: interrupt took too long (2511 > 2500), lowering kernel.perf_event_max_sample_rate to 79000
+Jun 21 12:04:43 archlinux polkitd[579]: Registered Authentication Agent for unix-process:691489:655677 (system bus name :1.278 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 12:04:43 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:691489:655677 (system bus name :1.278, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 12:31:09 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=0 signal=-71 noise=9999 txrate=0
+Jun 21 12:33:27 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=1 signal=-65 noise=9999 txrate=0
+Jun 21 12:35:32 archlinux kernel: perf: interrupt took too long (3151 > 3138), lowering kernel.perf_event_max_sample_rate to 63000
+Jun 21 12:45:39 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 12:45:39 archlinux systemd[1]: Started Hostname Service.
+Jun 21 12:45:52 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 983091: Could not fstatat ns/pid: Not a directory
+Jun 21 12:46:08 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 985084: Could not fstatat ns/pid: Not a directory
+Jun 21 12:46:11 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 12:49:24 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 12:52:40 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 12:52:40 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 12:57:05 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 12:59:19 archlinux polkitd[579]: Registered Authentication Agent for unix-process:1078678:983292 (system bus name :1.286 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 12:59:19 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:1078678:983292 (system bus name :1.286, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 12:59:34 archlinux hyprlock[1078685]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 13:32:41 archlinux kernel: perf: interrupt took too long (3950 > 3938), lowering kernel.perf_event_max_sample_rate to 50000
+Jun 21 13:37:57 archlinux polkitd[579]: Registered Authentication Agent for unix-process:1353483:1215079 (system bus name :1.290 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 13:37:57 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:1353483:1215079 (system bus name :1.290, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 13:46:15 archlinux polkitd[579]: Registered Authentication Agent for unix-process:1412294:1264863 (system bus name :1.293 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 13:46:15 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:1412294:1264863 (system bus name :1.293, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 13:50:48 archlinux polkitd[579]: Registered Authentication Agent for unix-process:1444505:1292109 (system bus name :1.296 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 13:50:48 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:1444505:1292109 (system bus name :1.296, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 13:52:42 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 13:52:42 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 13:53:54 archlinux polkitd[579]: Registered Authentication Agent for unix-process:1466547:1310719 (system bus name :1.299 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 13:53:54 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:1466547:1310719 (system bus name :1.299, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 13:53:57 archlinux hyprlock[1466554]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 13:58:59 archlinux polkitd[579]: Registered Authentication Agent for unix-process:1502604:1341236 (system bus name :1.303 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 13:58:59 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:1502604:1341236 (system bus name :1.303, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 14:00:26 archlinux hyprlock[1502615]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 14:02:58 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 14:02:58 archlinux systemd[1]: Started Hostname Service.
+Jun 21 14:03:28 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 14:28:36 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=0 signal=-72 noise=9999 txrate=130000
+Jun 21 14:28:41 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=1 signal=-63 noise=9999 txrate=0
+Jun 21 14:29:26 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 14:29:27 archlinux systemd[1]: Started Hostname Service.
+Jun 21 14:29:57 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 14:30:46 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 14:30:46 archlinux systemd[1]: Started Hostname Service.
+Jun 21 14:31:21 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 14:31:26 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 14:31:26 archlinux systemd[1]: Started Hostname Service.
+Jun 21 14:31:59 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 14:32:13 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=0 signal=-74 noise=9999 txrate=97600
+Jun 21 14:32:47 archlinux systemd[1117]: Started tmux child pane 1744568 launched by process 10887.
+Jun 21 14:32:47 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 14:32:47 archlinux systemd[1]: Started Hostname Service.
+Jun 21 14:32:59 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=1 signal=-62 noise=9999 txrate=195000
+Jun 21 14:33:21 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 14:33:34 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 14:33:34 archlinux systemd[1]: Started Hostname Service.
+Jun 21 14:34:15 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 14:34:18 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 14:34:18 archlinux systemd[1]: Started Hostname Service.
+Jun 21 14:34:50 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 14:35:16 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 14:35:16 archlinux systemd[1]: Started Hostname Service.
+Jun 21 14:35:46 archlinux systemd[1117]: tmux-spawn-9030b002-778a-4550-9437-25adbfe1c499.scope: Consumed 18.946s CPU time, 517.2M memory peak.
+Jun 21 14:37:41 archlinux systemd[1]: systemd-hostnamed.service: Deactivated successfully.
+Jun 21 14:49:24 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 14:52:43 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 14:57:04 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 14:57:04 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 14:57:04 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-DISCONNECTED bssid=c0:68:cc:78:c9:13 reason=4 locally_generated=1
+Jun 21 14:57:04 archlinux wpa_supplicant[549]: wlan0: Added BSSID c0:68:cc:78:c9:13 into ignore list, ignoring for 10 seconds
+Jun 21 14:57:04 archlinux NetworkManager[489]: <info>  [1750498024.9992] device (wlan0): supplicant interface state: completed -> disconnected
+Jun 21 14:57:04 archlinux NetworkManager[489]: <info>  [1750498024.9992] device (p2p-dev-wlan0): supplicant management interface state: completed -> disconnected
+Jun 21 14:57:05 archlinux NetworkManager[489]: <info>  [1750498025.0922] device (wlan0): supplicant interface state: disconnected -> scanning
+Jun 21 14:57:05 archlinux NetworkManager[489]: <info>  [1750498025.0922] device (p2p-dev-wlan0): supplicant management interface state: disconnected -> scanning
+Jun 21 14:57:07 archlinux wpa_supplicant[549]: wlan0: Removed BSSID c0:68:cc:78:c9:13 from ignore list (clear)
+Jun 21 14:57:07 archlinux wpa_supplicant[549]: wlan0: SME: Trying to authenticate with c0:68:cc:78:c9:13 (SSID='JioFiber-AD-5G' freq=5785 MHz)
+Jun 21 14:57:07 archlinux kernel: wlan0: authenticate with c0:68:cc:78:c9:13 (local address=48:f1:7f:78:45:42)
+Jun 21 14:57:07 archlinux kernel: wlan0: send auth to c0:68:cc:78:c9:13 (try 1/3)
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.0606] device (wlan0): supplicant interface state: scanning -> authenticating
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.0607] device (p2p-dev-wlan0): supplicant management interface state: scanning -> authenticating
+Jun 21 14:57:07 archlinux kernel: wlan0: authenticated
+Jun 21 14:57:07 archlinux wpa_supplicant[549]: wlan0: Trying to associate with c0:68:cc:78:c9:13 (SSID='JioFiber-AD-5G' freq=5785 MHz)
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.1011] device (wlan0): supplicant interface state: authenticating -> associating
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.1012] device (p2p-dev-wlan0): supplicant management interface state: authenticating -> associating
+Jun 21 14:57:07 archlinux kernel: wlan0: associate with c0:68:cc:78:c9:13 (try 1/3)
+Jun 21 14:57:07 archlinux kernel: wlan0: RX AssocResp from c0:68:cc:78:c9:13 (capab=0x111 status=0 aid=3)
+Jun 21 14:57:07 archlinux wpa_supplicant[549]: wlan0: Associated with c0:68:cc:78:c9:13
+Jun 21 14:57:07 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
+Jun 21 14:57:07 archlinux kernel: wlan0: associated
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.1137] device (wlan0): supplicant interface state: associating -> associated
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.1137] device (p2p-dev-wlan0): supplicant management interface state: associating -> associated
+Jun 21 14:57:07 archlinux kernel: wlan0: Limiting TX power to 20 (20 - 0) dBm as advertised by c0:68:cc:78:c9:13
+Jun 21 14:57:07 archlinux wpa_supplicant[549]: wlan0: WPA: Key negotiation completed with c0:68:cc:78:c9:13 [PTK=CCMP GTK=CCMP]
+Jun 21 14:57:07 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-CONNECTED - Connection to c0:68:cc:78:c9:13 completed [id=0 id_str=]
+Jun 21 14:57:07 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=1 signal=-65 noise=9999 txrate=0
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3603] device (wlan0): supplicant interface state: associated -> completed
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3605] device (wlan0): ip:dhcp4: restarting
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3606] dhcp4 (wlan0): canceled DHCP transaction
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3606] dhcp4 (wlan0): activation: beginning transaction (timeout in 45 seconds)
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3606] dhcp4 (wlan0): state changed no lease
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3606] dhcp4 (wlan0): activation: beginning transaction (timeout in 45 seconds)
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3607] device (wlan0): ip:dhcp6: restarting
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3608] dhcp6 (wlan0): canceled DHCP transaction
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3608] dhcp6 (wlan0): activation: beginning transaction (timeout in 45 seconds)
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3608] dhcp6 (wlan0): state changed no lease
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3608] dhcp6 (wlan0): activation: beginning transaction (timeout in 45 seconds)
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3610] device (p2p-dev-wlan0): supplicant management interface state: associated -> completed
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3691] dhcp6 (wlan0): state changed new lease
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3727] dhcp4 (wlan0): state changed new lease, address=192.168.29.185, acd pending
+Jun 21 14:57:07 archlinux NetworkManager[489]: <info>  [1750498027.3730] dhcp4 (wlan0): state changed new lease, address=192.168.29.185
+Jun 21 14:57:07 archlinux systemd[1]: Starting Network Manager Script Dispatcher Service...
+Jun 21 14:57:07 archlinux systemd[1]: Started Network Manager Script Dispatcher Service.
+Jun 21 14:57:17 archlinux systemd[1]: NetworkManager-dispatcher.service: Deactivated successfully.
+Jun 21 15:00:37 archlinux polkitd[579]: Registered Authentication Agent for unix-process:1944197:1711016 (system bus name :1.351 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 15:00:37 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:1944197:1711016 (system bus name :1.351, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 15:11:12 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2018730:1774520 (system bus name :1.354 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 15:11:12 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2018730:1774520 (system bus name :1.354, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 15:14:16 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2040689:1792941 (system bus name :1.357 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 15:14:16 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2040689:1792941 (system bus name :1.357, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 15:17:21 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2062609:1811412 (system bus name :1.360 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 15:17:21 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2062609:1811412 (system bus name :1.360, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 15:17:45 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=0 signal=-74 noise=9999 txrate=0
+Jun 21 15:18:39 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-SIGNAL-CHANGE above=1 signal=-63 noise=9999 txrate=0
+Jun 21 15:21:06 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2089474:1833970 (system bus name :1.363 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 15:21:06 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2089474:1833970 (system bus name :1.363, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 15:24:15 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2112916:1852885 (system bus name :1.366 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 15:24:15 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2112916:1852885 (system bus name :1.366, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 15:24:19 archlinux unix_chkpwd[2113406]: password check failed for user (aditya)
+Jun 21 15:24:19 archlinux hyprlock[2112923]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 15:27:23 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2135086:1871613 (system bus name :1.370 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 15:27:23 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2135086:1871613 (system bus name :1.370, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 15:35:14 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2191029:1918772 (system bus name :1.373 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 15:35:14 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2191029:1918772 (system bus name :1.373, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 15:42:24 archlinux logid[557]: [INFO] /dev/hidraw2:1 fell asleep.
+Jun 21 15:52:45 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 16:43:51 archlinux hyprlock[2191036]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 16:46:58 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2701289:2349147 (system bus name :1.377 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 16:46:58 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2701289:2349147 (system bus name :1.377, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 16:48:11 archlinux hyprlock[2701296]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 16:49:23 archlinux logid[557]: [INFO] /dev/hidraw2:1 woke up.
+Jun 21 16:49:24 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 16:52:24 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2739773:2381736 (system bus name :1.381 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 16:52:24 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2739773:2381736 (system bus name :1.381, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 16:52:52 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 16:52:52 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 16:52:52 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 16:52:52 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 16:52:52 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 16:52:52 archlinux wpa_supplicant[549]: wlan0: RSN: Group rekeying completed with c0:68:cc:78:c9:13 [GTK=CCMP]
+Jun 21 16:57:04 archlinux wpa_supplicant[549]: wlan0: CTRL-EVENT-BEACON-LOSS
+Jun 21 17:00:04 archlinux logid[557]: [INFO] /dev/hidraw2:1 fell asleep.
+Jun 21 17:06:23 archlinux hyprlock[2739785]: pam_unix(hyprlock:auth): authentication failure; logname=aditya uid=1000 euid=1000 tty= ruser= rhost=  user=aditya
+Jun 21 17:09:28 archlinux polkitd[579]: Registered Authentication Agent for unix-process:2861054:2484172 (system bus name :1.384 [/usr/bin/pkttyagent --notify-fd 7 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jun 21 17:09:28 archlinux polkitd[579]: Unregistered Authentication Agent for unix-process:2861054:2484172 (system bus name :1.384, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8) (disconnected from bus)
+Jun 21 17:13:00 archlinux logid[557]: [INFO] /dev/hidraw2:1 woke up.
+Jun 21 17:13:16 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 2888187: Could not fstatat ns/pid: Not a directory
+Jun 21 17:13:28 archlinux xdg-desktop-por[1862]: Realtime error: Could not get pidns for pid 2889790: Could not fstatat ns/pid: Not a directory
+Jun 21 17:16:55 archlinux systemd[1]: Starting Hostname Service...
+Jun 21 17:16:55 archlinux systemd[1]: Started Hostname Service.
+Jun 21 17:17:21 archlinux sudo[2916848]:   aditya : TTY=pts/15 ; PWD=/home/aditya/dotfiles/scripts ; USER=root ; COMMAND=/usr/bin/journalctl --since '7 hours ago'
+Jun 21 17:17:21 archlinux sudo[2916848]: pam_unix(sudo:session): session opened for user root(uid=0) by aditya(uid=1000)
+
+--- End Systemd Journal Logs ---
+
+--- System Log Extraction End: 20250621_171722 ---
