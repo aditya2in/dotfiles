@@ -1,3 +1,40 @@
-🚀 Script will capture logs into: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt
-Starting Routine retrieval for 2025-06-22 at Sun Jun 22 05:29:11 AM IST 2025
+QUICK RESULT
+Work o [[aady]] ***SLEEEEEEEEEEEEEEEEEEEEP***
+ashdf
 --------------------------------------------------------
+--------------------------------------------------------
+Starting Routine, Action List, and Current Action retrieval for 2025-06-23 at Mon Jun 23 01:22:27 AM IST 2025
+--------------------------------------------------------
+🎯 YOUR CURRENT ROUTINE NAME:
+----------------------------------------
+➡️ Work o [[aady]]
+➡️ ***SLEEEEEEEEEEEEEEEEEEEEP***
+
+✨ CONSIDERED LIST FOR CATEGORY OR ACTION:
+----------------------------------------
+    ➡️ **Linked Notes from Routine Name**
+        - ((from [[aady]]))
+    ➡️ **Subtasks**
+        - - [ ] Did you eat 3 times a day yesterday ? 
+        - - [ ] High morning energy already ?
+        - - [ ] **Slept by 8 yesterday?         #Task/Category/ADITYA\_TASK/21DayChallenge**
+        - - [ ] [[tesdft]] 
+        - - [ ] Are you scrolling in the morning ? 😂😂😂😂😂😂
+        - - [ ] Did you do gym yesterday Morning and were you sleepy early night?
+        - - [ ] Did you hydrate well and gave good guy health ? 
+        - - [ ] didn't feel like scrolling??
+        - - [ ] Did you do Night FS yesterday and prayed to wake me up early ? 
+    ➡️ **Linked Notes from Subtasks**
+        - ((from [[tesdft]]))
+
+🔍 DUPLICATE #CurrentAction TAGS CHECK:
+----------------------------------------
+    ✅ No duplicate #CurrentAction tags found. Only one (or zero) active #CurrentAction.
+
+✨ YOUR CURRENT ACTION #CurrentAction [[tesdft]] :
+----------------------------------------
+ashdf
+"--------------------------------------------------------
+"nScript finished at Mon Jun 23 01:22:28 AM IST 2025
+Output captured in: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt
+
