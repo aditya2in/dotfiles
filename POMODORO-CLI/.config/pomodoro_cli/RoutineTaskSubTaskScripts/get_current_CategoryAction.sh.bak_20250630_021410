@@ -12,7 +12,7 @@ current_routine_found="false"
 current_routine_line_to_color=""
 declare -a GLOBAL_ACTIVE_ROUTINE_LINES
 declare -a GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS
-DEBUG_MODE="false" # Set to "true" for detailed debugging, "false" to disable.
+DEBUG_MODE="true" # Set to "true" for detailed debugging, "false" to disable.
 
 GREEN='\e[0;32m'
 BLUE='\e[0;34m'
@@ -61,7 +61,6 @@ find_active_routine() {
     debug_log "Current time: ${current_hour}:${current_minute} (${current_time_in_minutes} minutes)."
     local current_file_line_num=0
 
-    # This check is now primarily for debugging within the function, initial file check is in main logic
     if [ ! -f "$PLANNER_FILE" ]; then
         log_and_tee "⚠️ Warning: Journal file '$PLANNER_FILE' not found during early routine scan."
         debug_log "Exiting find_active_routine due to missing planner file."
@@ -116,10 +115,9 @@ find_active_routine() {
 
     if [ ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]} -gt 0 ]; then
         current_routine_found="true"
-        # The QUICK_RESULT_CONTENT now contains comma-separated descriptions of all active routines
         QUICK_RESULT_CONTENT="$(IFS=, ; echo "${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[*]}")"
         debug_log "Active routines found: ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]}. QUICK_RESULT_CONTENT updated."
-        debug_log "Collected active routines (descriptions): '${QUICK_RESULT_CONTENT}'"
+        debug_log "Collected active routines (descriptions): '${QUICK_RESULT_CONTENT}'" # NEW DEBUG LINE
     else
         current_routine_found="false"
         QUICK_RESULT_CONTENT="No active routine found."
@@ -131,10 +129,7 @@ find_active_routine() {
 # --- New Helper Function: Get Leading Spaces ---
 get_leading_spaces() {
     local line="$1"
-    # Convert tabs to spaces (assuming 4 spaces per tab for Markdown consistency)
-    # If your editor/Markdown style uses a different tab width, adjust --tabs=N accordingly.
-    local line_with_spaces_only=$(echo "$line" | expand --tabs=4)
-    [[ "$line_with_spaces_only" =~ ^( *) ]]
+    [[ "$line" =~ ^( *) ]]
     echo "${#BASH_REMATCH[1]}"
 }
 
@@ -144,21 +139,16 @@ process_routine_details() {
     local routine_leading_indent=$2
     local routine_desc=$3 # Added to get notes from the routine line itself
 
-    local subtasks_with_line_numbers=()
-    local -a routine_linked_notes=()
-    local -a subtask_linked_notes=()
+    local subtasks=()
+    local linked_notes=()
 
     debug_log "Entering process_routine_details for line ${routine_start_line} with indent ${routine_leading_indent}."
 
     # Extract linked notes from the routine description itself
-    # Store with their source line number
-    local raw_routine_notes=$(echo "$routine_desc" | grep -oP '\[\[.*?\]\]')
-    if [ -n "$raw_routine_notes" ]; then
-        readarray -t notes_from_routine_desc <<< "$raw_routine_notes"
-        for note in "${notes_from_routine_desc[@]}"; do
-            routine_linked_notes+=("${routine_start_line}: 🔗 ${note}")
-            debug_log "  - Found routine linked note: ${note}"
-        done
+    local routine_line_notes=$(echo "$routine_desc" | grep -oP '\[\[.*?\]\]' | tr '\n' ' ' | xargs)
+    if [ -n "$routine_line_notes" ]; then
+        linked_notes+=("$routine_line_notes")
+        debug_log "  - Found linked notes in routine line: ${routine_line_notes}"
     fi
 
     local current_line_num=$((routine_start_line + 1))
@@ -174,20 +164,15 @@ process_routine_details() {
         fi
 
         current_indent=$(get_leading_spaces "$line_content")
-        debug_log "  - Subtask candidate indent: ${current_indent}, Routine indent: ${routine_leading_indent}"
+        debug_log "  - Subtask candidate indent: ${current_indent}, Routine indent: ${routine_leading_indent}" # NEW DEBUG LINE
         if (( current_indent > routine_leading_indent )); then
-            subtasks_with_line_numbers+=("${current_line_num}: ${line_content}")
+            subtasks+=("${line_content}")
             debug_log "  - Identified subtask: '${line_content}' (indent: ${current_indent})"
-
             # Extract linked notes from subtask line
-            # Store with their source line number
-            local raw_subtask_notes=$(echo "$line_content" | grep -oP '\[\[.*?\]\]')
-            if [ -n "$raw_subtask_notes" ]; then
-                readarray -t notes_from_subtask <<< "$raw_subtask_notes"
-                for note in "${notes_from_subtask[@]}"; do
-                    subtask_linked_notes+=("${current_line_num}: 🔗 ${note}")
-                    debug_log "  - Found subtask linked note: ${note}"
-                done
+            local subtask_notes=$(echo "$line_content" | grep -oP '\[\[.*?\]\]' | tr '\n' ' ' | xargs)
+            if [ -n "$subtask_notes" ]; then
+                linked_notes+=("$subtask_notes")
+                debug_log "  - Found linked notes in subtask: ${subtask_notes}"
             fi
         else
             debug_log "  - Line has less or equal indentation, stopping subtask scan."
@@ -199,15 +184,11 @@ process_routine_details() {
     log_and_tee "\n${YELLOW}--- Consideration List for Current Routine ---${NC}"
     log_and_tee ""
 
-    # MODIFIED: ROUTINE BOX IS NOW HERE, content shows line number + description
-    draw_routine_box "${routine_start_line}. ${routine_desc}"
-    log_and_tee "" # Add a blank line after the box for spacing
-
     # Subtasks Considered
     log_and_tee "${CYAN}--- Subtasks Considered ---${NC}"
-    if [ ${#subtasks_with_line_numbers[@]} -gt 0 ]; then
-        for task_info in "${subtasks_with_line_numbers[@]}"; do
-            log_and_tee "  - ${task_info}"
+    if [ ${#subtasks[@]} -gt 0 ]; then
+        for task in "${subtasks[@]}"; do
+            log_and_tee "  - ${task}"
         done
     else
         log_and_tee "  ℹ️ No subtasks found for this routine."
@@ -216,104 +197,82 @@ process_routine_details() {
 
     # Linked Notes Considered
     log_and_tee "${CYAN}--- Linked Notes Considered ---${NC}"
-    log_and_tee ""
-
-    # From Routine Description
-    if [ ${#routine_linked_notes[@]} -gt 0 ]; then
-        log_and_tee "${YELLOW}  From linked notes found in the routine name:${NC}"
-        for note_with_line in "${routine_linked_notes[@]}"; do
-            log_and_tee "    ${note_with_line}"
-        done
+    if [ ${#linked_notes[@]} -gt 0 ]; then
+        # Use printf to join array elements with comma and space for cleaner output
+        local unique_notes=$(echo "${linked_notes[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')
+        log_and_tee "  🔗 ${unique_notes}"
     else
-        log_and_tee "${YELLOW}  From linked notes found in the routine name:${NC}"
-        log_and_tee "  0 (No linked notes found)"
-    fi
-    log_and_tee ""
-
-    # From Subtasks
-    if [ ${#subtask_linked_notes[@]} -gt 0 ]; then
-        log_and_tee "${YELLOW}  From Subtasks:${NC}"
-        for note_with_line in "${subtask_linked_notes[@]}"; do
-            log_and_tee "    ${note_with_line}"
-        done
-    else
-        log_and_tee "${YELLOW}  From Subtasks:${NC}"
-        log_and_tee "  0 (No linked notes found)"
+        log_and_tee "  ℹ️ No linked notes found for this routine or its subtasks."
+        log_and_tee ""
     fi
     log_and_tee ""
 
     debug_log "Exiting process_routine_details."
 }
 
-# --- Main Script Logic ---
-# 1. Clear log file and marker for a fresh start
-echo -n > "$OUTPUT_LOG_FILE"
-rm -f "${SCRIPT_DIR}/.log_init_marker" # Remove marker to force re-init on first log_and_tee
+# --- Script Execution ---
+rm -f "${SCRIPT_DIR}/.log_init_marker"
+script_start_time=$(date +"%Y-%m-%d %H:%M:%S")
+log_and_tee ""
+find_active_routine
 
-# 2. Determine initial state for Quick Result
-if [ ! -f "$PLANNER_FILE" ]; then
-    # If planner file is missing, set quick result immediately
-    QUICK_RESULT_CONTENT="Journal file not found."
-    current_routine_found="false" # Ensure this is false if file not found
-else
-    # Otherwise, find active routine(s) which populates current_routine_found and QUICK_RESULT_CONTENT
-    find_active_routine
-fi
+# --- Modified Code for QUICK RESULT ---
+log_and_tee "--- QUICK RESULT: ---"
+log_and_tee "**${QUICK_RESULT_CONTENT}**"
+log_and_tee ""
+# --- End of Modified Code ---
 
-# 3. Display the QUICK RESULT and Clean Routine Name at the very top (NO BOX FOR QUICK RESULT)
-log_and_tee "${CYAN}--- QUICK RESULT ---${NC}"
-if [ "$current_routine_found" = "true" ]; then
-    # Removed: The line below is removed to make QUICK RESULT more concise
-    # log_and_tee "${GREEN}Active Routine: ${QUICK_RESULT_CONTENT}${NC}"
-    log_and_tee "Quick Result: ${GREEN}${QUICK_RESULT_CONTENT}${NC}" # Modified to make it "Quick Result: [content]"
-    log_and_tee "Clean Routine Name (for other scripts):\n${QUICK_RESULT_CONTENT}"
-elif [ ! -f "$PLANNER_FILE" ]; then
-    # Message for missing planner file
-    log_and_tee "${RED}Error: Journal file '$PLANNER_FILE' not found.${NC}"
-    log_and_tee "Quick Result: Journal file not found."
-else # No active routine found but planner file exists
-    log_and_tee "${YELLOW}No active routine found at $(date +%H:%M).${NC}"
-    log_and_tee "Quick Result: No active routine found."
-fi
-log_and_tee "" # Add a blank line for separation
-
-# 4. Display general script information
-log_and_tee "${CYAN}--- Daily Routine and Task Manager ---${NC}"
-log_and_tee "Current Date: ${GREEN}${current_date}${NC}"
-log_and_tee "Journal File: ${BLUE}${PLANNER_FILE}${NC}"
-log_and_tee "Script Path: ${BLUE}${SCRIPT_DIR}${NC}"
-log_and_tee "Output Log: ${BLUE}${OUTPUT_LOG_FILE}${NC}"
+log_and_tee "--- Basic Section ---"
+log_and_tee "Script Source Path: $(readlink -f "$0")" # MODIFIED: Dynamic script path
+log_and_tee "Parsing Started At: $script_start_time"
+log_and_tee "Expected Journal File: $PLANNER_FILE"
+log_and_tee "Output Log File: $OUTPUT_LOG_FILE"
+log_and_tee "Display All File Content: $ENABLE_ALL_FILE_CONTENT_SECTION"
+log_and_tee "Debug Mode: $DEBUG_MODE" # Added debug mode status
 log_and_tee ""
 
-# 5. Conditional logic for processing routine details (adjusted)
-if [ ! -f "$PLANNER_FILE" ]; then
-    # Planner file missing, detailed processing is skipped, message already displayed above.
-    debug_log "Planner file missing, skipping detailed routine processing."
-else # Planner file exists, proceed with routine processing if active routines found
-    if [ "$current_routine_found" = "true" ]; then
-        log_and_tee "\n${CYAN}--- Routine Details ---${NC}" # This header appears before detailed processing
-
-        for i in "${!GLOBAL_ACTIVE_ROUTINE_LINES[@]}"; do
-            line_num="${GLOBAL_ACTIVE_ROUTINE_LINES[$i]}"
-            routine_description="${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}"
-
-            actual_line_content=$(sed -n "${line_num}p" "$PLANNER_FILE")
-            routine_indent=$(get_leading_spaces "$actual_line_content")
-
-            # Removed: Previous line output for routine description (now handled by box in process_routine_details)
-            # log_and_tee "\n${YELLOW}Routine (Line ${line_num}): ${routine_description}${NC}"
-
-            log_and_tee "  Full Line Content: '${actual_line_content}'"
-            log_and_tee "  Leading Indent: ${routine_indent} spaces"
-
-            process_routine_details "$line_num" "$routine_indent" "$routine_description"
-        done
-    # Else (no active routine found), the relevant message is already displayed in the "QUICK RESULT" section.
+if [ -f "$PLANNER_FILE" ]; then
+    log_and_tee "✅ Found today's journal entry: $PLANNER_FILE"
+    if [ "$ENABLE_ALL_FILE_CONTENT_SECTION" = "true" ]; then
+        log_and_tee "\n--- All File Content ---\n"
+        cat "$PLANNER_FILE" | nl -ba | tee -a "$OUTPUT_LOG_FILE"
+        log_and_tee "\n--- End of Journal Entry Content ---"
     fi
+
+    log_and_tee "\n--- Routines Matching Current Time ---"
+    log_and_tee "🕒 Current Time: $(date +%H:%M)\n"
+
+    # THIS IS THE SINGLE, CORRECT BLOCK FOR PROCESSING ACTIVE ROUTINES
+    if [ "$current_routine_found" == "true" ]; then
+        debug_log "Processing active routines loop. Total active routines: ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]}"
+        for i in "${!GLOBAL_ACTIVE_ROUTINE_LINES[@]}"; do
+            routine_line_num=${GLOBAL_ACTIVE_ROUTINE_LINES[$i]}
+            routine_description_box=${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}
+            debug_log "Current active routine: Line ${routine_line_num}, Description: '$routine_description_box'"
+            draw_routine_box "${routine_line_num}. ${routine_description_box}"
+            echo "" | tee -a "$OUTPUT_LOG_FILE"
+
+            # Fetch the actual content of the routine line to determine its indentation
+            # This is crucial for correctly identifying subtasks relative to its indentation
+            routine_line_content=$(sed -n "${routine_line_num}p" "$PLANNER_FILE")
+            routine_indentation=$(get_leading_spaces "$routine_line_content")
+            debug_log "  - Routine line content: '${routine_line_content}' (indent: ${routine_indentation})"
+
+            # Call the new function to process and display routine details
+            process_routine_details "$routine_line_num" "$routine_indentation" "$routine_description_box" # Pass description for linked notes
+            log_and_tee ""
+        done
+    else
+        log_and_tee "ℹ️ No scheduled routine found for the current time."
+        debug_log "No routines were found active, skipping routine processing loop."
+    fi
+else
+    log_and_tee "❌ Error: Journal file not found at '$PLANNER_FILE'"
+    debug_log "ERROR: Journal file not found. Script cannot proceed."
 fi
 
-# 6. Final Summary
-log_and_tee "\n${CYAN}--- Final Summary ---${NC}"
-log_and_tee "Logs are saved to: ${BLUE}${OUTPUT_LOG_FILE}${NC}"
-log_and_tee ""
-log_and_tee "${GREEN}Script execution finished.${NC}"
+log_and_tee "\n--- Last Section ---\n"
+log_and_tee "Routine Parsing Ended At: $(date +%Y-%m-%d\ %H:%M:%S)"
+log_and_tee "Output Log File Path: $OUTPUT_LOG_FILE"
+log_and_tee "Script Finished: All output saved to '$OUTPUT_LOG_FILE'"
+echo "\nDone. View with: cat \"$OUTPUT_LOG_FILE\""

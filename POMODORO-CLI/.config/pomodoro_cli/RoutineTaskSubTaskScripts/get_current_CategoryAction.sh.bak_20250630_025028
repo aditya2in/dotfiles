@@ -12,7 +12,7 @@ current_routine_found="false"
 current_routine_line_to_color=""
 declare -a GLOBAL_ACTIVE_ROUTINE_LINES
 declare -a GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS
-DEBUG_MODE="false" # Set to "true" for detailed debugging, "false" to disable.
+DEBUG_MODE="true" # Set to "true" for detailed debugging, "false" to disable.
 
 GREEN='\e[0;32m'
 BLUE='\e[0;34m'
@@ -156,6 +156,7 @@ process_routine_details() {
     if [ -n "$raw_routine_notes" ]; then
         readarray -t notes_from_routine_desc <<< "$raw_routine_notes"
         for note in "${notes_from_routine_desc[@]}"; do
+            # MODIFIED: Store linked note with its routine_start_line
             routine_linked_notes+=("${routine_start_line}: 🔗 ${note}")
             debug_log "  - Found routine linked note: ${note}"
         done
@@ -185,6 +186,7 @@ process_routine_details() {
             if [ -n "$raw_subtask_notes" ]; then
                 readarray -t notes_from_subtask <<< "$raw_subtask_notes"
                 for note in "${notes_from_subtask[@]}"; do
+                    # MODIFIED: Store linked note with its current_line_num
                     subtask_linked_notes+=("${current_line_num}: 🔗 ${note}")
                     debug_log "  - Found subtask linked note: ${note}"
                 done
@@ -199,11 +201,13 @@ process_routine_details() {
     log_and_tee "\n${YELLOW}--- Consideration List for Current Routine ---${NC}"
     log_and_tee ""
 
-    # MODIFIED: ROUTINE BOX IS NOW HERE, content shows line number + description
-    draw_routine_box "${routine_start_line}. ${routine_desc}"
-    log_and_tee "" # Add a blank line after the box for spacing
+    # Routine Considered - NEW SECTION
+    log_and_tee "${CYAN}--- Routine Considered ---${NC}"
+    # MODIFIED: Add routine_start_line to the output
+    log_and_tee "  ${routine_start_line}. ${routine_desc}"
+    log_and_tee ""
 
-    # Subtasks Considered
+    # Subtasks Considered (no change here as subtask_with_line_numbers already includes line numbers)
     log_and_tee "${CYAN}--- Subtasks Considered ---${NC}"
     if [ ${#subtasks_with_line_numbers[@]} -gt 0 ]; then
         for task_info in "${subtasks_with_line_numbers[@]}"; do
@@ -221,6 +225,7 @@ process_routine_details() {
     # From Routine Description
     if [ ${#routine_linked_notes[@]} -gt 0 ]; then
         log_and_tee "${YELLOW}  From linked notes found in the routine name:${NC}"
+        # MODIFIED: Remove sort -u and count logic; iterate and print directly
         for note_with_line in "${routine_linked_notes[@]}"; do
             log_and_tee "    ${note_with_line}"
         done
@@ -233,6 +238,7 @@ process_routine_details() {
     # From Subtasks
     if [ ${#subtask_linked_notes[@]} -gt 0 ]; then
         log_and_tee "${YELLOW}  From Subtasks:${NC}"
+        # MODIFIED: Remove sort -u and count logic; iterate and print directly
         for note_with_line in "${subtask_linked_notes[@]}"; do
             log_and_tee "    ${note_with_line}"
         done
@@ -260,13 +266,11 @@ else
     find_active_routine
 fi
 
-# 3. Display the QUICK RESULT and Clean Routine Name at the very top (NO BOX FOR QUICK RESULT)
+# 3. Display the QUICK RESULT and Clean Routine Name at the very top
 log_and_tee "${CYAN}--- QUICK RESULT ---${NC}"
 if [ "$current_routine_found" = "true" ]; then
-    # Removed: The line below is removed to make QUICK RESULT more concise
-    # log_and_tee "${GREEN}Active Routine: ${QUICK_RESULT_CONTENT}${NC}"
-    log_and_tee "Quick Result: ${GREEN}${QUICK_RESULT_CONTENT}${NC}" # Modified to make it "Quick Result: [content]"
-    log_and_tee "Clean Routine Name (for other scripts):\n${QUICK_RESULT_CONTENT}"
+    draw_routine_box "${GREEN}Active Routine: ${QUICK_RESULT_CONTENT}${NC}"
+    log_and_tee "Clean Routine Name (for other scripts): ${QUICK_RESULT_CONTENT}"
 elif [ ! -f "$PLANNER_FILE" ]; then
     # Message for missing planner file
     log_and_tee "${RED}Error: Journal file '$PLANNER_FILE' not found.${NC}"
@@ -277,7 +281,7 @@ else # No active routine found but planner file exists
 fi
 log_and_tee "" # Add a blank line for separation
 
-# 4. Display general script information
+# 4. Display general script information (moved here)
 log_and_tee "${CYAN}--- Daily Routine and Task Manager ---${NC}"
 log_and_tee "Current Date: ${GREEN}${current_date}${NC}"
 log_and_tee "Journal File: ${BLUE}${PLANNER_FILE}${NC}"
@@ -292,7 +296,6 @@ if [ ! -f "$PLANNER_FILE" ]; then
 else # Planner file exists, proceed with routine processing if active routines found
     if [ "$current_routine_found" = "true" ]; then
         log_and_tee "\n${CYAN}--- Routine Details ---${NC}" # This header appears before detailed processing
-
         for i in "${!GLOBAL_ACTIVE_ROUTINE_LINES[@]}"; do
             line_num="${GLOBAL_ACTIVE_ROUTINE_LINES[$i]}"
             routine_description="${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}"
@@ -300,9 +303,7 @@ else # Planner file exists, proceed with routine processing if active routines f
             actual_line_content=$(sed -n "${line_num}p" "$PLANNER_FILE")
             routine_indent=$(get_leading_spaces "$actual_line_content")
 
-            # Removed: Previous line output for routine description (now handled by box in process_routine_details)
-            # log_and_tee "\n${YELLOW}Routine (Line ${line_num}): ${routine_description}${NC}"
-
+            log_and_tee "\n${YELLOW}Routine (Line ${line_num}): ${routine_description}${NC}"
             log_and_tee "  Full Line Content: '${actual_line_content}'"
             log_and_tee "  Leading Indent: ${routine_indent} spaces"
 
@@ -312,8 +313,9 @@ else # Planner file exists, proceed with routine processing if active routines f
     fi
 fi
 
-# 6. Final Summary
+# 6. Final Summary (removed Quick Result line, as it's now at the top)
 log_and_tee "\n${CYAN}--- Final Summary ---${NC}"
+# log_and_tee "Quick Result: ${QUICK_RESULT_CONTENT}" # REMOVED: Now displayed at the very top.
 log_and_tee "Logs are saved to: ${BLUE}${OUTPUT_LOG_FILE}${NC}"
 log_and_tee ""
 log_and_tee "${GREEN}Script execution finished.${NC}"

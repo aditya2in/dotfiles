@@ -1,157 +1,183 @@
+[0;36m--- QUICK RESULT ---[0m
+Quick Result: [0;32m**Connect to Shri Mataji and Thank for the great day**,**MUSCLE MEMORY** [[Browser + VIM]][0m
+Clean Routine Name (for other scripts):
+**Connect to Shri Mataji and Thank for the great day**,**MUSCLE MEMORY** [[Browser + VIM]]
 
---- QUICK RESULT: ---
-****Connect to Shri Mataji and Thank for the great day**,Post Study:**
+[0;36m--- Daily Routine and Task Manager ---[0m
+Current Date: [0;32m2025-06-30[0m
+Journal File: [0;34m/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-06-30.md[0m
+Script Path: [0;34m/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts[0m
+Output Log: [0;34m/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt[0m
 
---- Basic Section ---
-Script Source Path: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/fetch_daily_journal.sh
-Parsing Started At: 2025-06-29 22:10:52
-Expected Journal File: /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-06-29.md
-Output Log File: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt
-Display All File Content: true
-Debug Mode: false
 
-✅ Found today's journal entry: /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-06-29.md
+[0;36m--- Routine Details ---[0m
+  Full Line Content: '- [ ] **Connect to Shri Mataji and Thank for the great day**  02:30 - 04:40'
+  Leading Indent: 0 spaces
 
---- All File Content ---
-
-     1	# Day planner
-     2	
-     3	## Connect to Shri Mataji and Thank for the great day
-     4	
-     5	- [ ] **Connect to Shri Mataji and Thank for the great day**  21:40 - 22:35
-     6	  - [ ] > [!important] KEPT ABSOLUTELY 0 TASK FOR MORNING. RIGHT ??
-     7	  - [ ] Enjoy walk and relax.
-     8	  - [ ] DONT FEEL LIKE DOING FS AT NIGHT?. THEN DEFINITELY DO FS
-     9	    - [ ] Sit before any FS
-    10	    - [ ] _CLOSE DOOR PROTOCOL_
-    11	    - [ ] RECLAIM THE WHOLE 3 NADIS WITH COOLNESS AND  <br> <br>FILLING THE BODY WITH COOLNESS IS MUST.
-    12	    - [ ] WATER THE SEED DAILY MORNING AND EVENING.  <br> <br>Water center channel mornings by sitting on floor and meditation <br> <br>MONRING FS WORKS TILL AFTERNOON.  <br> <br>NIGHT FS WORKS TILL NEXT MONRING 4 AM
-    13	    - [ ] Night FS with hot cold and "Red bindi" infront of Shri Mataji photograph with candle in front of it (CLOSE DOOR) <br>with hands on Swadhistans. MUST DO FS OF THE DAY >>>
-    14	    - [ ] Tell krupa to do all sides if both are doing FS.
-    15	    - [ ] The good old Surrender FS. Just see the ATA the play of her during the FS. DO NOTHING. SHE KNOWS WHAT TO DO.
-    16	    - [ ] Keep kundalini up. Push all bad up by deep breathing and giving it o Shri Mataji.
-    17	  - [ ] Post FS tasks
-    18	    - [ ] Actual night FS duration ?
-    19	    - [ ] Keep FSD ready for both of us for now.. Half mug water for krupa
-    20	    - [ ] Close all taps fully and keeo them up position and closed.
-    21	    - [ ] Log all the experiences in log.
-    22	      - [ ] Coolness ? Cool the body like good old days ?
-    23	      - [ ] Relaxed, relieved after FS
-    24	    - [ ] Meditian for some time after FS and before before sleep. Sleep with cool head.
-    25	      - [ ] Vibrating clouds
-    26	      - [ ] Use Vibrations daily
-    27	        - [ ] state after bandhans?
-    28	    - [ ] Ajwain whole house
-    29	    - [ ] Make 2L vibrated water ready as Shri Mataji photograph is clean
-    30	    - [ ] Also vibrate others as well like Garlic , lemon chillies
-    31	    - [ ] Keep FSD SETUP with table for tomorrow morning. Half mug water for krupa.
-    32	      - [ ] You cant END a day unless you do a FS.
-    33	      - [ ] You cant START a day unless you do a FS.
-    34	  - [ ] Plan todays Work from office and free time
-    35	    - [ ] SCHEDULE THE DAY AND DETERMINE THE WORK FOR THE DAY
-    36	    - [ ] **Do Office First and finish it off, Then open MacBook**
-    37	      - [ ] Plan day or attend te office by 11 AM then plan the day mike
-    38	  - [ ] Laptop Workflow
-    39	    - [ ] Breakfast first (Post workout) okay monuments okay bye forty two two hours
-    40	      - [ ] whats for breakfast today ?
-    41	      - [ ] Breakfast vibrated ?
-    42	      - [ ] Take a breakfast pic and vlog
-    43	      - [ ] How much time did you spenmd to chew 50 times?
-    44	      - [ ] Chew 50 times.
-    45	    - [ ] Laptop open Routines - Automation icon
-    46	      - [ ] Check the button and turn on Obsidian G Drive sync and rest of all by automation
-    47	    - [ ] [[Things to master for KUBESTRONAUT]]
-    48	      - [ ] **MUSCLE MEMORY / PRACTICE SECTION**
-    49	        - [ ] \*\*MUSCLE MEMORY [[Touch Typing]] \*\*
-    50	          - [ ] In 2 websites
-    51	            - [ ] Typing club #CategoryOrAction
-    52	            - [ ] Monkey Type typing
-    53	          - [ ] DO NOT BUY ANY KEYBOARD OR THINK SO. TRY THIS VERSION OF BASE VERSION TO LEARN THNGS.
-    54	        - [ ] **MUSCLE MEMORY** [[VIM]] [[NeoVim nvim]]
-    55	          - [ ] Vim Plugins
-    56	            - [ ] [[VimTutor]] COMPLETELY and DAILY
-    57	            - [ ] vim be good plugin
-    58	            - [ ] Hardtime
-    59	            - [ ] Other places for gaining muscle memory
-    60	              - [ ] VimAdventures
-    61	                - [ ] Dont pay for Vim adventures as of now, try using Vimtutor and test of all the list of the tools for now
-    62	                - [ ] EXPLORE ALL DIFFERENT LINKS FOR LEARNING VIM
-    63	              - [ ] VimRacer
-    64	              - [ ] Vimgolf
-    65	        - [ ] **MUSCLE MEMORY/ Organise** [[Obsidian + VIM]] 
-    66	          - Obsidian Sustaining
-    67	            - [ ] Dedicate time to write somehting Daily morning and evening
-    68	            - [ ] WRITING GIVES YOUR ORGANISED MENTAL CLARITY ON ALL DIFFERENT SEGMENTS IN LIFE.
-    69	            - [ ] TWO Parts
-    70	              - [ ] Organisation ideas of your own and get lost.
-    71	                - [ ] Just keep doing something something and get lost.
-    72	              - [ ] Update as per specific things from whats app chat
-    73	              - [ ] The more you sit with yourself the more you construct
-    74	        - [ ] **MUSCLE MEMORY** [[Browser + VIM]] 12:15 - 17:10
-    75	          - [ ] vimium in real life
-    76		          - [ ] test
-    77			          - [ ] yes
-    78	      - [ ] **THEORY SECTION** 
-    79	        - [ ] [[Linux]]
-    80	          - [ ] Abhishek veeramalla
-    81	          - [ ] KodeKloud
-    82	        - [ ] [[Kubernetes]] 14:30 - 17:05  iiare :w
-    83	          - [ ] Daily KUBESTRONAUT Study List
-    84	            - [ ] FIRST: High level over view of study inertia
-    85	            - [ ] Daily High level OverviewF
-    86	              - [ ] ALL Project View
-    87	                - [ ] Check Excel and Kanban
-    88	              - [ ] Current Subjects
-    89	                - [ ] See Index what am I doing now
-    90	                - [ ] Subjects list
-    91	                  - [ ] Open [[qKubernetes Launchpad🚀 (Data view)]]
-    92	                  - [ ] See where are you and master study plan and see where are you and how many days to complete and inertia and consistency
-    93	                - [ ] Block time and Dedicate time for both of the subjects for the day
-    94	            - [ ] [[Kubernetes Tasks]]
-    95	            - [ ] Open Kodekloud and Pomodoro ON
-    96	              - [ ] Move Kandhans for the day and start
-    97	              - [ ] Continue with Pomodoro pattern ON OFF from work
-    98	              - [ ] Daily update obsidian high level over view
-    99	  - [ ] High level Overview Checklist
-   100	    - [ ] Daily note creatyion as per WFH or WFO
-   101	    - [ ] Check daily calender adjustments
-   102	      - [ ] **Daily idea Dump Tasks**
-   103	        - [ ] High level over view for tasks
-   104	        - [ ] Categorise all tasks and place them in respective notes and assign task dates
-   105	          - [ ] Journals folder
-   106	        - [ ] Daily tasks:
-   107	          - [ ] [[Tasks List MASTER]]
-   108	  - [ ] Questions during Course DAILY
-   109	    - [ ] Pomodoro used ?
-   110	    - [ ] Drink 1L water
-   111	    - [ ] Take Toilet break
-   112	  - [ ] Post Study:  21:50 - 22:35
-   113	    - Actual Duration of studying?
-   114	    - Number of topics done ?
-   115	    - Name of topics ?
-   116	    - DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?
-   117	  - [ ] Work
-   118	    - [ ] Keep earphoes loose and talk office calls.
-   119	
-
---- End of Journal Entry Content ---
-
---- Routines Matching Current Time ---
-🕒 Current Time: 22:10
+[1;33m--- Consideration List for Current Routine ---[0m
 
 [0;36m╭─────────────────────────────────────────────────────────────╮[0m
 [0;36m│  5. **Connect to Shri Mataji and Thank for the great day**[0m  [0;36m│[0m
 [0;36m╰─────────────────────────────────────────────────────────────╯[0m
 
+[0;36m--- Subtasks Considered ---[0m
+  - 6:   - [ ] > [!important] KEPT ABSOLUTELY 0 TASK FOR MORNING. RIGHT ??
+  - 7:   - [ ] Enjoy walk and relax.
+  - 8:   - [ ] DONT FEEL LIKE DOING FS AT NIGHT?. THEN DEFINITELY DO FS
+  - 9:     - [ ] Sit before any FS
+  - 10:     - [ ] _CLOSE DOOR PROTOCOL_
+  - 11:     - [ ] RECLAIM THE WHOLE 3 NADIS WITH COOLNESS AND  <br> <br>FILLING THE BODY WITH COOLNESS IS MUST.
+  - 12:     - [ ] WATER THE SEED DAILY MORNING AND EVENING.  <br> <br>Water center channel mornings by sitting on floor and meditation <br> <br>MONRING FS WORKS TILL AFTERNOON.  <br> <br>NIGHT FS WORKS TILL NEXT MONRING 4 AM
+  - 13:     - [ ] Night FS with hot cold and "Red bindi" infront of Shri Mataji photograph with candle in front of it (CLOSE DOOR) <br>with hands on Swadhistans. MUST DO FS OF THE DAY >>>
+  - 14:     - [ ] Tell krupa to do all sides if both are doing FS.
+  - 15:     - [ ] The good old Surrender FS. Just see the ATA the play of her during the FS. DO NOTHING. SHE KNOWS WHAT TO DO.
+  - 16:     - [ ] Keep kundalini up. Push all bad up by deep breathing and giving it o Shri Mataji.
+  - 17:   - [ ] Post FS tasks
+  - 18:     - [ ] Actual night FS duration ?
+  - 19:     - [ ] Keep FSD ready for both of us for now.. Half mug water for krupa
+  - 20:     - [ ] Close all taps fully and keeo them up position and closed.
+  - 21:     - [ ] Log all the experiences in log.
+  - 22:       - [ ] Coolness ? Cool the body like good old days ?
+  - 23:       - [ ] Relaxed, relieved after FS
+  - 24:     - [ ] Meditian for some time after FS and before before sleep. Sleep with cool head.
+  - 25:       - [ ] Vibrating clouds
+  - 26:       - [ ] Use Vibrations daily
+  - 27:         - [ ] state after bandhans?
+  - 28:     - [ ] Ajwain whole house
+  - 29:     - [ ] Make 2L vibrated water ready as Shri Mataji photograph is clean
+  - 30:     - [ ] Also vibrate others as well like Garlic , lemon chillies
+  - 31:     - [ ] Keep FSD SETUP with table for tomorrow morning. Half mug water for krupa.
+  - 32:       - [ ] You cant END a day unless you do a FS.
+  - 33:       - [ ] You cant START a day unless you do a FS.
+  - 34:   - [ ] Plan todays Work from office and free time
+  - 35:     - [ ] SCHEDULE THE DAY AND DETERMINE THE WORK FOR THE DAY
+  - 36:     - [ ] **Do Office First and finish it off, Then open MacBook**
+  - 37:       - [ ] Plan day or attend te office by 11 AM then plan the day mike
+  - 38:   - [ ] Laptop Workflow
+  - 39:     - [ ] Breakfast first (Post workout) okay monuments okay bye forty two two hours
+  - 40:       - [ ] whats for breakfast today ?
+  - 41:       - [ ] Breakfast vibrated ?
+  - 42:       - [ ] Take a breakfast pic and vlog
+  - 43:       - [ ] How much time did you spenmd to chew 50 times?
+  - 44:       - [ ] Chew 50 times.
+  - 45:     - [ ] Laptop open Routines - Automation icon
+  - 46:       - [ ] Check the button and turn on Obsidian G Drive sync and rest of all by automation
+  - 47:     - [ ] [[Things to master for KUBESTRONAUT]]
+  - 48:       - [ ] **MUSCLE MEMORY / PRACTICE SECTION**
+  - 49:         - [ ] \*\*MUSCLE MEMORY [[Touch Typing]] \*\*
+  - 50:           - [ ] In 2 websites
+  - 51:             - [ ] Typing club #CategoryOrAction
+  - 52:             - [ ] Monkey Type typing
+  - 53:           - [ ] DO NOT BUY ANY KEYBOARD OR THINK SO. TRY THIS VERSION OF BASE VERSION TO LEARN THNGS.
+  - 54:         - [ ] **MUSCLE MEMORY** [[VIM]] [[NeoVim nvim]]
+  - 55:           - [ ] Vim Plugins
+  - 56:             - [ ] [[VimTutor]] COMPLETELY and DAILY
+  - 57:             - [ ] vim be good plugin
+  - 58:             - [ ] Hardtime
+  - 59:             - [ ] Other places for gaining muscle memory
+  - 60:               - [ ] VimAdventures
+  - 61:                 - [ ] Dont pay for Vim adventures as of now, try using Vimtutor and test of all the list of the tools for now
+  - 62:                 - [ ] EXPLORE ALL DIFFERENT LINKS FOR LEARNING VIM
+  - 63:               - [ ] VimRacer
+  - 64:               - [ ] Vimgolf
+  - 65:         - [ ] **MUSCLE MEMORY/ Organise** [[Obsidian + VIM]] 
+  - 66:           - Obsidian Sustaining
+  - 67:             - [ ] Dedicate time to write somehting Daily morning and evening
+  - 68:             - [ ] WRITING GIVES YOUR ORGANISED MENTAL CLARITY ON ALL DIFFERENT SEGMENTS IN LIFE.
+  - 69:             - [ ] TWO Parts
+  - 70:               - [ ] Organisation ideas of your own and get lost.
+  - 71:                 - [ ] Just keep doing something something and get lost.
+  - 72:               - [ ] Update as per specific things from whats app chat
+  - 73:               - [ ] The more you sit with yourself the more you construct
+  - 74:         - [ ] **MUSCLE MEMORY** [[Browser + VIM]] 02:45 - 06:35
+  - 75: 	        - [ ] vimium in real life
+  - 76: 		        - [ ] test
+  - 77: 			        - [ ] yes
+  - 78:       - [ ] **THEORY SECTION** 
+  - 79:         - [ ] [[Linux]]
+  - 80:           - [ ] Abhishek veeramalla
+  - 81:           - [ ] KodeKloud
+  - 82:         - [ ] [[Kubernetes]] 14:30 - 17:05  iiare :w
+  - 83:           - [ ] Daily KUBESTRONAUT Study List
+  - 84:             - [ ] FIRST: High level over view of study inertia
+  - 85:             - [ ] Daily High level OverviewF
+  - 86:               - [ ] ALL Project View
+  - 87:                 - [ ] Check Excel and Kanban
+  - 88:               - [ ] Current Subjects
+  - 89:                 - [ ] See Index what am I doing now
+  - 90:                 - [ ] Subjects list
+  - 91:                   - [ ] Open [[qKubernetes Launchpad🚀 (Data view)]]
+  - 92:                   - [ ] See where are you and master study plan and see where are you and how many days to complete and inertia and consistency
+  - 93:                 - [ ] Block time and Dedicate time for both of the subjects for the day
+  - 94:             - [ ] [[Kubernetes Tasks]]
+  - 95:             - [ ] Open Kodekloud and Pomodoro ON
+  - 96:               - [ ] Move Kandhans for the day and start
+  - 97:               - [ ] Continue with Pomodoro pattern ON OFF from work
+  - 98:               - [ ] Daily update obsidian high level over view
+  - 99:   - [ ] High level Overview Checklist
+  - 100:     - [ ] Daily note creatyion as per WFH or WFO
+  - 101:     - [ ] Check daily calender adjustments
+  - 102:       - [ ] **Daily idea Dump Tasks**
+  - 103:         - [ ] High level over view for tasks
+  - 104:         - [ ] Categorise all tasks and place them in respective notes and assign task dates
+  - 105:           - [ ] Journals folder
+  - 106:         - [ ] Daily tasks:
+  - 107:           - [ ] [[Tasks List MASTER]]
+  - 108:   - [ ] Questions during Course DAILY
+  - 109:     - [ ] Pomodoro used ?
+  - 110:     - [ ] Drink 1L water
+  - 111:     - [ ] Take Toilet break
+  - 112:   - [ ] Post Study:  21:50 - 23:40
+  - 113:     - Actual Duration of studying?
+  - 114:     - Number of topics done ?
+  - 115:     - Name of topics ?
+  - 116:     - DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?
+  - 117:   - [ ] Work
+  - 118:     - [ ] Keep earphoes loose and talk office calls.
 
-[0;36m╭────────────────────╮[0m
-[0;36m│  112. Post Study:[0m  [0;36m│[0m
-[0;36m╰────────────────────╯[0m
+[0;36m--- Linked Notes Considered ---[0m
+
+[1;33m  From linked notes found in the routine name:[0m
+  0 (No linked notes found)
+
+[1;33m  From Subtasks:[0m
+    47: 🔗 [[Things to master for KUBESTRONAUT]]
+    49: 🔗 [[Touch Typing]]
+    54: 🔗 [[VIM]]
+    54: 🔗 [[NeoVim nvim]]
+    56: 🔗 [[VimTutor]]
+    65: 🔗 [[Obsidian + VIM]]
+    74: 🔗 [[Browser + VIM]]
+    79: 🔗 [[Linux]]
+    82: 🔗 [[Kubernetes]]
+    91: 🔗 [[qKubernetes Launchpad🚀 (Data view)]]
+    94: 🔗 [[Kubernetes Tasks]]
+    107: 🔗 [[Tasks List MASTER]]
+
+  Full Line Content: '        - [ ] **MUSCLE MEMORY** [[Browser + VIM]] 02:45 - 06:35'
+  Leading Indent: 8 spaces
+
+[1;33m--- Consideration List for Current Routine ---[0m
+
+[0;36m╭───────────────────────────────────────────╮[0m
+[0;36m│  74. **MUSCLE MEMORY** [[Browser + VIM]][0m  [0;36m│[0m
+[0;36m╰───────────────────────────────────────────╯[0m
+
+[0;36m--- Subtasks Considered ---[0m
+  - 75: 	        - [ ] vimium in real life
+  - 76: 		        - [ ] test
+  - 77: 			        - [ ] yes
+
+[0;36m--- Linked Notes Considered ---[0m
+
+[1;33m  From linked notes found in the routine name:[0m
+    74: 🔗 [[Browser + VIM]]
+
+[1;33m  From Subtasks:[0m
+  0 (No linked notes found)
 
 
+[0;36m--- Final Summary ---[0m
+Logs are saved to: [0;34m/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt[0m
 
---- Last Section ---
-
-Routine Parsing Ended At: 2025-06-29 22:10:52
-Output Log File Path: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt
-Script Finished: All output saved to '/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt'
+[0;32mScript execution finished.[0m

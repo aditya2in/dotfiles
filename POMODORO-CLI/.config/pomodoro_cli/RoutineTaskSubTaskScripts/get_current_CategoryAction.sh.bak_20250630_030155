@@ -187,7 +187,7 @@ process_routine_details() {
                 for note in "${notes_from_subtask[@]}"; do
                     subtask_linked_notes+=("${current_line_num}: 🔗 ${note}")
                     debug_log "  - Found subtask linked note: ${note}"
-                done
+                done # FIXED: Changed 'Fdone' to 'done' here
             fi
         else
             debug_log "  - Line has less or equal indentation, stopping subtask scan."
@@ -235,7 +235,7 @@ process_routine_details() {
         log_and_tee "${YELLOW}  From Subtasks:${NC}"
         for note_with_line in "${subtask_linked_notes[@]}"; do
             log_and_tee "    ${note_with_line}"
-        done
+        done # FIXED: Changed 'Fdone' to 'done' here
     else
         log_and_tee "${YELLOW}  From Subtasks:${NC}"
         log_and_tee "  0 (No linked notes found)"
@@ -263,9 +263,9 @@ fi
 # 3. Display the QUICK RESULT and Clean Routine Name at the very top (NO BOX FOR QUICK RESULT)
 log_and_tee "${CYAN}--- QUICK RESULT ---${NC}"
 if [ "$current_routine_found" = "true" ]; then
-    # Removed: The line below is removed to make QUICK RESULT more concise
-    # log_and_tee "${GREEN}Active Routine: ${QUICK_RESULT_CONTENT}${NC}"
-    log_and_tee "Quick Result: ${GREEN}${QUICK_RESULT_CONTENT}${NC}" # Modified to make it "Quick Result: [content]"
+    # MODIFIED: No draw_routine_box here.
+    log_and_tee "${GREEN}Active Routine: ${QUICK_RESULT_CONTENT}${NC}"
+    # MODIFIED: Newline for clean routine name.
     log_and_tee "Clean Routine Name (for other scripts):\n${QUICK_RESULT_CONTENT}"
 elif [ ! -f "$PLANNER_FILE" ]; then
     # Message for missing planner file
