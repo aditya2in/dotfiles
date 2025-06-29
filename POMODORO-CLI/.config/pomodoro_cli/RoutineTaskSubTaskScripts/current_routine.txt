@@ -1,7 +1,7 @@
 [0;36m--- QUICK RESULT ---[0m
-Quick Result: [0;32m**Connect to Shri Mataji and Thank for the great day**,**MUSCLE MEMORY** [[Browser + VIM]][0m
+Quick Result: [0;32m**Connect to Shri Mataji and Thank for the great day**,**MUSCLE MEMORY** [[Browser + VIM]],[[Kubernetes]][0m
 Clean Routine Name (for other scripts):
-**Connect to Shri Mataji and Thank for the great day**,**MUSCLE MEMORY** [[Browser + VIM]]
+**Connect to Shri Mataji and Thank for the great day**,**MUSCLE MEMORY** [[Browser + VIM]],[[Kubernetes]]
 
 [0;36m--- Daily Routine and Task Manager ---[0m
 Current Date: [0;32m2025-06-30[0m
@@ -97,7 +97,7 @@ Output Log: [0;34m/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/Routi
   - 79:         - [ ] [[Linux]]
   - 80:           - [ ] Abhishek veeramalla
   - 81:           - [ ] KodeKloud
-  - 82:         - [ ] [[Kubernetes]] 14:30 - 17:05  iiare :w
+  - 82:         - [ ] [[Kubernetes]] 02:45 - 05:20  iiare :w
   - 83:           - [ ] Daily KUBESTRONAUT Study List
   - 84:             - [ ] FIRST: High level over view of study inertia
   - 85:             - [ ] Daily High level OverviewF
@@ -175,6 +175,42 @@ Output Log: [0;34m/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/Routi
 
 [1;33m  From Subtasks:[0m
   0 (No linked notes found)
+
+  Full Line Content: '        - [ ] [[Kubernetes]] 02:45 - 05:20  iiare :w'
+  Leading Indent: 8 spaces
+
+[1;33m--- Consideration List for Current Routine ---[0m
+
+[0;36m╭──────────────────────╮[0m
+[0;36m│  82. [[Kubernetes]][0m  [0;36m│[0m
+[0;36m╰──────────────────────╯[0m
+
+[0;36m--- Subtasks Considered ---[0m
+  - 83:           - [ ] Daily KUBESTRONAUT Study List
+  - 84:             - [ ] FIRST: High level over view of study inertia
+  - 85:             - [ ] Daily High level OverviewF
+  - 86:               - [ ] ALL Project View
+  - 87:                 - [ ] Check Excel and Kanban
+  - 88:               - [ ] Current Subjects
+  - 89:                 - [ ] See Index what am I doing now
+  - 90:                 - [ ] Subjects list
+  - 91:                   - [ ] Open [[qKubernetes Launchpad🚀 (Data view)]]
+  - 92:                   - [ ] See where are you and master study plan and see where are you and how many days to complete and inertia and consistency
+  - 93:                 - [ ] Block time and Dedicate time for both of the subjects for the day
+  - 94:             - [ ] [[Kubernetes Tasks]]
+  - 95:             - [ ] Open Kodekloud and Pomodoro ON
+  - 96:               - [ ] Move Kandhans for the day and start
+  - 97:               - [ ] Continue with Pomodoro pattern ON OFF from work
+  - 98:               - [ ] Daily update obsidian high level over view
+
+[0;36m--- Linked Notes Considered ---[0m
+
+[1;33m  From linked notes found in the routine name:[0m
+    82: 🔗 [[Kubernetes]]
+
+[1;33m  From Subtasks:[0m
+    91: 🔗 [[qKubernetes Launchpad🚀 (Data view)]]
+    94: 🔗 [[Kubernetes Tasks]]
 
 
 [0;36m--- Final Summary ---[0m
