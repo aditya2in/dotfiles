@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# --- Script Configuration ---
+# --- Script Configuration ----
 current_date=$(date +%Y-%m-%d)
 JOURNAL_DIR="/home/aditya/obsidian/All Things/Journal/Daily Journal"
 PLANNER_FILE="${JOURNAL_DIR}/${current_date}.md"
