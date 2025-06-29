@@ -1,0 +1,23 @@
+[
+  {
+    "sessionId": "2605f7ee-8774-4793-95ad-0a321a74e074",
+    "messageId": 0,
+    "type": "user",
+    "message": "explain",
+    "timestamp": "2025-06-28T06:13:47.867Z"
+  },
+  {
+    "sessionId": "2605f7ee-8774-4793-95ad-0a321a74e074",
+    "messageId": 1,
+    "type": "user",
+    "message": "there are error when i update Lazyvim. can you see?",
+    "timestamp": "2025-06-28T06:14:16.551Z"
+  },
+  {
+    "sessionId": "2605f7ee-8774-4793-95ad-0a321a74e074",
+    "messageId": 2,
+    "type": "user",
+    "message": "what shoudl i test ?",
+    "timestamp": "2025-06-28T06:15:04.585Z"
+  }
+]

@@ -28,7 +28,7 @@ ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
-alias tt="tmux" # Removed the hidden character 
+# Removed the hidden character 
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment one of the following lines to change the auto-update behavior
@@ -68,7 +68,7 @@ alias tt="tmux" # Removed the hidden character 
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+# HIST_STAMPS="mm/dd/yyyy"nerd-dictation begin --simulate-input-tool=YDOTOOL
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -190,8 +190,9 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 alias c="clear"
 alias e="exit"
 #alias dd="sh nerd-dictation.sh"
-alias dd="~/dotfiles/scripts/toggle_nerd_dictation.sh"
-
+alias dd="~/dotfiles/scripts/toggle_nerd_dictation_NORMAL.sh"
+alias ddt="~/dotfiles/scripts/toggle_nerd_dictation_TERMINAL.sh"
+#alias dd="nerd-dictation begin --simulate-input-tool=YDOTOOL"
 alias gs="git status"
 alias ga="git add ."
 alias gc="git commit -v" 
