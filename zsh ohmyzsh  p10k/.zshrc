@@ -250,3 +250,6 @@ export PATH="$HOME/.local/bin:$PATH"
 # Pomodoro CLI Manager
 export PATH="$HOME/.config/pomodoro_cli:$PATH"
 export PATH="/home/aditya/.config/pomodoro_cli/RoutineTaskSubTaskScripts:$PATH"
+
+# npm global installations
+export PATH="$HOME/.npm-global/bin:$PATH"

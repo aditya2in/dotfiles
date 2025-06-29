@@ -1,0 +1,299 @@
+#!/bin/bash
+
+# --- Script Configuration ---
+current_date=$(date +%Y-%m-%d)
+JOURNAL_DIR="/home/aditya/obsidian/All Things/Journal/Daily Journal"
+PLANNER_FILE="${JOURNAL_DIR}/${current_date}.md"
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+OUTPUT_LOG_FILE="${SCRIPT_DIR}/current_routine.txt"
+ENABLE_ALL_FILE_CONTENT_SECTION="true"
+QUICK_RESULT_CONTENT="No active routine found."
+current_routine_found="false"
+current_routine_line_to_color=""
+declare -a GLOBAL_ACTIVE_ROUTINE_LINES
+declare -a GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS
+
+GREEN='\e[0;32m'
+BLUE='\e[0;34m'
+CYAN='\e[0;36m'
+YELLOW='\e[1;33m'
+RED='\e[0;31m'
+NC='\e[0m'
+
+TAB_WIDTH=8 # Adjust this to match your editor's tab width if different
+
+log_and_tee() {
+    local message="$1"
+    local target_fd=${2:-1} # 1 for stdout (default), 2 for stderr
+
+    if [ ! -f "${SCRIPT_DIR}/.log_init_marker}" ]; then
+        echo -n > "${OUTPUT_LOG_FILE}"
+        touch "${SCRIPT_DIR}/.log_init_marker"
+    fi
+    # Use >& to redirect to the specified file descriptor
+    echo -e "$message" >&"$target_fd" | tee -a "${OUTPUT_LOG_FILE}"
+}
+
+get_display_width() {
+    local stripped_string=$(echo -e "$1" | sed -E "s/\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
+    echo "${#stripped_string}"
+}
+
+draw_routine_box() {
+    local content="$1"
+    local box_line_padding="  "
+    local content_display_width=$(get_display_width "$content")
+    local horizontal_line_width=$((content_display_width + (2 * ${#box_line_padding})))
+    log_and_tee "${CYAN}╭$(printf '─%.0s' $(seq 1 "$horizontal_line_width"))╮${NC}"
+    local spaces_needed_right=$((horizontal_line_width - content_display_width - ${#box_line_padding}))
+    log_and_tee "${CYAN}│${box_line_padding}${content}${NC}$(printf ' %.0s' $(seq 1 "$spaces_needed_right"))${CYAN}│${NC}"
+    log_and_tee "${CYAN}╰$(printf '─%.0s' $(seq 1 "$horizontal_line_width"))╯${NC}"
+}
+
+# New helper function to calculate visual indentation length
+get_visual_indentation_length() {
+    local line="$1"
+    local tab_width=${2:-8} # Default tab width to 8 spaces
+    local raw_indentation=""
+    if [[ "$line" =~ ^([[:space:]]*).* ]]; then
+        raw_indentation="${BASH_REMATCH[1]}"
+    fi
+    # Convert tabs to spaces for consistent length calculation
+    local expanded_indentation=$(echo "$raw_indentation" | sed "s/\t/$(printf ' %.0s' $(seq 1 "$tab_width"))/g")
+    echo "${#expanded_indentation}"
+}
+
+
+extract_linked_notes() {
+    grep -o '\[\[.*?\]\]' | sed 's/\[\[//;s/\]\]//' | sort -u
+}
+
+find_active_routine() {
+    GLOBAL_ACTIVE_ROUTINE_LINES=()
+    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS=()
+    local current_hour=$(date +%H)
+    local current_minute=$(date +%M)
+    local current_time_in_minutes=$((10#$current_hour * 60 + 10#$current_minute))
+    local current_file_line_num=0
+
+    if [ ! -f "$PLANNER_FILE" ]; then
+        log_and_tee "⚠️ Warning: Journal file '$PLANNER_FILE' not found during early routine scan." 2
+        return
+    fi
+
+    log_and_tee "${BLUE}--- DEBUG: find_active_routine started ---${NC}" 2
+    log_and_tee "${BLUE}Current Time (minutes): $current_time_in_minutes${NC}" 2
+
+    while IFS= read -r line; do
+        current_file_line_num=$((current_file_line_num + 1))
+        # Match the line with time ranges
+        if [[ "$line" =~ ([0-9]{2}:[0-9]{2})[[:space:]]*-?[[:space:]]?([0-9]{2}:[0-9]{2}) ]]; then
+            # Extract the routine text by removing the timestamps and everything after them
+            local routine_text="$(echo "${line}" | sed -E 's/([0-9]{2}:[0-9]{2})[[:space:]]*-?[[:space:]]?([0-9]{2}:[0-9]{2}).*//')"
+            local start="${BASH_REMATCH[1]}" # This now refers to the first matched timestamp
+            local end="${BASH_REMATCH[2]}"   # This now refers to the second matched timestamp
+
+            # Clean the description by removing leading checkbox/bullet point
+            local description=$(echo "$routine_text" | sed -E 's/^[[:space:]]*- ?\[ ?\] ?//' | xargs)
+
+            local sh=$(echo "$start" | cut -d':' -f1)
+            local sm=$(echo "$start" | cut -d':' -f2)
+            local eh=$(echo "$end" | cut -d':' -f1)
+            local em=$(echo "$end" | cut -d':' -f2)
+
+            local start_min=$((10#$sh * 60 + 10#$sm))
+            local end_min=$((10#$eh * 60 + 10#$em))
+
+            log_and_tee "${BLUE}  Line $current_file_line_num: '$line'${NC}" 2
+            log_and_tee "${BLUE}  - Parsed Time Range: $start_min - $end_min${NC}" 2
+            log_and_tee "${BLUE}  - Routine Text: '$routine_text'${NC}" 2
+            log_and_tee "${BLUE}  - Description (cleaned): '$description'${NC}" 2
+
+
+            if (( start_min > end_min )); then
+                # Handle routines that cross midnight
+                log_and_tee "${BLUE}    DEBUG: Cross-midnight check - current_time_in_minutes ($current_time_in_minutes) vs start_min ($start_min) || current_time_in_minutes ($current_time_in_minutes) vs end_min ($end_min)${NC}" 2
+                if (( current_time_in_minutes >= start_min || current_time_in_minutes < end_min )); then
+                    GLOBAL_ACTIVE_ROUTINE_LINES+=("$current_file_line_num")
+                    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS+=("$description")
+                    log_and_tee "${GREEN}  -> Active (cross midnight)! Added. Current descriptions: ${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[*]}${NC}"
+                else
+                    log_and_tee "${YELLOW}  -> Inactive (cross midnight). Condition not met.${NC}" 2
+                fi
+            else
+                # Handle routines within the same day
+                log_and_tee "${BLUE}    DEBUG: Same-day check - current_time_in_minutes ($current_time_in_minutes) vs start_min ($start_min) && current_time_in_minutes ($current_time_in_minutes) vs end_min ($end_min)${NC}" 2
+                if (( current_time_in_minutes >= start_min && current_time_in_minutes < end_min )); then
+                    GLOBAL_ACTIVE_ROUTINE_LINES+=("$current_file_line_num")
+                    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS+=("$description")
+                    log_and_tee "${GREEN}  -> Active (same day)! Added. Current descriptions: ${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[*]}${NC}"
+                else
+                    log_and_tee "${YELLOW}  -> Inactive (same day). Condition not met.${NC}" 2
+                fi
+            fi
+        fi
+    done < "$PLANNER_FILE"
+
+    log_and_tee "${BLUE}--- DEBUG: find_active_routine finished ---${NC}" 2
+    log_and_tee "${BLUE}Total active routines found: ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]}${NC}" 2
+    log_and_tee "${BLUE}All active routine descriptions: $(IFS=, ; echo "${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[*]}") ${NC}" 2
+
+
+    if [ ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]} -gt 0 ]; then
+        current_routine_found="true"
+        QUICK_RESULT_CONTENT="$(IFS=, ; echo "${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[*]}")"
+    else
+        current_routine_found="false"
+        QUICK_RESULT_CONTENT="No active routine found."
+    fi
+}
+
+get_subtasks_for_routine() {
+    local start_line=$1
+    local file=$2
+    local subtasks=()
+    local routine_visual_indent_len=0 # Change from routine_indentation to visual length
+    local current_line_number=0
+    local initial_scan_done=false
+
+    log_and_tee "${BLUE}--- DEBUG: get_subtasks_for_routine for line $start_line ---${NC}" 2
+
+    if [ ! -f "$file" ]; then
+        log_and_tee "Error: File '$file' not found." 2
+        return 1
+    fi
+
+    # Read the file from the start_line onwards
+    while IFS= read -r line; do
+        current_line_number=$((current_line_number + 1))
+
+        if [ "$current_line_number" -eq "$start_line" ]; then
+            # Calculate the visual indentation length of the routine line
+            routine_visual_indent_len=$(get_visual_indentation_length "$line" "$TAB_WIDTH")
+            log_and_tee "${BLUE}  DEBUG: Routine visual indentation length: ${routine_visual_indent_len} ${NC}" 2
+            initial_scan_done=true
+            continue
+        fi
+
+        if ! "$initial_scan_done"; then
+            continue
+        fi
+
+        local current_line_visual_indent_len=$(get_visual_indentation_length "$line" "$TAB_WIDTH")
+        local trimmed_line_content=$(echo "$line" | xargs) # To check if line is empty
+
+        # If the line is empty or just whitespace, skip it
+        # If indentation is not deeper, it's not a subtask of THIS routine -> break
+        if [ -z "$trimmed_line_content" ]; then
+            log_and_tee "${BLUE}    DEBUG: Skipping empty or whitespace-only line at $current_line_number.${NC}" 2
+            continue
+        fi
+
+        if (( current_line_visual_indent_len <= routine_visual_indent_len )); then
+            log_and_tee "${BLUE}    DEBUG: Current line indentation (${current_line_visual_indent_len}) not greater than routine (${routine_visual_indent_len}) or new top-level routine/section. Stopping subtask scan at line $current_line_number.${NC}" 2
+            break # Stop if indentation is not deeper or it's a new section
+        fi
+
+
+        # If we reach here, it's deeper indented. Now check if it's a valid subtask line.
+        # This regex checks for the typical subtask patterns after any leading whitespace.
+        local subtask_content_pattern="^([[:space:]]*(-[[:space:]]\[[ x]\]|[[:space:]]*-|[[:space:]]*>[[:space:]]*\[\!.*\]|[[:space:]]*>[[:space:]]*)).*"
+        if [[ "$line" =~ "$subtask_content_pattern" ]]; then
+            # Check if it's another routine with a timestamp (which should stop subtask collection)
+            local routine_marker_pattern="^([[:space:]]*)-[[:space:]]\\[[ x]\\][[:space:]]+\\*\\*.*\\*\\*.*([0-9]{2}:[0-9]{2})[[:space:]]*-?[[:space:]]?([0-9]{2}:[0-9]{2})"
+            if [[ "$line" =~ $routine_marker_pattern ]]; then
+                log_and_tee "${BLUE}    DEBUG: Encountered another routine with timestamp at line $current_line_number. Stopping subtask scan.${NC}" 2
+                break
+            else
+                log_and_tee "${BLUE}    DEBUG: Adding subtask/context: '${line}'${NC}" 2
+                # Strip leading whitespace and the bullet/callout itself
+                subtasks+=("$(echo "$line" | sed -E 's/^[[:space:]]*(-[[:space:]]\[[ x]\]|[[:space:]]*-|[[:space:]]*>[[:space:]]*\[\!.*\]|[[:space:]]*>[[:space:]]*)[[:space:]]*//')")
+            fi
+        else
+            # It's indented deeper, but not a recognized subtask pattern (e.g., just random text)
+            log_and_tee "${BLUE}    DEBUG: Line at $current_line_number is deeper indented but not a subtask pattern. Stopping subtask scan.${NC}" 2
+            break
+        fi
+
+    done < <(tail -n +"$start_line" "$file") # Read file starting from the routine's line
+
+    log_and_tee "${BLUE}--- DEBUG: get_subtasks_for_routine finished for line $start_line ---${NC}" 2
+    if [ ${#subtasks[@]} -gt 0 ]; then
+        printf "%s\\n" "${subtasks[@]}"
+    fi
+}
+
+
+# --- Main Script Logic ---
+
+log_and_tee "\\n--- Basic Section ---"
+log_and_tee "Script Source Path: ${SCRIPT_DIR}/$(basename "$0")"
+log_and_tee "Parsing Started At: $(date +%Y-%m-%d\\ %H:%M:%S)"
+log_and_tee "Expected Journal File: $PLANNER_FILE"
+log_and_tee "Output Log File: $OUTPUT_LOG_FILE"
+log_and_tee "Display All File Content: $ENABLE_ALL_FILE_CONTENT_SECTION"
+
+if [ -f "$PLANNER_FILE" ]; then
+    log_and_tee "\\n✅ Found today's journal entry: $PLANNER_FILE"
+
+    if [ "$ENABLE_ALL_FILE_CONTENT_SECTION" = "true" ]; then
+        log_and_tee "\\n--- All File Content ---\\n"
+        # Use awk to add line numbers and then tee to output file
+        awk '{printf "%6d\t%s\n", NR, $0}' "$PLANNER_FILE" | tee -a "$OUTPUT_LOG_FILE"
+        log_and_tee "\\n--- End of Journal Entry Content ---\\n"
+    fi
+
+    log_and_tee "\\n--- Routines Matching Current Time ---"
+    log_and_tee "🕒 Current Time: $(date +%H:%M)"
+
+    find_active_routine # This populates GLOBAL_ACTIVE_ROUTINE_LINES and GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS
+
+    if [ "$current_routine_found" = "true" ]; then
+        for i in "${!GLOBAL_ACTIVE_ROUTINE_LINES[@]}"; do
+            routine_line_num=${GLOBAL_ACTIVE_ROUTINE_LINES[$i]}
+            routine_description_box=${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}
+            draw_routine_box "${routine_description_box}"
+            echo "" | tee -a "$OUTPUT_LOG_FILE"
+
+            log_and_tee "${YELLOW}--- Considered List ---${NC}"
+            log_and_tee "${YELLOW}Routine name: ${routine_description_box}${NC}"
+            log_and_tee "${YELLOW}Subtasks:${NC}"
+            log_and_tee ""
+            # Pass the full original line content to get_subtasks_for_routine, but it only uses the line number.
+            # The subtasks_output will still be derived from the file based on indentation.
+            subtasks_output=$(get_subtasks_for_routine "$routine_line_num" "$PLANNER_FILE") # This now captures only stdout from get_subtasks_for_routine
+            if [ -n "$subtasks_output" ]; then
+                echo -e "$subtasks_output" | tee -a "$OUTPUT_LOG_FILE"
+            else
+                log_and_tee "    (No subtasks found for this routine or none are indented.)"
+            fi
+
+            log_and_tee "${YELLOW}Linked Notes:${NC}"
+            log_and_tee "${BLUE}--- DEBUG: Input to linked notes grep for routine '$routine_description_box'---${NC}" 2
+            log_and_tee "${BLUE}  Routine Description Box: '$routine_description_box'${NC}" 2
+            log_and_tee "${BLUE}  Subtasks Output: '$subtasks_output'${NC}" 2
+
+            {
+              # Now routine_description_box correctly contains the linked note
+              echo "$routine_description_box"
+              echo "$subtasks_output"
+            } | grep -o '\[\[.*?\]\]' | sed 's/\[\[//;s/\\]\]//' | sort -u | while read -r link; do
+                log_and_tee "  - [[${link}]]"
+            done
+
+            log_and_tee ""
+        done
+    else
+        log_and_tee "ℹ️ No scheduled routine found for the current time."
+    fi
+else
+    log_and_tee "❌ Error: Journal file not found at '$PLANNER_FILE'"
+fi
+
+log_and_tee "\\n--- Last Section ---"
+log_and_tee "Routine Parsing Ended At: $(date +%Y-%m-%d\\ %H:%M:%S)"
+log_and_tee "Quick Result: $QUICK_RESULT_CONTENT"
+log_and_tee "Output saved to: $OUTPUT_LOG_FILE"
+
+# Clean up the marker file on script exit
+# trap 'rm -f "${SCRIPT_DIR}/.log_init_marker}"' EXIT

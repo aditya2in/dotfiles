@@ -1,0 +1,186 @@
+#!/bin/bash
+
+# --- Script Configuration ---
+current_date=$(date +%Y-%m-%d)
+JOURNAL_DIR="/home/aditya/obsidian/All Things/Journal/Daily Journal"
+PLANNER_FILE="${JOURNAL_DIR}/${current_date}.md"
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+OUTPUT_LOG_FILE="${SCRIPT_DIR}/current_routine.txt"
+ENABLE_ALL_FILE_CONTENT_SECTION="true"
+QUICK_RESULT_CONTENT="No active routine found."
+current_routine_found="false"
+current_routine_line_to_color=""
+declare -a GLOBAL_ACTIVE_ROUTINE_LINES
+declare -a GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS
+DEBUG_MODE="true" # Set to "true" for detailed debugging, "false" to disable.
+
+GREEN='\e[0;32m'
+BLUE='\e[0;34m'
+CYAN='\e[0;36m'
+YELLOW='\e[1;33m'
+RED='\e[0;31m'
+NC='\e[0m'
+
+log_and_tee() {
+    if [ ! -f "${SCRIPT_DIR}/.log_init_marker" ]; then
+        echo -n > "$OUTPUT_LOG_FILE"
+        touch "${SCRIPT_DIR}/.log_init_marker"
+    fi
+    echo -e "$@" | tee -a "$OUTPUT_LOG_FILE"
+}
+
+debug_log() {
+    if [ "$DEBUG_MODE" = "true" ]; then
+        log_and_tee "${BLUE}[DEBUG] $@${NC}"
+    fi
+}
+
+get_display_width() {
+    local stripped_string=$(echo -e "$1" | sed -E "s/\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
+    echo "${#stripped_string}"
+}
+
+draw_routine_box() {
+    local content="$1"
+    local box_line_padding="  "
+    local content_display_width=$(get_display_width "$content")
+    local horizontal_line_width=$((content_display_width + (2 * ${#box_line_padding})))
+    log_and_tee "${CYAN}╭$(printf '─%.0s' $(seq 1 $horizontal_line_width))╮${NC}"
+    local spaces_needed_right=$((horizontal_line_width - content_display_width - ${#box_line_padding}))
+    log_and_tee "${CYAN}│${box_line_padding}${content}${NC}$(printf ' %.0s' $(seq 1 $spaces_needed_right))${CYAN}│${NC}"
+    log_and_tee "${CYAN}╰$(printf '─%.0s' $(seq 1 $horizontal_line_width))╯${NC}"
+}
+
+find_active_routine() {
+    debug_log "Entering find_active_routine function."
+    GLOBAL_ACTIVE_ROUTINE_LINES=()
+    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS=()
+    local current_hour=$(date +%H)
+    local current_minute=$(date +%M)
+    local current_time_in_minutes=$((10#$current_hour * 60 + 10#$current_minute))
+    debug_log "Current time: ${current_hour}:${current_minute} (${current_time_in_minutes} minutes)."
+    local current_file_line_num=0
+
+    if [ ! -f "$PLANNER_FILE" ]; then
+        log_and_tee "⚠️ Warning: Journal file '$PLANNER_FILE' not found during early routine scan."
+        debug_log "Exiting find_active_routine due to missing planner file."
+        return
+    fi
+
+    debug_log "Scanning planner file: $PLANNER_FILE"
+    while IFS= read -r line; do
+        current_file_line_num=$((current_file_line_num + 1))
+        debug_log "Processing line ${current_file_line_num}: '$line'"
+        if [[ "$line" =~ (.*)([0-9]{2}:[0-9]{2})[[:space:]]*-?[[:space:]]?([0-9]{2}:[0-9]{2}) ]]; then
+            local routine_text="${BASH_REMATCH[1]}"
+            local start="${BASH_REMATCH[2]}"
+            local end="${BASH_REMATCH[3]}"
+            debug_log "  - Matched: Routine text='$routine_text', Start='$start', End='$end'"
+
+            local description=$(echo "$routine_text" | sed -E 's/^[[:space:]]*- ?\[ ?\] ?//' | xargs)
+            debug_log "  - Extracted description: '$description'"
+
+            local sh=$(echo "$start" | cut -d':' -f1)
+            local sm=$(echo "$start" | cut -d':' -f2)
+            local eh=$(echo "$end" | cut -d':' -f1)
+            local em=$(echo "$end" | cut -d':' -f2)
+
+            local start_min=$((10#$sh * 60 + 10#$sm))
+            local end_min=$((10#$eh * 60 + 10#$em))
+            debug_log "  - Start time in minutes: $start_min, End time in minutes: $end_min"
+
+            if (( start_min > end_min )); then
+                debug_log "  - Routine spans across midnight. Checking if current time (${current_time_in_minutes}) is >= $start_min OR < $end_min."
+                if (( current_time_in_minutes >= start_min || current_time_in_minutes < end_min )); then
+                    GLOBAL_ACTIVE_ROUTINE_LINES+=("$current_file_line_num")
+                    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS+=("$description")
+                    debug_log "  - Routine identified as ACTIVE (spans midnight): Line ${current_file_line_num}, Desc: '$description'"
+                else
+                    debug_log "  - Routine NOT active (spans midnight)."
+                fi
+            else
+                debug_log "  - Routine within same day. Checking if current time (${current_time_in_minutes}) is >= $start_min AND < $end_min."
+                if (( current_time_in_minutes >= start_min && current_time_in_minutes < end_min )); then
+                    GLOBAL_ACTIVE_ROUTINE_LINES+=("$current_file_line_num")
+                    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS+=("$description")
+                    debug_log "  - Routine identified as ACTIVE: Line ${current_file_line_num}, Desc: '$description'"
+                else
+                    debug_log "  - Routine NOT active (same day)."
+                fi
+            fi
+        else
+            debug_log "  - Line does not match routine time pattern."
+        fi
+    done < "$PLANNER_FILE"
+
+    if [ ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]} -gt 0 ]; then
+        current_routine_found="true"
+        QUICK_RESULT_CONTENT="$(IFS=, ; echo "${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[*]}")"
+        debug_log "Active routines found: ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]}. QUICK_RESULT_CONTENT updated."
+        debug_log "Collected active routines (descriptions): '${QUICK_RESULT_CONTENT}'" # NEW DEBUG LINE
+    else
+        current_routine_found="false"
+        QUICK_RESULT_CONTENT="No active routine found."
+        debug_log "No active routines found."
+    fi
+    debug_log "Exiting find_active_routine function."
+}
+
+# --- Script Execution ---
+rm -f "${SCRIPT_DIR}/.log_init_marker"
+script_start_time=$(date +"%Y-%m-%d %H:%M:%S")
+log_and_tee ""
+find_active_routine
+
+# --- Modified Code for QUICK RESULT ---
+log_and_tee "--- QUICK RESULT: ---"
+log_and_tee "**${QUICK_RESULT_CONTENT}**"
+log_and_tee ""
+# --- End of Modified Code ---
+
+log_and_tee "--- Basic Section ---"
+log_and_tee "Script Source Path: $SCRIPT_DIR/fetch_daily_journal.sh"
+log_and_tee "Parsing Started At: $script_start_time"
+log_and_tee "Expected Journal File: $PLANNER_FILE"
+log_and_tee "Output Log File: $OUTPUT_LOG_FILE"
+log_and_tee "Display All File Content: $ENABLE_ALL_FILE_CONTENT_SECTION"
+log_and_tee "Debug Mode: $DEBUG_MODE" # Added debug mode status
+log_and_tee ""
+
+if [ -f "$PLANNER_FILE" ]; then
+    log_and_tee "✅ Found today's journal entry: $PLANNER_FILE"
+    if [ "$ENABLE_ALL_FILE_CONTENT_SECTION" = "true" ]; then
+        log_and_tee "\n--- All File Content ---\n"
+        cat "$PLANNER_FILE" | nl -ba | tee -a "$OUTPUT_LOG_FILE"
+        log_and_tee "\n--- End of Journal Entry Content ---"
+    fi
+
+    log_and_tee "\n--- Routines Matching Current Time ---"
+    log_and_tee "🕒 Current Time: $(date +%H:%M)\n"
+
+    # THIS IS THE SINGLE, CORRECT BLOCK FOR PROCESSING ACTIVE ROUTINES
+    if [ "$current_routine_found" == "true" ]; then
+        debug_log "Processing active routines loop. Total active routines: ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]}"
+        for i in "${!GLOBAL_ACTIVE_ROUTINE_LINES[@]}"; do
+            routine_line_num=${GLOBAL_ACTIVE_ROUTINE_LINES[$i]}
+            routine_description_box=${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}
+            debug_log "Current active routine: Line ${routine_line_num}, Description: '$routine_description_box'"
+            draw_routine_box "${routine_line_num}. ${routine_description_box}"
+            echo "" | tee -a "$OUTPUT_LOG_FILE"
+
+            log_and_tee ""
+        done
+    else
+        log_and_tee "ℹ️ No scheduled routine found for the current time."
+        debug_log "No routines were found active, skipping routine processing loop."
+    fi
+else
+    log_and_tee "❌ Error: Journal file not found at '$PLANNER_FILE'"
+    debug_log "ERROR: Journal file not found. Script cannot proceed."
+fi
+
+log_and_tee "\n--- Last Section ---\n"
+log_and_tee "Routine Parsing Ended At: $(date +%Y-%m-%d\ %H:%M:%S)"
+log_and_tee "Output Log File Path: $OUTPUT_LOG_FILE"
+log_and_tee "Script Finished: All output saved to '$OUTPUT_LOG_FILE'"
+echo "\nDone. View with: cat \"$OUTPUT_LOG_FILE\""

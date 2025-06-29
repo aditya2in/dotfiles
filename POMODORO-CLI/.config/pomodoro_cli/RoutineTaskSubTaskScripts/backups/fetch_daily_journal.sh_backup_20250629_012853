@@ -1,0 +1,307 @@
+#!/bin/bash
+
+# fetch_daily_journal.sh: Fetches and displays today's daily journal entry from Obsidian.
+# Located in: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts
+# Output is saved to: current_routine.txt in the same directory as this script.
+
+# --- Script Configuration ---
+# Get the current date in Букмекерлар-MM-DD format (e.g., 2025-06-28)
+current_date=$(date +%Y-%m-%d)
+
+# Define the base directory for your daily journal files
+# IMPORTANT: Verify this path matches your Obsidian vault's Daily Journal folder.
+JOURNAL_DIR="/home/aditya/obsidian/All Things/Journal/Daily Journal"
+
+# Define the full path to today's planner file
+PLANNER_FILE="${JOURNAL_DIR}/${current_date}.md"
+
+# Determine the directory where this script is located
+# dirname "$(readlink -f "$0")": Gets the absolute path of the directory containing the script.
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+# Define the full path to the output log file, placed in the same directory as the script
+OUTPUT_LOG_FILE="${SCRIPT_DIR}/current_routine.txt"
+
+# NEW CONFIGURATION: Control whether the "All File Content" section is displayed.
+# Set to "true" to display the entire journal file content, "false" to hide it.
+ENABLE_ALL_FILE_CONTENT_SECTION="true"
+
+# Variable to store the quick result, initialized to a default message.
+# This will be placed at the very top of the output file.
+QUICK_RESULT_CONTENT="No active routine found."
+
+# Variables to store the found routine's details for later use
+current_routine_found="false"
+current_routine_line_to_color=""
+
+# NEW GLOBAL ARRAYS: To store all active routines found
+declare -a GLOBAL_ACTIVE_ROUTINE_LINES # Stores line numbers of all active routines
+declare -a GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS # Stores descriptions of all active routines
+
+# --- ANSI Color Codes ---
+GREEN='\e[0;32m'
+BLUE='\e[0;34m'
+CYAN='\e[0;36m'
+YELLOW='\e[1;33m' # Bold Yellow
+MAGENTA='\e[0;35m'
+RED='\e[0;31m'
+NC='\e[0m' # No Color (reset)
+
+# ANSI Color Codes for specific highlighting
+RED_COLOR='\e[0;31m' # Red color for highlighting
+NC_COLOR='\e[0m'     # No Color (reset)
+
+# --- Helper Functions ---
+
+# Function to clear the output file at the very first log_output call
+# and then append for subsequent calls.
+log_and_tee() {
+    if [ ! -f "${SCRIPT_DIR}/.log_init_marker" ]; then
+        echo -n > "$OUTPUT_LOG_FILE" # Clear the file
+        touch "${SCRIPT_DIR}/.log_init_marker" # Mark as initialized
+    fi
+    echo -e "$@" | tee -a "$OUTPUT_LOG_FILE" # Use -e for ANSI color interpretation
+}
+
+# Function to get the display width of a string, ignoring ANSI escape codes.
+get_display_width() {
+    # Remove ANSI escape codes and then calculate string length.
+    # This sed command removes common ANSI color/bold/reset codes.
+    local stripped_string=$(echo -e "$1" | sed -E "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
+    echo "${#stripped_string}"
+}
+
+# Function to draw a visually appealing box around a given string.
+# $1: The string to be enclosed in the box. This string can contain ANSI codes.
+draw_routine_box() {
+    local content="$1"
+    local padding_sides=4 # 2 spaces on each side for the content itself inside the box
+    local box_line_padding="  " # Padding for left and right inside the box line
+
+    # Calculate the visible width of the content, ignoring ANSI escape codes
+    local content_display_width=$(get_display_width "$content")
+
+    # The total width of the box for the horizontal lines (excluding corners)
+    # This includes the content width plus the internal padding on both sides
+    local horizontal_line_width=$((content_display_width + (2 * ${#box_line_padding})))
+
+    # Top border
+    log_and_tee "${CYAN}╭$(printf '─%.0s' $(seq 1 $horizontal_line_width))╮${NC}"
+
+    # Content line
+    # We explicitly calculate the spaces on the right to make sure it aligns correctly
+    local spaces_needed_right=$((horizontal_line_width - content_display_width - ${#box_line_padding}))
+    log_and_tee "${CYAN}│${box_line_padding}${content}${NC}$(printf ' %.0s' $(seq 1 $spaces_needed_right))${CYAN}│${NC}"
+
+    # Bottom border
+    log_and_tee "${CYAN}╰$(printf '─%.0s' $(seq 1 $horizontal_line_width))╯${NC}"
+}
+
+# NEW FUNCTION: Perform an early scan of the journal file to find the active routine
+# and set global variables for line coloring and quick result.
+find_active_routine() {
+    # Local variables for this function's scope; GLOBAL_ACTIVE_ROUTINE_LINES and _DESCRIPTIONS are global
+    GLOBAL_ACTIVE_ROUTINE_LINES=() # Clear array on each call
+    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS=() # Clear array on each call
+    local temp_routine_line_number=""
+    local temp_routine_description=""
+
+    # Get current hour and minute
+    local current_hour=$(date +%H)
+    local current_minute=$(date +%M)
+    local current_time_in_minutes=$((10#$current_hour * 60 + 10#$current_minute))
+
+    # Check if the journal file exists before trying to read it
+    if [ ! -f "$PLANNER_FILE" ]; then
+        log_and_tee "⚠️ Warning: Journal file '$PLANNER_FILE' not found during early routine scan."
+        # If file not found, no routine can be active. Global variables remain default.
+        return
+    fi
+
+    # Read the content of the journal file and find time patterns
+    while IFS= read -r line; do
+        if [[ "$line" =~ (.*)([0-9]{2}:[0-9]{2})[[:space:]]?-[[:space:]]?([0-9]{2}:[0-9]{2}) ]]; then
+            # The full line is $line.
+            # We need to extract the description after removing the checkbox and the time stamps.
+            local start_time_str="${BASH_REMATCH[2]}"
+            local end_time_str="${BASH_REMATCH[3]}"
+
+            # Start with the full line, as routine_description_raw might not contain the full string needed for time removal
+            local routine_description_temp="$line"
+
+            # NEW: 0. Remove any leading whitespace (spaces or tabs) from the beginning of the line
+            routine_description_temp=$(echo "$routine_description_temp" | sed -e 's/^[[:space:]]*//')
+
+            # 1. Remove the checkbox prefix (e.g., "- [ ] ")
+            routine_description_temp=$(echo "$routine_description_temp" | sed -e 's/^- \[\s*\]\s*//')
+
+            # 2. Remove the specific matched time string (e.g., "00:00 - 01:30")
+            # This uses the captured start and end times to form a precise pattern.
+            local time_pattern_to_remove="${start_time_str}[[:space:]]*-?[[:space:]]?[[:space:]]*${end_time_str}" # Added an extra [[:space:]]* before end_time_str for robustness
+            local routine_description=$(echo "$routine_description_temp" | sed -E "s/${time_pattern_to_remove}//g")
+
+            # 3. Trim any remaining leading/trailing spaces
+            routine_description=$(echo "$routine_description" | xargs)
+
+
+            local start_hour=$(echo "$start_time_str" | cut -d':' -f1)
+            local start_minute=$(echo "$start_time_str" | cut -d':' -f2)
+            local end_hour=$(echo "$end_time_str" | cut -d':' -f1)
+            local end_minute=$(echo "$end_time_str" | cut -d':' -f2)
+
+            local start_time_in_minutes=$((10#$start_hour * 60 + 10#$start_minute))
+            local end_time_in_minutes=$((10#$end_hour * 60 + 10#$end_minute))
+
+            # Get the line number from the original journal file
+            local line_number_from_file=$(grep -nF -- "$line" "$PLANNER_FILE" | head -n 1 | cut -d: -f1)
+            if [ -z "$line_number_from_file" ]; then
+                line_number_from_file="N/A"
+            fi
+
+            # Check if current time falls within the routine's schedule
+            if (( start_time_in_minutes > end_time_in_minutes )); then
+                # Routine spans midnight
+                if (( current_time_in_minutes >= start_time_in_minutes || current_time_in_minutes < end_time_in_minutes )); then # Changed logic to collect all
+                    GLOBAL_ACTIVE_ROUTINE_LINES+=("$line_number_from_file")
+                    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS+=("$routine_description")
+                fi
+            else
+                # Routine within the same day
+                if (( current_time_in_minutes >= start_time_in_minutes && current_time_in_minutes < end_time_in_minutes )); then # Changed logic to collect all
+                    GLOBAL_ACTIVE_ROUTINE_LINES+=("$line_number_from_file")
+                    GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS+=("$routine_description")
+                fi
+            fi
+        fi
+    done < "$PLANNER_FILE"
+
+    # Determine current_routine_found based on collected routines
+    if [ ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]} -gt 0 ]; then
+        export current_routine_found="true"
+        # Construct QUICK_RESULT_CONTENT based on all found routines
+        if [ ${#GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[@]} -eq 1 ]; then
+            export QUICK_RESULT_CONTENT="${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[0]}"
+        else
+            local merged_description=""
+            for i in "${!GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[@]}"; do
+                if [ "$i" -eq 0 ]; then
+                    merged_description="${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}"
+                elif [ "$i" -eq $(( ${#GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[@]} - 1 )) ]; then
+                    merged_description+=" AND ${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}"
+                else
+                    merged_description+=", ${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}"
+                fi
+            done
+            export QUICK_RESULT_CONTENT="$merged_description"
+        fi
+    else
+        export current_routine_found="false"
+        export QUICK_RESULT_CONTENT="No active routine found."
+    fi
+}
+
+
+# --- Main Script ---
+
+# Capture script start time
+script_start_time=$(date +"%Y-%m-%d %H:%M:%S")
+
+# Remove the initialization marker at the very start of the script run
+# This ensures a fresh clear of current_routine.txt every time the script is executed.
+rm -f "${SCRIPT_DIR}/.log_init_marker"
+
+# Initial blank line for better spacing at the very beginning of the output
+log_and_tee "" # NEW
+
+# NEW: Perform early routine identification to populate variables for coloring and quick result
+find_active_routine
+
+# --- Basic Section ---
+log_and_tee "--- Basic Section ---"
+log_and_tee "Script Source Path: $SCRIPT_DIR/fetch_daily_journal.sh"
+log_and_tee "Parsing Started At: $script_start_time"
+log_and_tee "Expected Journal File: $PLANNER_FILE"
+log_and_tee "Output Log File: $OUTPUT_LOG_FILE"
+log_and_tee "Display All File Content: $ENABLE_ALL_FILE_CONTENT_SECTION" # NEW: Show current setting
+log_and_tee ""
+
+# Ensure the journal directory exists
+if [ ! -d "$JOURNAL_DIR" ]; then
+    log_and_tee "❌ Error: Journal directory '$JOURNAL_DIR' not found."
+    log_and_tee "Please check the 'JOURNAL_DIR' variable in the script and ensure the path is correct."
+    exit 1
+fi
+
+# Check if today's planner file exists
+if [ -f "$PLANNER_FILE" ]; then
+    log_and_tee "✅ Found today's journal entry: $PLANNER_FILE"
+    log_and_tee "" # Add a newline after the header
+
+    # NEW: Conditionally display the entire journal file content
+    if [ "$ENABLE_ALL_FILE_CONTENT_SECTION" = "true" ]; then
+        log_and_tee "" # NEW: More space before All File Content
+        log_and_tee "--- All File Content ---" # New heading for file content
+        log_and_tee "" # Add a newline after the header
+
+        # MODIFIED LINE: Removed awk for line highlighting. Now simply output with line numbers.
+        cat "$PLANNER_FILE" | nl -ba | tee -a "$OUTPUT_LOG_FILE"
+        echo "" | tee -a "$OUTPUT_LOG_FILE" # Ensure a newline after the content
+
+        log_and_tee "--- End of Journal Entry Content ---"
+    fi # End of ENABLE_ALL_FILE_CONTENT_SECTION check
+
+else
+    log_and_tee "⚠️ Warning: Today's journal entry '$PLANNER_FILE' does not exist."
+    log_and_tee "You might need to create it in Obsidian first."
+    log_and_tee "To create it manually, use: touch \"$PLANNER_FILE\""
+fi
+
+# --- Routine Scheduled Section ---
+log_and_tee "" # Add a newline for separation
+log_and_tee "" # NEW: More space before Routine Scheduled
+log_and_tee "--- Routine Scheduled ---"
+log_and_tee "--- Identifying Current Scheduled Routine ---" # Keep this heading as it explains what happened earlier.
+
+# MODIFIED: Use the globally determined 'current_routine_found' and 'QUICK_RESULT_CONTENT'
+if [ "$current_routine_found" == "true" ]; then
+    # MODIFIED: Iterate through all found active routines and draw a box for each
+    for i in "${!GLOBAL_ACTIVE_ROUTINE_LINES[@]}"; do
+        draw_routine_box "${GLOBAL_ACTIVE_ROUTINE_LINES[$i]}. ${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}"
+        echo "" | tee -a "$OUTPUT_LOG_FILE" # Add a newline between boxes for clarity
+    done
+else
+    log_and_tee "ℹ️ No scheduled routine found for the current time."
+fi
+
+# Capture parsing end time
+parsing_end_time=$(date +"%Y-%m-%d %H:%M:%S")
+
+# --- Last Section ---
+log_and_tee "" # Add a newline for separation
+log_and_tee "" # NEW: More space before Last Section
+log_and_tee "--- Last Section ---\n" # Added newline to heading for consistency with other headings.
+log_and_tee "Routine Parsing Ended At: $parsing_end_time"
+log_and_tee "Output Log File Path: $OUTPUT_LOG_FILE"
+log_and_tee "Script Finished: All output saved to '$OUTPUT_LOG_FILE'"
+log_and_tee ""
+
+echo "" # Final newline for terminal
+echo "All logs captured to: $OUTPUT_LOG_FILE"
+echo "You can view its content using: cat \"$OUTPUT_LOG_FILE\""
+echo "Please upload the file named 'current_routine.txt' from the folder '$SCRIPT_DIR' to continue (if requested)."
+
+# --- Final Post-processing to add Quick Result at the top ---
+temp_file=$(mktemp) # Create a temporary file
+
+# Write the Quick Result header and content (plain text, no ANSI codes) to the temp file
+echo "QUICK RESULT" > "$temp_file"
+echo "$QUICK_RESULT_CONTENT" >> "$temp_file" # Use the already determined content
+echo "" >> "$temp_file" # Blank line after quick result for separation
+
+# Append the original content of OUTPUT_LOG_FILE to the temp file
+cat "$OUTPUT_LOG_FILE" >> "$temp_file"
+
+# Overwrite the original OUTPUT_LOG_FILE with the content of the temp file
+mv "$temp_file" "$OUTPUT_LOG_FILE"
+
+# --- End of Final Post-processing ---

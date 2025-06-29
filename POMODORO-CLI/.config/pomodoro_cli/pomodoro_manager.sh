@@ -39,9 +39,9 @@ MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Anal
 # SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
 # LONG_BREAK_DURATION="30m" # Adjust these for your actual break times
 #10 seconds for testing
-WORK_DURATION="10s" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
-SHORT_BREAK_DURATION="10s" # Adjust these for your actual break times
-LONG_BREAK_DURATION="10s"
+WORK_DURATION="10m" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
+SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
+LONG_BREAK_DURATION="10m"
 # These variables hold our script's internal state.
 # They are declared globally (without 'local') so they can be accessed by all functions.
 _status=""
@@ -526,7 +526,7 @@ update_current_routine_display_info() {
 
         # NEW: Assign the category/action
         if [[ "$category_action_output" == "NONE" || -z "$category_action_output" ]]; then
-            _current_category_action="No Action"
+            _current_category_action="No CategoryOrAction"
         else
             _current_category_action="$category_action_output"
         fi

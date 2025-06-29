@@ -16,7 +16,7 @@ OUTPUT_FILE="current_routine.txt"
 
 # --- Variables to store data for QuickResult ---
 quick_result_routine_name=""
-quick_result_current_action=""
+quick_result_category_action="" # Renamed
 # --- End QuickResult variables ---
 
 # Initialize output_content string that will accumulate all parts of the output
@@ -32,7 +32,7 @@ current_total_minutes=$((10#$current_hour * 60 + 10#$current_minute))
 # Check if today's planner file exists. If not, set error quick results and exit.
 if [ ! -f "$PLANNER_FILE" ]; then
     output_content+="--------------------------------------------------------\n"
-    output_content+="Starting Routine, Action List, and Current Action retrieval for $current_date at $(date)\n"
+    output_content+="Starting Routine, Action List, and Category/Action retrieval for $current_date at $(date)\n" # Updated message
     output_content+="--------------------------------------------------------\n"
     output_content+="Error: Planner file '$PLANNER_FILE' not found. Please ensure your daily journal is in the specified path.\n"
     output_content+="--------------------------------------------------------\n"
@@ -40,11 +40,11 @@ if [ ! -f "$PLANNER_FILE" ]; then
     output_content+="Output captured in: $(pwd)/$OUTPUT_FILE\n"
 
     quick_result_routine_name="No Active Routine (Planner File Missing)"
-    quick_result_current_action="N/A"
+    quick_result_category_action="N/A" # Renamed
 
     final_output_to_print="QUICK RESULT\n"
     final_output_to_print+="$quick_result_routine_name\n"
-    final_output_to_print+="$quick_result_current_action\n"
+    final_output_to_print+="$quick_result_category_action\n" # Renamed
     final_output_to_print+="--------------------------------------------------------\n"
     final_output_to_print+="$output_content"
 
@@ -55,7 +55,7 @@ fi
 
 # Append initial logging information.
 output_content+="--------------------------------------------------------\n"
-output_content+="Starting Routine, Action List, and Current Action retrieval for $current_date at $(date)\n"
+output_content+="Starting Routine, Action List, and Category/Action retrieval for $current_date at $(date)\n" # Updated message
 output_content+="--------------------------------------------------------\n"
 
 # Initialize an empty array to store all matched routine descriptions along with their line numbers.
@@ -181,26 +181,26 @@ for item in "${!temp_unique_items_map[@]}"; do
 done
 
 
-# --- Determine the current action ---
-current_action_found=""
-current_action_source_note="" # New variable to store the source linked note for the header
-found_current_actions_list=() # Array to store all items identified with #CurrentAction
+# --- Determine the category/action --- # Updated comment
+category_action_found="" # Renamed
+category_action_source_note="" # Renamed
+found_category_actions_list=() # Renamed
 
 
-# Attempt to find #CurrentAction within the unified consideration list.
+# Attempt to find #CategoryOrAction within the unified consideration list. # Updated message
 # This loop now checks both direct tasks and linked notes.
 for item_to_consider in "${all_consideration_list_items[@]}"; do
-    if [[ "$item_to_consider" =~ \#CurrentAction ]]; then
+    if [[ "$item_to_consider" =~ \#CategoryOrAction ]]; then # Updated tag
         # Found directly in a task or a representation string from a linked note
-        found_current_actions_list+=("$item_to_consider") # Add to list for duplicate check
+        found_category_actions_list+=("$item_to_consider") # Renamed
         
-        # If no current_action_found yet, set this one as the primary
-        if [ -z "$current_action_found" ]; then
-            current_action_found="$item_to_consider"
-            current_action_source_note="" # Reset if found directly in task
+        # If no category_action_found yet, set this one as the primary
+        if [ -z "$category_action_found" ]; then # Renamed
+            category_action_found="$item_to_consider" # Renamed
+            category_action_source_note="" # Renamed # Reset if found directly in task
             # Check if the direct match came from a linked note representation
-            if [[ "$current_action_found" =~ \(\(from\ \[\[([^]]+)\]\]\)\) ]]; then
-                current_action_source_note="[[${BASH_REMATCH[1]}]]"
+            if [[ "$category_action_found" =~ \(\(from\ \[\[([^]]+)\]\]\)\) ]]; then # Renamed
+                category_action_source_note="[[${BASH_REMATCH[1]}]]" # Renamed
             fi
         fi
     elif [[ "$item_to_consider" =~ \(\(from\ \[\[([^]]+)\]\]\)\) ]]; then
@@ -209,17 +209,17 @@ for item_to_consider in "${all_consideration_list_items[@]}"; do
         # Find the linked Markdown file within the Obsidian vault.
         linked_file_path=$(find "$OBSIDIAN_VAULT_PATH" -type f -iname "${note_name}.md" -print -quit 2>/dev/null)
         if [ -n "$linked_file_path" ]; then
-            # Grep for #CurrentAction in the linked file. -m 1 exits after first match.
-            found_in_linked_note=$(grep -m 1 "#CurrentAction" "$linked_file_path" 2>/dev/null)
+            # Grep for #CategoryOrAction in the linked file. -m 1 exits after first match. # Updated tag
+            found_in_linked_note=$(grep -m 1 "#CategoryOrAction" "$linked_file_path" 2>/dev/null) # Updated tag
             if [ -n "$found_in_linked_note" ]; then
                 # Append the original "((from [[note]]))" part to the found action for clarity
                 full_found_item="${found_in_linked_note} ${item_to_consider}"
-                found_current_actions_list+=("$full_found_item") # Add to list for duplicate check
+                found_category_actions_list+=("$full_found_item") # Renamed
 
-                # If no current_action_found yet, set this one as the primary
-                if [ -z "$current_action_found" ]; then
-                    current_action_found="$full_found_item"
-                    current_action_source_note="[[${note_name}]]" # Capture the source note name
+                # If no category_action_found yet, set this one as the primary
+                if [ -z "$category_action_found" ]; then # Renamed
+                    category_action_found="$full_found_item" # Renamed
+                    category_action_source_note="[[${note_name}]]" # Renamed # Capture the source note name
                 fi
             fi
         fi
@@ -227,29 +227,29 @@ for item_to_consider in "${all_consideration_list_items[@]}"; do
 done
 
 
-# Prepare the current action display header and content based on whether an action was found.
-current_action_display_header=""
-current_action_display_content=""
+# Prepare the category/action display header and content based on whether an action was found. # Updated message
+category_action_display_header="" # Renamed
+category_action_display_content="" # Renamed
 
-if [ -n "$current_action_found" ]; then
-    # Clean up the found action item by removing #CurrentAction tag and leading list markers,
+if [ -n "$category_action_found" ]; then # Renamed
+    # Clean up the found action item by removing #CategoryOrAction tag and leading list markers, # Updated tag
     # and also remove the ((from [[note]])) part for the main display, keep it for quick result.
-    cleaned_current_action=$(echo "$current_action_found" | sed -E 's/ \#CurrentAction//g; s/^\s*[-*] \[.?\]\s*//g; s/^\s*[-*]\s*//g; s/^\s*[0-9]+\.\s*//g; s/\s*\(\(from\ \[\[[^]]+\]\]\)\)//g' | xargs)
+    cleaned_category_action=$(echo "$category_action_found" | sed -E 's/ \#CategoryOrAction//g; s/^\s*[-*] \[.?\]\s*//g; s/^\s*[-*]\s*//g; s/^\s*[0-9]+\.\s*//g; s/\s*\(\(from\ \[\[[^]]+\]\]\)\)//g' | xargs) # Updated tag
     
     # Construct the dynamic header including the source note if available
-    if [ -n "$current_action_source_note" ]; then
-        current_action_display_header="✨ YOUR CURRENT ACTION #CurrentAction ${current_action_source_note} :"
+    if [ -n "$category_action_source_note" ]; then # Renamed
+        category_action_display_header="✨ YOUR CURRENT CATEGORY/ACTION #CategoryOrAction ${category_action_source_note} :" # Updated message and tag
     else
-        current_action_display_header="✨ YOUR CURRENT ACTION #CurrentAction :"
+        category_action_display_header="✨ YOUR CURRENT CATEGORY/ACTION #CategoryOrAction :" # Updated message and tag
     fi
     
-    current_action_display_content="$cleaned_current_action"
+    category_action_display_content="$cleaned_category_action" # Renamed
     # For quick result, only show the cleaned action text without source link
-    quick_result_current_action="$cleaned_current_action"
+    quick_result_category_action="$cleaned_category_action" # Renamed
 else
-    current_action_display_header="✨ YOUR CURRENT ACTION (No current action identified with '#CurrentAction' tag.) :"
-    current_action_display_content="NONE"
-    quick_result_current_action="NONE"
+    category_action_display_header="✨ YOUR CURRENT CATEGORY/ACTION (No category/action identified with '#CategoryOrAction' tag.) :" # Updated message and tag
+    category_action_display_content="NONE" # Renamed
+    quick_result_category_action="NONE" # Renamed
 fi
 
 # Append "YOUR CATEGORY/ACTION LIST" section (original direct tasks only).
@@ -309,32 +309,32 @@ fi
 output_content+="\n"
 
 
-# --- Check for Duplicate #CurrentAction Tags ---
-output_content+="🔍 DUPLICATE #CurrentAction TAGS CHECK:\n"
+# --- Check for Duplicate #CategoryOrAction Tags --- # Updated message
+output_content+="🔍 DUPLICATE #CategoryOrAction TAGS CHECK:\n" # Updated message
 output_content+="----------------------------------------\n"
 
-if [ ${#found_current_actions_list[@]} -gt 1 ]; then
-    output_content+="    ❌ Multiple instances of #CurrentAction were found!\n"
-    output_content+="    Please ensure only one #CurrentAction is active at a time.\n"
-    output_content+="    Found #CurrentAction tags in the following items:\n"
-    # Use a map to print unique found_current_actions_list items
+if [ ${#found_category_actions_list[@]} -gt 1 ]; then # Renamed
+    output_content+="    ❌ Multiple instances of #CategoryOrAction were found!\n" # Updated message
+    output_content+="    Please ensure only one #CategoryOrAction is active at a time.\n" # Updated message
+    output_content+="    Found #CategoryOrAction tags in the following items:\n" # Updated message
+    # Use a map to print unique found_category_actions_list items
     declare -A unique_found_actions_map
-    for action_item in "${found_current_actions_list[@]}"; do
+    for action_item in "${found_category_actions_list[@]}"; do # Renamed
         unique_found_actions_map["$action_item"]=1
     done
     for action_item in "${!unique_found_actions_map[@]}"; do
         output_content+="        - $action_item\n"
     done
 else
-    output_content+="    ✅ No duplicate #CurrentAction tags found. Only one (or zero) active #CurrentAction.\n"
+    output_content+="    ✅ No duplicate #CategoryOrAction tags found. Only one (or zero) active #CategoryOrAction.\n" # Updated message
 fi
 output_content+="\n"
 
 
-# Append "CURRENT ACTION" with the new, dynamic format.
-output_content+="$current_action_display_header\n"
+# Append "CATEGORY/ACTION" with the new, dynamic format. # Updated message
+output_content+="$category_action_display_header\n" # Renamed
 output_content+="----------------------------------------\n"
-output_content+="$current_action_display_content\n"
+output_content+="$category_action_display_content\n" # Renamed
 output_content+=\"--------------------------------------------------------\\n\"\n
 
 # Append final logging information.
@@ -344,7 +344,7 @@ output_content+="Output captured in: $(pwd)/$OUTPUT_FILE\n"
 # --- Final Print to STDOUT and File ---
 final_output_to_print="QUICK RESULT\n"
 final_output_to_print+="$quick_result_routine_name\n"
-final_output_to_print+="$quick_result_current_action\n"
+final_output_to_print+="$quick_result_category_action\n" # Renamed
 final_output_to_print+="--------------------------------------------------------\n"
 final_output_to_print+="$output_content"
 
