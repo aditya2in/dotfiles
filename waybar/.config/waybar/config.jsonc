@@ -7,10 +7,9 @@
 
   "modules-left": [
     "hyprland/workspaces",
-    "hyprland/window"
+    "custom/pomodoro"
   ],
   "modules-center": [ 
-    "custom/pomodoro"
   ],
 
   "modules-right": [

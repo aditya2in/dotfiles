@@ -18,7 +18,7 @@ DAEMON_PID_FILE="$POMODORO_DIR/pomodoro_daemon.pid"
 
 # --- NEW: Routine Integration Configuration ---
 GET_ROUTINE_SCRIPT="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/get_current_CategoryAction.sh" # Updated script name
-CURRENT_ROUTINE_FILE="$HOME/.config/pomodoro_cli/current_routine.txt"
+CURRENT_ROUTINE_FILE="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt"
 ROUTINE_UPDATE_FREQUENCY_SEC="1" # Run get_current_CategoryAction.sh every 5 minutes (300 seconds)
 LAST_ROUTINE_UPDATE_TIME_FILE="$POMODORO_DIR/last_routine_update.timestamp" # File to store last update timestamp
 # ----------------------------------------------
@@ -39,9 +39,9 @@ MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Anal
 # SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
 # LONG_BREAK_DURATION="30m" # Adjust these for your actual break times
 #10 seconds for testing
-WORK_DURATION="10m" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
-SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
-LONG_BREAK_DURATION="10m"
+WORK_DURATION="10s" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
+SHORT_BREAK_DURATION="10s" # Adjust these for your actual break times
+LONG_BREAK_DURATION="10s"
 # These variables hold our script's internal state.
 # They are declared globally (without 'local') so they can be accessed by all functions.
 _status=""
@@ -515,8 +515,8 @@ update_current_routine_display_info() {
     # Always read the routine name from the current_routine.txt file
     # This assumes the routine name is consistently on the 2nd line
     if [ -f "$CURRENT_ROUTINE_FILE" ]; then
-        local routine_output=$(sed -n '2p' "$CURRENT_ROUTINE_FILE" | xargs) # xargs to trim whitespace
-        local category_action_output=$(sed -n '3p' "$CURRENT_ROUTINE_FILE" | xargs) # NEW: Read 3rd line
+        local routine_output=$(sed -n '3p' "$CURRENT_ROUTINE_FILE" | xargs) # xargs to trim whitespace
+        local category_action_output=$(sed -n '4p' "$CURRENT_ROUTINE_FILE" | xargs) # NEW: Read 3rd line
 
         if [[ "$routine_output" == "NONE" || -z "$routine_output" ]]; then
             _current_routine_name="No Routine" # Default for Waybar if no routine found or output is empty

@@ -1,274 +1,14 @@
 
-[0;34m[DEBUG] Entering find_active_routine function.[0m
-[0;34m[DEBUG] Current time: 15:44 (944 minutes).[0m
-[0;34m[DEBUG] Scanning planner file: /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-06-29.md[0m
-[0;34m[DEBUG] Processing line 1: '# Day planner'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 2: ''[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 3: '## Connect to Shri Mataji and Thank for the great day'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 4: ''[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 5: '- [ ] **Connect to Shri Mataji and Thank for the great day**  19:30 - 19:45'[0m
-[0;34m[DEBUG]   - Matched: Routine text='- [ ] **Connect to Shri Mataji and Thank for the great day**  ', Start='19:30', End='19:45'[0m
-[0;34m[DEBUG]   - Extracted description: '**Connect to Shri Mataji and Thank for the great day**'[0m
-[0;34m[DEBUG]   - Start time in minutes: 1170, End time in minutes: 1185[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (944) is >= 1170 AND < 1185.[0m
-[0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 6: '  - [ ] > [!important] KEPT ABSOLUTELY 0 TASK FOR MORNING. RIGHT ??'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 7: '  - [ ] Enjoy walk and relax.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 8: '  - [ ] DONT FEEL LIKE DOING FS AT NIGHT?. THEN DEFINITELY DO FS'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 9: '    - [ ] Sit before any FS'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 10: '    - [ ] _CLOSE DOOR PROTOCOL_'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 11: '    - [ ] RECLAIM THE WHOLE 3 NADIS WITH COOLNESS AND  <br> <br>FILLING THE BODY WITH COOLNESS IS MUST.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 12: '    - [ ] WATER THE SEED DAILY MORNING AND EVENING.  <br> <br>Water center channel mornings by sitting on floor and meditation <br> <br>MONRING FS WORKS TILL AFTERNOON.  <br> <br>NIGHT FS WORKS TILL NEXT MONRING 4 AM'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 13: '    - [ ] Night FS with hot cold and "Red bindi" infront of Shri Mataji photograph with candle in front of it (CLOSE DOOR) <br>with hands on Swadhistans. MUST DO FS OF THE DAY >>>'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 14: '    - [ ] Tell krupa to do all sides if both are doing FS.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 15: '    - [ ] The good old Surrender FS. Just see the ATA the play of her during the FS. DO NOTHING. SHE KNOWS WHAT TO DO.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 16: '    - [ ] Keep kundalini up. Push all bad up by deep breathing and giving it o Shri Mataji.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 17: '  - [ ] Post FS tasks'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 18: '    - [ ] Actual night FS duration ?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 19: '    - [ ] Keep FSD ready for both of us for now.. Half mug water for krupa'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 20: '    - [ ] Close all taps fully and keeo them up position and closed.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 21: '    - [ ] Log all the experiences in log.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 22: '      - [ ] Coolness ? Cool the body like good old days ?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 23: '      - [ ] Relaxed, relieved after FS'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 24: '    - [ ] Meditian for some time after FS and before before sleep. Sleep with cool head.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 25: '      - [ ] Vibrating clouds'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 26: '      - [ ] Use Vibrations daily'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 27: '        - [ ] state after bandhans?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 28: '    - [ ] Ajwain whole house'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 29: '    - [ ] Make 2L vibrated water ready as Shri Mataji photograph is clean'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 30: '    - [ ] Also vibrate others as well like Garlic , lemon chillies'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 31: '    - [ ] Keep FSD SETUP with table for tomorrow morning. Half mug water for krupa.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 32: '      - [ ] You cant END a day unless you do a FS.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 33: '      - [ ] You cant START a day unless you do a FS.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 34: '  - [ ] Plan todays Work from office and free time'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 35: '    - [ ] SCHEDULE THE DAY AND DETERMINE THE WORK FOR THE DAY'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 36: '    - [ ] **Do Office First and finish it off, Then open MacBook**'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 37: '      - [ ] Plan day or attend te office by 11 AM then plan the day mike'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 38: '  - [ ] Laptop Workflow'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 39: '    - [ ] Breakfast first (Post workout) okay monuments okay bye forty two two hours'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 40: '      - [ ] whats for breakfast today ?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 41: '      - [ ] Breakfast vibrated ?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 42: '      - [ ] Take a breakfast pic and vlog'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 43: '      - [ ] How much time did you spenmd to chew 50 times?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 44: '      - [ ] Chew 50 times.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 45: '    - [ ] Laptop open Routines - Automation icon'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 46: '      - [ ] Check the button and turn on Obsidian G Drive sync and rest of all by automation'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 47: '    - [ ] [[Things to master for KUBESTRONAUT]]'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 48: '      - [ ] **MUSCLE MEMORY / PRACTICE SECTION**'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 49: '        - [ ] \*\*MUSCLE MEMORY [[Touch Typing]] \*\*'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 50: '          - [ ] In 2 websites'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 51: '            - [ ] Typing club #CategoryOrAction'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 52: '            - [ ] Monkey Type typing'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 53: '          - [ ] DO NOT BUY ANY KEYBOARD OR THINK SO. TRY THIS VERSION OF BASE VERSION TO LEARN THNGS.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 54: '        - [ ] **MUSCLE MEMORY** [[VIM]] [[NeoVim nvim]]'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 55: '          - [ ] Vim Plugins'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 56: '            - [ ] [[VimTutor]] COMPLETELY and DAILY'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 57: '            - [ ] vim be good plugin'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 58: '            - [ ] Hardtime'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 59: '            - [ ] Other places for gaining muscle memory'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 60: '              - [ ] VimAdventures'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 61: '                - [ ] Dont pay for Vim adventures as of now, try using Vimtutor and test of all the list of the tools for now'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 62: '                - [ ] EXPLORE ALL DIFFERENT LINKS FOR LEARNING VIM'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 63: '              - [ ] VimRacer'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 64: '              - [ ] Vimgolf'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 65: '        - [ ] **MUSCLE MEMORY/ Organise** [[Obsidian + VIM]] '[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 66: '          - Obsidian Sustaining'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 67: '            - [ ] Dedicate time to write somehting Daily morning and evening'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 68: '            - [ ] WRITING GIVES YOUR ORGANISED MENTAL CLARITY ON ALL DIFFERENT SEGMENTS IN LIFE.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 69: '            - [ ] TWO Parts'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 70: '              - [ ] Organisation ideas of your own and get lost.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 71: '                - [ ] Just keep doing something something and get lost.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 72: '              - [ ] Update as per specific things from whats app chat'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 73: '              - [ ] The more you sit with yourself the more you construct'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 74: '        - [ ] **MUSCLE MEMORY** [[Browser + VIM]] 12:15 - 16:25'[0m
-[0;34m[DEBUG]   - Matched: Routine text='        - [ ] **MUSCLE MEMORY** [[Browser + VIM]] ', Start='12:15', End='16:25'[0m
-[0;34m[DEBUG]   - Extracted description: '**MUSCLE MEMORY** [[Browser + VIM]]'[0m
-[0;34m[DEBUG]   - Start time in minutes: 735, End time in minutes: 985[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (944) is >= 735 AND < 985.[0m
-[0;34m[DEBUG]   - Routine identified as ACTIVE: Line 74, Desc: '**MUSCLE MEMORY** [[Browser + VIM]]'[0m
-[0;34m[DEBUG] Processing line 75: '          - [ ] vimium in real life'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 76: '	          - [ ] test'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 77: '		          - [ ] yes'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 78: '      - [ ] **THEORY SECTION** '[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 79: '        - [ ] [[Linux]]'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 80: '          - [ ] Abhishek veeramalla'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 81: '          - [ ] KodeKloud'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 82: '        - [ ] [[Kubernetes]] 14:30 - 16:25  iiare :w'[0m
-[0;34m[DEBUG]   - Matched: Routine text='        - [ ] [[Kubernetes]] ', Start='14:30', End='16:25'[0m
-[0;34m[DEBUG]   - Extracted description: '[[Kubernetes]]'[0m
-[0;34m[DEBUG]   - Start time in minutes: 870, End time in minutes: 985[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (944) is >= 870 AND < 985.[0m
-[0;34m[DEBUG]   - Routine identified as ACTIVE: Line 82, Desc: '[[Kubernetes]]'[0m
-[0;34m[DEBUG] Processing line 83: '          - [ ] Daily KUBESTRONAUT Study List'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 84: '            - [ ] FIRST: High level over view of study inertia'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 85: '            - [ ] Daily High level OverviewF'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 86: '              - [ ] ALL Project View'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 87: '                - [ ] Check Excel and Kanban'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 88: '              - [ ] Current Subjects'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 89: '                - [ ] See Index what am I doing now'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 90: '                - [ ] Subjects list'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 91: '                  - [ ] Open [[qKubernetes Launchpad🚀 (Data view)]]'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 92: '                  - [ ] See where are you and master study plan and see where are you and how many days to complete and inertia and consistency'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 93: '                - [ ] Block time and Dedicate time for both of the subjects for the day'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 94: '            - [ ] [[Kubernetes Tasks]]'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 95: '            - [ ] Open Kodekloud and Pomodoro ON'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 96: '              - [ ] Move Kandhans for the day and start'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 97: '              - [ ] Continue with Pomodoro pattern ON OFF from work'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 98: '              - [ ] Daily update obsidian high level over view'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 99: '  - [ ] High level Overview Checklist'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 100: '    - [ ] Daily note creatyion as per WFH or WFO'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 101: '    - [ ] Check daily calender adjustments'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 102: '      - [ ] **Daily idea Dump Tasks**'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 103: '        - [ ] High level over view for tasks'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 104: '        - [ ] Categorise all tasks and place them in respective notes and assign task dates'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 105: '          - [ ] Journals folder'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 106: '        - [ ] Daily tasks:'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 107: '          - [ ] [[Tasks List MASTER]]'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 108: '  - [ ] Questions during Course DAILY'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 109: '    - [ ] Pomodoro used ?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 110: '    - [ ] Drink 1L water'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 111: '    - [ ] Take Toilet break'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 112: '  - [ ] Post Study:  20:15 - 21:00'[0m
-[0;34m[DEBUG]   - Matched: Routine text='  - [ ] Post Study:  ', Start='20:15', End='21:00'[0m
-[0;34m[DEBUG]   - Extracted description: 'Post Study:'[0m
-[0;34m[DEBUG]   - Start time in minutes: 1215, End time in minutes: 1260[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (944) is >= 1215 AND < 1260.[0m
-[0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 113: '    - Actual Duration of studying?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 114: '    - Number of topics done ?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 115: '    - Name of topics ?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 116: '    - DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 117: '  - [ ] Work'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 118: '    - [ ] Keep earphoes loose and talk office calls.'[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 119: ''[0m
-[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Active routines found: 2. QUICK_RESULT_CONTENT updated.[0m
-[0;34m[DEBUG] Collected active routines (descriptions): '**MUSCLE MEMORY** [[Browser + VIM]],[[Kubernetes]]'[0m
-[0;34m[DEBUG] Exiting find_active_routine function.[0m
 --- QUICK RESULT: ---
-****MUSCLE MEMORY** [[Browser + VIM]],[[Kubernetes]]**
+****Connect to Shri Mataji and Thank for the great day**,Post Study:**
 
 --- Basic Section ---
 Script Source Path: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/fetch_daily_journal.sh
-Parsing Started At: 2025-06-29 15:44:34
+Parsing Started At: 2025-06-29 22:10:52
 Expected Journal File: /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-06-29.md
 Output Log File: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt
 Display All File Content: true
-Debug Mode: true
+Debug Mode: false
 
 ✅ Found today's journal entry: /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-06-29.md
 
@@ -278,7 +18,7 @@ Debug Mode: true
      2	
      3	## Connect to Shri Mataji and Thank for the great day
      4	
-     5	- [ ] **Connect to Shri Mataji and Thank for the great day**  19:30 - 19:45
+     5	- [ ] **Connect to Shri Mataji and Thank for the great day**  21:40 - 22:35
      6	  - [ ] > [!important] KEPT ABSOLUTELY 0 TASK FOR MORNING. RIGHT ??
      7	  - [ ] Enjoy walk and relax.
      8	  - [ ] DONT FEEL LIKE DOING FS AT NIGHT?. THEN DEFINITELY DO FS
@@ -347,7 +87,7 @@ Debug Mode: true
     71	                - [ ] Just keep doing something something and get lost.
     72	              - [ ] Update as per specific things from whats app chat
     73	              - [ ] The more you sit with yourself the more you construct
-    74	        - [ ] **MUSCLE MEMORY** [[Browser + VIM]] 12:15 - 16:25
+    74	        - [ ] **MUSCLE MEMORY** [[Browser + VIM]] 12:15 - 17:10
     75	          - [ ] vimium in real life
     76		          - [ ] test
     77			          - [ ] yes
@@ -355,7 +95,7 @@ Debug Mode: true
     79	        - [ ] [[Linux]]
     80	          - [ ] Abhishek veeramalla
     81	          - [ ] KodeKloud
-    82	        - [ ] [[Kubernetes]] 14:30 - 16:25  iiare :w
+    82	        - [ ] [[Kubernetes]] 14:30 - 17:05  iiare :w
     83	          - [ ] Daily KUBESTRONAUT Study List
     84	            - [ ] FIRST: High level over view of study inertia
     85	            - [ ] Daily High level OverviewF
@@ -385,7 +125,7 @@ Debug Mode: true
    109	    - [ ] Pomodoro used ?
    110	    - [ ] Drink 1L water
    111	    - [ ] Take Toilet break
-   112	  - [ ] Post Study:  20:15 - 21:00
+   112	  - [ ] Post Study:  21:50 - 22:35
    113	    - Actual Duration of studying?
    114	    - Number of topics done ?
    115	    - Name of topics ?
@@ -397,24 +137,21 @@ Debug Mode: true
 --- End of Journal Entry Content ---
 
 --- Routines Matching Current Time ---
-🕒 Current Time: 15:44
+🕒 Current Time: 22:10
 
-[0;34m[DEBUG] Processing active routines loop. Total active routines: 2[0m
-[0;34m[DEBUG] Current active routine: Line 74, Description: '**MUSCLE MEMORY** [[Browser + VIM]]'[0m
-[0;36m╭───────────────────────────────────────────╮[0m
-[0;36m│  74. **MUSCLE MEMORY** [[Browser + VIM]][0m  [0;36m│[0m
-[0;36m╰───────────────────────────────────────────╯[0m
+[0;36m╭─────────────────────────────────────────────────────────────╮[0m
+[0;36m│  5. **Connect to Shri Mataji and Thank for the great day**[0m  [0;36m│[0m
+[0;36m╰─────────────────────────────────────────────────────────────╯[0m
 
 
-[0;34m[DEBUG] Current active routine: Line 82, Description: '[[Kubernetes]]'[0m
-[0;36m╭──────────────────────╮[0m
-[0;36m│  82. [[Kubernetes]][0m  [0;36m│[0m
-[0;36m╰──────────────────────╯[0m
+[0;36m╭────────────────────╮[0m
+[0;36m│  112. Post Study:[0m  [0;36m│[0m
+[0;36m╰────────────────────╯[0m
 
 
 
 --- Last Section ---
 
-Routine Parsing Ended At: 2025-06-29 15:44:35
+Routine Parsing Ended At: 2025-06-29 22:10:52
 Output Log File Path: /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt
 Script Finished: All output saved to '/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt'

@@ -12,7 +12,7 @@ current_routine_found="false"
 current_routine_line_to_color=""
 declare -a GLOBAL_ACTIVE_ROUTINE_LINES
 declare -a GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS
-DEBUG_MODE="true" # Set to "true" for detailed debugging, "false" to disable.
+DEBUG_MODE="false" # Set to "true" for detailed debugging, "false" to disable.
 
 GREEN='\e[0;32m'
 BLUE='\e[0;34m'
