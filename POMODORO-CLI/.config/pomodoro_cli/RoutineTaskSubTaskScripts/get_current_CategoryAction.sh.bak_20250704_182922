@@ -186,7 +186,7 @@ get_concise_routine_name() {
     local temp_name
 
     # 1. Remove leading spaces and the optional '- [ ] ' part.
-    temp_name=$(echo "$full_routine_line" | sed -E 's/^[[:space:]]*- ?\[ ?\] ?//')
+    temp_name=$(echo "$full_routine_line" | sed -E 's/^[[:space:]]*-?[[:space:]]*\[[[:space:]]*\][[:space:]]*//')
 
     # 2. Remove the time range (HH:MM - HH:MM) from anywhere in the string.
     #    This pattern is HH:MM, optional space, hyphen, optional space, HH:MM.
@@ -210,7 +210,7 @@ process_routine_details() {
     local -a routine_linked_notes=()
     local -a subtask_linked_notes=()
 
-    debug_log "Entering process_routine_details for line ${routine_start_line} with indent ${routine_leading_indent}.."
+    debug_log "Entering process_routine_details for line ${routine_start_line} with indent ${routine_leading_indent}."
 
     # MODIFIED: Extract linked notes from the full routine line content (ensures all text is considered)
     # Old: local raw_routine_notes=$(echo "$routine_desc" | grep -oP '\[\[.*?\]\]')
@@ -248,7 +248,7 @@ process_routine_details() {
                 readarray -t notes_from_subtask <<< "$raw_subtask_notes"
                 for note in "${notes_from_subtask[@]}"; do
                     subtask_linked_notes+=("${current_line_num}: 🔗 ${note}")
-                done
+                done # Corrected this line to 'done'
             fi
         else
             debug_log "  - Line has less or equal indentation, stopping subtask scan."
@@ -322,28 +322,19 @@ process_routine_details() {
 }
 
 # --- New Global Variables for Tag Search Results ---
-# OLD: TAG_DEFINITIONS["#CurrentCategoryOrAction"]="Current Category Action"
-# MODIFIED: Added #CurrentTask
 declare -A TAG_DEFINITIONS
-TAG_DEFINITIONS["#CurrentCategoryOrAction"]="Current Category/Action"
-TAG_DEFINITIONS["#CurrentTask"]="Current Task"
+TAG_DEFINITIONS["#CurrentCategoryOrAction"]="Current Category Action"
 
 # NEW: Array to define explicit display order for tags
 # This ensures the order you requested for presentation in section 5.1
-# OLD: TAG_DISPLAY_ORDER=( "#CurrentCategoryOrAction" )
-# MODIFIED: Added #CurrentTask to the display order
 TAG_DISPLAY_ORDER=(
     "#CurrentCategoryOrAction"
-    "#CurrentTask"
 )
 
 # MODIFIED: Changed FOUND_TAGS_RESULTS to an associative array to store the first result per tag
 declare -A FOUND_TAGS_RESULTS
 # MODIFIED: New associative array to track if a tag has been found
 declare -A TAG_FOUND_STATUS
-
-# MODIFIED: New array to store detailed search logs for Section 5.1 (when tag is not found)
-declare -a DETAILED_TAG_SEARCH_LOGS
 
 # MODIFIED: New Helper Function: Resolve Obsidian Note Path (Simplified with exclusion) ---
 resolve_obsidian_note_path() {
@@ -352,31 +343,30 @@ resolve_obsidian_note_path() {
     local note_name=$(echo "$note_name_raw" | sed 's/^\[\[//;s/\]\]$//')
     local potential_path=""
 
-    # IMPORTANT: Do NOT use debug_log or log_and_tee here if the output is to be captured by $(...)
-    # Ensure ONLY the path is echoed to stdout.
-    # All logging about this function's internal search should happen in the caller (find_tags_in_consideration_list)
+    debug_log "  - Resolving Obsidian note path for: '${note_name}' by searching entire vault: '${OBSIDIAN_VAULT_ROOT}' (excluding .trash folder)"
 
+    # Directly search within the specified OBSIDIAN_VAULT_ROOT and its subdirectories
     if [ -d "$OBSIDIAN_VAULT_ROOT" ]; then
         # Use find to locate the note, prioritizing exact match, then case-insensitive
         # Exclude the .trash folder using -path and -prune
         local found_note_path=$(find "$OBSIDIAN_VAULT_ROOT" \
             -path "${OBSIDIAN_VAULT_ROOT}/.trash" -prune -o \
-            -type f \( -name "${note_name}.md" -o -iname "${note_name}.md" \) -print -quit)
+            -type f \( -name "${note_name}.md" -o -iname "${note_name}.md" \) -print -quit 2>/dev/null)
         if [ -n "$found_note_path" ]; then
+            debug_log "    - Found (via find in specified vault root, excluding .trash): ${found_note_path}"
             echo "$found_note_path"
             return
         fi
     else
-        # Do not log here; the caller will log if an empty path is returned.
-        : # No operation - placeholder
+        debug_log "    - Warning: Specified OBSIDIAN_VAULT_ROOT directory does not exist or is not a directory: '${OBSIDIAN_VAULT_ROOT}'"
     fi
 
+    debug_log "    - Note not found within the specified vault root: '${note_name}'"
     echo "" # Return empty if not found
 }
 
 # --- New Function: Search for Tags in Content ---
 # MODIFIED: Now stores result in FOUND_TAGS_RESULTS associative array for "first match wins"
-# MODIFIED: Adds more detailed logs to DETAILED_TAG_SEARCH_LOGS
 search_for_tags_in_content() {
     local content_source="$1" # e.g., "Subtask", "Routine Linked Note", "Subtask Linked Note"
     local content_text="$2"   # The actual text to search within (line content or file content)
@@ -387,58 +377,27 @@ search_for_tags_in_content() {
 
     # Check if this specific tag has already been found for the "first match wins" logic
     if [ "${TAG_FOUND_STATUS[$target_tag]}" = "true" ]; then
-        local skip_msg="      - Tag '${target_tag}' already found. Skipping search for this instance."
-        debug_log "$skip_msg"
-        DETAILED_TAG_SEARCH_LOGS+=("    ${skip_msg}")
+        debug_log "      - Tag '${target_tag}' already found. Skipping search for this instance."
         return 1 # Indicate that no new result was found for this tag
     fi
 
-    local search_msg="      - Searching for target tag '${target_tag}' in '${content_source}' (Routine: '${routine_desc}') from '${source_file}', Line: ${line_num}"
-    debug_log "$search_msg"
-    DETAILED_TAG_SEARCH_LOGS+=("    ${search_msg}")
+    debug_log "      - Searching for target tag '${target_tag}' in '${content_source}' (Routine: '${routine_desc}') from '${source_file}', Line: ${line_num}"
 
+    # Only search for the specific target tag
     local tag_display_name="${TAG_DEFINITIONS[$target_tag]}"
     # Use grep -q to check for presence efficiently
     if echo "$content_text" | grep -q -- "$target_tag"; then
-        local found_msg="        - ${GREEN}Found tag '${target_tag}' (as '${tag_display_name}') in '${content_source}'.${NC}"
-        debug_log "$found_msg"
-        DETAILED_TAG_SEARCH_LOGS+=("    ${found_msg}")
-
-        local actual_found_line=""
-        local actual_line_number_in_source_file=""
-
-        # Check if we are searching within a full file's content (e.g., an Obsidian linked note)
-        # The 'line_num' parameter will contain "(file content)" in this case.
-        if [[ "$line_num" =~ \(file\ content\) ]]; then
-            # Use grep -n on the actual file to get the precise line number and content
-            # head -n 1 ensures we only get the first match for consistency.
-            local grep_output=$(grep -nF "$target_tag" "$source_file" | head -n 1)
-            if [ -n "$grep_output" ]; then
-                actual_line_number_in_source_file=$(echo "$grep_output" | cut -d':' -f1)
-                # -f2- ensures that if the line content itself contains colons, it's preserved
-                actual_found_line=$(echo "$grep_output" | cut -d':' -f2-)
-            else
-                # Fallback for unexpected cases (should not happen if grep -q was true)
-                actual_line_number_in_source_file="UNKNOWN"
-                actual_found_line="$content_text"
-            fi
-        else
-            # If not a file content search, it's a direct line from PLANNER_FILE (like a subtask).
-            # The 'line_num' is already the correct line number, and 'content_text' is the line.
-            actual_line_number_in_source_file="${line_num}"
-            actual_found_line="${content_text}"
-        fi
-
-        # Store the result in a structured format for detailed display
-        # Format: "SourceType|RoutineName|FilePath|LineNumber|FoundContent"
-        FOUND_TAGS_RESULTS["$target_tag"]="${content_source}|${routine_desc}|${source_file}|${actual_line_number_in_source_file}|${actual_found_line}"
-
+        debug_log "        - Found tag '${target_tag}' (as '${tag_display_name}') in '${content_source}'."
+        # Store the first result for this tag in the associative array
+        FOUND_TAGS_RESULTS["$target_tag"]=$(
+            cat <<-EOF
+            File: ${BLUE}${source_file}${NC}
+            Line: ${line_num}
+            Content: ${content_text}
+EOF
+        )
         TAG_FOUND_STATUS["$target_tag"]="true" # Mark this tag as found
         return 0 # Indicate success
-    else
-        local not_found_msg="        - ${YELLOW}Tag '${target_tag}' NOT found in this content.${NC}"
-        debug_log "$not_found_msg"
-        DETAILED_TAG_SEARCH_LOGS+=("    ${not_found_msg}")
     fi
     return 1 # Indicate that the tag was not found in this content
 }
@@ -469,16 +428,8 @@ collect_all_considerations_from_routines() {
         if [ -n "$raw_routine_notes" ]; then
             readarray -t notes_from_routine_desc <<< "$raw_routine_notes"
             for note_name_raw in "${notes_from_routine_desc[@]}"; do
-                # MODIFIED: Capture the path only. Redirect stderr of find to /dev/null
-                local resolved_path=$(resolve_obsidian_note_path "$note_name_raw" 2>/dev/null)
-                local path_info=""
-                if [ -n "$resolved_path" ]; then
-                    path_info=" (PATH: ${resolved_path})"
-                else
-                    path_info=" (PATH: Not Found)"
-                fi
-                GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES+=("${routine_line_num}: ${concise_routine_name}: 🔗 ${note_name_raw}${path_info}")
-                debug_log "    - Collected routine linked note: ${note_name_raw}${path_info}"
+                GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES+=("${routine_line_num}: ${concise_routine_name}: 🔗 ${note_name_raw}")
+                debug_log "    - Collected routine linked note: ${note_name_raw}"
             done
         fi
 
@@ -499,16 +450,8 @@ collect_all_considerations_from_routines() {
                 if [ -n "$raw_subtask_notes" ]; then
                     readarray -t notes_from_subtask <<< "$raw_subtask_notes"
                     for note_name_raw in "${notes_from_subtask[@]}"; do
-                        # MODIFIED: Capture the path only. Redirect stderr of find to /dev/null
-                        local resolved_path=$(resolve_obsidian_note_path "$note_name_raw" 2>/dev/null)
-                        local path_info=""
-                        if [ -n "$resolved_path" ]; then
-                            path_info=" (PATH: ${resolved_path})"
-                        else
-                            path_info=" (PATH: Not Found)"
-                        fi
-                        GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES+=("${current_scan_line_num}: ${concise_routine_name}: 🔗 ${note_name_raw}${path_info}")
-                        debug_log "        - Collected subtask linked note: ${note_name_raw}${path_info}"
+                        GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES+=("${current_scan_line_num}: ${concise_routine_name}: 🔗 ${note_name_raw}")
+                        debug_log "        - Collected subtask linked note: ${note_name_raw}"
                     done
                 fi
             else
@@ -527,138 +470,79 @@ collect_all_considerations_from_routines() {
 # MODIFIED: Changed search order to: 1. Subtasks, 2. Routine Linked Notes, 3. Subtask Linked Notes
 # MODIFIED: Added specific tag order search based on TAG_DISPLAY_ORDER
 # MODIFIED: Implements "first match wins" logic for each tag
-# MODIFIED: Adds detailed logs to DETAILED_TAG_SEARCH_LOGS
 find_tags_in_consideration_list() {
     debug_log "Entering find_tags_in_consideration_list function (MODIFIED for enhanced debug output, 'first match wins' logic)."
-    DETAILED_TAG_SEARCH_LOGS=() # Clear logs for this run
+    
+    # Only search for #CurrentCategoryOrAction
+    local current_search_tag="#CurrentCategoryOrAction"
+    TAG_FOUND_STATUS["$current_search_tag"]="false"
+    FOUND_TAGS_RESULTS["$current_search_tag"]=""
 
-    # MODIFIED: Loop through all defined tags in the specified display order
-    for current_search_tag in "${TAG_DISPLAY_ORDER[@]}"; do
-        TAG_FOUND_STATUS["$current_search_tag"]="false"
-        FOUND_TAGS_RESULTS["$current_search_tag"]=""
+    debug_log "  Starting search for tag: ${current_search_tag}"
 
-        local start_search_msg="  Starting search for tag: ${current_search_tag}"
-        debug_log "$start_search_msg"
-        DETAILED_TAG_SEARCH_LOGS+=("  ${start_search_msg}")
+    # --- Search Priority 1: Collected Subtasks ---
+    debug_log "    Searching in GLOBAL_COLLECTED_SUBTASKS for '${current_search_tag}'."
+    for entry in "${GLOBAL_COLLECTED_SUBTASKS[@]}"; do
+        local line_num_info=$(echo "$entry" | cut -d':' -f1)
+        local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
+        local subtask_content=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*(.*)$/\1/')
+        debug_log "      - Searching for target tag '${current_search_tag}' in 'Subtask' (Routine: '${routine_name}') from '${PLANNER_FILE}', Line: ${line_num_info}"
 
-        # --- Search Priority 1: Collected Subtasks ---
-        local subtasks_search_msg="    Searching in GLOBAL_COLLECTED_SUBTASKS for '${current_search_tag}'."
-        debug_log "$subtasks_search_msg"
-        DETAILED_TAG_SEARCH_LOGS+=("    ${subtasks_search_msg}")
-        for entry in "${GLOBAL_COLLECTED_SUBTASKS[@]}"; do
-            local line_num_info=$(echo "$entry" | cut -d':' -f1)
-            local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
-            local subtask_content=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*(.*)$/\1/')
+        if search_for_tags_in_content "Subtask" "$subtask_content" "${routine_name}" "$PLANNER_FILE" "${line_num_info}" "${current_search_tag}"; then
+            debug_log "      Found '${current_search_tag}' in Subtask. Exiting search for this tag."
+            return # Exit the function as the only tag needed is found
+        fi
+    done
 
-            # Call search_for_tags_in_content with the detailed logging
-            if search_for_tags_in_content "Subtask" "$subtask_content" "${routine_name}" "$PLANNER_FILE" "${line_num_info}" "${current_search_tag}"; then
-                local found_in_subtask_msg="      Found '${current_search_tag}' in Subtask. Exiting search for this tag in other sources."
-                debug_log "$found_in_subtask_msg"
-                DETAILED_TAG_SEARCH_LOGS+=("    ${found_in_subtask_msg}")
-                break # Exit inner loop for this tag, proceed to next tag in TAG_DISPLAY_ORDER
+    # --- Search Priority 2: Collected Routine Linked Notes ---
+    debug_log "    Searching in GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES for '${current_search_tag}'."
+    for entry in "${GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES[@]}"; do
+        local line_num_info=$(echo "$entry" | cut -d':' -f1)
+        local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
+        local note_raw=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*🔗[[:space:]]*(.*)$/\1/')
+        debug_log "      - Searching for target tag '${current_search_tag}' in 'Routine Linked Note' (Routine: '${routine_name}') from '${PLANNER_FILE}', Line: ${line_num_info}"
+
+        local linked_note_path=$(resolve_obsidian_note_path "$note_raw")
+        if [ -n "$linked_note_path" ] && [ -f "$linked_note_path" ]; then
+            local note_content=$(<"$linked_note_path")
+            if search_for_tags_in_content "Routine Linked Note (from file: '${note_raw}')" "$note_content" "${routine_name}" "$linked_note_path" "${line_num_info} (file content)" "${current_search_tag}"; then
+                debug_log "      Found '${current_search_tag}' in Routine Linked Note file. Exiting search for this tag."
+                return
             fi
-        done
-        # If tag was found in subtasks, continue to the next tag in TAG_DISPLAY_ORDER
-        if [ "${TAG_FOUND_STATUS[$current_search_tag]}" = "true" ]; then
-            continue
         fi
 
-        # --- Search Priority 2: Collected Routine Linked Notes ---
-        local routine_notes_search_msg="    Searching in GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES for '${current_search_tag}'."
-        debug_log "$routine_notes_search_msg"
-        DETAILED_TAG_SEARCH_LOGS+=("    ${routine_notes_search_msg}")
-        for entry in "${GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES[@]}"; do
-            local line_num_info=$(echo "$entry" | cut -d':' -f1)
-            local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
-            local note_raw=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*🔗[[:space:]]*(.*)$/\1/')
-            note_raw=$(echo "$note_raw" | sed -E 's/\s*\(PATH:.*\)//') # Remove path info for resolution
+        # Also search in the raw collected note string itself
+        if search_for_tags_in_content "Routine Name (via collected note reference: '${note_raw}')" "$entry" "${routine_name}" "$PLANNER_FILE" "${line_num_info} (note reference string)" "${current_search_tag}"; then
+            debug_log "      Found '${current_search_tag}' in Routine Linked Note reference string. Exiting search for this tag."
+            return
+        fi
+    done
 
-            local resolve_msg="      - Attempting to resolve linked note file: '${note_raw}'"
-            debug_log "$resolve_msg"
-            DETAILED_TAG_SEARCH_LOGS+=("    ${resolve_msg}")
+    # --- Search Priority 3: Collected Subtask Linked Notes ---
+    debug_log "    Searching in GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES for '${current_search_tag}'."
+    for entry in "${GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES[@]}"; do
+        local line_num_info=$(echo "$entry" | cut -d':' -f1)
+        local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
+        local note_raw=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*🔗[[:space:]]*(.*)$/\1/')
+        debug_log "      - Searching for target tag '${current_search_tag}' in 'Subtask Linked Note' (Routine: '${routine_name}') from '${PLANNER_FILE}', Line: ${line_num_info}"
 
-            # MODIFIED: Redirect stderr of resolve_obsidian_note_path to /dev/null
-            local linked_note_path=$(resolve_obsian_note_path "$note_raw" 2>/dev/null)
-            if [ -n "$linked_note_path" ] && [ -f "$linked_note_path" ]; then
-                local file_found_msg="        - Linked note file found: ${linked_note_path}"
-                debug_log "$file_found_msg"
-                DETAILED_TAG_SEARCH_LOGS+=("    ${file_found_msg}")
-                local note_content=$(<"$linked_note_path")
-                if search_for_tags_in_content "Routine Linked Note (from file: '${note_raw}')" "$note_content" "${routine_name}" "$linked_note_path" "${line_num_info} (file content)" "${current_search_tag}"; then
-                    local found_in_file_msg="      Found '${current_search_tag}' in Routine Linked Note file. Exiting search for this tag in other sources."
-                    debug_log "$found_in_file_msg"
-                    DETAILED_TAG_SEARCH_LOGS+=("    ${found_in_file_msg}")
-                    break
-                fi
-            else
-                local file_not_found_msg="        - ${RED}Linked note file NOT found or not a regular file for '${note_raw}'. Path: '${linked_note_path}'.${NC}"
-                debug_log "$file_not_found_msg"
-                DETAILED_TAG_SEARCH_LOGS+=("    ${file_not_found_msg}")
+        local linked_note_path=$(resolve_obsidian_note_path "$note_raw")
+        if [ -n "$linked_note_path" ] && [ -f "$linked_note_path" ]; then
+            local note_content=$(<"$linked_note_path")
+            if search_for_tags_in_content "Subtask Linked Note (from file: '${note_raw}')" "$note_content" "${routine_name}" "$linked_note_path" "${line_num_info} (file content)" "${current_search_tag}"; then
+                debug_log "      Found '${current_search_tag}' in Subtask Linked Note file. Exiting search for this tag."
+                return
             fi
-
-            # Also search in the raw collected note string itself
-            if search_for_tags_in_content "Routine Name (via collected note reference: '${note_raw}')" "$entry" "${routine_name}" "$PLANNER_FILE" "${line_num_info} (note reference string)" "${current_search_tag}"; then
-                local found_in_ref_msg="      Found '${current_search_tag}' in Routine Linked Note reference string. Exiting search for this tag in other sources."
-                debug_log "$found_in_ref_msg"
-                DETAILED_TAG_SEARCH_LOGS+=("    ${found_in_ref_msg}")
-                break
-            fi
-        done
-        # If tag was found, continue to the next tag in TAG_DISPLAY_ORDER
-        if [ "${TAG_FOUND_STATUS[$current_search_tag]}" = "true" ]; then
-            continue
         fi
 
-        # --- Search Priority 3: Collected Subtask Linked Notes ---
-        local subtask_notes_search_msg="    Searching in GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES for '${current_search_tag}'."
-        debug_log "$subtask_notes_search_msg"
-        DETAILED_TAG_SEARCH_LOGS+=("    ${subtask_notes_search_msg}")
-        for entry in "${GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES[@]}"; do
-            local line_num_info=$(echo "$entry" | cut -d':' -f1)
-            local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
-            local note_raw=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*🔗[[:space:]]*(.*)$/\1/')
-            note_raw=$(echo "$note_raw" | sed -E 's/\s*\(PATH:.*\)//') # Remove path info for resolution
-
-            local resolve_msg="      - Attempting to resolve linked note file: '${note_raw}'"
-            debug_log "$resolve_msg"
-            DETAILED_TAG_SEARCH_LOGS+=("    ${resolve_msg}")
-
-            # MODIFIED: Redirect stderr of resolve_obsidian_note_path to /dev/null
-            local linked_note_path=$(resolve_obsidian_note_path "$note_raw" 2>/dev/null)
-            if [ -n "$linked_note_path" ] && [ -f "$linked_note_path" ]; then
-                local file_found_msg="        - Linked note file found: ${linked_note_path}"
-                debug_log "$file_found_msg"
-                DETAILED_TAG_SEARCH_LOGS+=("    ${file_found_msg}")
-                local note_content=$(<"$linked_note_path")
-                if search_for_tags_in_content "Subtask Linked Note (from file: '${note_raw}')" "$note_content" "${routine_name}" "$linked_note_path" "${line_num_info} (file content)" "${current_search_tag}"; then
-                    local found_in_file_msg="      Found '${current_search_tag}' in Subtask Linked Note file. Exiting search for this tag in other sources."
-                    debug_log "$found_in_file_msg"
-                    DETAILED_TAG_SEARCH_LOGS+=("    ${found_in_file_msg}")
-                    break
-                fi
-            else
-                local file_not_found_msg="        - ${RED}Linked note file NOT found or not a regular file for '${note_raw}'. Path: '${linked_note_path}'.${NC}"
-                debug_log "$file_not_found_msg"
-                DETAILED_TAG_SEARCH_LOGS+=("    ${file_not_found_msg}")
-            fi
-
-            # Also search in the raw collected note string itself
-            if search_for_tags_in_content "Subtask (via collected note reference: '${note_raw}')" "$entry" "${routine_name}" "$PLANNER_FILE" "${line_num_info} (note reference string)" "${current_search_tag}"; then
-                local found_in_ref_msg="      Found '${current_search_tag}' in Subtask Linked Note reference string. Exiting search for this tag in other sources."
-                debug_log "$found_in_ref_msg"
-                DETAILED_TAG_SEARCH_LOGS+=("    ${found_in_ref_msg}")
-                break
-            fi
-        done
-        # If tag was found, continue to the next tag in TAG_DISPLAY_ORDER (redundant but safe)
-        if [ "${TAG_FOUND_STATUS[$current_search_tag]}" = "true" ]; then
-            continue
+        # Also search in the raw collected note string itself
+        if search_for_tags_in_content "Subtask (via collected note reference: '${note_raw}')" "$entry" "${routine_name}" "$PLANNER_FILE" "${line_num_info} (note reference string)" "${current_search_tag}"; then
+            debug_log "      Found '${current_search_tag}' in Subtask Linked Note reference string. Exiting search for this tag."
+            return
         fi
-    done # End of TAG_DISPLAY_ORDER loop
+    done
 
-    local exit_search_msg="Exiting find_tags_in_consideration_list function."
-    debug_log "$exit_search_msg"
-    DETAILED_TAG_SEARCH_LOGS+=("  ${exit_search_msg}")
+    debug_log "Exiting find_tags_in_consideration_list function."
 }
 
 
@@ -684,19 +568,26 @@ else
     debug_log "Skipping collection of overall considerations as no active routine or planner file missing."
 fi
 
-# Call the find_tags_in_consideration_list here to populate FOUND_TAGS_RESULTS
-find_tags_in_consideration_list
-
 
 # 1. Display the QUICK RESULT and Clean Routine Name at the very top (NO BOX FOR QUICK RESULT)
 log_and_tee "${YELLOW}1. QUICK RESULT ---${NC}" # L1 - YELLOW
 if [ "$current_routine_found" = "true" ]; then
     log_and_tee "${CYAN}1.1 Quick Result Summary:${NC}\n${QUICK_RESULT_CONTENT}" # L2 - CYAN
+    # if [ ${#GLOBAL_ACTIVE_ROUTINE_LINES[@]} -gt 0 ]; then
+    #     first_active_line_num="${GLOBAL_ACTIVE_ROUTINE_LINES[0]}"
+    #     first_active_line_content=$(sed -n "${first_active_line_num}p" "$PLANNER_FILE")
+    #     clean_name_for_quick_result=$(get_concise_routine_name "$first_active_line_content")
+    #     log_and_tee "${CYAN}1.2 Clean Routine Name (for other scripts):${NC}\n${clean_name_for_quick_result}" # L2 - CYAN
+    # else
+    #     log_and_tee "${CYAN}1.2 Clean Routine Name (for other scripts):${NC} No active routine found." # L2 - CYAN
+    # fi
 elif [ ! -f "$PLANNER_FILE" ]; then
     # Message for missing planner file
     log_and_tee "${CYAN}1.1 Quick Result Summary:${NC}\n${RED}Error: Journal file '$PLANNER_FILE' not found.${NC}" # L2 - CYAN
+    # log_and_tee "${CYAN}1.2 Clean Routine Name (for other scripts):${NC} Journal file not found." # L2 - CYAN
 else # No active routine found but planner file exists
     log_and_tee "${CYAN}1.1 Quick Result Summary:${NC}\n${YELLOW}No active routine found at $(date +%H:%M).${NC}" # L2 - CYAN
+    # log_and_tee "${CYAN}1.2 Clean Routine Name (for other scripts):${NC} No active routine found." # L2 - CYAN
 fi
 log_and_tee "" # Add a blank line for separation
 
@@ -781,7 +672,7 @@ if [ "$QUICK_MODE" != "true" ]; then
     if [ ${#GLOBAL_COLLECTED_SUBTASKS[@]} -gt 0 ]; then
         for task_info in "${GLOBAL_COLLECTED_SUBTASKS[@]}"; do
             log_and_tee "  - ${task_info}"
-        done
+        done # Corrected from '}' to 'done'
     else
         log_and_tee "  ℹ️ No overall subtasks found from all routines."
     fi
@@ -810,7 +701,7 @@ if [ "$QUICK_MODE" != "true" ]; then
         done
     else
         log_and_tee "  0 (No overall linked notes found from subtasks)"
-    _fi
+    fi
     log_and_tee ""
 fi
 
@@ -818,59 +709,20 @@ fi
 # 5. CURRENT CATEGORY/TASK/SUBTASK/MINITASK --- (NEW SECTION)
 if [ "$QUICK_MODE" != "true" ]; then
     log_and_tee "\n${YELLOW}5. CURRENT CATEGORY/TASK/SUBTASK/MINITASK ---${NC}" # L1 - YELLOW
+    find_tags_in_consideration_list # Call the new function
 
-    # Loop through the TAG_DISPLAY_ORDER to print results for each tag
-    for tag_to_display in "${TAG_DISPLAY_ORDER[@]}"; do
-        local tag_display_name="${TAG_DEFINITIONS[$tag_to_display]}"
+    # MODIFIED: Display logic for Section 5.1
+    current_search_tag="#CurrentCategoryOrAction"
+    tag_display_name="${TAG_DEFINITIONS[$current_search_tag]}"
+    log_and_tee "\n${BLUE}5.1 ${tag_display_name} (${current_search_tag}):${NC}" # L2 - BLUE
 
-        log_and_tee "\n${BLUE}5.X ${tag_display_name} (${tag_to_display}):${NC}" # L2 - BLUE (X will be replaced)
-
-        if [ -n "${FOUND_TAGS_RESULTS[$tag_to_display]}" ]; then
-            # Parse the structured result: "SourceType|RoutineName|FilePath|LineNumber|FoundContent"
-            IFS='|' read -r source_type routine_name file_path line_num found_content <<< "${FOUND_TAGS_RESULTS[$tag_to_display]}"
-
-            log_and_tee "  ${GREEN}✅ Tag '${tag_to_display}' found! Here are the details:${NC}" # L3 - GREEN
-            log_and_tee ""
-
-            log_and_tee "  ${CYAN}5.X.1 Location of Tag Discovery and Exact match details ---${NC}" # L4 - CYAN
-            log_and_tee "    ${BLUE}Associated Routine:${NC} ${routine_name}"
-            log_and_tee "    ${BLUE}Source Type:${NC} ${source_type}"
-            log_and_tee "    ${BLUE}File Path:${NC} ${file_path}"
-            log_and_tee "    ${BLUE}Line Number:${NC} ${line_num}"
-            log_and_tee "    ${BLUE}Found Content:${NC} ${found_content}"
-            log_and_tee ""
-
-            # Cleaned Content
-            # MODIFIED: Apply cleaning specific to the tag
-            local cleaned_content=""
-            if [ "$tag_to_display" = "#CurrentCategoryOrAction" ]; then
-                cleaned_content=$(echo "${found_content}" | sed -E 's/^[[:space:]]*- ?\[ ?\][[:space:]]*//; s/[[:space:]]*#CurrentCategoryOrAction//' | xargs)
-            elif [ "$tag_to_display" = "#CurrentTask" ]; then
-                cleaned_content=$(echo "${found_content}" | sed -E 's/^[[:space:]]*- ?\[ ?\][[:space:]]*//; s/[[:space:]]*#CurrentTask//' | xargs)
-            fi
-
-            log_and_tee "\n${BLUE}5.X.2 Cleaned ${tag_display_name} is:${NC}" # L2 - BLUE
-            log_and_tee "  ${GREEN}${tag_display_name}:${NC} ${cleaned_content}"
-            log_and_tee ""
-
-        else
-            log_and_tee "  ${YELLOW}None found for this tag. Detailed search process below (if DEBUG_MODE is 'true'):${NC}"
-            if [ ${#DETAILED_TAG_SEARCH_LOGS[@]} -gt 0 ] && [ "$DEBUG_MODE" = "true" ]; then
-                # Filter logs to show only relevant ones for this tag's search
-                for log_entry in "${DETAILED_TAG_SEARCH_LOGS[@]}"; do
-                    if echo "$log_entry" | grep -q -- "$tag_to_display"; then
-                        log_and_tee "    ${log_entry}"
-                    fi
-                done
-            elif [ "$DEBUG_MODE" = "false" ]; then
-                log_and_tee "      (Debug logs are suppressed because DEBUG_MODE is 'false'.)"
-            else
-                log_and_tee "      (No detailed search logs were generated for this tag.)"
-            fi
-        fi
-    done
+    if [ -n "${FOUND_TAGS_RESULTS[$current_search_tag]}" ]; then
+        # Retrieve the stored result for #CurrentCategoryOrAction
+        echo -e "${FOUND_TAGS_RESULTS[$current_search_tag]}" | sed 's/^/    /' # Indent output
+    else
+        log_and_tee "    ${YELLOW}None found for this tag.${NC}"
+    fi
 fi
-
 
 # MODIFIED: New variable to store script end time
 SCRIPT_END_TIME=$(date +"%Y-%m-%d %H:%M:%S")

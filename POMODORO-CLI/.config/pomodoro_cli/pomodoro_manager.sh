@@ -502,7 +502,7 @@ update_current_routine_display_info() {
         echo "DEBUG: Running get_current_CategoryAction.sh to update routine info..." >&2
         # Ensure the script is executable and run it silently
         if [ -f "$GET_ROUTINE_SCRIPT" ]; then
-            bash "$GET_ROUTINE_SCRIPT" >/dev/null 2>&1 # Run silently
+            bash "$GET_ROUTINE_SCRIPT" --debug=off >/dev/null 2>&1 # Run silently
             echo "$current_timestamp" > "$LAST_ROUTINE_UPDATE_TIME_FILE" # Update timestamp
             echo "DEBUG: get_current_CategoryAction.sh executed and timestamp updated." >&2
         else
