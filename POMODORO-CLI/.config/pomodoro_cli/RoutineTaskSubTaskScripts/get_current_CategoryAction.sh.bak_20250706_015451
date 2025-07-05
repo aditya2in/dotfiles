@@ -618,11 +618,10 @@ find_tags_in_consideration_list() {
         debug_log "$routine_notes_search_msg"
         DETAILED_TAG_SEARCH_LOGS+=("    ${routine_notes_search_msg}")
         for entry in "${GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES[@]}"; do
-            local routine_part=$(echo "$entry" | awk -F': 🔗 ' '{print $1}')
-            local note_part=$(echo "$entry" | awk -F': 🔗 ' '{print $2}')
-            local line_num_info=$(echo "$routine_part" | cut -d':' -f1)
-            local routine_name=$(echo "$routine_part" | cut -d':' -f2- | xargs)
-            local note_raw=$(echo "$note_part" | grep -oP '\[\[.*?\]\]' | head -n 1)
+            local line_num_info=$(echo "$entry" | cut -d':' -f1)
+            local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
+            local note_raw=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*🔗[[:space:]]*(.*)$/\1/')
+            note_raw=$(echo "$note_raw" | sed -E 's/\s*\(PATH:.*\)//') # Remove path info for resolution
 
             local resolve_msg="      - Attempting to resolve linked note file: '${note_raw}'"
             debug_log "$resolve_msg"
@@ -665,11 +664,10 @@ find_tags_in_consideration_list() {
         debug_log "$subtask_notes_search_msg"
         DETAILED_TAG_SEARCH_LOGS+=("    ${subtask_notes_search_msg}")
         for entry in "${GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES[@]}"; do
-            local routine_part=$(echo "$entry" | awk -F': 🔗 ' '{print $1}')
-            local note_part=$(echo "$entry" | awk -F': 🔗 ' '{print $2}')
-            local line_num_info=$(echo "$routine_part" | cut -d':' -f1)
-            local routine_name=$(echo "$routine_part" | cut -d':' -f2- | xargs)
-            local note_raw=$(echo "$note_part" | grep -oP '\[\[.*?\]\]' | head -n 1)
+            local line_num_info=$(echo "$entry" | cut -d':' -f1)
+            local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
+            local note_raw=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*🔗[[:space:]]*(.*)$/\1/')
+            note_raw=$(echo "$note_raw" | sed -E 's/\s*\(PATH:.*\)//') # Remove path info for resolution
 
             local resolve_msg="      - Attempting to resolve linked note file: '${note_raw}'"
             debug_log "$resolve_msg"

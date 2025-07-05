@@ -87,20 +87,6 @@ draw_routine_box() {
     log_and_tee "${CYAN}╰$(printf '─%.0s' $(seq 1 $horizontal_line_width))╯${NC}"
 }
 
-draw_result_box() {
-    local tag_name="$1"
-    local cleaned_content="$2"
-    local content="${tag_name}: ${cleaned_content}"
-    local box_line_padding="  "
-    local box_color="${GREEN}"
-    local content_display_width=$(get_display_width "$content")
-    local horizontal_line_width=$((content_display_width + (2 * ${#box_line_padding})))
-    log_and_tee "${box_color}╭$(printf '─%.0s' $(seq 1 $horizontal_line_width))╮${NC}"
-    local spaces_needed_right=$((horizontal_line_width - content_display_width - ${#box_line_padding}))
-    log_and_tee "${box_color}│${box_line_padding}${content}${NC}$(printf ' %.0s' $(seq 1 $spaces_needed_right))${box_color}│${NC}"
-    log_and_tee "${box_color}╰$(printf '─%.0s' $(seq 1 $horizontal_line_width))╯${NC}"
-}
-
 find_active_routine() {
     debug_log "Entering find_active_routine function."
     GLOBAL_ACTIVE_ROUTINE_LINES=()
@@ -209,15 +195,6 @@ get_concise_routine_name() {
 
     # 3. Use xargs to trim any remaining leading/trailing whitespace.
     echo "$temp_name" | xargs
-}
-
-# --- New Helper Function: Get Cleaned Tag Content ---
-get_cleaned_tag_content() {
-    local tag="$1"
-    local content="$2"
-    # This sed command removes the leading checkbox and the tag itself.
-    # xargs trims whitespace.
-    echo "${content}" | sed -E "s/^[[:space:]]*- ?\[ ?\][[:space:]]*//; s/[[:space:]]*${tag}//" | xargs
 }
 
 # --- New Function: Process Routine Details and Consideration List ---
@@ -350,8 +327,6 @@ process_routine_details() {
 declare -A TAG_DEFINITIONS
 TAG_DEFINITIONS["#CurrentCategoryOrAction"]="Current Category/Action"
 TAG_DEFINITIONS["#CurrentTask"]="Current Task"
-TAG_DEFINITIONS["#CurrentSubTask"]="Current SubTask"
-TAG_DEFINITIONS["#CurrentMiniTask"]="Current MiniTask"
 
 # NEW: Array to define explicit display order for tags
 # This ensures the order you requested for presentation in section 5.1
@@ -360,8 +335,6 @@ TAG_DEFINITIONS["#CurrentMiniTask"]="Current MiniTask"
 TAG_DISPLAY_ORDER=(
     "#CurrentCategoryOrAction"
     "#CurrentTask"
-    "#CurrentSubTask"
-    "#CurrentMiniTask"
 )
 
 # MODIFIED: Changed FOUND_TAGS_RESULTS to an associative array to store the first result per tag
@@ -400,29 +373,6 @@ resolve_obsidian_note_path() {
 
     echo "" # Return empty if not found
 }
-
-# --- New Helper Function: Get Routine Details by Description ---
-get_routine_details_by_description() {
-    local target_desc="$1"
-    local routine_line_num=""
-    local full_line_content=""
-
-    # Find the index of the description in the global array
-    for i in "${!GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[@]}"; do
-        # Exact match on the description string
-        if [ "${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[$i]}" = "$target_desc" ]; then
-            routine_line_num="${GLOBAL_ACTIVE_ROUTINE_LINES[$i]}"
-            # Fetch the full line content from the planner file using the line number
-            full_line_content=$(sed -n "${routine_line_num}p" "$PLANNER_FILE")
-            # Return as a pipe-separated string for easy parsing
-            echo "${routine_line_num}|${full_line_content}"
-            return
-        fi
-    done
-    # Return an empty pipe if no match is found
-    echo "|"
-}
-
 
 # --- New Function: Search for Tags in Content ---
 # MODIFIED: Now stores result in FOUND_TAGS_RESULTS associative array for "first match wins"
@@ -618,11 +568,10 @@ find_tags_in_consideration_list() {
         debug_log "$routine_notes_search_msg"
         DETAILED_TAG_SEARCH_LOGS+=("    ${routine_notes_search_msg}")
         for entry in "${GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES[@]}"; do
-            local routine_part=$(echo "$entry" | awk -F': 🔗 ' '{print $1}')
-            local note_part=$(echo "$entry" | awk -F': 🔗 ' '{print $2}')
-            local line_num_info=$(echo "$routine_part" | cut -d':' -f1)
-            local routine_name=$(echo "$routine_part" | cut -d':' -f2- | xargs)
-            local note_raw=$(echo "$note_part" | grep -oP '\[\[.*?\]\]' | head -n 1)
+            local line_num_info=$(echo "$entry" | cut -d':' -f1)
+            local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
+            local note_raw=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*🔗[[:space:]]*(.*)$/\1/')
+            note_raw=$(echo "$note_raw" | sed -E 's/\s*\(PATH:.*\)//') # Remove path info for resolution
 
             local resolve_msg="      - Attempting to resolve linked note file: '${note_raw}'"
             debug_log "$resolve_msg"
@@ -655,7 +604,7 @@ find_tags_in_consideration_list() {
                 break
             fi
         done
-        # If tag was found, continue to the next tag in TAG_DISPLAY_ORDER (redundant but safe)
+        # If tag was found, continue to the next tag in TAG_DISPLAY_ORDER
         if [ "${TAG_FOUND_STATUS[$current_search_tag]}" = "true" ]; then
             continue
         fi
@@ -665,11 +614,10 @@ find_tags_in_consideration_list() {
         debug_log "$subtask_notes_search_msg"
         DETAILED_TAG_SEARCH_LOGS+=("    ${subtask_notes_search_msg}")
         for entry in "${GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES[@]}"; do
-            local routine_part=$(echo "$entry" | awk -F': 🔗 ' '{print $1}')
-            local note_part=$(echo "$entry" | awk -F': 🔗 ' '{print $2}')
-            local line_num_info=$(echo "$routine_part" | cut -d':' -f1)
-            local routine_name=$(echo "$routine_part" | cut -d':' -f2- | xargs)
-            local note_raw=$(echo "$note_part" | grep -oP '\[\[.*?\]\]' | head -n 1)
+            local line_num_info=$(echo "$entry" | cut -d':' -f1)
+            local routine_name=$(echo "$entry" | cut -d':' -f2 | xargs)
+            local note_raw=$(echo "$entry" | sed -E 's/^[0-9]+:[^:]+:[[:space:]]*🔗[[:space:]]*(.*)$/\1/')
+            note_raw=$(echo "$note_raw" | sed -E 's/\s*\(PATH:.*\)//') # Remove path info for resolution
 
             local resolve_msg="      - Attempting to resolve linked note file: '${note_raw}'"
             debug_log "$resolve_msg"
@@ -713,46 +661,8 @@ find_tags_in_consideration_list() {
     DETAILED_TAG_SEARCH_LOGS+=("  ${exit_search_msg}")
 }
 
-# --- New Function: Build Quick Result ---
-build_quick_result() {
-    if [ "$current_routine_found" != "true" ]; then
-        # If no routine is active, the default message is already set.
-        return
-    fi
 
-    local quick_result_lines=()
-    # Start with the routine description(s)
-    quick_result_lines+=("$(get_concise_routine_name "${QUICK_RESULT_CONTENT}")")
-
-    # Loop through found tags and add them to the quick result
-    for tag in "${TAG_DISPLAY_ORDER[@]}"; do
-        if [ -n "${FOUND_TAGS_RESULTS[$tag]}" ]; then
-            IFS='|' read -r _ _ _ _ found_content <<< "${FOUND_TAGS_RESULTS[$tag]}"
-            local cleaned_content=$(get_cleaned_tag_content "$tag" "$found_content")
-            quick_result_lines+=("${cleaned_content}")
-        else
-            case "$tag" in
-                "#CurrentCategoryOrAction")
-                    quick_result_lines+=("No Category or Action")
-                    ;;
-                "#CurrentTask")
-                    quick_result_lines+=("No Task")
-                    ;;
-                "#CurrentSubTask")
-                    quick_result_lines+=("No Sub Task")
-                    ;;
-                "#CurrentMiniTask")
-                    quick_result_lines+=("No Mini task")
-                    ;;
-            esac
-        fi
-    done
-
-    # Join the lines with newlines for the final quick result
-    QUICK_RESULT_CONTENT=$(printf "%s\n" "${quick_result_lines[@]}")
-}
-
-
+# --- Main Script Logic ---
 # 1. Clear log file for a fresh start (no marker file needed)
 echo -n > "$OUTPUT_LOG_FILE"
 # Removed: rm -f "${SCRIPT_DIR}/.log_init_marker" # Marker file is no longer used or created.
@@ -776,9 +686,6 @@ fi
 
 # Call the find_tags_in_consideration_list here to populate FOUND_TAGS_RESULTS
 find_tags_in_consideration_list
-
-# Build the quick result content after tags are found
-build_quick_result
 
 
 # 1. Display the QUICK RESULT and Clean Routine Name at the very top (NO BOX FOR QUICK RESULT)
@@ -900,40 +807,33 @@ if [ "$QUICK_MODE" != "true" ]; then
     if [ ${#GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES[@]} -gt 0 ]; then
         for note_info in "${GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES[@]}"; do
             log_and_tee "  - ${note_info}"
-        done # <-- FIX APPLIED HERE: Changed 'end' to 'done'
+        done
     else
         log_and_tee "  0 (No overall linked notes found from subtasks)"
-    fi
+    fi # MODIFIED: Changed _fi to fi to correct syntax error
     log_and_tee ""
 fi
 
 
-# 5. CURRENT CATEGORY/TASK/SUBTASK/MINITASK ---
+# 5. CURRENT CATEGORY/TASK/SUBTASK/MINITASK --- (NEW SECTION)
 if [ "$QUICK_MODE" != "true" ]; then
-    log_and_tee "\n${YELLOW}5. CURRENT CATEGORY/TASK/SUBTASK/MINITASK ---\n" # L1 - YELLOW
-    section_5_counter=0 # Initialize counter for 5.X sections
+    log_and_tee "\n${YELLOW}5. CURRENT CATEGORY/TASK/SUBTASK/MINITASK ---${NC}" # L1 - YELLOW
+
     # Loop through the TAG_DISPLAY_ORDER to print results for each tag
     for tag_to_display in "${TAG_DISPLAY_ORDER[@]}"; do
+        local tag_display_name="${TAG_DEFINITIONS[$tag_to_display]}"
 
-        section_5_counter=$((section_5_counter + 1)) # Increment counter
-        tag_display_name="${TAG_DEFINITIONS[$tag_to_display]}"
-
-        log_and_tee "\n${BLUE}5.${section_5_counter} ${tag_display_name} (${tag_to_display}):${NC}" # L2 - BLUE (X will be replaced)
+        log_and_tee "\n${BLUE}5.X ${tag_display_name} (${tag_to_display}):${NC}" # L2 - BLUE (X will be replaced)
 
         if [ -n "${FOUND_TAGS_RESULTS[$tag_to_display]}" ]; then
-            # MODIFIED: Directly parse the result string using IFS without the helper function.
-            # This resolves issues with spaces in the parsed content.
+            # Parse the structured result: "SourceType|RoutineName|FilePath|LineNumber|FoundContent"
             IFS='|' read -r source_type routine_name file_path line_num found_content <<< "${FOUND_TAGS_RESULTS[$tag_to_display]}"
-
-            # Fetch the full routine details using the new helper function
-            IFS='|' read -r routine_line_num full_routine_line <<< "$(get_routine_details_by_description "$routine_name")"
-
 
             log_and_tee "  ${GREEN}✅ Tag '${tag_to_display}' found! Here are the details:${NC}" # L3 - GREEN
             log_and_tee ""
 
-            log_and_tee "  ${CYAN}5.${section_5_counter}.1 Location of Tag Discovery and Exact match details ---${NC}" # L4 - CYAN
-            log_and_tee "    ${BLUE}Associated Routine:${NC} [Line ${routine_line_num}] ${full_routine_line}"
+            log_and_tee "  ${CYAN}5.X.1 Location of Tag Discovery and Exact match details ---${NC}" # L4 - CYAN
+            log_and_tee "    ${BLUE}Associated Routine:${NC} ${routine_name}"
             log_and_tee "    ${BLUE}Source Type:${NC} ${source_type}"
             log_and_tee "    ${BLUE}File Path:${NC} ${file_path}"
             log_and_tee "    ${BLUE}Line Number:${NC} ${line_num}"
@@ -942,23 +842,15 @@ if [ "$QUICK_MODE" != "true" ]; then
 
             # Cleaned Content
             # MODIFIED: Apply cleaning specific to the tag
-            # Ensured 'local' keyword is NOT present on this line (Original line 859) as it's in the global scope.
-            cleaned_content="" # Variable assignment (no 'local' or 'declare')
-                               # Using a variable for temporary cleanup.
-                               # The 'declare' statement at line 835 also ensures it's properly handled.
+            local cleaned_content=""
             if [ "$tag_to_display" = "#CurrentCategoryOrAction" ]; then
                 cleaned_content=$(echo "${found_content}" | sed -E 's/^[[:space:]]*- ?\[ ?\][[:space:]]*//; s/[[:space:]]*#CurrentCategoryOrAction//' | xargs)
             elif [ "$tag_to_display" = "#CurrentTask" ]; then
                 cleaned_content=$(echo "${found_content}" | sed -E 's/^[[:space:]]*- ?\[ ?\][[:space:]]*//; s/[[:space:]]*#CurrentTask//' | xargs)
-            elif [ "$tag_to_display" = "#CurrentSubTask" ]; then
-                cleaned_content=$(echo "${found_content}" | sed -E 's/^[[:space:]]*- ?\[ ?\][[:space:]]*//; s/[[:space:]]*#CurrentSubTask//' | xargs)
-            elif [ "$tag_to_display" = "#CurrentMiniTask" ]; then
-                cleaned_content=$(echo "${found_content}" | sed -E 's/^[[:space:]]*- ?\[ ?\][[:space:]]*//; s/[[:space:]]*#CurrentMiniTask//' | xargs)
             fi
 
-            log_and_tee "
-${BLUE}5.${section_5_counter}.2 Cleaned ${tag_display_name} is:${NC}" # L2 - BLUE
-            draw_result_box "${tag_display_name}" "${cleaned_content}"
+            log_and_tee "\n${BLUE}5.X.2 Cleaned ${tag_display_name} is:${NC}" # L2 - BLUE
+            log_and_tee "  ${GREEN}${tag_display_name}:${NC} ${cleaned_content}"
             log_and_tee ""
 
         else
@@ -985,23 +877,10 @@ SCRIPT_END_TIME=$(date +"%Y-%m-%d %H:%M:%S")
 
 # 6. Final Summary (Renumbered)
 if [ "$QUICK_MODE" != "true" ]; then
-    log_and_tee "
-${YELLOW}6. FINAL SUMMARY ---${NC}" # L1 - YELLOW
+    log_and_tee "\n${YELLOW}6. FINAL SUMMARY ---${NC}" # L1 - YELLOW
     log_and_tee "${CYAN}6.1 Log File Location:${NC} ${BLUE}${OUTPUT_LOG_FILE}${NC}" # L2 - CYAN
     log_and_tee "${CYAN}6.2 Script Completion Status:${NC} ${GREEN}Script execution finished.${NC}" # L2 - CYAN
     # MODIFIED: Added script end time
     log_and_tee "${CYAN}6.3 Script End Time:${NC} ${GREEN}${SCRIPT_END_TIME}${NC}" # L2 - CYAN
     log_and_tee ""
-
-    # New Summary Section
-    log_and_tee "${CYAN}6.4 Concise Summary:${NC}"
-    if [ "$current_routine_found" = "true" ]; then
-        # QUICK_RESULT_CONTENT is already formatted with newlines by build_quick_result
-        # Add indentation to each line for better formatting in the final summary.
-        echo "${QUICK_RESULT_CONTENT}" | while IFS= read -r line; do
-            log_and_tee "  ${line}"
-        done
-    else
-        log_and_tee "  No active routine."
-    fi
 fi

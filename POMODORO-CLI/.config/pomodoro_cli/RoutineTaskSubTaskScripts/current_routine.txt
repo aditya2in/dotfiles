@@ -1,303 +1,354 @@
 [0;34m[DEBUG] Entering find_active_routine function.[0m
-[0;34m[DEBUG] Current time: 22:48 (1368 minutes).[0m
-[0;34m[DEBUG] Scanning planner file: /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-04.md[0m
+[0;34m[DEBUG] Current time: 02:01 (121 minutes).[0m
+[0;34m[DEBUG] Scanning planner file: /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md[0m
 [0;34m[DEBUG] Processing line 1: '# Day planner'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
 [0;34m[DEBUG] Processing line 2: ''[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 3: '- [ ] 09:10 - 09:15 New item'[0m
-[0;34m[DEBUG]   - Matched: Before Time='- [ ] ', Start='09:10', End='09:15', After Time=' New item'[0m
-[0;34m[DEBUG]   - Extracted description: 'New item'[0m
-[0;34m[DEBUG]   - Start time in minutes: 550, End time in minutes: 555[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (1368) is >= 550 AND < 555.[0m
-[0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 4: '- [ ] 17:10 - 17:15 New item'[0m
-[0;34m[DEBUG]   - Matched: Before Time='- [ ] ', Start='17:10', End='17:15', After Time=' New item'[0m
-[0;34m[DEBUG]   - Extracted description: 'New item'[0m
-[0;34m[DEBUG]   - Start time in minutes: 1030, End time in minutes: 1035[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (1368) is >= 1030 AND < 1035.[0m
-[0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 5: ''[0m
+[0;34m[DEBUG] Processing line 3: ''[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 6: '## Connect to Shri Mataji and Thank for the great day'[0m
+[0;34m[DEBUG] Processing line 4: ''[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 7: ''[0m
+[0;34m[DEBUG] Processing line 5: '## Connect to Shri Mataji and Thank for the great day'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 8: '- [ ] **Connect to Shri Mataji and Thank for the great day**  03:25 - 05:35 [[Tasks List MASTER]]'[0m
+[0;34m[DEBUG] Processing line 6: ''[0m
+[0;34m[DEBUG]   - Line does not match routine time pattern.[0m
+[0;34m[DEBUG] Processing line 7: '- [ ] **Connect to Shri Mataji and Thank for the great day**  03:25 - 05:35 [[Tasks List MASTER]]'[0m
 [0;34m[DEBUG]   - Matched: Before Time='- [ ] **Connect to Shri Mataji and Thank for the great day**  ', Start='03:25', End='05:35', After Time=' [[Tasks List MASTER]]'[0m
 [0;34m[DEBUG]   - Extracted description: '**Connect to Shri Mataji and Thank for the great day** [[Tasks List MASTER]]'[0m
 [0;34m[DEBUG]   - Start time in minutes: 205, End time in minutes: 335[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (1368) is >= 205 AND < 335.[0m
+[0;34m[DEBUG]   - Routine within same day. Checking if current time (121) is >= 205 AND < 335.[0m
 [0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 9: '	- [ ] > [!important] KEPT ABSOLUTELY 0 TASK FOR MORNING. RIGHT ??'[0m
+[0;34m[DEBUG] Processing line 8: '	- [ ] > [!important] KEPT ABSOLUTELY 0 TASK FOR MORNING. RIGHT ??'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 10: '	- [ ] Enjoy walk and relax.'[0m
+[0;34m[DEBUG] Processing line 9: '	- [ ] Enjoy walk and relax.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 11: '	- [ ] DONT FEEL LIKE DOING FS AT NIGHT?. THEN DEFINITELY DO FS'[0m
+[0;34m[DEBUG] Processing line 10: '	- [ ] DONT FEEL LIKE DOING FS AT NIGHT?. THEN DEFINITELY DO FS'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 12: '		- [ ] Sit before any FS'[0m
+[0;34m[DEBUG] Processing line 11: '		- [ ] Sit before any FS'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 13: '		- [ ] *CLOSE DOOR PROTOCOL*'[0m
+[0;34m[DEBUG] Processing line 12: '		- [ ] *CLOSE DOOR PROTOCOL*'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 14: '		- [ ] RECLAIM THE WHOLE 3 NADIS WITH COOLNESS AND  <br> <br>FILLING THE BODY WITH COOLNESS IS MUST.'[0m
+[0;34m[DEBUG] Processing line 13: '		- [ ] RECLAIM THE WHOLE 3 NADIS WITH COOLNESS AND  <br> <br>FILLING THE BODY WITH COOLNESS IS MUST.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 15: '		- [ ] WATER THE SEED DAILY MORNING AND EVENING.  <br> <br>Water center channel mornings by sitting on floor and meditation <br> <br>MONRING FS WORKS TILL AFTERNOON.  <br> <br>NIGHT FS WORKS TILL NEXT MONRING 4 AM'[0m
+[0;34m[DEBUG] Processing line 14: '		- [ ] WATER THE SEED DAILY MORNING AND EVENING.  <br> <br>Water center channel mornings by sitting on floor and meditation <br> <br>MONRING FS WORKS TILL AFTERNOON.  <br> <br>NIGHT FS WORKS TILL NEXT MONRING 4 AM'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 16: '		- [ ] Night FS with hot cold and "Red bindi" infront of Shri Mataji photograph with candle in front of it (CLOSE DOOR) <br>with hands on Swadhistans. MUST DO FS OF THE DAY >>>'[0m
+[0;34m[DEBUG] Processing line 15: '		- [ ] Night FS with hot cold and "Red bindi" infront of Shri Mataji photograph with candle in front of it (CLOSE DOOR) <br>with hands on Swadhistans. MUST DO FS OF THE DAY >>>'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 17: '		- [ ] Tell krupa to do all sides if both are doing FS.'[0m
+[0;34m[DEBUG] Processing line 16: '		- [ ] Tell krupa to do all sides if both are doing FS.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 18: '		- [ ] The good old Surrender FS. Just see the ATA the play of her during the FS. DO NOTHING. SHE KNOWS WHAT TO DO.'[0m
+[0;34m[DEBUG] Processing line 17: '		- [ ] The good old Surrender FS. Just see the ATA the play of her during the FS. DO NOTHING. SHE KNOWS WHAT TO DO.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 19: '		- [ ] Keep kundalini up. Push all bad up by deep breathing and giving it o Shri Mataji.'[0m
+[0;34m[DEBUG] Processing line 18: '		- [ ] Keep kundalini up. Push all bad up by deep breathing and giving it o Shri Mataji.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 20: '	- [ ] Post FS tasks'[0m
+[0;34m[DEBUG] Processing line 19: '	- [ ] Post FS tasks'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 21: '		- [ ] Actual night FS duration ?'[0m
+[0;34m[DEBUG] Processing line 20: '		- [ ] Actual night FS duration ?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 22: '		- [ ] Keep FSD ready for both of us for now.. Half mug water for krupa'[0m
+[0;34m[DEBUG] Processing line 21: '		- [ ] Keep FSD ready for both of us for now.. Half mug water for krupa'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 23: '		- [ ] Close all taps fully and keeo them up position and closed.'[0m
+[0;34m[DEBUG] Processing line 22: '		- [ ] Close all taps fully and keeo them up position and closed.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 24: '		- [ ] Log all the experiences in log.'[0m
+[0;34m[DEBUG] Processing line 23: '		- [ ] Log all the experiences in log.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 25: '			- [ ] Coolness ? Cool the body like good old days ?'[0m
+[0;34m[DEBUG] Processing line 24: '			- [ ] Coolness ? Cool the body like good old days ?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 26: '			- [ ] Relaxed, relieved after FS'[0m
+[0;34m[DEBUG] Processing line 25: '			- [ ] Relaxed, relieved after FS'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 27: '		- [ ] Meditian for some time after FS and before before sleep. Sleep with cool head.'[0m
+[0;34m[DEBUG] Processing line 26: '		- [ ] Meditian for some time after FS and before before sleep. Sleep with cool head.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 28: '			- [ ] Vibrating clouds'[0m
+[0;34m[DEBUG] Processing line 27: '			- [ ] Vibrating clouds'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 29: '			- [ ] Use Vibrations daily'[0m
+[0;34m[DEBUG] Processing line 28: '			- [ ] Use Vibrations daily'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 30: '				- [ ] state after bandhans?'[0m
+[0;34m[DEBUG] Processing line 29: '				- [ ] state after bandhans?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 31: '		- [ ] Ajwain whole house'[0m
+[0;34m[DEBUG] Processing line 30: '		- [ ] Ajwain whole house'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 32: '		- [ ] Make 2L vibrated water ready as Shri Mataji photograph is clean'[0m
+[0;34m[DEBUG] Processing line 31: '		- [ ] Make 2L vibrated water ready as Shri Mataji photograph is clean'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 33: '		- [ ] Also vibrate others as well like Garlic , lemon chillies'[0m
+[0;34m[DEBUG] Processing line 32: '		- [ ] Also vibrate others as well like Garlic , lemon chillies'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 34: '		- [ ] Keep FSD SETUP with table for tomorrow morning. Half mug water for krupa.'[0m
+[0;34m[DEBUG] Processing line 33: '		- [ ] Keep FSD SETUP with table for tomorrow morning. Half mug water for krupa.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 35: '			- [ ] You cant END a day unless you do a FS.'[0m
+[0;34m[DEBUG] Processing line 34: '			- [ ] You cant END a day unless you do a FS.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 36: '			- [ ] You cant START a day unless you do a FS.'[0m
+[0;34m[DEBUG] Processing line 35: '			- [ ] You cant START a day unless you do a FS.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 37: '	- [ ] Plan todays Work from office and free time'[0m
+[0;34m[DEBUG] Processing line 36: '	- [ ] Plan todays Work from office and free time'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 38: '		- [ ] SCHEDULE THE DAY AND DETERMINE THE WORK FOR THE DAY'[0m
+[0;34m[DEBUG] Processing line 37: '		- [ ] SCHEDULE THE DAY AND DETERMINE THE WORK FOR THE DAY'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 39: '		- [ ] **Do Office First and finish it off, Then open MacBook**'[0m
+[0;34m[DEBUG] Processing line 38: '		- [ ] **Do Office First and finish it off, Then open MacBook**'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 40: '			- [ ] Plan day or attend te office by 11 AM then plan the day mike'[0m
+[0;34m[DEBUG] Processing line 39: '			- [ ] Plan day or attend te office by 11 AM then plan the day mike'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 41: '	- [ ] Laptop Workflow'[0m
+[0;34m[DEBUG] Processing line 40: '	- [ ] Laptop Workflow'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 42: '		- [ ] Breakfast first (Post workout) okay monuments okay bye forty two two hours'[0m
+[0;34m[DEBUG] Processing line 41: '		- [ ] Breakfast first (Post workout) okay monuments okay bye forty two two hours'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 43: '			- [ ] whats for breakfast today ?'[0m
+[0;34m[DEBUG] Processing line 42: '			- [ ] whats for breakfast today ?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 44: '			- [ ] Breakfast vibrated ?'[0m
+[0;34m[DEBUG] Processing line 43: '			- [ ] Breakfast vibrated ?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 45: '			- [ ] Take a breakfast pic and vlog'[0m
+[0;34m[DEBUG] Processing line 44: '			- [ ] Take a breakfast pic and vlog'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 46: '			- [ ] How much time did you spenmd to chew 50 times?'[0m
+[0;34m[DEBUG] Processing line 45: '			- [ ] How much time did you spenmd to chew 50 times?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 47: '			- [ ] Chew 50 times.'[0m
+[0;34m[DEBUG] Processing line 46: '			- [ ] Chew 50 times.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 48: '		- [ ] Laptop open Routines - Automation icon'[0m
+[0;34m[DEBUG] Processing line 47: '		- [ ] Laptop open Routines - Automation icon'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 49: '			- [ ] Check the button and turn on Obsidian G Drive sync and rest of all by automation'[0m
+[0;34m[DEBUG] Processing line 48: '			- [ ] Check the button and turn on Obsidian G Drive sync and rest of all by automation'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 50: '		- [ ] [[Things to master for KUBESTRONAUT]]'[0m
+[0;34m[DEBUG] Processing line 49: '		- [ ] [[Things to master for KUBESTRONAUT]]'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 51: '			- [ ] **MUSCLE MEMORY / PRACTICE SECTION**'[0m
+[0;34m[DEBUG] Processing line 50: '			- [ ] **MUSCLE MEMORY / PRACTICE SECTION**'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 52: '				- [ ] \*\*MUSCLE MEMORY [[Touch Typing]] \*\*'[0m
+[0;34m[DEBUG] Processing line 51: '				- [ ] \*\*MUSCLE MEMORY [[Touch Typing]] \*\*'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 53: '					- [ ] In 2 websites'[0m
+[0;34m[DEBUG] Processing line 52: '					- [ ] In 2 websites'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 54: '						- [ ] Typing club #CategoryOrAction'[0m
+[0;34m[DEBUG] Processing line 53: '						- [ ] Typing club #CategoryOrAction'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 55: '						- [ ] Monkey Type typing'[0m
+[0;34m[DEBUG] Processing line 54: '						- [ ] Monkey Type typing'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 56: '					- [ ] DO NOT BUY ANY KEYBOARD OR THINK SO. TRY THIS VERSION OF BASE VERSION TO LEARN THNGS.'[0m
+[0;34m[DEBUG] Processing line 55: '					- [ ] DO NOT BUY ANY KEYBOARD OR THINK SO. TRY THIS VERSION OF BASE VERSION TO LEARN THNGS.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 57: '				- [ ] **MUSCLE MEMORY** [[VIM]] [[NeoVim nvim]]'[0m
+[0;34m[DEBUG] Processing line 56: '				- [ ] **MUSCLE MEMORY** [[VIM]] [[NeoVim nvim]]'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 58: '					- [ ] Vim Plugins'[0m
+[0;34m[DEBUG] Processing line 57: '					- [ ] Vim Plugins'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 59: '						- [ ] [[VimTutor]] COMPLETELY and DAILY'[0m
+[0;34m[DEBUG] Processing line 58: '						- [ ] [[VimTutor]] COMPLETELY and DAILY'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 60: '						- [ ] vim be good plugin'[0m
+[0;34m[DEBUG] Processing line 59: '						- [ ] vim be good plugin'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 61: '						- [ ] Hardtime'[0m
+[0;34m[DEBUG] Processing line 60: '						- [ ] Hardtime'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 62: '						- [ ] Other places for gaining muscle memory'[0m
+[0;34m[DEBUG] Processing line 61: '						- [ ] Other places for gaining muscle memory'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 63: '							- [ ] VimAdventures'[0m
+[0;34m[DEBUG] Processing line 62: '							- [ ] VimAdventures'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 64: '								- [ ] Dont pay for Vim adventures as of now, try using Vimtutor and test of all the list of the tools for now'[0m
+[0;34m[DEBUG] Processing line 63: '								- [ ] Dont pay for Vim adventures as of now, try using Vimtutor and test of all the list of the tools for now'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 65: '								- [ ] EXPLORE ALL DIFFERENT LINKS FOR LEARNING VIM'[0m
+[0;34m[DEBUG] Processing line 64: '								- [ ] EXPLORE ALL DIFFERENT LINKS FOR LEARNING VIM'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 66: '							- [ ] VimRacer'[0m
+[0;34m[DEBUG] Processing line 65: '							- [ ] VimRacer'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 67: '							- [ ] Vimgolf'[0m
+[0;34m[DEBUG] Processing line 66: '							- [ ] Vimgolf'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 68: '				- [ ] **MUSCLE MEMORY/ Organise** [[Obsidian + VIM]]'[0m
+[0;34m[DEBUG] Processing line 67: '				- [ ] **MUSCLE MEMORY/ Organise** [[Obsidian + VIM]]'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 69: '					- Obsidian Sustaining'[0m
+[0;34m[DEBUG] Processing line 68: '					- Obsidian Sustaining'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 70: '						- [ ] Dedicate time to write somehting Daily morning and evening'[0m
+[0;34m[DEBUG] Processing line 69: '						- [ ] Dedicate time to write somehting Daily morning and evening'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 71: '						- [ ] WRITING GIVES YOUR ORGANISED MENTAL CLARITY ON ALL DIFFERENT SEGMENTS IN LIFE.'[0m
+[0;34m[DEBUG] Processing line 70: '						- [ ] WRITING GIVES YOUR ORGANISED MENTAL CLARITY ON ALL DIFFERENT SEGMENTS IN LIFE.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 72: '						- [ ] TWO Parts'[0m
+[0;34m[DEBUG] Processing line 71: '						- [ ] TWO Parts'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 73: '							- [ ] Organisation ideas of your own and get lost.'[0m
+[0;34m[DEBUG] Processing line 72: '							- [ ] Organisation ideas of your own and get lost.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 74: '								- [ ] Just keep doing something something and get lost.'[0m
+[0;34m[DEBUG] Processing line 73: '								- [ ] Just keep doing something something and get lost.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 75: '							- [ ] Update as per specific things from whats app chat'[0m
+[0;34m[DEBUG] Processing line 74: '							- [ ] Update as per specific things from whats app chat'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 76: '							- [ ] The more you sit with yourself the more you construct'[0m
+[0;34m[DEBUG] Processing line 75: '							- [ ] The more you sit with yourself the more you construct'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 77: '				- [ ] \*\*MUSCLE MEMORY*08:40 - 17:05*'[0m
-[0;34m[DEBUG]   - Matched: Before Time='				- [ ] \*\*MUSCLE MEMORY*', Start='08:40', End='17:05', After Time='*'[0m
+[0;34m[DEBUG] Processing line 76: '				- [ ] \*\*MUSCLE MEMORY*12:50 - 21:15*'[0m
+[0;34m[DEBUG]   - Matched: Before Time='				- [ ] \*\*MUSCLE MEMORY*', Start='12:50', End='21:15', After Time='*'[0m
 [0;34m[DEBUG]   - Extracted description: '**MUSCLE MEMORY**'[0m
-[0;34m[DEBUG]   - Start time in minutes: 520, End time in minutes: 1025[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (1368) is >= 520 AND < 1025.[0m
+[0;34m[DEBUG]   - Start time in minutes: 770, End time in minutes: 1275[0m
+[0;34m[DEBUG]   - Routine within same day. Checking if current time (121) is >= 770 AND < 1275.[0m
 [0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 78: '					- [ ] vimium in real life '[0m
+[0;34m[DEBUG] Processing line 77: '					- [ ] vimium in real life '[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 79: '						- [ ] test'[0m
+[0;34m[DEBUG] Processing line 78: '						- [ ] test'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 80: '							- [ ] yes[[test]]'[0m
+[0;34m[DEBUG] Processing line 79: '							- [ ] yes[[test]] '[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 81: '							- [ ] sdafsd'[0m
+[0;34m[DEBUG] Processing line 80: '							- [ ] [[sdafsd]]'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 82: '			- [ ] **THEORY SECTION** 18:40 - 22:39'[0m
-[0;34m[DEBUG]   - Matched: Before Time='			- [ ] **THEORY SECTION** ', Start='18:40', End='22:39', After Time=''[0m
+[0;34m[DEBUG] Processing line 81: '			- [ ] **THEORY SECTION** 10:40 - 14:39'[0m
+[0;34m[DEBUG]   - Matched: Before Time='			- [ ] **THEORY SECTION** ', Start='10:40', End='14:39', After Time=''[0m
 [0;34m[DEBUG]   - Extracted description: '**THEORY SECTION**'[0m
-[0;34m[DEBUG]   - Start time in minutes: 1120, End time in minutes: 1359[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (1368) is >= 1120 AND < 1359.[0m
+[0;34m[DEBUG]   - Start time in minutes: 640, End time in minutes: 879[0m
+[0;34m[DEBUG]   - Routine within same day. Checking if current time (121) is >= 640 AND < 879.[0m
 [0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 83: '				- [ ] [[Linux]]'[0m
+[0;34m[DEBUG] Processing line 82: '				- [ ] [[Linux]]'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 84: '					- [ ] Abhishek veeramalla'[0m
+[0;34m[DEBUG] Processing line 83: '					- [ ] Abhishek veeramalla'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 85: '					- [ ] KodeKloud'[0m
+[0;34m[DEBUG] Processing line 84: '					- [ ] KodeKloud'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 86: '				- [ ] [[Kubernetes]] 19:35 - 22:10'[0m
-[0;34m[DEBUG]   - Matched: Before Time='				- [ ] [[Kubernetes]] ', Start='19:35', End='22:10', After Time=''[0m
+[0;34m[DEBUG] Processing line 85: '				- [ ] [[Kubernetes]] 12:45 - 15:20'[0m
+[0;34m[DEBUG]   - Matched: Before Time='				- [ ] [[Kubernetes]] ', Start='12:45', End='15:20', After Time=''[0m
 [0;34m[DEBUG]   - Extracted description: '[[Kubernetes]]'[0m
-[0;34m[DEBUG]   - Start time in minutes: 1175, End time in minutes: 1330[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (1368) is >= 1175 AND < 1330.[0m
+[0;34m[DEBUG]   - Start time in minutes: 765, End time in minutes: 920[0m
+[0;34m[DEBUG]   - Routine within same day. Checking if current time (121) is >= 765 AND < 920.[0m
 [0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 87: '					- [ ] Daily KUBESTRONAUT Study List'[0m
+[0;34m[DEBUG] Processing line 86: '					- [ ] Daily KUBESTRONAUT Study List'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 88: '						- [ ] FIRST: High level over view of study inertia'[0m
+[0;34m[DEBUG] Processing line 87: '						- [ ] FIRST: High level over view of study inertia'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 89: '						- [ ] Daily High level OverviewF'[0m
+[0;34m[DEBUG] Processing line 88: '						- [ ] Daily High level OverviewF'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 90: '							- [ ] ALL Project View'[0m
+[0;34m[DEBUG] Processing line 89: '							- [ ] ALL Project View'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 91: '								- [ ] Check Excel and Kanban'[0m
+[0;34m[DEBUG] Processing line 90: '								- [ ] Check Excel and Kanban'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 92: '							- [ ] Current Subjects'[0m
+[0;34m[DEBUG] Processing line 91: '							- [ ] Current Subjects'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 93: '								- [ ] See Index what am I doing now'[0m
+[0;34m[DEBUG] Processing line 92: '								- [ ] See Index what am I doing now'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 94: '								- [ ] Subjects list'[0m
+[0;34m[DEBUG] Processing line 93: '								- [ ] Subjects list'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 95: '									- [ ] Open [[qKubernetes Launchpad🚀 (Data view)]]'[0m
+[0;34m[DEBUG] Processing line 94: '									- [ ] Open [[qKubernetes Launchpad🚀 (Data view)]]'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 96: '									- [ ] See where are you and master study plan and see where are you and how many days to complete and inertia and consistency'[0m
+[0;34m[DEBUG] Processing line 95: '									- [ ] See where are you and master study plan and see where are you and how many days to complete and inertia and consistency'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 97: '								- [ ] Block time and Dedicate time for both of the subjects for the day'[0m
+[0;34m[DEBUG] Processing line 96: '								- [ ] Block time and Dedicate time for both of the subjects for the day'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 98: '						- [ ] [[Kubernetes Tasks]]'[0m
+[0;34m[DEBUG] Processing line 97: '						- [ ] [[Kubernetes Tasks]]'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 99: '						- [ ] Open Kodekloud and Pomodoro ON'[0m
+[0;34m[DEBUG] Processing line 98: '						- [ ] Open Kodekloud and Pomodoro ON'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 100: '							- [ ] Move Kandhans for the day and start'[0m
+[0;34m[DEBUG] Processing line 99: '							- [ ] Move Kandhans for the day and start'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 101: '							- [ ] Continue with Pomodoro pattern ON OFF from work'[0m
+[0;34m[DEBUG] Processing line 100: '							- [ ] Continue with Pomodoro pattern ON OFF from work'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 102: '							- [ ] Daily update obsidian high level over viewh'[0m
+[0;34m[DEBUG] Processing line 101: '							- [ ] Daily update obsidian high level over viewh'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 103: '	- [ ] High level Overview Checklist'[0m
+[0;34m[DEBUG] Processing line 102: '	- [ ] High level Overview Checklist'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 104: '		- [ ] Daily note creatyion as per WFH or WFO'[0m
+[0;34m[DEBUG] Processing line 103: '		- [ ] Daily note creatyion as per WFH or WFO'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 105: '		- [ ] Check daily calender adjustments'[0m
+[0;34m[DEBUG] Processing line 104: '		- [ ] Check daily calender adjustments'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 106: '		- [ ] Daily idea Dump Tasks'[0m
+[0;34m[DEBUG] Processing line 105: '		- [ ] Daily idea Dump Tasks'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 107: '		- [ ] High level over view for tasks'[0m
+[0;34m[DEBUG] Processing line 106: '		- [ ] High level over view for tasks'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 108: '		- [ ] Categorise all tasks and place them in respective notes and assign task dates'[0m
+[0;34m[DEBUG] Processing line 107: '		- [ ] Categorise all tasks and place them in respective notes and assign task dates'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 109: '			- [ ] Journals folder'[0m
+[0;34m[DEBUG] Processing line 108: '			- [ ] Journals folder'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 110: '				- [ ] Daily tasks:'[0m
+[0;34m[DEBUG] Processing line 109: '				- [ ] Daily tasks:'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 111: '					- [ ] [[Tasks List MASTER]]'[0m
+[0;34m[DEBUG] Processing line 110: '					- [ ] [[Tasks List MASTER]]'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 112: '	- [ ] Questions during Course DAILY'[0m
+[0;34m[DEBUG] Processing line 111: '	- [ ] Questions during Course DAILY'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 113: '		- [ ] Pomodoro used ?'[0m
+[0;34m[DEBUG] Processing line 112: '		- [ ] Pomodoro used ?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 114: '		- [ ] Drink 1L water'[0m
+[0;34m[DEBUG] Processing line 113: '		- [ ] Drink 1L water'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 115: '		- [ ] Take Toilet break'[0m
+[0;34m[DEBUG] Processing line 114: '		- [ ] Take Toilet break'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 116: '	- [ ] 00:25 - 05:20 Post Study:  [[qKubernetes Launchpad🚀 (Data view)]]'[0m
+[0;34m[DEBUG] Processing line 115: '	- [ ] 00:25 - 05:20 Post Study:  [[qKubernetes Launchpad🚀 (Data view)]]'[0m
 [0;34m[DEBUG]   - Matched: Before Time='	- [ ] ', Start='00:25', End='05:20', After Time=' Post Study:  [[qKubernetes Launchpad🚀 (Data view)]]'[0m
 [0;34m[DEBUG]   - Extracted description: 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]'[0m
 [0;34m[DEBUG]   - Start time in minutes: 25, End time in minutes: 320[0m
-[0;34m[DEBUG]   - Routine within same day. Checking if current time (1368) is >= 25 AND < 320.[0m
-[0;34m[DEBUG]   - Routine NOT active (same day).[0m
-[0;34m[DEBUG] Processing line 117: '		- Actual Duration of studying?'[0m
+[0;34m[DEBUG]   - Routine within same day. Checking if current time (121) is >= 25 AND < 320.[0m
+[0;34m[DEBUG]   - Routine identified as ACTIVE: Line 115, Desc: 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]'[0m
+[0;34m[DEBUG] Processing line 116: '		- Actual Duration of studying?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 118: '			- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction'[0m
+[0;34m[DEBUG] Processing line 117: '			- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 119: '				- Name of topics ?'[0m
+[0;34m[DEBUG] Processing line 118: '				- Name of topics  ? #CurrentTask '[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 120: '		- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?'[0m
+[0;34m[DEBUG] Processing line 119: '		- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 121: '	- [ ] Work'[0m
+[0;34m[DEBUG] Processing line 120: '	- [ ] Work'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] Processing line 122: '		- [ ] Keep earphoes loose and talk office calls.'[0m
+[0;34m[DEBUG] Processing line 121: '		- [ ] Keep earphoes loose and talk office calls.'[0m
 [0;34m[DEBUG]   - Line does not match routine time pattern.[0m
-[0;34m[DEBUG] No active routines found.[0m
+[0;34m[DEBUG] Active routines found: 1. QUICK_RESULT_CONTENT updated.[0m
+[0;34m[DEBUG] Collected active routines (descriptions): 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]'[0m
 [0;34m[DEBUG] Exiting find_active_routine function.[0m
-[0;34m[DEBUG] Skipping collection of overall considerations as no active routine or planner file missing.[0m
+[0;34m[DEBUG] Entering collect_all_considerations_from_routines function.[0m
+[0;34m[DEBUG]   Collecting considerations for Routine: 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]' (Line: 115)[0m
+[0;34m[DEBUG]     - Collected routine linked note: [[qKubernetes Launchpad🚀 (Data view)]] (PATH: /home/aditya/obsidian/Project K8s - KUBESTRONAUT/Zettelkasten + Attachments/qKubernetes Launchpad🚀 (Data view).md)[0m
+[0;34m[DEBUG]       - Collected subtask: '		- Actual Duration of studying?'[0m
+[0;34m[DEBUG]       - Collected subtask: '			- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction'[0m
+[0;34m[DEBUG]         - Collected subtask linked note: [[Tasks List MASTER]] (PATH: /home/aditya/obsidian/ENV2 - Tasks and Workflows/Tasks List MASTER.md)[0m
+[0;34m[DEBUG]       - Collected subtask: '				- Name of topics  ? #CurrentTask '[0m
+[0;34m[DEBUG]       - Collected subtask: '		- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?'[0m
+[0;34m[DEBUG]       - Line has less or equal indentation, stopping subtask scan for this routine.[0m
+[0;34m[DEBUG] Exiting collect_all_considerations_from_routines function.[0m
 [0;34m[DEBUG] Entering find_tags_in_consideration_list function (MODIFIED for enhanced debug output, 'first match wins' logic).[0m
 [0;34m[DEBUG]   Starting search for tag: #CurrentCategoryOrAction[0m
 [0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_SUBTASKS for '#CurrentCategoryOrAction'.[0m
-[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES for '#CurrentCategoryOrAction'.[0m
-[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES for '#CurrentCategoryOrAction'.[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentCategoryOrAction' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 116[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentCategoryOrAction' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentCategoryOrAction' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 117[0m
+[0;34m[DEBUG]         - [0;32mFound tag '#CurrentCategoryOrAction' (as 'Current Category/Action') in 'Subtask'.[0m[0m
+[0;34m[DEBUG]       Found '#CurrentCategoryOrAction' in Subtask. Exiting search for this tag in other sources.[0m
 [0;34m[DEBUG]   Starting search for tag: #CurrentTask[0m
 [0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_SUBTASKS for '#CurrentTask'.[0m
-[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES for '#CurrentTask'.[0m
-[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES for '#CurrentTask'.[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 116[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 117[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 118[0m
+[0;34m[DEBUG]         - [0;32mFound tag '#CurrentTask' (as 'Current Task') in 'Subtask'.[0m[0m
+[0;34m[DEBUG]       Found '#CurrentTask' in Subtask. Exiting search for this tag in other sources.[0m
+[0;34m[DEBUG]   Starting search for tag: #CurrentSubTask[0m
+[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_SUBTASKS for '#CurrentSubTask'.[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentSubTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 116[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentSubTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentSubTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 117[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentSubTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentSubTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 118[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentSubTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentSubTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 119[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentSubTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES for '#CurrentSubTask'.[0m
+[0;34m[DEBUG]       - Attempting to resolve linked note file: '[[qKubernetes Launchpad🚀 (Data view)]]'[0m
+[0;34m[DEBUG]         - Linked note file found: /home/aditya/obsidian/Project K8s - KUBESTRONAUT/Zettelkasten + Attachments/qKubernetes Launchpad🚀 (Data view).md[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentSubTask' in 'Routine Linked Note (from file: '[[qKubernetes Launchpad🚀 (Data view)]]')' (Routine: 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]') from '/home/aditya/obsidian/Project K8s - KUBESTRONAUT/Zettelkasten + Attachments/qKubernetes Launchpad🚀 (Data view).md', Line: 115 (file content)[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentSubTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentSubTask' in 'Routine Name (via collected note reference: '[[qKubernetes Launchpad🚀 (Data view)]]')' (Routine: 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 115 (note reference string)[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentSubTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES for '#CurrentSubTask'.[0m
+[0;34m[DEBUG]       - Attempting to resolve linked note file: '[[Tasks List MASTER]]'[0m
+[0;34m[DEBUG]         - Linked note file found: /home/aditya/obsidian/ENV2 - Tasks and Workflows/Tasks List MASTER.md[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentSubTask' in 'Subtask Linked Note (from file: '[[Tasks List MASTER]]')' (Routine: 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]') from '/home/aditya/obsidian/ENV2 - Tasks and Workflows/Tasks List MASTER.md', Line: 117 (file content)[0m
+[0;34m[DEBUG]         - [0;32mFound tag '#CurrentSubTask' (as 'Current SubTask') in 'Subtask Linked Note (from file: '[[Tasks List MASTER]]')'.[0m[0m
+[0;34m[DEBUG]       Found '#CurrentSubTask' in Subtask Linked Note file. Exiting search for this tag in other sources.[0m
+[0;34m[DEBUG]   Starting search for tag: #CurrentMiniTask[0m
+[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_SUBTASKS for '#CurrentMiniTask'.[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentMiniTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 116[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentMiniTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentMiniTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 117[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentMiniTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentMiniTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 118[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentMiniTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentMiniTask' in 'Subtask' (Routine: 'Post Study') from '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md', Line: 119[0m
+[0;34m[DEBUG]         - [1;33mTag '#CurrentMiniTask' NOT found in this content.[0m[0m
+[0;34m[DEBUG]     Searching in GLOBAL_COLLECTED_ROUTINE_LINKED_NOTES for '#CurrentMiniTask'.[0m
+[0;34m[DEBUG]       - Attempting to resolve linked note file: '[[qKubernetes Launchpad🚀 (Data view)]]'[0m
+[0;34m[DEBUG]         - Linked note file found: /home/aditya/obsidian/Project K8s - KUBESTRONAUT/Zettelkasten + Attachments/qKubernetes Launchpad🚀 (Data view).md[0m
+[0;34m[DEBUG]       - Searching for target tag '#CurrentMiniTask' in 'Routine Linked Note (from file: '[[qKubernetes Launchpad🚀 (Data view)]]')' (Routine: 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]') from '/home/aditya/obsidian/Project K8s - KUBESTRONAUT/Zettelkasten + Attachments/qKubernetes Launchpad🚀 (Data view).md', Line: 115 (file content)[0m
+[0;34m[DEBUG]         - [0;32mFound tag '#CurrentMiniTask' (as 'Current MiniTask') in 'Routine Linked Note (from file: '[[qKubernetes Launchpad🚀 (Data view)]]')'.[0m[0m
+[0;34m[DEBUG]       Found '#CurrentMiniTask' in Routine Linked Note file. Exiting search for this tag in other sources.[0m
 [0;34m[DEBUG] Exiting find_tags_in_consideration_list function.[0m
 [1;33m1. QUICK RESULT ---[0m
 [0;36m1.1 Quick Result Summary:[0m
-[1;33mNo active routine found at 22:48.[0m
+Post Study: [[qKubernetes Launchpad🚀 (Data view)]]
+[[qKubernetes Launchpad🚀 (Data view)]]: - Number of topics done ? [[Tasks List MASTER]]
+[[qKubernetes Launchpad🚀 (Data view)]]: - Name of topics ?
+6. [[Aditya Tasks]]
+- Total List Filter using Data View:
 
 
 [1;33m2. SCRIPT INFORMATION ---[0m
 [0;36m2.1 Script Configuration Details:[0m
-  Current Date: [0;32m2025-07-04[0m
-  Journal File: [0;34m/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-04.md[0m
+  Current Date: [0;32m2025-07-06[0m
+  Journal File: [0;34m/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md[0m
   Script Path: [0;34m/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts[0m
   Output Log: [0;34m/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt[0m
-  Script Start Time: [0;32m2025-07-04 22:48:49[0m
+  Script Start Time: [0;32m2025-07-06 02:01:03[0m
   Obsidian Vault Root: [0;34m/home/aditya/obsidian[0m
 
 
@@ -306,128 +357,274 @@
 
      1	# Day planner
      2	
-     3	- [ ] 09:10 - 09:15 New item
-     4	- [ ] 17:10 - 17:15 New item
-     5	
-     6	## Connect to Shri Mataji and Thank for the great day
-     7	
-     8	- [ ] **Connect to Shri Mataji and Thank for the great day**  03:25 - 05:35 [[Tasks List MASTER]]
-     9		- [ ] > [!important] KEPT ABSOLUTELY 0 TASK FOR MORNING. RIGHT ??
-    10		- [ ] Enjoy walk and relax.
-    11		- [ ] DONT FEEL LIKE DOING FS AT NIGHT?. THEN DEFINITELY DO FS
-    12			- [ ] Sit before any FS
-    13			- [ ] *CLOSE DOOR PROTOCOL*
-    14			- [ ] RECLAIM THE WHOLE 3 NADIS WITH COOLNESS AND  <br> <br>FILLING THE BODY WITH COOLNESS IS MUST.
-    15			- [ ] WATER THE SEED DAILY MORNING AND EVENING.  <br> <br>Water center channel mornings by sitting on floor and meditation <br> <br>MONRING FS WORKS TILL AFTERNOON.  <br> <br>NIGHT FS WORKS TILL NEXT MONRING 4 AM
-    16			- [ ] Night FS with hot cold and "Red bindi" infront of Shri Mataji photograph with candle in front of it (CLOSE DOOR) <br>with hands on Swadhistans. MUST DO FS OF THE DAY >>>
-    17			- [ ] Tell krupa to do all sides if both are doing FS.
-    18			- [ ] The good old Surrender FS. Just see the ATA the play of her during the FS. DO NOTHING. SHE KNOWS WHAT TO DO.
-    19			- [ ] Keep kundalini up. Push all bad up by deep breathing and giving it o Shri Mataji.
-    20		- [ ] Post FS tasks
-    21			- [ ] Actual night FS duration ?
-    22			- [ ] Keep FSD ready for both of us for now.. Half mug water for krupa
-    23			- [ ] Close all taps fully and keeo them up position and closed.
-    24			- [ ] Log all the experiences in log.
-    25				- [ ] Coolness ? Cool the body like good old days ?
-    26				- [ ] Relaxed, relieved after FS
-    27			- [ ] Meditian for some time after FS and before before sleep. Sleep with cool head.
-    28				- [ ] Vibrating clouds
-    29				- [ ] Use Vibrations daily
-    30					- [ ] state after bandhans?
-    31			- [ ] Ajwain whole house
-    32			- [ ] Make 2L vibrated water ready as Shri Mataji photograph is clean
-    33			- [ ] Also vibrate others as well like Garlic , lemon chillies
-    34			- [ ] Keep FSD SETUP with table for tomorrow morning. Half mug water for krupa.
-    35				- [ ] You cant END a day unless you do a FS.
-    36				- [ ] You cant START a day unless you do a FS.
-    37		- [ ] Plan todays Work from office and free time
-    38			- [ ] SCHEDULE THE DAY AND DETERMINE THE WORK FOR THE DAY
-    39			- [ ] **Do Office First and finish it off, Then open MacBook**
-    40				- [ ] Plan day or attend te office by 11 AM then plan the day mike
-    41		- [ ] Laptop Workflow
-    42			- [ ] Breakfast first (Post workout) okay monuments okay bye forty two two hours
-    43				- [ ] whats for breakfast today ?
-    44				- [ ] Breakfast vibrated ?
-    45				- [ ] Take a breakfast pic and vlog
-    46				- [ ] How much time did you spenmd to chew 50 times?
-    47				- [ ] Chew 50 times.
-    48			- [ ] Laptop open Routines - Automation icon
-    49				- [ ] Check the button and turn on Obsidian G Drive sync and rest of all by automation
-    50			- [ ] [[Things to master for KUBESTRONAUT]]
-    51				- [ ] **MUSCLE MEMORY / PRACTICE SECTION**
-    52					- [ ] \*\*MUSCLE MEMORY [[Touch Typing]] \*\*
-    53						- [ ] In 2 websites
-    54							- [ ] Typing club #CategoryOrAction
-    55							- [ ] Monkey Type typing
-    56						- [ ] DO NOT BUY ANY KEYBOARD OR THINK SO. TRY THIS VERSION OF BASE VERSION TO LEARN THNGS.
-    57					- [ ] **MUSCLE MEMORY** [[VIM]] [[NeoVim nvim]]
-    58						- [ ] Vim Plugins
-    59							- [ ] [[VimTutor]] COMPLETELY and DAILY
-    60							- [ ] vim be good plugin
-    61							- [ ] Hardtime
-    62							- [ ] Other places for gaining muscle memory
-    63								- [ ] VimAdventures
-    64									- [ ] Dont pay for Vim adventures as of now, try using Vimtutor and test of all the list of the tools for now
-    65									- [ ] EXPLORE ALL DIFFERENT LINKS FOR LEARNING VIM
-    66								- [ ] VimRacer
-    67								- [ ] Vimgolf
-    68					- [ ] **MUSCLE MEMORY/ Organise** [[Obsidian + VIM]]
-    69						- Obsidian Sustaining
-    70							- [ ] Dedicate time to write somehting Daily morning and evening
-    71							- [ ] WRITING GIVES YOUR ORGANISED MENTAL CLARITY ON ALL DIFFERENT SEGMENTS IN LIFE.
-    72							- [ ] TWO Parts
-    73								- [ ] Organisation ideas of your own and get lost.
-    74									- [ ] Just keep doing something something and get lost.
-    75								- [ ] Update as per specific things from whats app chat
-    76								- [ ] The more you sit with yourself the more you construct
-    77					- [ ] \*\*MUSCLE MEMORY*08:40 - 17:05*
-    78						- [ ] vimium in real life 
-    79							- [ ] test
-    80								- [ ] yes[[test]]
-    81								- [ ] sdafsd
-    82				- [ ] **THEORY SECTION** 18:40 - 22:39
-    83					- [ ] [[Linux]]
-    84						- [ ] Abhishek veeramalla
-    85						- [ ] KodeKloud
-    86					- [ ] [[Kubernetes]] 19:35 - 22:10
-    87						- [ ] Daily KUBESTRONAUT Study List
-    88							- [ ] FIRST: High level over view of study inertia
-    89							- [ ] Daily High level OverviewF
-    90								- [ ] ALL Project View
-    91									- [ ] Check Excel and Kanban
-    92								- [ ] Current Subjects
-    93									- [ ] See Index what am I doing now
-    94									- [ ] Subjects list
-    95										- [ ] Open [[qKubernetes Launchpad🚀 (Data view)]]
-    96										- [ ] See where are you and master study plan and see where are you and how many days to complete and inertia and consistency
-    97									- [ ] Block time and Dedicate time for both of the subjects for the day
-    98							- [ ] [[Kubernetes Tasks]]
-    99							- [ ] Open Kodekloud and Pomodoro ON
-   100								- [ ] Move Kandhans for the day and start
-   101								- [ ] Continue with Pomodoro pattern ON OFF from work
-   102								- [ ] Daily update obsidian high level over viewh
-   103		- [ ] High level Overview Checklist
-   104			- [ ] Daily note creatyion as per WFH or WFO
-   105			- [ ] Check daily calender adjustments
-   106			- [ ] Daily idea Dump Tasks
-   107			- [ ] High level over view for tasks
-   108			- [ ] Categorise all tasks and place them in respective notes and assign task dates
-   109				- [ ] Journals folder
-   110					- [ ] Daily tasks:
-   111						- [ ] [[Tasks List MASTER]]
-   112		- [ ] Questions during Course DAILY
-   113			- [ ] Pomodoro used ?
-   114			- [ ] Drink 1L water
-   115			- [ ] Take Toilet break
-   116		- [ ] 00:25 - 05:20 Post Study:  [[qKubernetes Launchpad🚀 (Data view)]]
-   117			- Actual Duration of studying?
-   118				- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction
-   119					- Name of topics ?
-   120			- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?
-   121		- [ ] Work
-   122			- [ ] Keep earphoes loose and talk office calls.
+     3	
+     4	
+     5	## Connect to Shri Mataji and Thank for the great day
+     6	
+     7	- [ ] **Connect to Shri Mataji and Thank for the great day**  03:25 - 05:35 [[Tasks List MASTER]]
+     8		- [ ] > [!important] KEPT ABSOLUTELY 0 TASK FOR MORNING. RIGHT ??
+     9		- [ ] Enjoy walk and relax.
+    10		- [ ] DONT FEEL LIKE DOING FS AT NIGHT?. THEN DEFINITELY DO FS
+    11			- [ ] Sit before any FS
+    12			- [ ] *CLOSE DOOR PROTOCOL*
+    13			- [ ] RECLAIM THE WHOLE 3 NADIS WITH COOLNESS AND  <br> <br>FILLING THE BODY WITH COOLNESS IS MUST.
+    14			- [ ] WATER THE SEED DAILY MORNING AND EVENING.  <br> <br>Water center channel mornings by sitting on floor and meditation <br> <br>MONRING FS WORKS TILL AFTERNOON.  <br> <br>NIGHT FS WORKS TILL NEXT MONRING 4 AM
+    15			- [ ] Night FS with hot cold and "Red bindi" infront of Shri Mataji photograph with candle in front of it (CLOSE DOOR) <br>with hands on Swadhistans. MUST DO FS OF THE DAY >>>
+    16			- [ ] Tell krupa to do all sides if both are doing FS.
+    17			- [ ] The good old Surrender FS. Just see the ATA the play of her during the FS. DO NOTHING. SHE KNOWS WHAT TO DO.
+    18			- [ ] Keep kundalini up. Push all bad up by deep breathing and giving it o Shri Mataji.
+    19		- [ ] Post FS tasks
+    20			- [ ] Actual night FS duration ?
+    21			- [ ] Keep FSD ready for both of us for now.. Half mug water for krupa
+    22			- [ ] Close all taps fully and keeo them up position and closed.
+    23			- [ ] Log all the experiences in log.
+    24				- [ ] Coolness ? Cool the body like good old days ?
+    25				- [ ] Relaxed, relieved after FS
+    26			- [ ] Meditian for some time after FS and before before sleep. Sleep with cool head.
+    27				- [ ] Vibrating clouds
+    28				- [ ] Use Vibrations daily
+    29					- [ ] state after bandhans?
+    30			- [ ] Ajwain whole house
+    31			- [ ] Make 2L vibrated water ready as Shri Mataji photograph is clean
+    32			- [ ] Also vibrate others as well like Garlic , lemon chillies
+    33			- [ ] Keep FSD SETUP with table for tomorrow morning. Half mug water for krupa.
+    34				- [ ] You cant END a day unless you do a FS.
+    35				- [ ] You cant START a day unless you do a FS.
+    36		- [ ] Plan todays Work from office and free time
+    37			- [ ] SCHEDULE THE DAY AND DETERMINE THE WORK FOR THE DAY
+    38			- [ ] **Do Office First and finish it off, Then open MacBook**
+    39				- [ ] Plan day or attend te office by 11 AM then plan the day mike
+    40		- [ ] Laptop Workflow
+    41			- [ ] Breakfast first (Post workout) okay monuments okay bye forty two two hours
+    42				- [ ] whats for breakfast today ?
+    43				- [ ] Breakfast vibrated ?
+    44				- [ ] Take a breakfast pic and vlog
+    45				- [ ] How much time did you spenmd to chew 50 times?
+    46				- [ ] Chew 50 times.
+    47			- [ ] Laptop open Routines - Automation icon
+    48				- [ ] Check the button and turn on Obsidian G Drive sync and rest of all by automation
+    49			- [ ] [[Things to master for KUBESTRONAUT]]
+    50				- [ ] **MUSCLE MEMORY / PRACTICE SECTION**
+    51					- [ ] \*\*MUSCLE MEMORY [[Touch Typing]] \*\*
+    52						- [ ] In 2 websites
+    53							- [ ] Typing club #CategoryOrAction
+    54							- [ ] Monkey Type typing
+    55						- [ ] DO NOT BUY ANY KEYBOARD OR THINK SO. TRY THIS VERSION OF BASE VERSION TO LEARN THNGS.
+    56					- [ ] **MUSCLE MEMORY** [[VIM]] [[NeoVim nvim]]
+    57						- [ ] Vim Plugins
+    58							- [ ] [[VimTutor]] COMPLETELY and DAILY
+    59							- [ ] vim be good plugin
+    60							- [ ] Hardtime
+    61							- [ ] Other places for gaining muscle memory
+    62								- [ ] VimAdventures
+    63									- [ ] Dont pay for Vim adventures as of now, try using Vimtutor and test of all the list of the tools for now
+    64									- [ ] EXPLORE ALL DIFFERENT LINKS FOR LEARNING VIM
+    65								- [ ] VimRacer
+    66								- [ ] Vimgolf
+    67					- [ ] **MUSCLE MEMORY/ Organise** [[Obsidian + VIM]]
+    68						- Obsidian Sustaining
+    69							- [ ] Dedicate time to write somehting Daily morning and evening
+    70							- [ ] WRITING GIVES YOUR ORGANISED MENTAL CLARITY ON ALL DIFFERENT SEGMENTS IN LIFE.
+    71							- [ ] TWO Parts
+    72								- [ ] Organisation ideas of your own and get lost.
+    73									- [ ] Just keep doing something something and get lost.
+    74								- [ ] Update as per specific things from whats app chat
+    75								- [ ] The more you sit with yourself the more you construct
+    76					- [ ] \*\*MUSCLE MEMORY*12:50 - 21:15*
+    77						- [ ] vimium in real life 
+    78							- [ ] test
+    79								- [ ] yes[[test]] 
+    80								- [ ] [[sdafsd]]
+    81				- [ ] **THEORY SECTION** 10:40 - 14:39
+    82					- [ ] [[Linux]]
+    83						- [ ] Abhishek veeramalla
+    84						- [ ] KodeKloud
+    85					- [ ] [[Kubernetes]] 12:45 - 15:20
+    86						- [ ] Daily KUBESTRONAUT Study List
+    87							- [ ] FIRST: High level over view of study inertia
+    88							- [ ] Daily High level OverviewF
+    89								- [ ] ALL Project View
+    90									- [ ] Check Excel and Kanban
+    91								- [ ] Current Subjects
+    92									- [ ] See Index what am I doing now
+    93									- [ ] Subjects list
+    94										- [ ] Open [[qKubernetes Launchpad🚀 (Data view)]]
+    95										- [ ] See where are you and master study plan and see where are you and how many days to complete and inertia and consistency
+    96									- [ ] Block time and Dedicate time for both of the subjects for the day
+    97							- [ ] [[Kubernetes Tasks]]
+    98							- [ ] Open Kodekloud and Pomodoro ON
+    99								- [ ] Move Kandhans for the day and start
+   100								- [ ] Continue with Pomodoro pattern ON OFF from work
+   101								- [ ] Daily update obsidian high level over viewh
+   102		- [ ] High level Overview Checklist
+   103			- [ ] Daily note creatyion as per WFH or WFO
+   104			- [ ] Check daily calender adjustments
+   105			- [ ] Daily idea Dump Tasks
+   106			- [ ] High level over view for tasks
+   107			- [ ] Categorise all tasks and place them in respective notes and assign task dates
+   108				- [ ] Journals folder
+   109					- [ ] Daily tasks:
+   110						- [ ] [[Tasks List MASTER]]
+   111		- [ ] Questions during Course DAILY
+   112			- [ ] Pomodoro used ?
+   113			- [ ] Drink 1L water
+   114			- [ ] Take Toilet break
+   115		- [ ] 00:25 - 05:20 Post Study:  [[qKubernetes Launchpad🚀 (Data view)]]
+   116			- Actual Duration of studying?
+   117				- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction
+   118					- Name of topics  ? #CurrentTask 
+   119			- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?
+   120		- [ ] Work
+   121			- [ ] Keep earphoes loose and talk office calls.
 
 
 
 [1;33m4. ROUTINE DETAILS ---[0m
-[0;36m  No active routine found for detailed display.[0m
+[0;34m[DEBUG]   Processing routine on line 115 with indent 4 spaces.[0m
+
+[1;33m4.1 ROUTINE 1 [1/1] ---[0m
+[0;34m[DEBUG] Entering process_routine_details for line 115 with indent 4..[0m
+[0;34m[DEBUG]   - Found routine linked note: [[qKubernetes Launchpad🚀 (Data view)]][0m
+[0;34m[DEBUG]   - Scanning subsequent line 116: '		- Actual Duration of studying?'[0m
+[0;34m[DEBUG]   - Subtask candidate indent: 8, Routine indent: 4[0m
+[0;34m[DEBUG]   - Identified subtask: '		- Actual Duration of studying?' (indent: 8)[0m
+[0;34m[DEBUG]   - Scanning subsequent line 117: '			- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction'[0m
+[0;34m[DEBUG]   - Subtask candidate indent: 12, Routine indent: 4[0m
+[0;34m[DEBUG]   - Identified subtask: '			- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction' (indent: 12)[0m
+[0;34m[DEBUG]   - Scanning subsequent line 118: '				- Name of topics  ? #CurrentTask '[0m
+[0;34m[DEBUG]   - Subtask candidate indent: 16, Routine indent: 4[0m
+[0;34m[DEBUG]   - Identified subtask: '				- Name of topics  ? #CurrentTask ' (indent: 16)[0m
+[0;34m[DEBUG]   - Scanning subsequent line 119: '		- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?'[0m
+[0;34m[DEBUG]   - Subtask candidate indent: 8, Routine indent: 4[0m
+[0;34m[DEBUG]   - Identified subtask: '		- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?' (indent: 8)[0m
+[0;34m[DEBUG]   - Scanning subsequent line 120: '	- [ ] Work'[0m
+[0;34m[DEBUG]   - Subtask candidate indent: 4, Routine indent: 4[0m
+[0;34m[DEBUG]   - Line has less or equal indentation, stopping subtask scan.[0m
+
+[0;36m  Full Line Content: '	- [ ] 00:25 - 05:20 Post Study:  [[qKubernetes Launchpad🚀 (Data view)]]'[0m
+[0;36m  Concise Routine Name: 'Post Study: [[qKubernetes Launchpad🚀 (Data view)]]'[0m
+[0;36m  Routine Box text: 115. Post Study: [[qKubernetes Launchpad🚀 (Data view)]][0m
+
+[0;36m  4.1.1 Routine Header (Line 115):[0m
+[0;36m╭───────────────────────────────────────────────────────────╮[0m
+[0;36m│  115. Post Study: [[qKubernetes Launchpad🚀 (Data view)]][0m  [0;36m│[0m
+[0;36m╰───────────────────────────────────────────────────────────╯[0m
+    Leading Indent: 4 spaces
+
+[0;36m  4.1.2 CONSIDERATION LIST FOR CURRENT ROUTINE ---[0m
+
+[0;34m  4.1.2.1 Subtasks Considered ---[0m
+    - 116: 		- Actual Duration of studying?
+    - 117: 			- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction
+    - 118: 				- Name of topics  ? #CurrentTask 
+    - 119: 		- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?
+
+[0;34m  4.1.2.2 Linked Notes Considered ---[0m
+
+[0;32m  4.1.2.2.1 From linked notes found in the routine name:[0m
+      115: 🔗 [[qKubernetes Launchpad🚀 (Data view)]]
+
+[0;32m  4.1.2.2.2 From Subtasks:[0m
+      117: 🔗 [[Tasks List MASTER]]
+
+[0;34m[DEBUG] Exiting process_routine_details.[0m
+
+[1;33m4.5 OVERALL CONSIDERATION LIST from all ROUTINEs ---[0m
+
+[0;36m4.5.1 Overall Subtasks Considered from all routines ---[0m
+  - 116: Post Study: [[qKubernetes Launchpad🚀 (Data view)]]: 		- Actual Duration of studying?
+  - 117: Post Study: [[qKubernetes Launchpad🚀 (Data view)]]: 			- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction
+  - 118: Post Study: [[qKubernetes Launchpad🚀 (Data view)]]: 				- Name of topics  ? #CurrentTask 
+  - 119: Post Study: [[qKubernetes Launchpad🚀 (Data view)]]: 		- DID THIS BRING A INERTIA CHANGE WITHIN YOU? HOW MOVED ARE YOU?
+
+[0;36m4.5.2 Overall Linked Notes Considered from all routines ---[0m
+
+[0;32m4.5.2.1 Overall linked notes found in all the routine names:[0m
+  - 115: Post Study: [[qKubernetes Launchpad🚀 (Data view)]]: 🔗 [[qKubernetes Launchpad🚀 (Data view)]] (PATH: /home/aditya/obsidian/Project K8s - KUBESTRONAUT/Zettelkasten + Attachments/qKubernetes Launchpad🚀 (Data view).md)
+
+[0;32m4.5.2.2 Overall linked notes found From Subtasks:[0m
+  - 117: Post Study: [[qKubernetes Launchpad🚀 (Data view)]]: 🔗 [[Tasks List MASTER]] (PATH: /home/aditya/obsidian/ENV2 - Tasks and Workflows/Tasks List MASTER.md)
+
+
+[1;33m5. CURRENT CATEGORY/TASK/SUBTASK/MINITASK ---
+
+
+[0;34m5.1 Current Category/Action (#CurrentCategoryOrAction):[0m
+  [0;32m✅ Tag '#CurrentCategoryOrAction' found! Here are the details:[0m
+
+  [0;36m5.1.1 Location of Tag Discovery and Exact match details ---[0m
+    [0;34mAssociated Routine:[0m [Line ] 
+    [0;34mSource Type:[0m Subtask
+    [0;34mFile Path:[0m /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md
+    [0;34mLine Number:[0m 117
+    [0;34mFound Content:[0m [[qKubernetes Launchpad🚀 (Data view)]]: 			- Number of topics done ? [[Tasks List MASTER]] #CurrentCategoryOrAction
+
+
+[0;34m5.1.2 Cleaned Current Category/Action is:[0m
+[0;32m╭────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮[0m
+[0;32m│  Current Category/Action: [[qKubernetes Launchpad🚀 (Data view)]]: - Number of topics done ? [[Tasks List MASTER]][0m  [0;32m│[0m
+[0;32m╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯[0m
+
+
+[0;34m5.2 Current Task (#CurrentTask):[0m
+  [0;32m✅ Tag '#CurrentTask' found! Here are the details:[0m
+
+  [0;36m5.2.1 Location of Tag Discovery and Exact match details ---[0m
+    [0;34mAssociated Routine:[0m [Line ] 
+    [0;34mSource Type:[0m Subtask
+    [0;34mFile Path:[0m /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-06.md
+    [0;34mLine Number:[0m 118
+    [0;34mFound Content:[0m [[qKubernetes Launchpad🚀 (Data view)]]: 				- Name of topics  ? #CurrentTask 
+
+
+[0;34m5.2.2 Cleaned Current Task is:[0m
+[0;32m╭────────────────────────────────────────────────────────────────────────────╮[0m
+[0;32m│  Current Task: [[qKubernetes Launchpad🚀 (Data view)]]: - Name of topics ?[0m  [0;32m│[0m
+[0;32m╰────────────────────────────────────────────────────────────────────────────╯[0m
+
+
+[0;34m5.3 Current SubTask (#CurrentSubTask):[0m
+  [0;32m✅ Tag '#CurrentSubTask' found! Here are the details:[0m
+
+  [0;36m5.3.1 Location of Tag Discovery and Exact match details ---[0m
+    [0;34mAssociated Routine:[0m [Line 115] 	- [ ] 00:25 - 05:20 Post Study:  [[qKubernetes Launchpad🚀 (Data view)]]
+    [0;34mSource Type:[0m Subtask Linked Note (from file: '[[Tasks List MASTER]]')
+    [0;34mFile Path:[0m /home/aditya/obsidian/ENV2 - Tasks and Workflows/Tasks List MASTER.md
+    [0;34mLine Number:[0m 7
+    [0;34mFound Content:[0m 6. [[Aditya Tasks]] #CurrentSubTask
+
+
+[0;34m5.3.2 Cleaned Current SubTask is:[0m
+[0;32m╭────────────────────────────────────────╮[0m
+[0;32m│  Current SubTask: 6. [[Aditya Tasks]][0m  [0;32m│[0m
+[0;32m╰────────────────────────────────────────╯[0m
+
+
+[0;34m5.4 Current MiniTask (#CurrentMiniTask):[0m
+  [0;32m✅ Tag '#CurrentMiniTask' found! Here are the details:[0m
+
+  [0;36m5.4.1 Location of Tag Discovery and Exact match details ---[0m
+    [0;34mAssociated Routine:[0m [Line 115] 	- [ ] 00:25 - 05:20 Post Study:  [[qKubernetes Launchpad🚀 (Data view)]]
+    [0;34mSource Type:[0m Routine Linked Note (from file: '[[qKubernetes Launchpad🚀 (Data view)]]')
+    [0;34mFile Path:[0m /home/aditya/obsidian/Project K8s - KUBESTRONAUT/Zettelkasten + Attachments/qKubernetes Launchpad🚀 (Data view).md
+    [0;34mLine Number:[0m 4
+    [0;34mFound Content:[0m - Total List Filter using Data View: #CurrentMiniTask 
+
+
+[0;34m5.4.2 Cleaned Current MiniTask is:[0m
+[0;32m╭──────────────────────────────────────────────────────────╮[0m
+[0;32m│  Current MiniTask: - Total List Filter using Data View:[0m  [0;32m│[0m
+[0;32m╰──────────────────────────────────────────────────────────╯[0m
+
+
+[1;33m6. FINAL SUMMARY ---[0m
+[0;36m6.1 Log File Location:[0m [0;34m/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt[0m
+[0;36m6.2 Script Completion Status:[0m [0;32mScript execution finished.[0m
+[0;36m6.3 Script End Time:[0m [0;32m2025-07-06 02:01:06[0m
+
+[0;36m6.4 Concise Summary:[0m
+  Post Study: [[qKubernetes Launchpad🚀 (Data view)]]
+  [[qKubernetes Launchpad🚀 (Data view)]]: - Number of topics done ? [[Tasks List MASTER]]
+  [[qKubernetes Launchpad🚀 (Data view)]]: - Name of topics ?
+  6. [[Aditya Tasks]]
+  - Total List Filter using Data View:
