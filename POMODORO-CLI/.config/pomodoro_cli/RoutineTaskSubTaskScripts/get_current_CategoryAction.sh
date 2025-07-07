@@ -21,6 +21,9 @@ declare -a GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES
 DEBUG_MODE="true" # Default to true for detailed debugging.
 QUICK_MODE="false" # Default to false for full output.
 
+# NEW: Variable to control showing all routines in quick summary
+SHOW_ALL_ROUTINES_IN_QUICK_SUMMARY="false"
+
 # MODIFIED: New variable to store script start time
 SCRIPT_START_TIME=$(date +"%Y-%m-%d %H:%M:%S")
 
@@ -38,6 +41,9 @@ for arg in "$@"; do
             ;;
         --quick)
             QUICK_MODE="true"
+            ;;
+        --show-all-routines-in-quick-summary)
+            SHOW_ALL_ROUTINES_IN_QUICK_SUMMARY="true"
             ;;
         *)
             # Handle other arguments if needed, or ignore them
@@ -218,6 +224,26 @@ get_cleaned_tag_content() {
     # This sed command removes the leading checkbox and the tag itself.
     # xargs trims whitespace.
     echo "${content}" | sed -E "s/^[[:space:]]*- ?\[ ?\][[:space:]]*//; s/[[:space:]]*${tag}//" | xargs
+}
+
+# --- New Helper Function: Get Ultra Cleaned Tag Content for Quick Result ---
+get_ultra_cleaned_tag_content() {
+    local tag="$1"
+    local content="$2"
+    local temp_content
+
+    # 1. Remove leading linked note pattern: "[[...]]: - "
+    # This should handle optional spaces around the colon and dash.
+    temp_content=$(echo "${content}" | sed -E 's/^\[\[.*?\]\][[:space:]]*:[[:space:]]*-?[[:space:]]*//')
+
+    # 2. Remove leading checkbox pattern: "- [ ] "
+    # This should handle optional spaces and the checkbox itself.
+    temp_content=$(echo "${temp_content}" | sed -E 's/^[[:space:]]*-?[[:space:]]?\[ ?\][[:space:]]*//')
+
+    # 3. Remove the tag itself
+    temp_content=$(echo "${temp_content}" | sed -E "s/[[:space:]]*${tag}//" | xargs)
+
+    echo "${temp_content}"
 }
 
 # --- New Function: Process Routine Details and Consideration List ---
@@ -728,7 +754,7 @@ build_quick_result() {
     for tag in "${TAG_DISPLAY_ORDER[@]}"; do
         if [ -n "${FOUND_TAGS_RESULTS[$tag]}" ]; then
             IFS='|' read -r _ _ _ _ found_content <<< "${FOUND_TAGS_RESULTS[$tag]}"
-            local cleaned_content=$(get_cleaned_tag_content "$tag" "$found_content")
+            local cleaned_content=$(get_ultra_cleaned_tag_content "$tag" "$found_content")
             quick_result_lines+=("${cleaned_content}")
         else
             case "$tag" in
@@ -962,16 +988,19 @@ ${BLUE}5.${section_5_counter}.2 Cleaned ${tag_display_name} is:${NC}" # L2 - BLU
             log_and_tee ""
 
         else
-            log_and_tee "  ${YELLOW}None found for this tag. Detailed search process below (if DEBUG_MODE is 'true'):${NC}"
-            if [ ${#DETAILED_TAG_SEARCH_LOGS[@]} -gt 0 ] && [ "$DEBUG_MODE" = "true" ]; then
-                # Filter logs to show only relevant ones for this tag's search
+            log_and_tee "  ${YELLOW}None found for this tag.${NC}"
+        fi
+
+        # Always show detailed search process if DEBUG_MODE is 'true'
+        if [ "$DEBUG_MODE" = "true" ]; then
+            log_and_tee "  ${CYAN}Detailed search process for ${tag_to_display}:${NC}"
+            if [ ${#DETAILED_TAG_SEARCH_LOGS[@]} -gt 0 ]; then
                 for log_entry in "${DETAILED_TAG_SEARCH_LOGS[@]}"; do
-                    if echo "$log_entry" | grep -q -- "$tag_to_display"; then
+                    # Filter logs to show only relevant ones for this tag's search
+                    if echo "$log_entry" | grep -q -- "${tag_to_display}"; then
                         log_and_tee "    ${log_entry}"
                     fi
                 done
-            elif [ "$DEBUG_MODE" = "false" ]; then
-                log_and_tee "      (Debug logs are suppressed because DEBUG_MODE is 'false'.)"
             else
                 log_and_tee "      (No detailed search logs were generated for this tag.)"
             fi
