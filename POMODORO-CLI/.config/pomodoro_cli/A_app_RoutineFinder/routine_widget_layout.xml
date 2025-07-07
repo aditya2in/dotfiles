@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="#80000000"> <!-- Semi-transparent black background -->
+
+    <!-- Routine Name -->
+    <TextView
+        android:id="@+id/routine_name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Routine: Loading..."
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <!-- Category/Action -->
+    <TextView
+        android:id="@+id/category_action_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Category/Action: Loading..."
+        android:textColor="#CCCCCC"
+        android:textSize="12sp" />
+
+    <!-- Task -->
+    <TextView
+        android:id="@+id/task_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Task: Loading..."
+        android:textColor="#BBBBBB"
+        android:textSize="12sp" />
+
+    <!-- SubTask -->
+    <TextView
+        android:id="@+id/sub_task_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SubTask: Loading..."
+        android:textColor="#AAAAAA"
+        android:textSize="12sp" />
+
+    <!-- MiniTask -->
+    <TextView
+        android:id="@+id/mini_task_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MiniTask: Loading..."
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
+</LinearLayout>

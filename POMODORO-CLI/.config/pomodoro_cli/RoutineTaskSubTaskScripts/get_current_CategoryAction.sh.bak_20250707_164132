@@ -747,52 +747,28 @@ build_quick_result() {
     fi
 
     local quick_result_lines=()
+    # Start with the routine description(s)
+    quick_result_lines+=("$(get_concise_routine_name "${QUICK_RESULT_CONTENT}")")
 
-    # Add the Current Routine Name with label and newline
-    local routine_name_for_quick_summary=$(get_concise_routine_name "${GLOBAL_ACTIVE_ROUTINE_DESCRIPTIONS[0]}") # Assuming first active routine for quick summary
-    quick_result_lines+=("${CYAN}Quick Current Routine Name:${NC}") # Label with CYAN color
-    quick_result_lines+=("****${routine_name_for_quick_summary}****") # Value without color, retains bolding
-
-    # Loop through found tags and add them to the quick result with labels
+    # Loop through found tags and add them to the quick result
     for tag in "${TAG_DISPLAY_ORDER[@]}"; do
-        local label_text=""
-        case "$tag" in
-            "#CurrentCategoryOrAction")
-                label_text="Quick Current Category or Action name:"
-                ;;
-            "#CurrentTask")
-                label_text="Quick Current Task Name:"
-                ;;
-            "#CurrentSubTask")
-                label_text="Quick Current Sub Task name:"
-                ;;
-            "#CurrentMiniTask")
-                label_text="Quick Current Mini Task name:"
-                ;;
-            *)
-                label_text="Unknown Tag:"
-                ;;
-        esac
-
-        quick_result_lines+=("${CYAN}${label_text}${NC}") # Label with CYAN color
-
         if [ -n "${FOUND_TAGS_RESULTS[$tag]}" ]; then
             IFS='|' read -r _ _ _ _ found_content <<< "${FOUND_TAGS_RESULTS[$tag]}"
             local cleaned_content=$(get_ultra_cleaned_tag_content "$tag" "$found_content")
-            quick_result_lines+=("${cleaned_content}") # Value without color
+            quick_result_lines+=("${cleaned_content}")
         else
             case "$tag" in
                 "#CurrentCategoryOrAction")
-                    quick_result_lines+=("No Category or Action") # Value without color
+                    quick_result_lines+=("No Category or Action")
                     ;;
                 "#CurrentTask")
-                    quick_result_lines+=("No Task") # Value without color
+                    quick_result_lines+=("No Task")
                     ;;
                 "#CurrentSubTask")
-                    quick_result_lines+=("No Sub Task") # Value without color
+                    quick_result_lines+=("No Sub Task")
                     ;;
                 "#CurrentMiniTask")
-                    quick_result_lines+=("No Mini task") # Value without color
+                    quick_result_lines+=("No Mini task")
                     ;;
             esac
         fi
@@ -837,9 +813,9 @@ if [ "$current_routine_found" = "true" ]; then
     log_and_tee "${CYAN}1.1 Quick Result Summary:${NC}\n${QUICK_RESULT_CONTENT}" # L2 - CYAN
 elif [ ! -f "$PLANNER_FILE" ]; then
     # Message for missing planner file
-    log_and_tee "${CYAN}1.1 Quick Result Summary:${NC} ${RED}Error: Journal file '$PLANNER_FILE' not found.${NC}" # L2 - CYAN
+    log_and_tee "${CYAN}1.1 Quick Result Summary:${NC}\n${RED}Error: Journal file '$PLANNER_FILE' not found.${NC}" # L2 - CYAN
 else # No active routine found but planner file exists
-    log_and_tee "${CYAN}1.1 Quick Result Summary:${NC} ${YELLOW}No active routine found at $(date +%H:%M).${NC}" # L2 - CYAN
+    log_and_tee "${CYAN}1.1 Quick Result Summary:${NC}\n${YELLOW}No active routine found at $(date +%H:%M).${NC}" # L2 - CYAN
 fi
 log_and_tee "" # Add a blank line for separation
 
@@ -950,7 +926,7 @@ if [ "$QUICK_MODE" != "true" ]; then
     if [ ${#GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES[@]} -gt 0 ]; then
         for note_info in "${GLOBAL_COLLECTED_SUBTASK_LINKED_NOTES[@]}"; do
             log_and_tee "  - ${note_info}"
-        done
+        done # <-- FIX APPLIED HERE: Changed 'end' to 'done'
     else
         log_and_tee "  0 (No overall linked notes found from subtasks)"
     fi

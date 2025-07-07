@@ -19,7 +19,7 @@ DAEMON_PID_FILE="$POMODORO_DIR/pomodoro_daemon.pid"
 # --- NEW: Routine Integration Configuration ---
 GET_ROUTINE_SCRIPT="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/get_current_CategoryAction.sh" # Updated script name
 CURRENT_ROUTINE_FILE="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt"
-ROUTINE_UPDATE_FREQUENCY_SEC="1" # Run get_current_CategoryAction.sh every 5 minutes (300 seconds)
+ROUTINE_UPDATE_FREQUENCY_SEC="10" # Run get_current_CategoryAction.sh every 5 minutes (300 seconds)
 LAST_ROUTINE_UPDATE_TIME_FILE="$POMODORO_DIR/last_routine_update.timestamp" # File to store last update timestamp
 # ----------------------------------------------
 # --- NEW: Obsidian Configuration ---
@@ -49,7 +49,10 @@ _session_type=""
 _total_pomodoro_cycles_today=0
 _current_session_in_cycle=0
 _current_routine_name="Loading Routine..." # Initial placeholder for routine display
-_current_category_action="Loading Action..." # <--- NEW: Placeholder for category/action
+_current_category_action="Loading Action..." # Placeholder for category/action
+_current_task_name="Loading Task..."
+_current_subtask_name="Loading SubTask..."
+_current_minitask_name="Loading MiniTask..."
 _last_run_date=""
 
 
@@ -502,7 +505,7 @@ update_current_routine_display_info() {
         echo "DEBUG: Running get_current_CategoryAction.sh to update routine info..." >&2
         # Ensure the script is executable and run it silently
         if [ -f "$GET_ROUTINE_SCRIPT" ]; then
-            bash "$GET_ROUTINE_SCRIPT" --debug=off >/dev/null 2>&1 # Run silently
+            bash "$GET_ROUTINE_SCRIPT" --quick >/dev/null 2>&1 # Run silently
             echo "$current_timestamp" > "$LAST_ROUTINE_UPDATE_TIME_FILE" # Update timestamp
             echo "DEBUG: get_current_CategoryAction.sh executed and timestamp updated." >&2
         else
@@ -513,30 +516,67 @@ update_current_routine_display_info() {
     fi
 
     # Always read the routine name from the current_routine.txt file
-    # This assumes the routine name is consistently on the 2nd line
     if [ -f "$CURRENT_ROUTINE_FILE" ]; then
-        local routine_output=$(sed -n '3p' "$CURRENT_ROUTINE_FILE" | xargs) # xargs to trim whitespace
-        local category_action_output=$(sed -n '4p' "$CURRENT_ROUTINE_FILE" | xargs) # NEW: Read 3rd line
+        # The get_current_CategoryAction.sh script now provides a structured "Quick Result"
+        # at the top of its output file. We parse this section.
+        # Line 4: Routine Name (e.g., ******Office Work******)
+        # Line 6: Category/Action
+        # Line 8: Task
+        # Line 10: SubTask
+        # Line 12: MiniTask
+        local routine_output=$(sed -n '4p' "$CURRENT_ROUTINE_FILE" | sed 's/^\*\{6\}//;s/\*\{6\}$//' | xargs)
+        local category_action_output=$(sed -n '6p' "$CURRENT_ROUTINE_FILE" | xargs)
+        local task_output=$(sed -n '8p' "$CURRENT_ROUTINE_FILE" | xargs)
+        local subtask_output=$(sed -n '10p' "$CURRENT_ROUTINE_FILE" | xargs)
+        local minitask_output=$(sed -n '12p' "$CURRENT_ROUTINE_FILE" | xargs)
 
-        if [[ "$routine_output" == "NONE" || -z "$routine_output" ]]; then
-            _current_routine_name="No Routine" # Default for Waybar if no routine found or output is empty
+        # Assign Routine Name
+        if [[ -z "$routine_output" || "$routine_output" == "NONE" ]]; then
+            _current_routine_name="No Routine"
         else
-            _current_routine_name="$routine_output" # Use the raw output from the script
+            _current_routine_name="$routine_output"
         fi
 
-        # NEW: Assign the category/action
-        if [[ "$category_action_output" == "NONE" || -z "$category_action_output" ]]; then
-            _current_category_action="No CategoryOrAction"
+        # Assign Category/Action
+        if [[ -z "$category_action_output" || "$category_action_output" == "NONE" ]]; then
+            _current_category_action=""
         else
             _current_category_action="$category_action_output"
         fi
+
+        # Assign Task
+        if [[ -z "$task_output" ]]; then
+            _current_task_name=""
+        else
+            _current_task_name="$task_output"
+        fi
+
+        # Assign SubTask
+        if [[ -z "$subtask_output" ]]; then
+            _current_subtask_name=""
+        else
+            _current_subtask_name="$subtask_output"
+        fi
+
+        # Assign MiniTask
+        if [[ -z "$minitask_output" ]]; then
+            _current_minitask_name=""
+        else
+            _current_minitask_name="$minitask_output"
+        fi
     else
-        _current_routine_name="Routine File N/A" # Set a default if routine file not found
-        _current_category_action="Action File N/A" # NEW: Set default for action too
-        echo "Warning: current_routine.txt not found at "$CURRENT_ROUTINE_FILE"" >&2
+        _current_routine_name="Routine File N/A"
+        _current_category_action="Action File N/A"
+        _current_task_name=""
+        _current_subtask_name=""
+        _current_minitask_name=""
+        echo "Warning: current_routine.txt not found at $CURRENT_ROUTINE_FILE" >&2
     fi
     echo "DEBUG: Retrieved routine: '"$_current_routine_name"'" >&2
-    echo "DEBUG: Retrieved category/action: '"$_current_category_action"'" >&2 # NEW: Debug for action
+    echo "DEBUG: Retrieved category/action: '"$_current_category_action"'" >&2
+    echo "DEBUG: Retrieved task: '"$_current_task_name"'" >&2
+    echo "DEBUG: Retrieved subtask: '"$_current_subtask_name"'" >&2
+    echo "DEBUG: Retrieved minitask: '"$_current_minitask_name"'" >&2
 }
 # -----------------------------------------------------------------------------
 # Main Commands (User Facing)
@@ -817,8 +857,24 @@ cmd_status() {
             esac
             ;;
     esac
-    local routine_display="${_current_routine_name} \\ \"${_current_category_action}\"" # NEW: Combine routine and action
-    local full_text="${routine_display} ${icon}[[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} ${time_text} (${current_cycle_display})" # UPDATED: Prepend routine_display
+    local routine_display="<span foreground='#89b4fa'>${_current_routine_name}</span>" # Start with the base routine name (blue)
+
+    # Conditionally append other task levels if they exist with different colors
+    local separator=" || "
+    if [ -n "$_current_category_action" ]; then
+        routine_display+="${separator}<span foreground='#a6e3a1'>${_current_category_action}</span>" # Green
+    fi
+    if [ -n "$_current_task_name" ]; then
+        routine_display+="${separator}<span foreground='#f9e2af'>${_current_task_name}</span>" # Yellow
+    fi
+    if [ -n "$_current_subtask_name" ]; then
+        routine_display+="${separator}<span foreground='#b4befe'>${_current_subtask_name}</span>" # Lavender
+    fi
+    if [ -n "$_current_minitask_name" ]; then
+        routine_display+="${separator}<span foreground='#fab387'>${_current_minitask_name}</span>" # Peach
+    fi
+
+    local full_text="${icon} [[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} ${time_text} (${current_cycle_display}) ${routine_display}"
 
     # --- DEBUGGING OUTPUT TO STDERR ---
     echo "DEBUG: pcli_json: '"$pcli_json"'" >&2

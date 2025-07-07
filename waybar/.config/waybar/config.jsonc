@@ -15,11 +15,7 @@
   "modules-right": [
     "cpu",
     "custom/memory",
-    "temperature",
-    "pulseaudio",
-    "battery",
-    "tray",
-    "clock"
+    "pulseaudio"
   ],
 
   "custom/memory": {
@@ -43,9 +39,9 @@
   
   "custom/pomodoro": {
     "format": "{}",
-    "interval": 1, 
-    "exec": "~/.config/pomodoro_cli/pomodoro_manager.sh status", 
-    "return-type": "json", 
+    "interval": 1,
+    "exec": "~/.config/pomodoro_cli/pomodoro_manager.sh status",
+    "return-type": "json",
     "tooltip": true,
     "on-click": "~/.config/pomodoro_cli/pomodoro_manager.sh start",
     "on-click-right": "~/.config/pomodoro_cli/pomodoro_manager.sh stop"
