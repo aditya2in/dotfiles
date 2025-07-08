@@ -254,3 +254,5 @@ export PATH="/home/aditya/.config/pomodoro_cli/RoutineTaskSubTaskScripts:$PATH"
 
 # npm global installations
 export PATH="$HOME/.npm-global/bin:$PATH"
+
+export GEMINI_API_KEY="AIzaSyAwE9KB6wOyhiO9pJD1pgnieJcxFJqjMQ"
