@@ -832,7 +832,7 @@ build_quick_result
 
 
 # 1. Display the QUICK RESULT and Clean Routine Name at the very top (NO BOX FOR QUICK RESULT)
-log_and_tee "${YELLOW}1. QUICK RESULT ---"${NC} # L1 - YELLOW
+log_and_tee "${YELLOW}1. QUICK RESULT ---${NC}" # L1 - YELLOW
 if [ "$current_routine_found" = "true" ]; then
     log_and_tee "${CYAN}1.1 Quick Result Summary:${NC}\n${QUICK_RESULT_CONTENT}" # L2 - CYAN
 elif [ ! -f "$PLANNER_FILE" ]; then
@@ -843,14 +843,8 @@ else # No active routine found but planner file exists
 fi
 log_and_tee "" # Add a blank line for separation
 
-# Add timestamp only for quick mode
-if [ "$QUICK_MODE" = "true" ]; then
-    log_and_tee "\n${YELLOW}Quick Result Generated At:${NC} ${GREEN}${SCRIPT_START_TIME}${NC}"
-fi
-
 # 2. SCRIPT INFORMATION
 if [ "$QUICK_MODE" != "true" ]; then
-
     log_and_tee "\n${YELLOW}2. SCRIPT INFORMATION ---${NC}" # L1 - YELLOW
     log_and_tee "${CYAN}2.1 Script Configuration Details:${NC}" # L2 - CYAN
     log_and_tee "  Current Date: ${GREEN}${current_date}${NC}"

@@ -19,7 +19,7 @@ DAEMON_PID_FILE="$POMODORO_DIR/pomodoro_daemon.pid"
 # --- NEW: Routine Integration Configuration ---
 GET_ROUTINE_SCRIPT="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/get_current_CategoryAction.sh" # Updated script name
 CURRENT_ROUTINE_FILE="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/current_routine.txt"
-ROUTINE_UPDATE_FREQUENCY_SEC="10" # Run get_current_CategoryAction.sh every 5 minutes (300 seconds)
+ROUTINE_UPDATE_FREQUENCY_SEC="30" # Run get_current_CategoryAction.sh every 5 minutes (300 seconds)
 LAST_ROUTINE_UPDATE_TIME_FILE="$POMODORO_DIR/last_routine_update.timestamp" # File to store last update timestamp
 # ----------------------------------------------
 # --- NEW: Obsidian Configuration ---
