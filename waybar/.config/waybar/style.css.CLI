@@ -1,0 +1,162 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "Roboto Mono", monospace;
+  font-size: 10px;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: rgba(30, 30, 46, 0.9);
+  color: #cdd6f4;
+  border-radius: 8px;
+  min-height: 30px;
+}
+
+@define-color base #1e1e2e;
+@define-color mantle #181825;
+@define-color crust #11111b;
+@define-color text #cdd6f4;
+@define-color subtext0 #a6adc8;
+@define-color surface0 #313244;
+@define-color surface1 #45475a;
+@define-color surface2 #585b70;
+@define-color blue #89b4fa;
+@define-color red #f38ba8;
+@define-color maroon #eba0ac;
+@define-color peach #fab387;
+@define-color green #a6e3a1;
+@define-color lavender #b4befe;
+@define-color yellow #f9e2af;
+@define-color mauve #cba6f7;
+@define-color orange #ffb86c;
+@define-color attention-red #FF0000;
+
+#workspaces button {
+  padding: 0 8px;
+  background-color: @surface0;
+  color: @subtext0;
+  border-radius: 5px;
+  margin: 3px 3px;
+  transition: all 0.3s ease-in-out;
+  font-size: 16px;
+  min-width: 45px;
+}
+
+#workspaces button:hover {
+  background-color: @surface1;
+  color: @text;
+}
+#workspaces button.active {
+  background-color: @blue;
+  color: @crust;
+  border-radius: 5px;
+  box-shadow: 0 0 5px @blue;
+}
+#workspaces button.occupied {
+  background-color: @surface2;
+  color: @text;
+}
+#workspaces button.urgent {
+  background-color: @red;
+  color: @text;
+}
+#workspaces button.empty {
+  background-color: @mantle;
+  color: @subtext0;
+}
+
+#window {
+  margin: 3px 3px;
+  padding: 0 10px;
+  background-color: @surface0;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+#clock,
+#battery,
+#cpu,
+#temperature,
+#network,
+#pulseaudio,
+#tray,
+#custom-memory {
+  padding: 0 10px;
+  background-color: @surface0;
+  color: @text;
+  margin: 3px 3px;
+  border-radius: 5px;
+}
+
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 5px @green;
+  }
+  50% {
+    box-shadow: 0 0 15px @green;
+  }
+  100% {
+    box-shadow: 0 0 5px @green;
+  }
+}
+
+@keyframes pulse-lavender {
+  0% {
+    box-shadow: 0 0 5px @lavender;
+  }
+  50% {
+    box-shadow: 0 0 15px @lavender;
+  }
+  100% {
+    box-shadow: 0 0 5px @lavender;
+  }
+}
+
+@keyframes pulse-blue {
+  0% {
+    box-shadow: 0 0 5px @blue;
+  }
+  50% {
+    box-shadow: 0 0 15px @blue;
+  }
+  100% {
+    box-shadow: 0 0 5px @blue;
+  }
+}
+
+@keyframes pulse-orange {
+  0% {
+    box-shadow: 0 0 5px @orange;
+  }
+  50% {
+    box-shadow: 0 0 15px @orange;
+  }
+  100% {
+    box-shadow: 0 0 5px @orange;
+  }
+}
+
+@keyframes attention-blink {
+  from {
+    box-shadow: 0 0 2px @maroon;
+  }
+  to {
+    box-shadow: 0 0 5px @maroon;
+  }
+}
+
+#custom-pomodoro {
+  padding: 0 5px;
+  margin: 2px 2px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 11px;
+  min-width: 120px;
+  transition: all 0.3s ease-in-out;
+  background-color: @mantle;
+  color: @subtext0;
+}
+
+#custom-pomodoro.stopped {
+  font-weight: bold;

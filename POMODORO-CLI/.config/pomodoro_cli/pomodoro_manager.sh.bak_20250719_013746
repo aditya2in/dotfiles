@@ -41,9 +41,9 @@ MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Anal
 # SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
 # LONG_BREAK_DURATION="30m" # Adjust these for your actual break times
 #10 seconds for testing
-WORK_DURATION="25m" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
-SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
-LONG_BREAK_DURATION="30m"
+WORK_DURATION="10s" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
+SHORT_BREAK_DURATION="10s" # Adjust these for your actual break times
+LONG_BREAK_DURATION="10s"
 # These variables hold our script's internal state.
 # They are declared globally (without 'local') so they can be accessed by all functions.
 _status=""
@@ -356,10 +356,6 @@ display_break_block() {
 start_session() {
     local type="$1"
     local duration_str="$2" # This is now the string like "10s", "25m"
-
-    # Construct Obsidian URIs
-    local relative_break_path="${OBSIDIAN_BREAK_NOTE_PATH#$OBSIDIAN_VAULT_PATH/}"
-    local obsidian_break_uri="obsidian://open?vault=$(urlencode "$OBSIDIAN_VAULT_NAME")&file=$(urlencode "$relative_break_path")"
     local notify_title="$3"
     local notify_msg="$4"
 
@@ -394,10 +390,30 @@ start_session() {
         hyprctl dispatch workspace 2
         echo "DEBUG: Switched to Workspace 2." >&2
 
-        # 2. Open the Obsidian break file on Workspace 2
-        echo "DEBUG: Opening Obsidian URI: ${obsidian_break_uri}" >&2
-        nohup xdg-open "${obsidian_break_uri}" >/tmp/pomodoro_obsidian_output.log 2>&1 &
-        echo "DEBUG: Obsidian break file launched via xdg-open." >&2
+        # 2. Open the Obsidian markdown log file on Workspace 2
+        nohup xdg-open "${obsidian_markdown_log_uri}&newtab=true" >/tmp/pomodoro_obsidian_output.log 2>&1 &
+        echo "DEBUG: Obsidian markdown log launched via xdg-open." >&2
+
+        sleep 1 # Give Obsidian time to open the first file in a new tab
+
+        # Capture the address of the Obsidian window that just opened
+        local first_obsidian_address=$(hyprctl clients -j | jq -r '.[] | select(.class == "obsidian") | .address' | head -n 1)
+        if [ -n "$first_obsidian_address" ]; then
+            hyprctl dispatch focuswindow address:$first_obsidian_address
+            echo "DEBUG: Focused first Obsidian window: $first_obsidian_address" >&2
+            sleep 2 # Give Hyprland more time to focus
+
+            echo "DEBUG: About to send Ctrl+T via ydotool." >&2
+            ydotool key 29:1 48:1 48:0 29:0 # Ctrl+T
+            echo "DEBUG: Ctrl+T sent via ydotool." >&2
+            sleep 1 # Give Obsidian time to open the new tab
+        else
+            echo "Warning: Could not find first Obsidian window to send Ctrl+T." >&2
+        fi
+
+        # Open the Obsidian break file on Workspace 2 in the newly created tab
+        nohup xdg-open "${obsidian_break_uri}&newtab=true" >>/tmp/pomodoro_obsidian_output.log 2>&1 &
+        echo "DEBUG: Obsidian break file launched in new tab via xdg-open." >&2
 
         # 3. Wait for Obsidian to open
         sleep 2 # Give Obsidian time to open on Workspace 2

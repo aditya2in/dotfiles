@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------------
+# Standalone Test Script for a COMPLETE Pomodoro Break Session Simulation
+# -----------------------------------------------------------------------------
+# This script simulates the entire break sequence: entering the break,
+# waiting for a set duration, and then automatically exiting the break.
+
+# --- Configuration ---
+OBSIDIAN_VAULT_NAME="obsidian"
+OBSIDIAN_BREAK_NOTE_PATH="POMODORO BREAK FILE.md"
+BREAK_DURATION_SECONDS=10 # <--- This simulates the break time.
+
+# --- Utility Function: urlencode ---
+urlencode() {
+    local string="$1"
+    local length="${#string}"
+    local url_encoded=""
+    for (( i=0; i<length; i++ )); do
+        local c="${string:i:1}"
+        case "$c" in
+            [a-zA-Z0-9.~_-]) url_encoded+="$c" ;;
+            *) printf -v c_encoded '%%%02X' "'$c"
+               url_encoded+="$c_encoded" ;;
+        esac
+    done
+    echo "$url_encoded"
+}
+
+
+# --- Main Break Sequence ---
+echo "---> Starting break session simulation..."
+
+echo "(1/8) Switching to Workspace 2..."
+hyprctl dispatch workspace 2
+
+# Construct the Obsidian URI
+obsidian_uri="obsidian://open?vault=$(urlencode "$OBSIDIAN_VAULT_NAME")&file=$(urlencode "$OBSIDIAN_BREAK_NOTE_PATH")"
+echo "(2/8) Opening Obsidian with URI: $obsidian_uri"
+nohup xdg-open "$obsidian_uri" >/tmp/pomodoro_obsidian_output.log 2>&1 &
+
+echo "(3/8) Pausing for 2 seconds to allow Obsidian to launch..."
+sleep 2
+
+echo "(4/8) Moving Obsidian window to Workspace 1 (preparatory step)..."
+hyprctl dispatch movetoworkspace 1
+
+echo "(5/8) Moving Obsidian window to Workspace 10 (final destination)..."
+hyprctl dispatch movetoworkspace 10
+
+echo "(6/8) Making Obsidian window fullscreen..."
+hyprctl dispatch fullscreen 0
+
+echo "--------------------------------------------------------------------"
+echo "---> NOW IN SIMULATED BREAK for $BREAK_DURATION_SECONDS seconds. Please observe the screen."
+echo "--------------------------------------------------------------------"
+sleep $BREAK_DURATION_SECONDS
+
+echo "---> Break time finished. Reverting sequence automatically..."
+
+echo "(7/10) Exiting fullscreen mode (while still on Workspace 10)..."
+hyprctl dispatch fullscreen 1
+
+echo "(8/10) Moving Obsidian window to Workspace 1..."
+hyprctl dispatch movetoworkspace 1
+
+echo "(9/10) Moving Obsidian window to its final place on Workspace 2..."
+hyprctl dispatch movetoworkspace 2
+
+echo "(10/10) Switching active focus to Workspace 1 for work..."
+hyprctl dispatch workspace 1
+
+echo "---> Simulation complete. Obsidian is on Workspace 2, and you are on Workspace 1."

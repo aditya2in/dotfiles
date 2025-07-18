@@ -1,7 +1,7 @@
 ## Gemini Added Memories
 
 - I prefer to use zsh instead of bash.
-- prefer to see a table when explaining me things.
+- prefer to see output content in any visual representation mode when explaining me things for fast readability.
 
 ## Rules wehn you show results
 

@@ -24,10 +24,9 @@ LAST_ROUTINE_UPDATE_TIME_FILE="$POMODORO_DIR/last_routine_update.timestamp" # Fi
 # ----------------------------------------------
 # --- NEW: Obsidian Configuration ---
 # Based on your vault folder /home/aditya/obsidian, the vault name is likely "obsidian"
-OBSIDIAN_VAULT_PATH="$HOME/obsidian" # Assuming your Obsidian vault is directly in your home directory
 OBSIDIAN_VAULT_NAME="obsidian" # <--- CONFIRM/REPLACE with your actual Obsidian vault name (e.g., "My Notes")
-OBSIDIAN_BREAK_NOTE_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO BREAK FILE.md" # <--- IMPORTANT: This is the file you provided
-OBSIDIAN_MARKDOWN_LOG_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO mark down table data for obsidian Analysis.md" # <--- NEW: Path to the Markdown log file in Obsidian
+OBSIDIAN_BREAK_NOTE_PATH="All Things/Journal/Pomodoro session records/POMODORO BREAK FILE.md" # <--- IMPORTANT: This is the file you provided
+OBSIDIAN_MARKDOWN_LOG_PATH="All Things/Journal/Pomodoro session records/POMODORO mark down table data for obsidian Analysis.md" # <--- NEW: Path to the Markdown log file in Obsidian
 # ----------------------------------
 # --- NEW: Markdown Log Configuration ---
 MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Analysis.md"
@@ -41,9 +40,9 @@ MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Anal
 # SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
 # LONG_BREAK_DURATION="30m" # Adjust these for your actual break times
 #10 seconds for testing
-WORK_DURATION="25m" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
-SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
-LONG_BREAK_DURATION="30m"
+WORK_DURATION="10s" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
+SHORT_BREAK_DURATION="10s" # Adjust these for your actual break times
+LONG_BREAK_DURATION="10s"
 # These variables hold our script's internal state.
 # They are declared globally (without 'local') so they can be accessed by all functions.
 _status=""
@@ -57,7 +56,6 @@ _current_subtask_name="Loading SubTask..."
 _current_minitask_name="Loading MiniTask..."
 _last_run_date=""
 _obsidian_break_window_address="" # NEW: Stores the address of the Obsidian window opened for the break
-
 
 
 # -----------------------------------------------------------------------------
@@ -262,8 +260,6 @@ log_session_event() {
     echo "DEBUG: Logged session event to "$MARKDOWN_LOG_FILE": "$event_type" for "$session_type"" >&2
 }
 
-
-
 # NEW: URL-encodes a string for use in URIs (e.g., for Obsidian links).
 urlencode() {
     local string="$1"
@@ -356,10 +352,6 @@ display_break_block() {
 start_session() {
     local type="$1"
     local duration_str="$2" # This is now the string like "10s", "25m"
-
-    # Construct Obsidian URIs
-    local relative_break_path="${OBSIDIAN_BREAK_NOTE_PATH#$OBSIDIAN_VAULT_PATH/}"
-    local obsidian_break_uri="obsidian://open?vault=$(urlencode "$OBSIDIAN_VAULT_NAME")&file=$(urlencode "$relative_break_path")"
     local notify_title="$3"
     local notify_msg="$4"
 
@@ -388,41 +380,33 @@ start_session() {
 
     # Handle break-specific actions
     if [ "$type" == "Break" ] || [ "$type" == "Long Break" ]; then
-        echo "DEBUG: Triggering break action for "$type": New window management sequence." >&2
+        echo "DEBUG: Triggering break action for "$type": Switching to Workspace 2 and Opening Obsidian note." >&2
 
-        # 1. Switch to Workspace 2
+        # Switch to Workspace 2 first
+        # This assumes hyprctl is in your PATH and configured for your Hyprland session.
         hyprctl dispatch workspace 2
         echo "DEBUG: Switched to Workspace 2." >&2
 
-        # 2. Open the Obsidian break file on Workspace 2
-        echo "DEBUG: Opening Obsidian URI: ${obsidian_break_uri}" >&2
-        nohup xdg-open "${obsidian_break_uri}" >/tmp/pomodoro_obsidian_output.log 2>&1 &
-        echo "DEBUG: Obsidian break file launched via xdg-open." >&2
+        # Construct the Obsidian URI for the specific note
+        local obsidian_break_uri="obsidian://open?vault=$(urlencode "$OBSIDIAN_VAULT_NAME")&file=$(urlencode "$OBSIDIAN_BREAK_NOTE_PATH")"
+        local obsidian_markdown_log_uri="obsidian://open?vault=$(urlencode "$OBSIDIAN_VAULT_NAME")&file=$(urlencode "$OBSIDIAN_MARKDOWN_LOG_PATH")"
+        echo "DEBUG: Obsidian Break URI: "$obsidian_break_uri"" >&2
+        echo "DEBUG: Obsidian Markdown Log URI: "$obsidian_markdown_log_uri"" >&2
 
-        # 3. Wait for Obsidian to open
-        sleep 2 # Give Obsidian time to open on Workspace 2
+        # Open the Obsidian notes. 'xdg-open' is commonly used on Linux to open URIs/files with default apps.
+        # Ensure 'xdg-open' is available and configured to handle 'obsidian://' links.
+        nohup xdg-open "$obsidian_markdown_log_uri" >/tmp/pomodoro_obsidian_output.log 2>&1 &
+        # nohup xdg-open "$obsidian_break_uri" >>/tmp/pomodoro_obsidian_output.log 2>&1 & # Append output to the same log (COMMENTED OUT FOR DEBUGGING)
+        echo "DEBUG: Obsidian notes launched via xdg-open." >&2
 
-        # 4. Capture the address of the Obsidian window that just opened on Workspace 2
-        _obsidian_break_window_address=$(hyprctl clients -j | jq -r '.[] | select(.workspace.id == 2 and .class == "obsidian") | .address' | head -n 1)
+        # NEW: Window manipulation sequence for break awareness
+        sleep 2 # Wait for Obsidian to open
+        hyprctl dispatch workspace 10 # Switch to Workspace 10
+        hyprctl dispatch fullscreen 0 # Go fullscreen
+
+        # Capture the address of the Obsidian window that just went fullscreen on workspace 10
+        _obsidian_break_window_address=$(hyprctl clients -j | jq -r '.[] | select(.workspace.id == 10 and .class == "obsidian") | .address' | head -n 1)
         echo "DEBUG: Captured Obsidian break window address: $_obsidian_break_window_address" >&2
-
-        if [ -n "$_obsidian_break_window_address" ]; then
-            # 5. Move Obsidian to Workspace 1
-            hyprctl dispatch movetoworkspace 1,address:$_obsidian_break_window_address
-            echo "DEBUG: Moved Obsidian to Workspace 1." >&2
-            sleep 0.5 # Give Hyprland time to process
-
-            # 6. Move Obsidian to Workspace 9
-            hyprctl dispatch movetoworkspace 9,address:$_obsidian_break_window_address
-            echo "DEBUG: Moved Obsidian to Workspace 9." >&2
-            sleep 0.5 # Give Hyprland time to process
-
-            # 7. Set the Obsidian window on Workspace 9 to fullscreen
-            hyprctl dispatch fullscreen 1,address:$_obsidian_break_window_address
-            echo "DEBUG: Fullscreened Obsidian on Workspace 9." >&2
-        else
-            echo "Warning: Could not find Obsidian window on Workspace 2 after launch. Skipping window moves." >&2
-        fi
     fi
 
     echo "$notify_msg" >&2 # Ensure this informational message goes to stderr
@@ -495,36 +479,23 @@ handle_transition() {
         send_notification "Break Over!" "Time to start a new Work session when you're ready."
         echo "Break finished. Please start your next Work session manually." >&2 # Debug/info to terminal
 
-        # NEW: Revert window manipulation after break
-        hyprctl dispatch workspace 9 # Ensure we are on workspace 9
-        sleep 0.5 # Give Hyprland time to switch
-
-        local target_obsidian_address=""
+        # NEW: Revert window manipulation after break using the perfected sequence
+        # Ensure we are on workspace 10 and focus the specific Obsidian window
+        hyprctl dispatch workspace 10 # Move view to workspace 10
         if [ -n "$_obsidian_break_window_address" ]; then
-            target_obsidian_address="$_obsidian_break_window_address"
+            hyprctl dispatch focuswindow address:$_obsidian_break_window_address # Explicitly focus the Obsidian window
+            sleep 0.1 # Give Hyprland a moment to process the focus change
+            # Exit fullscreen for the specific Obsidian window
+            hyprctl dispatch fullscreen 1,address:$_obsidian_break_window_address
+            # Move the specific Obsidian window to workspace 2
+            hyprctl dispatch movetoworkspace 2,address:$_obsidian_break_window_address
+            _obsidian_break_window_address="" # Clear the address after use
         else
-            # If no specific address was captured, try to find an Obsidian window on workspace 9
-            target_obsidian_address=$(hyprctl clients -j | jq -r '.[] | select(.workspace.id == 9 and .class == "obsidian") | .address' | head -n 1)
+            echo "Warning: No Obsidian break window address found. Performing generic window moves." >&2
+            hyprctl dispatch fullscreen 1 # Exit fullscreen on the current workspace (10)
+            hyprctl dispatch movetoworkspace 2,class:obsidian # Move Obsidian to its final place on workspace 2
         fi
-
-        if [ -n "$target_obsidian_address" ]; then
-            # Move to Workspace 1
-            hyprctl dispatch movetoworkspace 1,address:$target_obsidian_address
-            sleep 0.5 # Give Hyprland time to process
-
-            # Move to Workspace 4
-            hyprctl dispatch movetoworkspace 4,address:$target_obsidian_address
-            sleep 0.5 # Give Hyprland time to process
-
-            # Move to Workspace 2
-            hyprctl dispatch movetoworkspace 2,address:$target_obsidian_address
-            sleep 0.5 # Give Hyprland time to process
-
-            # Conditionally fullscreen on Workspace 2
-            hyprctl dispatch fullscreen 1,address:$target_obsidian_address
-        fi
-
-        _obsidian_break_window_address="" # Clear the address after use
+        hyprctl dispatch workspace 1 # Switch user's focus to workspace 1
     else
         # This branch is hit if handle_transition is called unexpectedly when _session_type is "None"
         echo "Warning: handle_transition called with unexpected session_type: "$_session_type". Setting to stopped." >&2
@@ -1019,14 +990,6 @@ cmd_daemon() {
             elif [[ "$pcli_status_class" == "stopped" ]]; then # Also check for 'stopped' class, as a fallback
                 echo "DEBUG: Daemon detected pomodoro-cli 'stopped' class while script state is 'Running'. Triggering transition." >&2
                 handle_transition
-            fi
-
-            # NEW: 5-second warning sound (continuous)
-            local remaining_seconds=$(echo "$pcli_status_json" | jq -r '.remaining // 0 | tonumber')
-            echo "DEBUG: Daemon: Remaining seconds: $remaining_seconds" >&2
-            if (( remaining_seconds > 0 && remaining_seconds <= 5 )); then
-                echo "DEBUG: Playing 5-second warning sound (continuous)." >&2
-                play_sound
             fi
         fi
         sleep 1 # Check every 1 second

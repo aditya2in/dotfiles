@@ -203,6 +203,7 @@ alias ww="pkill -f waybar ; nohup waybar > /dev/null 2>&1 & ; pomodoro-cli start
 alias ta="tmux attach-session -t ArchSession "
 alias td="tmux detach"
 alias tt="tmux" 
+alias tg="tmux new-session -t GeminiSession"
 
 alias ppp="sh ~/.config/pomodoro_cli/pomodoro_manager.sh quick-start"
 alias ppc="sh ~/.config/pomodoro_cli/pomodoro_manager.sh cleanup"
