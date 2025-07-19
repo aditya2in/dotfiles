@@ -29,9 +29,6 @@ OBSIDIAN_VAULT_NAME="obsidian" # <--- CONFIRM/REPLACE with your actual Obsidian 
 OBSIDIAN_BREAK_NOTE_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO BREAK FILE.md" # <--- IMPORTANT: This is the file you provided
 OBSIDIAN_MARKDOWN_LOG_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO mark down table data for obsidian Analysis.md" # <--- NEW: Path to the Markdown log file in Obsidian
 # ----------------------------------
-# --- NEW: Break Behavior Configuration ---
-BREAK_LOCK_DELAY_SEC=30 # Seconds to wait before locking the screen during a break
-# -------------------------------------
 # --- NEW: Markdown Log Configuration ---
 MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Analysis.md"
 # -----------------------------------------
@@ -46,7 +43,7 @@ MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Anal
 #10 seconds for testing
 WORK_DURATION="25m" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
 SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
-LONG_BREAK_DURATION="15m" # Adjust these for your actual long break times
+LONG_BREAK_DURATION="30m"
 # These variables hold our script's internal state.
 # They are declared globally (without 'local') so they can be accessed by all functions.
 _status=""
@@ -423,11 +420,6 @@ start_session() {
             # 7. Set the Obsidian window on Workspace 9 to fullscreen
             hyprctl dispatch fullscreen 1,address:$_obsidian_break_window_address
             echo "DEBUG: Fullscreened Obsidian on Workspace 9." >&2
-
-            # --- NEW: Wait for the configured delay and then lock the screen with hyprlock ---
-            (sleep "$BREAK_LOCK_DELAY_SEC" && hyprlock) &
-            echo "DEBUG: Screen will lock in $BREAK_LOCK_DELAY_SEC seconds using hyprlock." >&2
-            # --- END NEW ---
         else
             echo "Warning: Could not find Obsidian window on Workspace 2 after launch. Skipping window moves." >&2
         fi
