@@ -47,6 +47,10 @@ MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Anal
 WORK_DURATION="25m" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
 SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
 LONG_BREAK_DURATION="15m" # Adjust these for your actual long break times
+
+# --- NEW: Evening Lock Configuration ---
+EVENING_LOCK_INTERVAL_SEC=30 # How often to check and potentially re-lock after evening lock time
+# -------------------------------------
 # These variables hold our script's internal state.
 # They are declared globally (without 'local') so they can be accessed by all functions.
 _status=""
@@ -60,6 +64,7 @@ _current_subtask_name="Loading SubTask..."
 _current_minitask_name="Loading MiniTask..."
 _last_run_date=""
 _obsidian_break_window_address="" # NEW: Stores the address of the Obsidian window opened for the break
+_last_evening_lock_attempt_timestamp=0 # NEW: Timestamp of the last evening lock attempt
 
 
 
@@ -987,6 +992,17 @@ cmd_daemon() {
         read_state # Always read the latest state
         reset_daily_counts # Ensure daily reset even if daemon runs continuously
 
+        # NEW: Check for evening lock (controlled frequency)
+        local current_timestamp=$(date +%s)
+        if (( current_timestamp - _last_evening_lock_attempt_timestamp >= EVENING_LOCK_INTERVAL_SEC )); then
+            /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/evening_lock.sh &
+            _last_evening_lock_attempt_timestamp=$current_timestamp
+            echo "DEBUG: Triggered evening_lock.sh at $current_timestamp" >&2
+        else
+            echo "DEBUG: Skipping evening_lock.sh, too soon. Last attempt: $_last_evening_lock_attempt_timestamp" >&2
+        fi
+        # END NEW
+
         if [ "$_status" == "Running" ]; then
             # Capture raw output from pomodoro-cli, including any non-JSON prefix like "Time is up!".
             # Redirect stderr to /dev/null to prevent any unexpected error messages from pomodoro-cli.
@@ -1073,7 +1089,7 @@ cmd_cleanup() {
     killall yad 2>/dev/null || true
     echo "Cleanup: Yad windows killed." >&2
 
-    # Kill any lingering swaylock instances (important for the new approach)
+    # Kill any lingering swaylock instances
     killall swaylock 2>/dev/null || true
     echo "Cleanup: Swaylock instances killed." >&2
 
