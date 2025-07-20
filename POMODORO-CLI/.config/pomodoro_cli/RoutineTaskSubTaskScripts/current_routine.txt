@@ -1,15 +1,5 @@
 [1;33m1. QUICK RESULT ---[0m
-[0;36m1.1 Quick Result Summary:[0m
-[0;36mQuick Current Routine Name:[0m
-******Family Dinner******
-[0;36mQuick Current Category or Action name:[0m
-No Category or Action
-[0;36mQuick Current Task Name:[0m
-No Task
-[0;36mQuick Current Sub Task name:[0m
-No Sub Task
-[0;36mQuick Current Mini Task name:[0m
-No Mini task
+[0;36m1.1 Quick Result Summary:[0m [0;31mError: Journal file '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-20.md' not found.[0m
 
 
-[1;33mQuick Result Generated At:[0m [0;32m2025-07-19 19:08:40[0m
+[1;33mQuick Result Generated At:[0m [0;32m2025-07-20 11:03:41[0m
