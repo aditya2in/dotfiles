@@ -38,14 +38,13 @@
   "hyprland/window": { "format": "{}", "max-length": 50 },
   
   "custom/pomodoro": {
-    "format": "{text}",
+    "format": "{}",
     "interval": 1,
     "exec": "~/.config/pomodoro_cli/pomodoro_manager.sh status",
     "return-type": "json",
     "tooltip": true,
     "on-click": "~/.config/pomodoro_cli/pomodoro_manager.sh start",
-    "on-click-right": "~/.config/pomodoro_cli/pomodoro_manager.sh stop",
-    "on-click-middle": "~/.config/pomodoro_cli/pomodoro_manager.sh toggle_pause"
+    "on-click-right": "~/.config/pomodoro_cli/pomodoro_manager.sh stop"
   },
 
   "cpu": {

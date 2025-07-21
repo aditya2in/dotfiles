@@ -173,8 +173,8 @@ log_daily_summary() {
 reset_daily_counts() {
     local today=$(date +%Y-%m-%d)
     if [ "$_last_run_date" != "$today" ]; then
-        echo "DEBUG: New day detected. Logging previous day's summary and resetting state." >&2
-        log_daily_summary # Log summary of the day that just ended
+        echo "DEBUG: New day detected. Logging previous day's summary before resetting counts." >&2
+        log_daily_summary # <--- NEW: Call existing logging function HERE
 
         # NEW: Log to Markdown for daily reset event
         log_session_event \
@@ -186,18 +186,11 @@ reset_daily_counts() {
             "Stopped" \
             "Daily reset - summary of previous day logged."
 
-        echo "DEBUG: Resetting state for new day." >&2
-        # Reset all session-related state variables to their defaults
-        _status="Stopped"
-        _session_type="None"
+        echo "DEBUG: Resetting daily counts for new day." >&2
         _total_pomodoro_cycles_today=0
-        _current_session_in_cycle=0
+        _current_session_in_cycle=0 # This will still reset on a new day, which is probably desired behavior.
         _last_run_date="$today"
-        
-        # Stop any active pomodoro-cli timer to prevent carry-over
-        pomodoro-cli stop >/dev/null 2>/dev/null
-
-        write_state # Write the fully reset state to the file
+        write_state
     fi
 }
 
@@ -436,10 +429,9 @@ start_session() {
             hyprctl dispatch fullscreen 1,address:$_obsidian_break_window_address
             echo "DEBUG: Fullscreened Obsidian on Workspace 9." >&2
 
-            # --- NEW: Use the frequent locker during breaks ---
-            local duration_in_seconds=$(parse_duration_to_seconds "$duration_str")
-            /home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/break_frequent_locker.sh "$duration_in_seconds" &
-            echo "DEBUG: Started frequent screen lock for the break duration." >&2
+            # --- NEW: Wait for the configured delay and then lock the screen with hyprlock ---
+            (sleep "$BREAK_LOCK_DELAY_SEC" && loginctl lock-session) &
+            echo "DEBUG: Screen will lock in $BREAK_LOCK_DELAY_SEC seconds using loginctl." >&2
             # --- END NEW ---
         else
             echo "Warning: Could not find Obsidian window on Workspace 2 after launch. Skipping window moves." >&2
@@ -956,24 +948,7 @@ cmd_status() {
         routine_display+="${separator}<span foreground='#fab387'>${_current_minitask_name}</span>" # Peach
     fi
 
-    local text_color=""
-    case "$_status" in
-        "Running")
-            case "$_session_type" in
-                "Work")
-                    text_color="#a6e3a1" # Green for work
-                    ;;
-                "Break"|"Long Break")
-                    text_color="#b4befe" # Lavender for breaks
-                    ;;
-            esac
-            ;;
-        "Stopped"|"Paused")
-            text_color="#f38ba8" # Red for stopped/paused
-            ;;
-    esac
-
-    local full_text="<span foreground='${text_color}'>${icon} [[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} <span font_size='150%'>${time_text}</span> (${current_cycle_display}) ${routine_display}</span>"
+    local full_text="${icon} [[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} ${time_text} (${current_cycle_display}) ${routine_display}"
 
     # --- DEBUGGING OUTPUT TO STDERR ---
     echo "DEBUG: pcli_json: '"$pcli_json"'" >&2
@@ -1071,7 +1046,7 @@ cmd_daemon() {
             fi
 
             # NEW: 5-second warning sound (continuous)
-            local remaining_seconds=$(echo "$pcli_status_json" | jq -r '.tooltip' | grep -oP 'Left: \K[0-9:]+' | awk -F: '{ if (NF==2) print ($1*60)+$2; else print $1 }' | xargs)
+            local remaining_seconds=$(echo "$pcli_status_json" | jq -r '.remaining // 0 | tonumber')
             echo "DEBUG: Daemon: Remaining seconds: $remaining_seconds" >&2
             if (( remaining_seconds > 0 && remaining_seconds <= 5 )); then
                 echo "DEBUG: Playing 5-second warning sound (continuous)." >&2

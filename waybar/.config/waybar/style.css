@@ -209,3 +209,25 @@ window#waybar {
   font-weight: normal;
   opacity: 0.8;
 }
+
+/* Styling for the progress bar itself */
+#custom-pomodoro .bar {
+  border-radius: 2px; /* Slightly rounded corners for the bar */
+  border: 1px solid @surface2; /* A subtle border around the bar */
+  background-color: @mantle; /* Color of the unfilled part of the bar */
+}
+
+/* Color of the filled part of the bar based on session status */
+#custom-pomodoro.running.work .bar {
+  background-color: @green; /* Green for work sessions */
+}
+
+#custom-pomodoro.running.break .bar,
+#custom-pomodoro.running.long-break .bar {
+  background-color: @lavender; /* Lavender for break sessions */
+}
+
+#custom-pomodoro.stopped .bar,
+#custom-pomodoro.paused .bar {
+  background-color: @red; /* Red for stopped/paused sessions */
+}

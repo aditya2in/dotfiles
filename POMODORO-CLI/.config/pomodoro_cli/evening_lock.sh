@@ -19,8 +19,8 @@ if (( CURRENT_TIME >= LOCK_START_TIME || CURRENT_TIME < LOCK_END_TIME )); then
     fi
 
     echo "DEBUG: Evening lock activated. Current time: $CURRENT_TIME, Lock range: $LOCK_START_TIME - $LOCK_END_TIME" >&2
-    # Lock the screen using hyprlock
-    hyprlock &
+    # Lock the screen using loginctl
+    loginctl lock-session
     echo "DEBUG: Screen locked by evening_lock.sh" >&2
 else
     echo "DEBUG: Evening lock not active. Current time: $CURRENT_TIME, Lock range: $LOCK_START_TIME - $LOCK_END_TIME" >&2
