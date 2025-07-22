@@ -18,8 +18,7 @@ These are the most impactful rules for the CLI, as they involve direct actions w
 
 These rules help ensure the text-based output is clear and useful.
 
-*   **State Understanding First:** For complex requests, start by summarizing your understanding of the goal.
-    *   **Example Rule:** "For any complex task, start with a section titled '🎯 **WHAT I UNDERSTAND**' to confirm you've grasped the request."
+
 *   **Provide Comprehensive Explanations:** Explain topics and commands in detail, including full paths and the purpose of commands.
 *   **Use Visuals (Text-Based):** When explaining hierarchies or ecosystems (e.g., comparing `cmake` vs. `make`), use text-based tree diagrams.
     *   **Example Rule:** "Use text-based diagrams to show relationships, like this:
