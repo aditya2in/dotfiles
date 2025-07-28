@@ -379,7 +379,7 @@ _break_frequent_locker() {
 
     echo "DEBUG: Starting frequent lock for $duration_seconds seconds." >&2
 
-    sleep "$BREAK_LOCK_DELAY_SEC" # Grace period before frequent locking begins
+    sleep 30 # Grace period before frequent locking begins
 
     while [ $(date +%s) -lt $end_time ]; do
         # Lock the session using the system's lock command
@@ -1042,7 +1042,11 @@ _evening_lock() {
 
     # Check if current time is past LOCK_TIME
     if (( CURRENT_TIME >= LOCK_START_TIME || CURRENT_TIME < LOCK_END_TIME )); then
-        
+        # Check if hyprlock is already running
+        if pgrep -x "hyprlock" > /dev/null; then
+            echo "DEBUG: hyprlock is already running. Not re-locking." >&2
+            exit 0
+        fi
 
         echo "DEBUG: Evening lock activated. Current time: $CURRENT_TIME, Lock range: $LOCK_START_TIME - $LOCK_END_TIME" >&2
         # Lock the screen using loginctl

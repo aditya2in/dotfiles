@@ -4,7 +4,7 @@ After=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/pomodoro_manager.sh quick-start
+ExecStart=/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/pomodoro_manager.sh daemon
 
 [Install]
 WantedBy=graphical-session.target

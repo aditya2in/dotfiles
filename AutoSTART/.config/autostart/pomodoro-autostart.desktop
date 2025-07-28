@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Exec=/home/aditya/dotfiles/POMODORO-CLI/.config/pomodoro_cli/pomodoro_manager.sh start
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-Name=Pomodoro Autostart
-Comment=Starts the Pomodoro timer automatically on login.

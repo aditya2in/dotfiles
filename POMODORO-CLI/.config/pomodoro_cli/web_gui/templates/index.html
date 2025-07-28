@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro CLI Web GUI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Pomodoro CLI Control Panel</h1>
+
+        {% if message %}
+            <div class="message success">{{ message }}</div>
+        {% endif %}
+        {% if error %}
+            <div class="message error">{{ error }}</div>
+        {% endif %}
+
+        <div class="status-section">
+            <h2>Current Pomodoro Status:</h2>
+            <p class="pomodoro-status">{{ pomodoro_status }}</p>
+            <p class="daemon-status">Daemon Status: {{ daemon_status }}</p>
+            <p class="daemon-status">Daemon Status: {{ daemon_status }}</p>
+        </div>
+
+        <div class="section">
+            <h2>Pomodoro Actions</h2>
+            <form method="post" class="action-form">
+                <button type="submit" name="pomodoro_action" value="start">Start</button>
+                <button type="submit" name="pomodoro_action" value="pause">Pause</button>
+                <button type="submit" name="pomodoro_action" value="resume">Resume</button>
+                <button type="submit" name="pomodoro_action" value="stop">Stop</button>
+                <button type="submit" name="pomodoro_action" value="reset">Reset</button>
+                <button type="submit" name="pomodoro_action" value="quick-start">Quick Start</button>
+                <button type="submit" name="pomodoro_action" value="cleanup">Cleanup</button>
+                <button type="submit" name="pomodoro_action" value="daemon">Start Daemon</button>
+                <button type="submit" name="pomodoro_action" value="stop-daemon">Stop Daemon</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h2>Configuration Variables</h2>
+            <form method="post" class="config-form">
+                {% if current_config %}
+                    {% for key, value in current_config.items() %}
+                        {% if key == "EVENING_LOCK_INTERVAL_SEC" %}
+                            <div class="form-group">
+                                <label>Evening Lock Feature:</label>
+                                <div class="radio-group">
+                                    <input type="radio" id="evening_lock_on" name="EVENING_LOCK_ENABLED" value="on" {% if current_config["EVENING_LOCK_ENABLED"] == "on" %}checked{% endif %}>
+                                    <label for="evening_lock_on">ON</label>
+                                    <input type="radio" id="evening_lock_off" name="EVENING_LOCK_ENABLED" value="off" {% if current_config["EVENING_LOCK_ENABLED"] == "off" %}checked{% endif %}>
+                                    <label for="evening_lock_off">OFF</label>
+                                </div>
+                                <span class="default-value">Default: ON (Interval: {{ default_config["EVENING_LOCK_INTERVAL_SEC"] }} seconds)</span>
+                            </div>
+                        {% elif key != "EVENING_LOCK_ENABLED" and key != "POMODORO_DIR" %}
+                            <div class="form-group">
+                                <label for="{{ key }}">{{ key }}:</label>
+                                <input type="text" id="{{ key }}" name="{{ key }}" value="{{ value }}">
+                                <span class="default-value">Default: {{ default_config.get(key, 'N/A') }}</span>
+                                <button type="submit" name="restore_individual_default" value="{{ key }}" class="restore-individual-button">Default</button>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="error">Could not load current configuration.</p>
+                {% endif %}
+                <div class="form-actions">
+                    <button type="submit" name="save_config" value="true">Save Configuration</button>
+                    <button type="submit" name="restore_defaults" value="true" class="restore-button">Restore All Defaults</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
