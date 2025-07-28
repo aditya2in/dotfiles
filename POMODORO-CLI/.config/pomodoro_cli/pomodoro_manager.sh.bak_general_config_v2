@@ -6,44 +6,16 @@
 # Base directory for Pomodoro CLI related files
 POMODORO_DIR="$HOME/.config/pomodoro_cli"
 
-# Main Configuration File
-POMODORO_CONFIG_FILE="$POMODORO_DIR/pomodoro_config.conf"
+# Test Mode Configuration File
+TEST_MODE_CONFIG_FILE="$POMODORO_DIR/pomodoro_test_mode.conf"
 
-# Ensure main config file exists and is sourced
-if [ ! -f "$POMODORO_CONFIG_FILE" ]; then
-    echo "# Pomodoro Configuration" > "$POMODORO_CONFIG_FILE"
-    echo "TEST_MODE=\"OFF\"" >> "$POMODORO_CONFIG_FILE"
-    echo "BREAK_LOCK_DELAY_SEC_DEFAULT=30" >> "$POMODORO_CONFIG_FILE"
-    echo "BREAK_LOCK_DELAY_SEC_TEST=3" >> "$POMODORO_CONFIG_FILE"
-    echo "WORK_DURATION_DEFAULT=\"25m\"" >> "$POMODORO_CONFIG_FILE"
-    echo "SHORT_BREAK_DURATION_DEFAULT=\"5m\"" >> "$POMODORO_CONFIG_FILE"
-    echo "LONG_BREAK_DURATION_DEFAULT=\"15m\"" >> "$POMODORO_CONFIG_FILE"
-    echo "WORK_DURATION_TEST=\"15s\"" >> "$POMODORO_CONFIG_FILE"
-    echo "SHORT_BREAK_DURATION_TEST=\"15s\"" >> "$POMODORO_CONFIG_FILE"
-    echo "LONG_BREAK_DURATION_TEST=\"15s\"" >> "$POMODORO_CONFIG_FILE"
-    echo "EVENING_LOCK_ENABLED=\"OFF\"" >> "$POMODORO_CONFIG_FILE"
-    echo "LOCK_START_TIME_CONFIG=\"1930\"" >> "$POMODORO_CONFIG_FILE"
-    echo "LOCK_FREQUENCY_CONFIG=\"10\"" >> "$POMODORO_CONFIG_FILE"
+# Ensure test mode config file exists and is sourced
+if [ ! -f "$TEST_MODE_CONFIG_FILE" ]; then
+    echo "TEST_MODE=\"OFF\"" > "$TEST_MODE_CONFIG_FILE"
 fi
-source "$POMODORO_CONFIG_FILE"
-
-# Define Obsidian paths using variables from config
-OBSIDIAN_BREAK_NOTE_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO BREAK FILE.md"
-OBSIDIAN_MARKDOWN_LOG_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO mark down table data for obsidian Analysis.md"
-MARKDOWN_LOG_FILE="$OBSIDIAN_MARKDOWN_LOG_PATH"
-
-# Debugging Configuration
-DEBUG_MODE="${DEBUG_ENABLED:-OFF}" # Default to OFF, can be overridden by config or --debug
-
-# Function for debug logging
-debug_log() {
-    if [ "$DEBUG_MODE" == "ON" ]; then
-        echo "DEBUG: $@" >&2
-    fi
-}
+source "$TEST_MODE_CONFIG_FILE"
 
 # Path to the state file
-
 
 STATE_FILE="$POMODORO_DIR/pomodoro_state.json"
 # Path to the sound file for notifications (ensure you place a WAV or OGG here)
@@ -61,9 +33,38 @@ CURRENT_ROUTINE_FILE="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/curre
 ROUTINE_UPDATE_FREQUENCY_SEC="30" # Run get_current_CategoryAction.sh every 5 minutes (300 seconds)
 LAST_ROUTINE_UPDATE_TIME_FILE="$POMODORO_DIR/last_routine_update.timestamp" # File to store last update timestamp
 # ----------------------------------------------
-
+# --- NEW: Obsidian Configuration ---
+# Based on your vault folder /home/aditya/obsidian, the vault name is likely "obsidian"
+OBSIDIAN_VAULT_PATH="$HOME/obsidian" # Assuming your Obsidian vault is directly in your home directory
+OBSIDIAN_VAULT_NAME="obsidian" # <--- CONFIRM/REPLACE with your actual Obsidian vault name (e.g., "My Notes")
+OBSIDIAN_BREAK_NOTE_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO BREAK FILE.md" # <--- IMPORTANT: This is the file you provided
+OBSIDIAN_MARKDOWN_LOG_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO mark down table data for obsidian Analysis.md" # <--- NEW: Path to the Markdown log file in Obsidian
+# ----------------------------------
 # --- NEW: Break Behavior Configuration ---
+BREAK_LOCK_DELAY_SEC_DEFAULT=30 # Seconds to wait before locking the screen during a break (default)
+BREAK_LOCK_DELAY_SEC_TEST=3   # Seconds to wait before locking the screen during a break (test)
+BREAK_LOCK_DELAY_SEC="" # Will be set after parsing arguments
 
+# -------------------------------------
+# --- NEW: Markdown Log Configuration ---
+MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Analysis.md"
+# -----------------------------------------
+
+# Session Durations for direct use with pomodoro-cli's --duration flag.
+# Use "Xs" for X seconds, "Xm" for X minutes.
+# For testing purposes, set all to 10 seconds ("10s").
+# #25m for real usage
+WORK_DURATION_DEFAULT="25m"
+SHORT_BREAK_DURATION_DEFAULT="5m"
+LONG_BREAK_DURATION_DEFAULT="15m"
+
+WORK_DURATION_TEST="15s"
+SHORT_BREAK_DURATION_TEST="15s"
+LONG_BREAK_DURATION_TEST="15s"
+
+WORK_DURATION="" # Will be set after parsing arguments
+SHORT_BREAK_DURATION="" # Will be set after parsing arguments
+LONG_BREAK_DURATION="" # Will be set after parsing arguments
 
 # --- NEW: Evening Lock Configuration ---
 EVENING_LOCK_INTERVAL_SEC=30 # How often to check and potentially re-lock after evening lock time
@@ -107,7 +108,7 @@ release_lock() {
 # Initializes the state file with default values. This function is now only responsible
 # for CREATING a default state file when explicitly told by read_state.
 initialize_state_file() {
-    debug_log "Initializing Pomodoro state file with default values..."
+    echo "DEBUG: Initializing Pomodoro state file with default values..." >&2
     # Create the directory if it's not exist
     mkdir -p "$(dirname "$STATE_FILE")" || { echo "Error: Could not create directory for state file: $(dirname "$STATE_FILE")" >&2; exit 1; }
     jq -n \
@@ -123,7 +124,7 @@ initialize_state_file() {
             "current_session_in_cycle": ($current_cycle | tonumber),
             "last_run_date": $last_date
         }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
-    debug_log "State file initialized."
+    echo "DEBUG: State file initialized." >&2
 }
 
 # Reads the current state from the JSON file into shell variables.
@@ -131,7 +132,7 @@ read_state() {
     acquire_lock # Acquire lock for this operation
     # Check if the state file exists, is not empty, or contains valid JSON
     if [ ! -f "$STATE_FILE" ] || [ ! -s "$STATE_FILE" ] || ! jq -e . >/dev/null 2>&1 < "$STATE_FILE"; then
-        debug_log "read_state: State file missing, empty or invalid JSON. Attempting to re-initialize."
+        echo "DEBUG: read_state: State file missing, empty or invalid JSON. Attempting to re-initialize." >&2
         initialize_state_file # Call the new initialization function
         # After initialization, the state file now exists with default zeros, so we can read it.
     fi
@@ -144,7 +145,7 @@ read_state() {
     _last_run_date=$(jq -r '.last_run_date' "$STATE_FILE")
 
     update_current_routine_display_info # NEW: Update routine info every time state is read
-    debug_log "read_state: Loaded state: status='$_status', session_type='$_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$_last_run_date'"
+    echo "DEBUG: read_state: Loaded state: status='$_status', session_type='$_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$_last_run_date'" >&2
 
     release_lock # Release lock after this operation
     return 0
@@ -168,7 +169,7 @@ write_state() {
             "current_session_in_cycle": ($current_cycle | tonumber),
             "last_run_date": $last_date
         }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
-    debug_log "write_state: Saved state: status='$_status', session_type='$_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$_last_run_date'"
+    echo "DEBUG: write_state: Saved state: status='$_status', session_type='$_session_type', total_cycles='$_total_pomodoro_cycles_today', current_cycle='$_current_session_in_cycle', last_date='$_last_run_date'" >&2
     release_lock # Release lock after this operation
 }
 
@@ -182,7 +183,7 @@ log_daily_summary() {
     # Format the log entry: Log date, then values for the day that *just ended*
     local log_entry="[$(date "+%Y-%m-%d %H:%M:%S")] Daily Summary for $_last_run_date: Total Pomodoros: $_total_pomodoro_cycles_today, Last Cycle Progress: ${_current_session_in_cycle}/4"
     echo "$log_entry" >> "$DAILY_LOG_FILE"
-    debug_log "Logged daily summary for $_last_run_date to $DAILY_LOG_FILE"
+    echo "DEBUG: Logged daily summary for $_last_run_date to $DAILY_LOG_FILE" >&2
 }
 
 
@@ -190,7 +191,7 @@ log_daily_summary() {
 reset_daily_counts() {
     local today=$(date +%Y-%m-%d)
     if [ "$_last_run_date" != "$today" ]; then
-        debug_log "New day detected. Logging previous day's summary and resetting state."
+        echo "DEBUG: New day detected. Logging previous day's summary and resetting state." >&2
         log_daily_summary # Log summary of the day that just ended
 
         # NEW: Log to Markdown for daily reset event
@@ -203,7 +204,7 @@ reset_daily_counts() {
             "Stopped" \
             "Daily reset - summary of previous day logged."
 
-        debug_log "Resetting state for new day."
+        echo "DEBUG: Resetting state for new day." >&2
         # Reset all session-related state variables to their defaults
         _status="Stopped"
         _session_type="None"
@@ -264,12 +265,6 @@ parse_duration_to_minutes_or_seconds() {
 # Arguments: Event_Type, Session_Type, Planned_Duration_Seconds, Actual_Duration_Seconds,
 #            Remaining_Time_Seconds, Current_Status_After_Event, Notes/Reason
 log_session_event() {
-    # Ensure MARKDOWN_LOG_FILE is set before proceeding
-    if [ -z "$MARKDOWN_LOG_FILE" ]; then
-        echo "Warning: MARKDOWN_LOG_FILE is not set. Cannot log session event." >&2
-        return 1
-    fi
-
     local event_type="$1"
     local session_type="$2"
     local planned_duration_sec="$3"
@@ -280,27 +275,24 @@ log_session_event() {
 
     local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
     local session_id=$(date "+%Y%m%d%H%M%S") # Simple unique ID
-    local routine_name="${_current_routine_name:-N/A}" # Use the globally updated routine name, default to N/A if empty
-    local total_pomodoros="${_total_pomodoro_cycles_today:-0}"
-    local cycle_progress="${_current_session_in_cycle:-0}/4"
+    local routine_name="$_current_routine_name" # Use the globally updated routine name
+    local total_pomodoros="$_total_pomodoro_cycles_today"
+    local cycle_progress="${_current_session_in_cycle}/4"
 
     # Create the directory for the log file if it doesn't exist
     mkdir -p "$(dirname "$MARKDOWN_LOG_FILE")" || { echo "Error: Could not create directory for Markdown log file: $(dirname "$MARKDOWN_LOG_FILE")" >&2; return 1; }
 
     # Check if file exists and is empty or has only a title, then add header and separator
     if [ ! -f "$MARKDOWN_LOG_FILE" ] || [ ! -s "$MARKDOWN_LOG_FILE" ] || ! grep -q "|---" "$MARKDOWN_LOG_FILE"; then
-        printf "%s\n" "# Pomodoro Session History" >> "$MARKDOWN_LOG_FILE"
-        printf "%s\n" "" >> "$MARKDOWN_LOG_FILE" # Add a blank line for readability
-        printf "%s\n" "| Session_ID | Event_Timestamp | Event_Type | Session_Type | Routine_Name | Planned_Duration_Sec | Actual_Duration_Sec | Remaining_Time_Sec | Status_After_Event | Total_Pomodoros_Today | Current_Cycle_Progress | Notes/Reason |" >> "$MARKDOWN_LOG_FILE"
-        printf "%s\n" "|:----------:|:-----------------:|:----------:|:------------:|:------------:|:--------------------:|:-------------------:|:--------------------:|:------------------:|:---------------------:|:----------------------:|:-------------|" >> "$MARKDOWN_LOG_FILE"
+        echo "# Pomodoro Session History" > "$MARKDOWN_LOG_FILE"
+        echo "" >> "$MARKDOWN_LOG_FILE" # Add a blank line for readability
+        echo "| Session_ID | Event_Timestamp | Event_Type | Session_Type | Routine_Name | Planned_Duration_Sec | Actual_Duration_Sec | Remaining_Time_Sec | Status_After_Event | Total_Pomodoros_Today | Current_Cycle_Progress | Notes/Reason |" >> "$MARKDOWN_LOG_FILE"
+        echo "|:----------:|:-----------------:|:----------:|:------------:|:------------:|:--------------------:|:-------------------:|:--------------------:|:------------------:|:---------------------:|:----------------------:|:-------------|" >> "$MARKDOWN_LOG_FILE"
     fi
 
     # Append the new data row
-    printf "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |\n" \
-        "${session_id}" "${timestamp}" "${event_type}" "${session_type}" "${routine_name}" \
-        "${planned_duration_sec}" "${actual_duration_sec}" "${remaining_time_sec}" \
-        "${status_after_event}" "${total_pomodoros}" "${cycle_progress}" "${notes_reason}" >> "$MARKDOWN_LOG_FILE"
-    debug_log "Logged session event to "$MARKDOWN_LOG_FILE": "$event_type" for "$session_type""
+    echo "| "$session_id" | "$timestamp" | "$event_type" | "$session_type" | "$routine_name" | "$planned_duration_sec" | "$actual_duration_sec" | "$remaining_time_sec" | "$status_after_event" | "$total_pomodoros" | "$cycle_progress" | "$notes_reason" |" >> "$MARKDOWN_LOG_FILE"
+    echo "DEBUG: Logged session event to "$MARKDOWN_LOG_FILE": "$event_type" for "$session_type"" >&2
 }
 
 
@@ -321,10 +313,78 @@ urlencode() {
     echo "$url_encoded"
 }
 
+# Displays a full-screen blocking message during breaks using swaylock.
+# Takes duration in seconds as argument, followed by DISPLAY, XAUTHORITY, DBUS_SESSION_BUS_ADDRESS.
+display_break_block() {
+    local duration_seconds="$1"
+    local display_var="$2"      # Passed from start_session
+    local xauthority_var="$3"   # Passed from start_session
+    local dbus_address_var="$4" # Passed from start_session
+
+    # Explicitly set environment variables for swaylock to connect to the correct display
+    # While swaylock is Wayland native, passing these ensures consistency and might help XWayland compatibility if any part needs it.
+    export DISPLAY="$display_var"
+    export XAUTHORITY="$xauthority_var"
+    export DBUS_SESSION_BUS_ADDRESS="$dbus_address_var"
+
+    echo "DEBUG: display_break_block: DISPLAY=$DISPLAY, XAUTHORITY=$XAUTHORITY, DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS" >&2
+    
+    local break_duration_text=$(parse_duration_to_minutes_or_seconds "$duration_seconds")
+    
+    # Define the message content with Pango markup for large, centered text
+    # Using a very large font size (e.g., 200) for maximum impact on screen.
+    local pango_message_content="<span font_desc='Noto Sans Bold 200' foreground='#eceff4'>Time to get up and go to relax and take a break!</span>\n\n"
+    pango_message_content+="<span font_desc='Noto Sans Bold 100' foreground='#eceff4'>This break is for ${break_duration_text}.</span>\n\n"
+    pango_message_content+="<span font_desc='Noto Sans Bold 100' foreground='#eceff4'>Rest, come back after your break.</span>"
+
+    # Temporary image file for the message
+    local temp_image="/tmp/pomodoro_break_message_$(date +%s%N).png"
+
+    echo "DEBUG: Generating temporary image for swaylock: "$temp_image"" >&2
+
+    # Generate the PNG image with the message using pango-view
+    # -o: output file, --font: font description, --markup: enable pango markup
+    # --width, --height: ensure a large enough canvas for the text
+    # --background: make it transparent for layering on swaylock
+    # FIX: Quoted 'rgba(0,0,0,0)' to prevent shell syntax error.
+    pango-view --markup --text="$pango_message_content" \
+        -o "$temp_image" \
+        --width=1920 --height=1080 --background='rgba(0,0,0,0)' >/dev/null 2>&1
+
+    if [ ! -f "$temp_image" ]; then
+        echo "Error: Failed to generate temporary image for break block. Swaylock will use default background." >&2
+        # Fallback for swaylock if image generation fails (it will use its default config)
+        swaylock --daemonize >/dev/null 2>&1 &
+    else
+        echo "DEBUG: Launching swaylock with custom image." >&2
+        # Launch swaylock with the generated image as background
+        # --daemonize: run in background
+        # --image: specify the background image
+        # You might need to configure swaylock further (e.g., blur, indicators) via its config file
+        swaylock --image "$temp_image" --daemonize >/dev/null 2>&1 &
+    fi
+
+    # Get the PID of the last background command (swaylock)
+    local swaylock_pid=$!
+
+    echo "DEBUG: Swaylock launched with PID: "$swaylock_pid". Sleeping for "$duration_seconds" seconds." >&2
+
+    # Wait for the duration
+    sleep "$duration_seconds"
+
+    echo "DEBUG: Attempting to kill swaylock (PID: "$swaylock_pid")." >&2
+    # Kill swaylock to unlock the screen
+    kill -TERM "$swaylock_pid" 2>/dev/null
+    # Clean up the temporary image file
+    rm -f "$temp_image"
+    echo "DEBUG: Swaylock killed and temporary image removed." >&2
+}
 
 
-
-display_break_block() {    local duration_seconds="$1"    local display_var="$2"      # Passed from start_session    local xauthority_var="$3"   # Passed from start_session    local dbus_address_var="$4" # Passed from start_session    # Explicitly set environment variables for swaylock to connect to the correct display    # While swaylock is Wayland native, passing these ensures consistency and might help XWayland compatibility if any part needs it.    export DISPLAY="$display_var"    export XAUTHORITY="$xauthority_var"    export DBUS_SESSION_BUS_ADDRESS="$dbus_address_var"    debug_log "display_break_block: DISPLAY=$DISPLAY, XAUTHORITY=$XAUTHORITY, DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS"        local break_duration_text=$(parse_duration_to_minutes_or_seconds "$duration_seconds")        # Define the message content with Pango markup for large, centered text    # Using a very large font size (e.g., 200) for maximum impact on screen.    local pango_message_content="<span font_desc='Noto Sans Bold 200' foreground='#eceff4'>Time to get up and go to relax and take a break!</span>\n\n"    pango_message_content+="<span font_desc='Noto Sans Bold 100' foreground='#eceff4'>This break is for ${break_duration_text}.</span>\n\n"    pango_message_content+="<span font_desc='Noto Sans Bold 100' foreground='#eceff4'>Rest, come back after your break.</span>"    # Temporary image file for the message    local temp_image="/tmp/pomodoro_break_message_$(date +%s%N).png"    debug_log "Generating temporary image for swaylock: "$temp_image""    # Generate the PNG image with the message using pango-view    # -o: output file, --font: font description, --markup: enable pango markup    # --width, --height: ensure a large enough canvas for the text    # --background: make it transparent for layering on swaylock    # FIX: Quoted 'rgba(0,0,0,0)' to prevent shell syntax error.    pango-view --markup --text="$pango_message_content"         -o "$temp_image"         --width=1920 --height=1080 --background='rgba(0,0,0,0)' >/dev/null 2>&1    if [ ! -f "$temp_image" ]; then        echo "Error: Failed to generate temporary image for break block. Swaylock will use default background." >&2        # Fallback for swaylock if image generation fails (it will use its default config)        swaylock --daemonize >/dev/null 2>&1 &    else        debug_log "Launching swaylock with custom image."        # Launch swaylock with the generated image as background        # --daemonize: run in background        # --image: specify the background image        # You might need to configure swaylock further (e.g., blur, indicators) via its config file        swaylock --image "$temp_image" --daemonize >/dev/null 2>&1 &    fi    # Get the PID of the last background command (swaylock)    local swaylock_pid=$!    debug_log "Swaylock launched with PID: "$swaylock_pid". Sleeping for "$duration_seconds" seconds."    # Wait for the duration    sleep "$duration_seconds"    debug_log "Attempting to kill swaylock (PID: "$swaylock_pid")."    # Kill swaylock to unlock the screen    kill -TERM "$swaylock_pid" 2>/dev/null    # Clean up the temporary image file    rm -f "$temp_image"    debug_log "Swaylock killed and temporary image removed."}# -----------------------------------------------------------------------------# Frequent Break Locker (Merged from break_frequent_locker.sh)# -----------------------------------------------------------------------------_break_frequent_locker() {
+# -----------------------------------------------------------------------------
+# Frequent Break Locker (Merged from break_frequent_locker.sh)
+# -----------------------------------------------------------------------------
+_break_frequent_locker() {
     # --- Argument Check ---
     if [ -z "$1" ]; then
         echo "Error: Duration in seconds is required." >&2
@@ -335,18 +395,18 @@ display_break_block() {    local duration_seconds="$1"    local display_var="$2"
     local duration_seconds=$1
     local end_time=$(( $(date +%s) + duration_seconds ))
 
-    debug_log "Starting frequent lock for $duration_seconds seconds."
+    echo "DEBUG: Starting frequent lock for $duration_seconds seconds." >&2
 
     sleep "$BREAK_LOCK_DELAY_SEC" # Grace period before frequent locking begins
 
     while [ $(date +%s) -lt $end_time ]; do
         # Lock the session using the system's lock command
         loginctl lock-session
-        # Wait for the configured lock frequency before the next lock attempt
-        sleep "$LOCK_FREQUENCY_SEC"
+        # Wait for 10 seconds before the next lock attempt
+        sleep 10
     done
 
-    debug_log "Frequent lock period finished."
+    echo "DEBUG: Frequent lock period finished." >&2
 }
 
 # -----------------------------------------------------------------------------
@@ -389,44 +449,43 @@ start_session() {
 
     # Handle break-specific actions
     if [ "$type" == "Break" ] || [ "$type" == "Long Break" ]; then
-        debug_log "Triggering break action for "$type": New window management sequence."
+        echo "DEBUG: Triggering break action for "$type": New window management sequence." >&2
 
         # 1. Switch to Workspace 2
         hyprctl dispatch workspace 2
-        debug_log "Switched to Workspace 2."
+        echo "DEBUG: Switched to Workspace 2." >&2
 
         # 2. Open the Obsidian break file on Workspace 2
-        debug_log "Opening Obsidian URI: ${obsidian_break_uri}"
+        echo "DEBUG: Opening Obsidian URI: ${obsidian_break_uri}" >&2
         nohup xdg-open "${obsidian_break_uri}" >/tmp/pomodoro_obsidian_output.log 2>&1 &
-        debug_log "Obsidian break file launched via xdg-open."
+        echo "DEBUG: Obsidian break file launched via xdg-open." >&2
 
         # 3. Wait for Obsidian to open
         sleep 2 # Give Obsidian time to open on Workspace 2
 
         # 4. Capture the address of the Obsidian window that just opened on Workspace 2
         _obsidian_break_window_address=$(hyprctl clients -j | jq -r '.[] | select(.workspace.id == 2 and .class == "obsidian") | .address' | head -n 1)
-        debug_log "Captured Obsidian break window address: $_obsidian_break_window_address"
+        echo "DEBUG: Captured Obsidian break window address: $_obsidian_break_window_address" >&2
 
         if [ -n "$_obsidian_break_window_address" ]; then
             # 5. Move Obsidian to Workspace 1
             hyprctl dispatch movetoworkspace 1,address:$_obsidian_break_window_address
-            debug_log "Moved Obsidian to Workspace 1."
+            echo "DEBUG: Moved Obsidian to Workspace 1." >&2
             sleep 0.5 # Give Hyprland time to process
 
             # 6. Move Obsidian to Workspace 9
             hyprctl dispatch movetoworkspace 9,address:$_obsidian_break_window_address
-            debug_log "Moved Obsidian to Workspace 9."
+            echo "DEBUG: Moved Obsidian to Workspace 9." >&2
             sleep 0.5 # Give Hyprland time to process
 
             # 7. Set the Obsidian window on Workspace 9 to fullscreen
             hyprctl dispatch fullscreen 1,address:$_obsidian_break_window_address
-            debug_log "Fullscreened Obsidian on Workspace 9."
+            echo "DEBUG: Fullscreened Obsidian on Workspace 9." >&2
 
             # --- NEW: Use the frequent locker during breaks ---
             local duration_in_seconds=$(parse_duration_to_seconds "$duration_str")
             _break_frequent_locker "$duration_in_seconds" &
-            _break_locker_pid=$!
-            debug_log "Started frequent screen lock for the break duration (PID: $_break_locker_pid)."
+            echo "DEBUG: Started frequent screen lock for the break duration." >&2
             # --- END NEW ---
         else
             echo "Warning: Could not find Obsidian window on Workspace 2 after launch. Skipping window moves." >&2
@@ -558,7 +617,7 @@ handle_transition() {
 
 # Runs the get_current_CategoryAction.sh script (conditionally) and updates the _current_routine_name global variable.
 update_current_routine_display_info() {
-    debug_log "Checking for routine update info..."
+    echo "DEBUG: Checking for routine update info..." >&2
     local current_timestamp=$(date +%s)
     local last_update_timestamp=0
 
@@ -571,17 +630,17 @@ update_current_routine_display_info() {
 
     # Check if the script should be run based on frequency
     if (( current_timestamp - last_update_timestamp >= ROUTINE_UPDATE_FREQUENCY_SEC )); then
-        debug_log "Running get_current_CategoryAction.sh to update routine info..."
+        echo "DEBUG: Running get_current_CategoryAction.sh to update routine info..." >&2
         # Ensure the script is executable and run it silently
         if [ -f "$GET_ROUTINE_SCRIPT" ]; then
             bash "$GET_ROUTINE_SCRIPT" --quick >/dev/null 2>&1 # Run silently
             echo "$current_timestamp" > "$LAST_ROUTINE_UPDATE_TIME_FILE" # Update timestamp
-            debug_log "get_current_CategoryAction.sh executed and timestamp updated."
+            echo "DEBUG: get_current_CategoryAction.sh executed and timestamp updated." >&2
         else
             echo "Warning: get_current_CategoryAction.sh not found at "$GET_ROUTINE_SCRIPT"" >&2
         fi
     else
-        debug_log "Not running get_current_CategoryAction.sh, too soon. Last run: $(date -d @"$last_update_timestamp" +'%Y-%m-%d %H:%M:%S')"
+        echo "DEBUG: Not running get_current_CategoryAction.sh, too soon. Last run: $(date -d @"$last_update_timestamp" +'%Y-%m-%d %H:%M:%S')" >&2
     fi
 
     # Always read the routine name from the current_routine.txt file
@@ -641,11 +700,11 @@ update_current_routine_display_info() {
         _current_minitask_name=""
         echo "Warning: current_routine.txt not found at $CURRENT_ROUTINE_FILE" >&2
     fi
-    debug_log "Retrieved routine: '"$_current_routine_name"'"
-    debug_log "Retrieved category/action: '"$_current_category_action"'"
-    debug_log "Retrieved task: '"$_current_task_name"'"
-    debug_log "Retrieved subtask: '"$_current_subtask_name"'"
-    debug_log "Retrieved minitask: '"$_current_minitask_name"'"
+    echo "DEBUG: Retrieved routine: '"$_current_routine_name"'" >&2
+    echo "DEBUG: Retrieved category/action: '"$_current_category_action"'" >&2
+    echo "DEBUG: Retrieved task: '"$_current_task_name"'" >&2
+    echo "DEBUG: Retrieved subtask: '"$_current_subtask_name"'" >&2
+    echo "DEBUG: Retrieved minitask: '"$_current_minitask_name"'" >&2
 }
 # -----------------------------------------------------------------------------
 # Main Commands (User Facing)
@@ -779,18 +838,11 @@ cmd_stop() {
 
     send_notification "Pomodoro Stopped" "Pomodoro timer has been stopped."
     echo "Pomodoro stopped." >&2 # Redirected to stderr
-
-    # Kill the break locker process if it's running
-    if [ -n "$_break_locker_pid" ] && kill -0 "$_break_locker_pid" 2>/dev/null; then
-        debug_log "Killing break locker process (PID: $_break_locker_pid)."
-        kill -TERM "$_break_locker_pid" 2>/dev/null
-        _break_locker_pid="" # Clear the PID
-    fi
 }
 
 # Command to reset the Pomodoro timer and state to default "Stopped" values, but preserves counts.
 cmd_reset() {
-    debug_log "cmd_reset: Starting reset command."
+    echo "DEBUG: cmd_reset: Starting reset command." >&2
     read_state # Load existing counts from state file into global variables
 
     # Get current status for elapsed/remaining time before reset (if any session was running)
@@ -807,7 +859,7 @@ cmd_reset() {
         "Long Break") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
     esac
 
-    debug_log "cmd_reset: State after read_state: total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"'"
+    echo "DEBUG: cmd_reset: State after read_state: total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"'" >&2
 
     pomodoro-cli reset >/dev/null 2>/dev/null
 
@@ -818,7 +870,7 @@ cmd_reset() {
     local new_session_type="None"
     local new_last_run_date=$(date +%Y-%m-%d)
 
-    debug_log "cmd_reset: Values to write: status='"$new_status"', session_type='"$new_session_type"', total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"', last_date='"$new_last_run_date"'"
+    echo "DEBUG: cmd_reset: Values to write: status='"$new_status"', session_type='"$new_session_type"', total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"', last_date='"$new_last_run_date"'" >&2
 
     # Perform the state write directly here, explicitly passing all required values.
     # This avoids potential issues with global variables implicitly changing before write_state.
@@ -837,7 +889,7 @@ cmd_reset() {
             "last_run_date": $last_run_date
         }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
     release_lock # Release lock after this explicit write
-    debug_log "cmd_reset: State written to file (via inline jq)."
+    echo "DEBUG: cmd_reset: State written to file (via inline jq)." >&2
 
     # Log the reset event
     log_session_event \
@@ -870,8 +922,8 @@ cmd_status() {
     # Add a check to ensure pcli_json is valid JSON before proceeding.
     # If it's not valid, default it to an empty JSON object to prevent 'jq' errors downstream.
     if ! echo "$pcli_json" | jq -e . >/dev/null 2>&1; then
-        debug_log "Failed to parse pomodoro-cli output as JSON. Raw output was: '"$raw_pcli_output"'"
-        debug_log "Attempted JSON extraction resulted in: '"$pcli_json"'"
+        echo "DEBUG: Failed to parse pomodoro-cli output as JSON. Raw output was: '"$raw_pcli_output"'" >&2
+        echo "DEBUG: Attempted JSON extraction resulted in: '"$pcli_json"'" >&2
         pcli_json='{}' # Fallback to empty JSON if extraction or validation fails
     fi
 
@@ -970,17 +1022,17 @@ cmd_status() {
     local full_text="<span foreground='${text_color}'>${icon} [[${_total_pomodoro_cycles_today}]] ${_status}/${_session_type} <span font_size='150%'>${time_text}</span> (${current_cycle_display}) ${routine_display}</span>"
 
     # --- DEBUGGING OUTPUT TO STDERR ---
-    debug_log "pcli_json: '"$pcli_json"'"
-    debug_log "_status: '"$_status"'"
-    debug_log "_session_type: '"$_session_type"'"
-    debug_log "_total_pomodoro_cycles_today: '"$_total_pomodoro_cycles_today"'"
-    debug_log "_current_session_in_cycle: '"$_current_session_in_cycle"'"
-    debug_log "time_text: '"$time_text"'"
-    debug_log "tooltip_text: '"$tooltip_text"'"
-    debug_log "class_name: '"$class_name"'"
-    debug_log "percentage_val: '"$percentage_val"'" # Corrected to show the value
-    debug_log "full_text (final display string): '"$full_text"'"
-    debug_log "About to call jq -nc with above arguments."
+    echo "DEBUG: pcli_json: '"$pcli_json"'" >&2
+    echo "DEBUG: _status: '"$_status"'" >&2
+    echo "DEBUG: _session_type: '"$_session_type"'" >&2
+    echo "DEBUG: _total_pomodoro_cycles_today: '"$_total_pomodoro_cycles_today"'" >&2
+    echo "DEBUG: _current_session_in_cycle: '"$_current_session_in_cycle"'" >&2
+    echo "DEBUG: time_text: '"$time_text"'" >&2
+    echo "DEBUG: tooltip_text: '"$tooltip_text"'" >&2
+    echo "DEBUG: class_name: '"$class_name"'" >&2
+    echo "DEBUG: percentage_val: '"$percentage_val"'" >&2 # Corrected to show the value
+    echo "DEBUG: full_text (final display string): '"$full_text"'" >&2
+    echo "DEBUG: About to call jq -nc with above arguments." >&2
     # --- END DEBUGGING OUTPUT ---
 
     # Final JSON output for Waybar. This MUST use jq -nc for single-line output.
@@ -1000,9 +1052,8 @@ cmd_status() {
 # -----------------------------------------------------------------------------
 _evening_lock() {
     # Configuration
-    local LOCK_START_TIME="$LOCK_START_TIME_CONFIG" # Configurable start time
+    local LOCK_START_TIME="1900" # 7 PM (19:00 in 24-hour format)
     local LOCK_END_TIME="0700"   # 7 AM (07:00 in 24-hour format) - next day
-    local LOCK_FREQUENCY_SEC="$LOCK_FREQUENCY_CONFIG" # Configurable lock frequency
 
     # Get current time in HHMM format
     local CURRENT_TIME=$(date +%H%M)
@@ -1011,12 +1062,12 @@ _evening_lock() {
     if (( CURRENT_TIME >= LOCK_START_TIME || CURRENT_TIME < LOCK_END_TIME )); then
         
 
-        debug_log "Evening lock activated. Current time: $CURRENT_TIME, Lock range: $LOCK_START_TIME - $LOCK_END_TIME"
+        echo "DEBUG: Evening lock activated. Current time: $CURRENT_TIME, Lock range: $LOCK_START_TIME - $LOCK_END_TIME" >&2
         # Lock the screen using loginctl
         loginctl lock-session
-        debug_log "Screen locked by evening_lock.sh"
+        echo "DEBUG: Screen locked by evening_lock.sh" >&2
     else
-        debug_log "Evening lock not active. Current time: $CURRENT_TIME, Lock range: $LOCK_START_TIME - $LOCK_END_TIME"
+        echo "DEBUG: Evening lock not active. Current time: $CURRENT_TIME, Lock range: $LOCK_START_TIME - $LOCK_END_TIME" >&2
     fi
 }
 
@@ -1030,24 +1081,20 @@ cmd_daemon() {
 
     echo $$ > "$DAEMON_PID_FILE" # Store current PID
 
-    debug_log "Pomodoro daemon started. Monitoring sessions..."
+    echo "DEBUG: Pomodoro daemon started. Monitoring sessions..." >&2
     # Loop indefinitely to check the timer
     while true; do
         read_state # Always read the latest state
         reset_daily_counts # Ensure daily reset even if daemon runs continuously
 
         # NEW: Check for evening lock (controlled frequency)
-        if [ "$EVENING_LOCK_ENABLED" == "ON" ]; then
-            local current_timestamp=$(date +%s)
-            if (( current_timestamp - _last_evening_lock_attempt_timestamp >= EVENING_LOCK_INTERVAL_SEC )); then
-                _evening_lock &
-                _last_evening_lock_attempt_timestamp=$current_timestamp
-                debug_log "Triggered evening_lock.sh at $current_timestamp"
-            else
-                debug_log "Skipping evening_lock.sh, too soon. Last attempt: $_last_evening_lock_attempt_timestamp"
-            fi
+        local current_timestamp=$(date +%s)
+        if (( current_timestamp - _last_evening_lock_attempt_timestamp >= EVENING_LOCK_INTERVAL_SEC )); then
+            _evening_lock &
+            _last_evening_lock_attempt_timestamp=$current_timestamp
+            echo "DEBUG: Triggered evening_lock.sh at $current_timestamp" >&2
         else
-            debug_log "Evening lock is disabled."
+            echo "DEBUG: Skipping evening_lock.sh, too soon. Last attempt: $_last_evening_lock_attempt_timestamp" >&2
         fi
         # END NEW
 
@@ -1064,13 +1111,13 @@ cmd_daemon() {
             # Add a check to ensure pcli_status_json is valid JSON before proceeding.
             # If it's not valid, default it to an empty JSON object to prevent 'jq' errors downstream.
             if ! echo "$pcli_status_json" | jq -e . >/dev/null 2>&1; then
-                debug_log "Failed to parse pomodoro-cli output as JSON in daemon. Raw output was: '"$raw_pcli_output"'"
-                debug_log "Attempted JSON extraction resulted in: '"$pcli_status_json"'"
+                echo "DEBUG: Failed to parse pomodoro-cli output as JSON in daemon. Raw output was: '"$raw_pcli_output"'" >&2
+                echo "DEBUG: Attempted JSON extraction resulted in: '"$pcli_status_json"'" >&2
                 pcli_status_json='{}' # Fallback to empty JSON if extraction or validation fails
             fi
 
             # --- NEW DEBUGGING FOR DAEMON'S INTERNAL STATUS CHECK ---
-            debug_log "Daemon loop: Raw pcli_json: '"$pcli_status_json"'"
+            echo "DEBUG: Daemon loop: Raw pcli_json: '"$pcli_status_json"'" >&2
             # --- END NEW DEBUGGING ---
 
             local pcli_status_class="unknown" # Default if parsing fails or no output
@@ -1081,23 +1128,23 @@ cmd_daemon() {
                 pcli_status_class=$(echo "$pcli_status_json" | jq -r '.class // "unknown"')
             fi
             # --- NEW DEBUGGING FOR DAEMON'S INTERNAL PARSED CLASS ---
-            debug_log "Daemon loop: Parsed pcli_status_class: '"$pcli_status_class"'"
+            echo "DEBUG: Daemon loop: Parsed pcli_status_class: '"$pcli_status_class"'" >&2
             # --- END NEW DEBUGGING ---
 
             # Check if pomodoro-cli has finished its timer based on its 'class'
             if [[ "$pcli_status_class" == "finished" ]]; then
-                debug_log "Daemon detected pomodoro-cli 'finished' class. Triggering transition."
+                echo "DEBUG: Daemon detected pomodoro-cli 'finished' class. Triggering transition." >&2
                 handle_transition
             elif [[ "$pcli_status_class" == "stopped" ]]; then # Also check for 'stopped' class, as a fallback
-                debug_log "Daemon detected pomodoro-cli 'stopped' class while script state is 'Running'. Triggering transition."
+                echo "DEBUG: Daemon detected pomodoro-cli 'stopped' class while script state is 'Running'. Triggering transition." >&2
                 handle_transition
             fi
 
             # NEW: 5-second warning sound (continuous)
             local remaining_seconds=$(echo "$pcli_status_json" | jq -r '.tooltip' | grep -oP 'Left: \K[0-9:]+' | awk -F: '{ if (NF==2) print ($1*60)+$2; else print $1 }' | xargs)
-            debug_log "Daemon: Remaining seconds: $remaining_seconds"
+            echo "DEBUG: Daemon: Remaining seconds: $remaining_seconds" >&2
             if (( remaining_seconds > 0 && remaining_seconds <= 5 )); then
-                debug_log "Playing 5-second warning sound (continuous)."
+                echo "DEBUG: Playing 5-second warning sound (continuous)." >&2
                 play_sound
             fi
         fi
@@ -1118,18 +1165,11 @@ cmd_stop_daemon() {
     else
         echo "Pomodoro daemon not running (PID file not found)." >&2
     fi
-    # Kill the break locker process if it's running (fallback)
-    if [ -n "$_break_locker_pid" ] && kill -0 "$_break_locker_pid" 2>/dev/null; then
-        debug_log "Killing break locker process (PID: $_break_locker_pid) from stop-daemon."
-        kill -TERM "$_break_locker_pid" 2>/dev/null
-        _break_locker_pid="" # Clear the PID
-    fi
 }
 
 # --- NEW FUNCTION: cmd_cleanup ---
 # Command to perform a comprehensive cleanup of Pomodoro CLI related processes and files.
 cmd_cleanup() {
-    read_state # Ensure all state and config variables are loaded
     echo "Performing comprehensive Pomodoro CLI cleanup..." >&2
 
     # Stop the custom daemon if running
@@ -1187,10 +1227,10 @@ cmd_cleanup() {
     # Log the cleanup event (after most cleanup actions, but before potential Waybar restart)
     log_session_event \
         "System_Cleanup" \
-        "${current_session_type_on_cleanup:-None}" \
-        "${planned_duration_sec_on_cleanup:-0}" \
-        "${elapsed_on_cleanup:-0}" \
-        "${remaining_on_cleanup:-0}" \
+        "$current_session_type_on_cleanup" \
+        "$planned_duration_sec_on_cleanup" \
+        "$elapsed_on_cleanup" \
+        "$remaining_on_cleanup" \
         "Stopped" \
         "Comprehensive cleanup initiated. Session (if any) cancelled."
 
@@ -1238,20 +1278,16 @@ ARG5=""
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
         --testMode=ON)
-            sed -i 's/^TEST_MODE=".*"/TEST_MODE="ON"/' "$POMODORO_CONFIG_FILE"
-            source "$POMODORO_CONFIG_FILE" # Re-source to apply changes immediately
-            debug_log "Test mode set to ON persistently."
-            exit 0 # Exit after setting mode
+            echo "TEST_MODE=\"ON\"" > "$TEST_MODE_CONFIG_FILE"
+            TEST_MODE="ON" # Update in-memory variable for current run
+            echo "DEBUG: Test mode set to ON persistently." >&2
+            COMMAND="set-test-mode" # Use a dummy command to trigger the exit logic
             ;;
         --testMode=OFF)
-            sed -i 's/^TEST_MODE=".*"/TEST_MODE="OFF"/' "$POMODORO_CONFIG_FILE"
-            source "$POMODORO_CONFIG_FILE" # Re-source to apply changes immediately
-            debug_log "Test mode set to OFF persistently."
-            exit 0 # Exit after setting mode
-            ;;
-        --debug)
-            DEBUG_MODE="ON" # Override config for this run
-            debug_log "Debug mode enabled via command-line argument."
+            echo "TEST_MODE=\"OFF\"" > "$TEST_MODE_CONFIG_FILE"
+            TEST_MODE="OFF" # Update in-memory variable for current run
+            echo "DEBUG: Test mode set to OFF persistently." >&2
+            COMMAND="set-test-mode" # Use a dummy command to trigger the exit logic
             ;;
         start)
             COMMAND="start"
@@ -1296,7 +1332,7 @@ while [[ "$#" -gt 0 ]]; do
             shift 4 # Shift past the command and its 4 arguments
             ;;
         *)
-            echo "Usage: $0 [--testMode=ON|OFF] [--debug] {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
+            echo "Usage: $0 [--testMode=ON|OFF] {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
             exit 1
             ;;
     esac
@@ -1309,19 +1345,19 @@ if [ "$TEST_MODE" == "ON" ]; then
     WORK_DURATION="$WORK_DURATION_TEST"
     SHORT_BREAK_DURATION="$SHORT_BREAK_DURATION_TEST"
     LONG_BREAK_DURATION="$LONG_BREAK_DURATION_TEST"
-    debug_log "Test mode is ON. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC"
+    echo "DEBUG: Test mode is ON. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC" >&2
 else
     BREAK_LOCK_DELAY_SEC="$BREAK_LOCK_DELAY_SEC_DEFAULT"
     WORK_DURATION="$WORK_DURATION_DEFAULT"
     SHORT_BREAK_DURATION="$SHORT_BREAK_DURATION_DEFAULT"
     LONG_BREAK_DURATION="$LONG_BREAK_DURATION_DEFAULT"
-    debug_log "Test mode is OFF. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC"
+    echo "DEBUG: Test mode is OFF. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC" >&2
 fi
 
 # Execute the command
 if [ -z "$COMMAND" ]; then
-    echo "Usage: $0 [--testMode=ON|OFF] [--debug] {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
-    exit 1
+    echo "DEBUG: No command specified. Exiting after applying test mode settings." >&2
+    exit 0
 fi
 
 case "$COMMAND" in
@@ -1359,11 +1395,9 @@ case "$COMMAND" in
         echo "Starting Pomodoro CLI Web GUI..." >&2
         VENV_PATH="$POMODORO_DIR/venv_pomodoro" # Define virtual environment path
         if [ -d "$VENV_PATH" ]; then
-            source "$VENV_PATH/bin/activate" && python3 "$POMODORO_DIR/web_gui/app.py" &
-            web_gui_pid=$!
-            echo "Web GUI started with PID: $web_gui_pid. Output will appear here." >&2
-            echo "Opening http://127.0.0.1:5001/ in your default browser..." >&2
-            xdg-open http://127.0.0.1:5001/ &>/dev/null &
+            source "$VENV_PATH/bin/activate"
+            nohup python3 "$POMODORO_DIR/web_gui/app.py" > /tmp/pomodoro_web_gui.log 2>&1 &
+            echo "Web GUI started in background. Check /tmp/pomodoro_web_gui.log for output." >&2
         else
             echo "Error: Virtual environment not found at $VENV_PATH." >&2
             echo "Please create and activate it first: python3 -m venv venv_pomodoro && source venv_pomodoro/bin/activate && pip install Flask" >&2
@@ -1375,7 +1409,10 @@ case "$COMMAND" in
         # but kept for completeness in case it's called elsewhere or for debug.
         display_break_block "$ARG2" "$ARG3" "$ARG4" "$ARG5"
         ;;
-    
+    set-test-mode)
+        # This command is used internally to trigger exit after setting test mode
+        exit 0
+        ;;
     *)
         echo "Usage: $0 [--testMode=ON|OFF] {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
         exit 1
