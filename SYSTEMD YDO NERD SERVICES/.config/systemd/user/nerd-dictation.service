@@ -5,7 +5,7 @@ PartOf=graphical-session.target
 
 [Service]
 # Starts the daemon. --no-dmenu prevents a GUI from popping up at login
-ExecStart=/usr/bin/nerd-dictation begin 
+ExecStart=/home/aditya/dotfiles/scripts/toggle_nerd_dictation_TERMINAL.sh 
 
 Restart=on-failure
 # Wait 5 seconds before restarting on failure

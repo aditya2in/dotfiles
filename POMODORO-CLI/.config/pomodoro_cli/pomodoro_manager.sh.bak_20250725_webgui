@@ -1284,37 +1284,10 @@ case "$1" in
         # but kept for completeness in case it's called elsewhere or for debug.
         display_break_block "$2" "$3" "$4" "$5"
         ;;
-    web-gui)
-        cmd_web_gui
-        ;;
     *)
-        echo "Usage: "$0" {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
+        echo "Usage: "$0" {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start}" >&2
         exit 1
         ;;
 esac
-
-# Command to start the Web GUI
-cmd_web_gui() {
-    echo "Starting Pomodoro Web GUI..." >&2
-    local WEB_GUI_DIR="$POMODORO_DIR/pomodoro_web_gui"
-    local VENV_PYTHON="$WEB_GUI_DIR/venv/bin/python"
-    local APP_PY="$WEB_GUI_DIR/app.py"
-    local LOG_FILE="/tmp/pomodoro_flask_app.log"
-    local PORT="5001"
-
-    # Check if Flask app is already running
-    if pgrep -f "$APP_PY" > /dev/null; then
-        echo "Web GUI is already running." >&2
-    else
-        # Start Flask app in background, redirecting output to log file
-        nohup "$VENV_PYTHON" "$APP_PY" > "$LOG_FILE" 2>&1 &
-        echo "Web GUI started in background. Logs: $LOG_FILE" >&2
-    fi
-
-    # Wait a moment for the server to start and then open in browser
-    sleep 3
-    xdg-open "http://127.0.0.1:$PORT/" >/dev/null 2>&1
-    echo "Web GUI opened in browser." >&2
-}
 
 exit 0
