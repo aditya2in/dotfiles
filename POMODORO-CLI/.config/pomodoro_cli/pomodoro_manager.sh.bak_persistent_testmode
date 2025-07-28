@@ -3,20 +3,11 @@
 # -----------------------------------------------------------------------------
 # Configuration Variables
 # -----------------------------------------------------------------------------
+TEST_MODE="OFF" # Set to "ON" for testing durations, "OFF" for normal operation
+
 # Base directory for Pomodoro CLI related files
 POMODORO_DIR="$HOME/.config/pomodoro_cli"
-
-# Test Mode Configuration File
-TEST_MODE_CONFIG_FILE="$POMODORO_DIR/pomodoro_test_mode.conf"
-
-# Ensure test mode config file exists and is sourced
-if [ ! -f "$TEST_MODE_CONFIG_FILE" ]; then
-    echo "TEST_MODE=\"OFF\"" > "$TEST_MODE_CONFIG_FILE"
-fi
-source "$TEST_MODE_CONFIG_FILE"
-
 # Path to the state file
-
 STATE_FILE="$POMODORO_DIR/pomodoro_state.json"
 # Path to the sound file for notifications (ensure you place a WAV or OGG here)
 SOUND_FILE="$POMODORO_DIR/sounds/beep.wav"
@@ -1278,16 +1269,12 @@ ARG5=""
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
         --testMode=ON)
-            echo "TEST_MODE=\"ON\"" > "$TEST_MODE_CONFIG_FILE"
-            TEST_MODE="ON" # Update in-memory variable for current run
-            echo "DEBUG: Test mode set to ON persistently." >&2
-            COMMAND="set-test-mode" # Use a dummy command to trigger the exit logic
+            TEST_MODE="ON"
+            echo "DEBUG: Test mode explicitly set to ON." >&2
             ;;
         --testMode=OFF)
-            echo "TEST_MODE=\"OFF\"" > "$TEST_MODE_CONFIG_FILE"
-            TEST_MODE="OFF" # Update in-memory variable for current run
-            echo "DEBUG: Test mode set to OFF persistently." >&2
-            COMMAND="set-test-mode" # Use a dummy command to trigger the exit logic
+            TEST_MODE="OFF"
+            echo "DEBUG: Test mode explicitly set to OFF." >&2
             ;;
         start)
             COMMAND="start"
@@ -1408,10 +1395,6 @@ case "$COMMAND" in
         # This case is no longer actively used by start_session for breaks,\
         # but kept for completeness in case it's called elsewhere or for debug.
         display_break_block "$ARG2" "$ARG3" "$ARG4" "$ARG5"
-        ;;
-    set-test-mode)
-        # This command is used internally to trigger exit after setting test mode
-        exit 0
         ;;
     *)
         echo "Usage: $0 [--testMode=ON|OFF] {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2

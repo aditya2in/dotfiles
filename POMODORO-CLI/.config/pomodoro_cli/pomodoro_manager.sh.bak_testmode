@@ -3,20 +3,11 @@
 # -----------------------------------------------------------------------------
 # Configuration Variables
 # -----------------------------------------------------------------------------
+TEST_MODE="OFF" # Set to "ON" for testing durations, "OFF" for normal operation
+
 # Base directory for Pomodoro CLI related files
 POMODORO_DIR="$HOME/.config/pomodoro_cli"
-
-# Test Mode Configuration File
-TEST_MODE_CONFIG_FILE="$POMODORO_DIR/pomodoro_test_mode.conf"
-
-# Ensure test mode config file exists and is sourced
-if [ ! -f "$TEST_MODE_CONFIG_FILE" ]; then
-    echo "TEST_MODE=\"OFF\"" > "$TEST_MODE_CONFIG_FILE"
-fi
-source "$TEST_MODE_CONFIG_FILE"
-
 # Path to the state file
-
 STATE_FILE="$POMODORO_DIR/pomodoro_state.json"
 # Path to the sound file for notifications (ensure you place a WAV or OGG here)
 SOUND_FILE="$POMODORO_DIR/sounds/beep.wav"
@@ -43,7 +34,7 @@ OBSIDIAN_MARKDOWN_LOG_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro ses
 # --- NEW: Break Behavior Configuration ---
 BREAK_LOCK_DELAY_SEC_DEFAULT=30 # Seconds to wait before locking the screen during a break (default)
 BREAK_LOCK_DELAY_SEC_TEST=3   # Seconds to wait before locking the screen during a break (test)
-BREAK_LOCK_DELAY_SEC="" # Will be set after parsing arguments
+BREAK_LOCK_DELAY_SEC="$BREAK_LOCK_DELAY_SEC_DEFAULT" # Initialize with default
 
 # -------------------------------------
 # --- NEW: Markdown Log Configuration ---
@@ -62,9 +53,20 @@ WORK_DURATION_TEST="15s"
 SHORT_BREAK_DURATION_TEST="15s"
 LONG_BREAK_DURATION_TEST="15s"
 
-WORK_DURATION="" # Will be set after parsing arguments
-SHORT_BREAK_DURATION="" # Will be set after parsing arguments
-LONG_BREAK_DURATION="" # Will be set after parsing arguments
+WORK_DURATION="$WORK_DURATION_DEFAULT" # Initialize with default
+SHORT_BREAK_DURATION="$SHORT_BREAK_DURATION_DEFAULT" # Initialize with default
+LONG_BREAK_DURATION="$LONG_BREAK_DURATION_DEFAULT" # Initialize with default
+
+# --- Test Mode Logic ---
+if [ "$TEST_MODE" == "ON" ]; then
+    BREAK_LOCK_DELAY_SEC="$BREAK_LOCK_DELAY_SEC_TEST"
+    WORK_DURATION="$WORK_DURATION_TEST"
+    SHORT_BREAK_DURATION="$SHORT_BREAK_DURATION_TEST"
+    LONG_BREAK_DURATION="$LONG_BREAK_DURATION_TEST"
+    echo "DEBUG: Test mode is ON. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC" >&2
+else
+    echo "DEBUG: Test mode is OFF. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC" >&2
+fi
 
 # --- NEW: Evening Lock Configuration ---
 EVENING_LOCK_INTERVAL_SEC=30 # How often to check and potentially re-lock after evening lock time
@@ -1269,98 +1271,7 @@ cmd_quick_start() {
 
 
 # Main script logic: parse arguments
-COMMAND=""
-ARG2=""
-ARG3=""
-ARG4=""
-ARG5=""
-
-while [[ "$#" -gt 0 ]]; do
-    case "$1" in
-        --testMode=ON)
-            echo "TEST_MODE=\"ON\"" > "$TEST_MODE_CONFIG_FILE"
-            TEST_MODE="ON" # Update in-memory variable for current run
-            echo "DEBUG: Test mode set to ON persistently." >&2
-            COMMAND="set-test-mode" # Use a dummy command to trigger the exit logic
-            ;;
-        --testMode=OFF)
-            echo "TEST_MODE=\"OFF\"" > "$TEST_MODE_CONFIG_FILE"
-            TEST_MODE="OFF" # Update in-memory variable for current run
-            echo "DEBUG: Test mode set to OFF persistently." >&2
-            COMMAND="set-test-mode" # Use a dummy command to trigger the exit logic
-            ;;
-        start)
-            COMMAND="start"
-            ;;
-        pause)
-            COMMAND="pause"
-            ;;
-        resume)
-            COMMAND="resume"
-            ;;
-        stop)
-            COMMAND="stop"
-            ;;
-        reset)
-            COMMAND="reset"
-            ;;
-        status)
-            COMMAND="status"
-            ;;
-        daemon)
-            COMMAND="daemon"
-            ;;
-        stop-daemon)
-            COMMAND="stop-daemon"
-            ;;
-        cleanup)
-            COMMAND="cleanup"
-            ;;
-        quick-start)
-            COMMAND="quick-start"
-            ;;
-        web-gui)
-            COMMAND="web-gui"
-            ;;
-        run-display-block)
-            COMMAND="run-display-block"
-            # Capture arguments for run-display-block
-            ARG2="$2"
-            ARG3="$3"
-            ARG4="$4"
-            ARG5="$5"
-            shift 4 # Shift past the command and its 4 arguments
-            ;;
-        *)
-            echo "Usage: $0 [--testMode=ON|OFF] {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
-            exit 1
-            ;;
-    esac
-    shift
-done
-
-# Apply test mode settings after all arguments are parsed
-if [ "$TEST_MODE" == "ON" ]; then
-    BREAK_LOCK_DELAY_SEC="$BREAK_LOCK_DELAY_SEC_TEST"
-    WORK_DURATION="$WORK_DURATION_TEST"
-    SHORT_BREAK_DURATION="$SHORT_BREAK_DURATION_TEST"
-    LONG_BREAK_DURATION="$LONG_BREAK_DURATION_TEST"
-    echo "DEBUG: Test mode is ON. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC" >&2
-else
-    BREAK_LOCK_DELAY_SEC="$BREAK_LOCK_DELAY_SEC_DEFAULT"
-    WORK_DURATION="$WORK_DURATION_DEFAULT"
-    SHORT_BREAK_DURATION="$SHORT_BREAK_DURATION_DEFAULT"
-    LONG_BREAK_DURATION="$LONG_BREAK_DURATION_DEFAULT"
-    echo "DEBUG: Test mode is OFF. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC" >&2
-fi
-
-# Execute the command
-if [ -z "$COMMAND" ]; then
-    echo "DEBUG: No command specified. Exiting after applying test mode settings." >&2
-    exit 0
-fi
-
-case "$COMMAND" in
+case "$1" in
     start)
         cmd_start
         ;;
@@ -1369,7 +1280,7 @@ case "$COMMAND" in
         ;;
     resume)
         cmd_resume
-        ;;
+        ;;\
     stop)
         cmd_stop
         ;;
@@ -1407,14 +1318,10 @@ case "$COMMAND" in
     run-display-block)
         # This case is no longer actively used by start_session for breaks,\
         # but kept for completeness in case it's called elsewhere or for debug.
-        display_break_block "$ARG2" "$ARG3" "$ARG4" "$ARG5"
-        ;;
-    set-test-mode)
-        # This command is used internally to trigger exit after setting test mode
-        exit 0
+        display_break_block "$2" "$3" "$4" "$5"
         ;;
     *)
-        echo "Usage: $0 [--testMode=ON|OFF] {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
+        echo "Usage: "$0" {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
         exit 1
         ;;
 esac
