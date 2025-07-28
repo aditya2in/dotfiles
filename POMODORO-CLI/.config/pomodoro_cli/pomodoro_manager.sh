@@ -15,8 +15,6 @@ DAILY_LOG_FILE="$POMODORO_DIR/pomodoro_daily_log.txt"
 LOCK_FILE="$POMODORO_DIR/pomodoro_lock"
 # PID file for the daemon process
 DAEMON_PID_FILE="$POMODORO_DIR/pomodoro_daemon.pid"
-# Named pipe for communication
-FIFO_FILE="/tmp/pomodoro.pipe"
 
 # --- NEW: Routine Integration Configuration ---
 GET_ROUTINE_SCRIPT="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/get_current_CategoryAction.sh" # Updated script name
@@ -32,7 +30,7 @@ OBSIDIAN_BREAK_NOTE_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro sessi
 OBSIDIAN_MARKDOWN_LOG_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO mark down table data for obsidian Analysis.md" # <--- NEW: Path to the Markdown log file in Obsidian
 # ----------------------------------
 # --- NEW: Break Behavior Configuration ---
-BREAK_LOCK_DELAY_SEC=30 # Seconds to wait before locking the screen during a break
+BREAK_LOCK_DELAY_SEC=3 # Seconds to wait before locking the screen during a break
 # -------------------------------------
 # --- NEW: Markdown Log Configuration ---
 MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Analysis.md"
@@ -46,9 +44,9 @@ MARKDOWN_LOG_FILE="$POMODORO_DIR/POMODORO mark down table data for obsidian Anal
 # SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
 # LONG_BREAK_DURATION="30m" # Adjust these for your actual break times
 #10 seconds for testing
-WORK_DURATION="25m" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
-SHORT_BREAK_DURATION="5m" # Adjust these for your actual break times
-LONG_BREAK_DURATION="15m" # Adjust these for your actual long break times
+WORK_DURATION="15s" # <--- CONFIRM/REPLACE with your actual work duration (e.g., "25m")
+SHORT_BREAK_DURATION="15s" # Adjust these for your actual break times
+LONG_BREAK_DURATION="15s" # Adjust these for your actual long break times
 
 # --- NEW: Evening Lock Configuration ---
 EVENING_LOCK_INTERVAL_SEC=30 # How often to check and potentially re-lock after evening lock time
@@ -366,7 +364,7 @@ display_break_block() {
 
 
 # -----------------------------------------------------------------------------
-# Pomodoro Logic Functions (DAEMON-ONLY)
+# Pomodoro Logic Functions
 # -----------------------------------------------------------------------------
 
 # Starts a Pomodoro session (Work or Break)
@@ -668,27 +666,197 @@ update_current_routine_display_info() {
 
 # Command to start the Pomodoro timer.
 cmd_start() {
-    echo "start" > "$FIFO_FILE"
+    read_state
+    reset_daily_counts # Check for new day before starting
+    if [ "$_status" == "Running" ]; then
+        echo "Pomodoro is already running. Current session: "$_session_type"." >&2 # Redirected to stderr
+        return 0
+    fi
+    start_session "Work" "$WORK_DURATION" "Pomodoro Started!" "Time to focus for $(parse_duration_to_minutes_or_seconds "$(parse_duration_to_seconds "$WORK_DURATION")")."
 }
 
 # Command to pause the Pomodoro timer.
 cmd_pause() {
-    echo "pause" > "$FIFO_FILE"
+    read_state
+    if [ "$_status" == "Stopped" ]; then
+        echo "Pomodoro is not running. Cannot pause." >&2 # Redirected to stderr
+        return 0
+    fi
+
+    # Get current status for elapsed/remaining time before pausing
+    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
+    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
+    local elapsed_on_pause=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
+    local remaining_on_pause=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
+    
+    local planned_duration_sec_on_pause=0
+    case "$_session_type" in
+        "Work") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
+        "Break") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
+        "Long Break") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
+    esac
+
+    pomodoro-cli pause >/dev/null 2>/dev/null
+    _status="Paused"
+    write_state
+
+    # Log the pause event
+    log_session_event \
+        "Paused" \
+        "$_session_type" \
+        "$planned_duration_sec_on_pause" \
+        "$elapsed_on_pause" \
+        "$remaining_on_pause" \
+        "Paused" \
+        "User manually paused session."
+
+    send_notification "Pomodoro Paused" "Current session: "$_session_type"."
+    echo "Pomodoro paused." >&2 # Redirected to stderr
 }
 
 # Command to resume the Pomodoro timer.
 cmd_resume() {
-    echo "resume" > "$FIFO_FILE"
+    read_state
+    if [ "$_status" != "Paused" ]; then
+        echo "Pomodoro is not paused. Cannot resume." >&2 # Redirected to stderr
+        return 0
+    fi
+
+    # Retrieve remaining time from pomodoro-cli or stored state (if available)
+    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
+    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
+    local remaining_on_resume=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
+
+    local planned_duration_sec_on_resume=0
+    case "$_session_type" in
+        "Work") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
+        "Break") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
+        "Long Break") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
+    esac
+
+
+    pomodoro-cli start --resume >/dev/null 2>/dev/null
+    _status="Running"
+    write_state
+
+    # Log the resume event
+    log_session_event \
+        "Resumed" \
+        "$_session_type" \
+        "$planned_duration_sec_on_resume" \
+        "0" \
+        "$remaining_on_resume" \
+        "Running" \
+        "User manually resumed session."
+
+    send_notification "Pomodoro Resumed" "Current session: "$_session_type"."
+    echo "Pomodoro resumed." >&2 # Redirected to stderr
 }
 
 # Command to stop the Pomodoro timer.
 cmd_stop() {
-    echo "stop" > "$FIFO_FILE"
+    read_state
+    if [ "$_status" == "Stopped" ] && [ "$_session_type" == "None" ]; then
+        echo "Pomodoro is already stopped." >&2 # Redirected to stderr
+        return 0
+    fi
+
+    # Get current status for elapsed/remaining time before stopping
+    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
+    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
+    local elapsed_on_stop=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
+    local remaining_on_stop=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
+
+    local session_type_at_stop="$_session_type" # Capture before it's set to None
+    local planned_duration_sec_at_stop=0
+    case "$session_type_at_stop" in
+        "Work") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
+        "Break") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
+        "Long Break") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
+    esac
+
+    pomodoro-cli stop >/dev/null 2>/dev/null
+    _status="Stopped"
+    _session_type="None" # Reset session type on full stop
+    write_state
+
+    # Log the stop event
+    log_session_event \
+        "End (Stopped)" \
+        "$session_type_at_stop" \
+        "$planned_duration_sec_at_stop" \
+        "$elapsed_on_stop" \
+        "$remaining_on_stop" \
+        "Stopped" \
+        "User manually stopped session."
+
+    send_notification "Pomodoro Stopped" "Pomodoro timer has been stopped."
+    echo "Pomodoro stopped." >&2 # Redirected to stderr
 }
 
 # Command to reset the Pomodoro timer and state to default "Stopped" values, but preserves counts.
 cmd_reset() {
-    echo "reset" > "$FIFO_FILE"
+    echo "DEBUG: cmd_reset: Starting reset command." >&2
+    read_state # Load existing counts from state file into global variables
+
+    # Get current status for elapsed/remaining time before reset (if any session was running)
+    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
+    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
+    local elapsed_on_reset=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
+    local remaining_on_reset=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
+
+    local session_type_at_reset="$_session_type" # Capture before it's set to None
+    local planned_duration_sec_at_reset=0
+    case "$session_type_at_reset" in
+        "Work") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
+        "Break") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
+        "Long Break") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
+    esac
+
+    echo "DEBUG: cmd_reset: State after read_state: total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"'" >&2
+
+    pomodoro-cli reset >/dev/null 2>/dev/null
+
+    # Explicitly define the new status, session type, and last_run_date
+    # The counts (_total_pomodoro_cycles_today, _current_session_in_cycle)
+    # are kept as they were loaded by read_state and passed to jq directly.
+    local new_status="Stopped"
+    local new_session_type="None"
+    local new_last_run_date=$(date +%Y-%m-%d)
+
+    echo "DEBUG: cmd_reset: Values to write: status='"$new_status"', session_type='"$new_session_type"', total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"', last_date='"$new_last_run_date"'" >&2
+
+    # Perform the state write directly here, explicitly passing all required values.
+    # This avoids potential issues with global variables implicitly changing before write_state.
+    acquire_lock # Acquire lock for this explicit write
+    jq -n \
+        --arg status "$new_status" \
+        --arg session_type "$new_session_type" \
+        --arg total_cycles "$_total_pomodoro_cycles_today" \
+        --arg current_cycle "$_current_session_in_cycle" \
+        --arg last_run_date "$new_last_run_date" \
+        '{
+            "status": $status,
+            "session_type": $session_type,
+            "total_pomodoro_cycles_today": ($total_cycles | tonumber),
+            "current_session_in_cycle": ($current_cycle | tonumber),
+            "last_run_date": $last_run_date
+        }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+    release_lock # Release lock after this explicit write
+    echo "DEBUG: cmd_reset: State written to file (via inline jq)." >&2
+
+    # Log the reset event
+    log_session_event \
+        "End (Cancelled)" \
+        "$session_type_at_reset" \
+        "$planned_duration_sec_at_reset" \
+        "$elapsed_on_reset" \
+        "$remaining_on_reset" \
+        "Stopped" \
+        "User manually reset session. Counts preserved."
+
+    send_notification "Pomodoro Reset" "Timer and current session have been reset to Stopped. Counts are preserved."
+    echo "Pomodoro timer and session status have been reset. Counts are preserved." >&2
 }
 
 # Command to get the current status for Waybar (outputs JSON).
@@ -846,27 +1014,6 @@ cmd_daemon() {
     echo "DEBUG: Pomodoro daemon started. Monitoring sessions..." >&2
     # Loop indefinitely to check the timer
     while true; do
-        # Read commands from the named pipe
-        if read -t 1 command <"$FIFO_FILE"; then
-            case "$command" in
-                start)
-                    cmd_start_daemon
-                    ;;
-                pause)
-                    cmd_pause_daemon
-                    ;;
-                resume)
-                    cmd_resume_daemon
-                    ;;
-                stop)
-                    cmd_stop_daemon_logic
-                    ;;
-                reset)
-                    cmd_reset_daemon
-                    ;;
-            esac
-        fi
-
         read_state # Always read the latest state
         reset_daily_counts # Ensure daily reset even if daemon runs continuously
 
@@ -1050,202 +1197,6 @@ cmd_quick_start() {
     echo "Quick start sequence complete." >&2
 }
 
-# -----------------------------------------------------------------------------
-# Daemon-specific Logic Functions
-# -----------------------------------------------------------------------------
-
-cmd_start_daemon() {
-    read_state
-    reset_daily_counts # Check for new day before starting
-    if [ "$_status" == "Running" ]; then
-        echo "Pomodoro is already running. Current session: "$_session_type"." >&2 # Redirected to stderr
-        return 0
-    fi
-    start_session "Work" "$WORK_DURATION" "Pomodoro Started!" "Time to focus for $(parse_duration_to_minutes_or_seconds "$(parse_duration_to_seconds "$WORK_DURATION")")."
-}
-
-cmd_pause_daemon() {
-    read_state
-    if [ "$_status" == "Stopped" ]; then
-        echo "Pomodoro is not running. Cannot pause." >&2 # Redirected to stderr
-        return 0
-    fi
-
-    # Get current status for elapsed/remaining time before pausing
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local elapsed_on_pause=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
-    local remaining_on_pause=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-    
-    local planned_duration_sec_on_pause=0
-    case "$_session_type" in
-        "Work") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_on_pause="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
-    pomodoro-cli pause >/dev/null 2>/dev/null
-    _status="Paused"
-    write_state
-
-    # Log the pause event
-    log_session_event \
-        "Paused" \
-        "$_session_type" \
-        "$planned_duration_sec_on_pause" \
-        "$elapsed_on_pause" \
-        "$remaining_on_pause" \
-        "Paused" \
-        "User manually paused session."
-
-    send_notification "Pomodoro Paused" "Current session: "$_session_type"."
-    echo "Pomodoro paused." >&2 # Redirected to stderr
-}
-
-cmd_resume_daemon() {
-    read_state
-    if [ "$_status" != "Paused" ]; then
-        echo "Pomodoro is not paused. Cannot resume." >&2 # Redirected to stderr
-        return 0
-    fi
-
-    # Retrieve remaining time from pomodoro-cli or stored state (if available)
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local remaining_on_resume=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-
-    local planned_duration_sec_on_resume=0
-    case "$_session_type" in
-        "Work") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_on_resume="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
-
-    pomodoro-cli start --resume >/dev/null 2>/dev/null
-    _status="Running"
-    write_state
-
-    # Log the resume event
-    log_session_event \
-        "Resumed" \
-        "$_session_type" \
-        "$planned_duration_sec_on_resume" \
-        "0" \
-        "$remaining_on_resume" \
-        "Running" \
-        "User manually resumed session."
-
-    send_notification "Pomodoro Resumed" "Current session: "$_session_type"."
-    echo "Pomodoro resumed." >&2 # Redirected to stderr
-}
-
-cmd_stop_daemon_logic() {
-    read_state
-    if [ "$_status" == "Stopped" ] && [ "$_session_type" == "None" ]; then
-        echo "Pomodoro is already stopped." >&2 # Redirected to stderr
-        return 0
-    fi
-
-    # Get current status for elapsed/remaining time before stopping
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local elapsed_on_stop=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
-    local remaining_on_stop=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-
-    local session_type_at_stop="$_session_type" # Capture before it's set to None
-    local planned_duration_sec_at_stop=0
-    case "$session_type_at_stop" in
-        "Work") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_at_stop="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
-    pomodoro-cli stop >/dev/null 2>/dev/null
-    # NEW: Kill the break locker script if it's running
-    pkill -f break_frequent_locker.sh
-    _status="Stopped"
-    _session_type="None" # Reset session type on full stop
-    write_state
-
-    # Log the stop event
-    log_session_event \
-        "End (Stopped)" \
-        "$session_type_at_stop" \
-        "$planned_duration_sec_at_stop" \
-        "$elapsed_on_stop" \
-        "$remaining_on_stop" \
-        "Stopped" \
-        "User manually stopped session."
-
-    send_notification "Pomodoro Stopped" "Pomodoro timer has been stopped."
-    echo "Pomodoro stopped." >&2 # Redirected to stderr
-}
-
-cmd_reset_daemon() {
-    echo "DEBUG: cmd_reset: Starting reset command." >&2
-    read_state # Load existing counts from state file into global variables
-
-    # Get current status for elapsed/remaining time before reset (if any session was running)
-    local raw_pcli_output=$(pomodoro-cli status --format json --time-format digital 2>/dev/null)
-    local pcli_json=$(echo "$raw_pcli_output" | sed -n 's/^[^\{]*\(.*\)/\1/p' || echo '{}')
-    local elapsed_on_reset=$(echo "$pcli_json" | jq -r '.elapsed // 0 | tonumber')
-    local remaining_on_reset=$(echo "$pcli_json" | jq -r '.remaining // 0 | tonumber')
-
-    local session_type_at_reset="$_session_type" # Capture before it's set to None
-    local planned_duration_sec_at_reset=0
-    case "$session_type_at_reset" in
-        "Work") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$WORK_DURATION")" ;;
-        "Break") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$SHORT_BREAK_DURATION")" ;;
-        "Long Break") planned_duration_sec_at_reset="$(parse_duration_to_seconds "$LONG_BREAK_DURATION")" ;;
-    esac
-
-    echo "DEBUG: cmd_reset: State after read_state: total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"'" >&2
-
-    pomodoro-cli reset >/dev/null 2>/dev/null
-
-    # Explicitly define the new status, session type, and last_run_date
-    # The counts (_total_pomodoro_cycles_today, _current_session_in_cycle)
-    # are kept as they were loaded by read_state and passed to jq directly.
-    local new_status="Stopped"
-    local new_session_type="None"
-    local new_last_run_date=$(date +%Y-%m-%d)
-
-    echo "DEBUG: cmd_reset: Values to write: status='"$new_status"', session_type='"$new_session_type"', total_cycles='"$_total_pomodoro_cycles_today"', current_cycle='"$_current_session_in_cycle"', last_date='"$new_last_run_date"'" >&2
-
-    # Perform the state write directly here, explicitly passing all required values.
-    # This avoids potential issues with global variables implicitly changing before write_state.
-    acquire_lock # Acquire lock for this explicit write
-    jq -n \
-        --arg status "$new_status" \
-        --arg session_type "$new_session_type" \
-        --arg total_cycles "$_total_pomodoro_cycles_today" \
-        --arg current_cycle "$_current_session_in_cycle" \
-        --arg last_date "$new_last_run_date" \
-        '{
-            "status": $status,
-            "session_type": $session_type,
-            "total_pomodoro_cycles_today": ($total_cycles | tonumber),
-            "current_session_in_cycle": ($current_cycle | tonumber),
-            "last_run_date": $last_run_date
-        }' > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
-    release_lock # Release lock after this explicit write
-    echo "DEBUG: cmd_reset: State written to file (via inline jq)." >&2
-
-    # Log the reset event
-    log_session_event \
-        "End (Cancelled)" \
-        "$session_type_at_reset" \
-        "$planned_duration_sec_at_reset" \
-        "$elapsed_on_reset" \
-        "$remaining_on_reset" \
-        "Stopped" \
-        "User manually reset session. Counts preserved."
-
-    send_notification "Pomodoro Reset" "Timer and current session have been reset to Stopped. Counts are preserved."
-    echo "Pomodoro timer and session status have been reset. Counts are preserved." >&2
-}
-
 
 # Main script logic: parse arguments
 case "$1" in
@@ -1257,7 +1208,7 @@ case "$1" in
         ;;
     resume)
         cmd_resume
-        ;;
+        ;;\
     stop)
         cmd_stop
         ;;
@@ -1284,37 +1235,10 @@ case "$1" in
         # but kept for completeness in case it's called elsewhere or for debug.
         display_break_block "$2" "$3" "$4" "$5"
         ;;
-    web-gui)
-        cmd_web_gui
-        ;;
     *)
-        echo "Usage: "$0" {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start|web-gui}" >&2
+        echo "Usage: "$0" {start|pause|resume|stop|reset|status|daemon|stop-daemon|cleanup|quick-start}" >&2
         exit 1
         ;;
 esac
-
-# Command to start the Web GUI
-cmd_web_gui() {
-    echo "Starting Pomodoro Web GUI..." >&2
-    local WEB_GUI_DIR="$POMODORO_DIR/pomodoro_web_gui"
-    local VENV_PYTHON="$WEB_GUI_DIR/venv/bin/python"
-    local APP_PY="$WEB_GUI_DIR/app.py"
-    local LOG_FILE="/tmp/pomodoro_flask_app.log"
-    local PORT="5001"
-
-    # Check if Flask app is already running
-    if pgrep -f "$APP_PY" > /dev/null; then
-        echo "Web GUI is already running." >&2
-    else
-        # Start Flask app in background, redirecting output to log file
-        nohup "$VENV_PYTHON" "$APP_PY" > "$LOG_FILE" 2>&1 &
-        echo "Web GUI started in background. Logs: $LOG_FILE" >&2
-    fi
-
-    # Wait a moment for the server to start and then open in browser
-    sleep 3
-    xdg-open "http://127.0.0.1:$PORT/" >/dev/null 2>&1
-    echo "Web GUI opened in browser." >&2
-}
 
 exit 0
