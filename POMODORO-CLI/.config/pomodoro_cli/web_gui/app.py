@@ -39,6 +39,15 @@ DEFAULT_CONFIG = {
 
 # --- Utility Functions ---
 
+def read_raw_config_file():
+    try:
+        with open(POMODORO_CONFIG_FILE, 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        return f"Error: {POMODORO_CONFIG_FILE} not found."
+    except Exception as e:
+        return f"Error reading raw config file: {e}"
+
 def get_current_config():
     config = {}
     try:
@@ -347,7 +356,8 @@ def index():
                            daemon_status=daemon_status, # Pass daemon status to template
                            theme_mode=current_config.get("THEME_MODE", "dark"), # Pass theme mode to template
                            message=message,
-                           error=error)
+                           error=error,
+                           raw_config_content=read_raw_config_file())
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

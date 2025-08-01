@@ -27,9 +27,6 @@ if [ ! -f "$POMODORO_CONFIG_FILE" ]; then
 fi
 source "$POMODORO_CONFIG_FILE"
 
-# Unscheduled Reminder Configuration
-_last_unscheduled_reminder_timestamp=0 # Timestamp of the last unscheduled reminder
-
 # Define Obsidian paths using variables from config
 OBSIDIAN_BREAK_NOTE_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO BREAK FILE.md"
 OBSIDIAN_MARKDOWN_LOG_PATH="$OBSIDIAN_VAULT_PATH/All Things/Journal/Pomodoro session records/POMODORO mark down table data for obsidian Analysis.md"
@@ -57,8 +54,6 @@ DAILY_LOG_FILE="$POMODORO_DIR/pomodoro_daily_log.txt"
 LOCK_FILE="$POMODORO_DIR/pomodoro_lock"
 # PID file for the daemon process
 DAEMON_PID_FILE="$POMODORO_DIR/pomodoro_daemon.pid"
-# PID file for the break locker process
-BREAK_LOCKER_PID_FILE="$POMODORO_DIR/break_locker.pid"
 
 # --- NEW: Routine Integration Configuration ---
 GET_ROUTINE_SCRIPT="$HOME/.config/pomodoro_cli/RoutineTaskSubTaskScripts/get_current_CategoryAction.sh" # Updated script name
@@ -220,9 +215,7 @@ reset_daily_counts() {
         pomodoro-cli stop >/dev/null 2>/dev/null
 
         write_state # Write the fully reset state to the file
-        return 1 # Signal that a new day was detected
     fi
-    return 0 # Signal it's the same day
 }
 
 # Plays a notification sound.
@@ -331,7 +324,7 @@ urlencode() {
 
 
 
-_break_frequent_locker() {
+display_break_block() {    local duration_seconds="$1"    local display_var="$2"      # Passed from start_session    local xauthority_var="$3"   # Passed from start_session    local dbus_address_var="$4" # Passed from start_session    # Explicitly set environment variables for swaylock to connect to the correct display    # While swaylock is Wayland native, passing these ensures consistency and might help XWayland compatibility if any part needs it.    export DISPLAY="$display_var"    export XAUTHORITY="$xauthority_var"    export DBUS_SESSION_BUS_ADDRESS="$dbus_address_var"    debug_log "display_break_block: DISPLAY=$DISPLAY, XAUTHORITY=$XAUTHORITY, DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS"        local break_duration_text=$(parse_duration_to_minutes_or_seconds "$duration_seconds")        # Define the message content with Pango markup for large, centered text    # Using a very large font size (e.g., 200) for maximum impact on screen.    local pango_message_content="<span font_desc='Noto Sans Bold 200' foreground='#eceff4'>Time to get up and go to relax and take a break!</span>\n\n"    pango_message_content+="<span font_desc='Noto Sans Bold 100' foreground='#eceff4'>This break is for ${break_duration_text}.</span>\n\n"    pango_message_content+="<span font_desc='Noto Sans Bold 100' foreground='#eceff4'>Rest, come back after your break.</span>"    # Temporary image file for the message    local temp_image="/tmp/pomodoro_break_message_$(date +%s%N).png"    debug_log "Generating temporary image for swaylock: "$temp_image""    # Generate the PNG image with the message using pango-view    # -o: output file, --font: font description, --markup: enable pango markup    # --width, --height: ensure a large enough canvas for the text    # --background: make it transparent for layering on swaylock    # FIX: Quoted 'rgba(0,0,0,0)' to prevent shell syntax error.    pango-view --markup --text="$pango_message_content"         -o "$temp_image"         --width=1920 --height=1080 --background='rgba(0,0,0,0)' >/dev/null 2>&1    if [ ! -f "$temp_image" ]; then        echo "Error: Failed to generate temporary image for break block. Swaylock will use default background." >&2        # Fallback for swaylock if image generation fails (it will use its default config)        swaylock --daemonize >/dev/null 2>&1 &    else        debug_log "Launching swaylock with custom image."        # Launch swaylock with the generated image as background        # --daemonize: run in background        # --image: specify the background image        # You might need to configure swaylock further (e.g., blur, indicators) via its config file        swaylock --image "$temp_image" --daemonize >/dev/null 2>&1 &    fi    # Get the PID of the last background command (swaylock)    local swaylock_pid=$!    debug_log "Swaylock launched with PID: "$swaylock_pid". Sleeping for "$duration_seconds" seconds."    # Wait for the duration    sleep "$duration_seconds"    debug_log "Attempting to kill swaylock (PID: "$swaylock_pid")."    # Kill swaylock to unlock the screen    kill -TERM "$swaylock_pid" 2>/dev/null    # Clean up the temporary image file    rm -f "$temp_image"    debug_log "Swaylock killed and temporary image removed."}# -----------------------------------------------------------------------------# Frequent Break Locker (Merged from break_frequent_locker.sh)# -----------------------------------------------------------------------------_break_frequent_locker() {
     # --- Argument Check ---
     if [ -z "$1" ]; then
         echo "Error: Duration in seconds is required." >&2
@@ -354,18 +347,6 @@ _break_frequent_locker() {
     done
 
     debug_log "Frequent lock period finished."
-}
-
-# Kills the break locker process if it is running.
-kill_break_locker() {
-    if [ -f "$BREAK_LOCKER_PID_FILE" ]; then
-        local pid_to_kill=$(cat "$BREAK_LOCKER_PID_FILE")
-        if kill -0 "$pid_to_kill" 2>/dev/null; then
-            debug_log "Stopping break locker process (PID: $pid_to_kill)."
-            kill -TERM "$pid_to_kill" 2>/dev/null
-        fi
-        rm -f "$BREAK_LOCKER_PID_FILE"
-    fi
 }
 
 # -----------------------------------------------------------------------------
@@ -443,8 +424,9 @@ start_session() {
 
             # --- NEW: Use the frequent locker during breaks ---
             local duration_in_seconds=$(parse_duration_to_seconds "$duration_str")
-            _break_frequent_locker "$duration_in_seconds" &            echo $! > "$BREAK_LOCKER_PID_FILE"
-            debug_log "Started frequent screen lock for the break duration (PID: $(cat "$BREAK_LOCKER_PID_FILE"))."
+            _break_frequent_locker "$duration_in_seconds" &
+            _break_locker_pid=$!
+            debug_log "Started frequent screen lock for the break duration (PID: $_break_locker_pid)."
             # --- END NEW ---
         else
             echo "Warning: Could not find Obsidian window on Workspace 2 after launch. Skipping window moves." >&2
@@ -520,8 +502,6 @@ handle_transition() {
         write_state
         send_notification "Break Over!" "Time to start a new Work session when you're ready."
         echo "Break finished. Please start your next Work session manually." >&2 # Debug/info to terminal
-
-        kill_break_locker # Stop the frequent locker
 
         # NEW: Revert window manipulation after break
         hyprctl dispatch workspace 9 # Ensure we are on workspace 9
@@ -800,7 +780,12 @@ cmd_stop() {
     send_notification "Pomodoro Stopped" "Pomodoro timer has been stopped."
     echo "Pomodoro stopped." >&2 # Redirected to stderr
 
-    kill_break_locker # Ensure locker is stopped
+    # Kill the break locker process if it's running
+    if [ -n "$_break_locker_pid" ] && kill -0 "$_break_locker_pid" 2>/dev/null; then
+        debug_log "Killing break locker process (PID: $_break_locker_pid)."
+        kill -TERM "$_break_locker_pid" 2>/dev/null
+        _break_locker_pid="" # Clear the PID
+    fi
 }
 
 # Command to reset the Pomodoro timer and state to default "Stopped" values, but preserves counts.
@@ -1017,7 +1002,7 @@ _evening_lock() {
     # Configuration
     local LOCK_START_TIME="$LOCK_START_TIME_CONFIG" # Configurable start time
     local LOCK_END_TIME="0700"   # 7 AM (07:00 in 24-hour format) - next day
-    LOCK_FREQUENCY_SEC="$LOCK_FREQUENCY_CONFIG" # Configurable lock frequency
+    local LOCK_FREQUENCY_SEC="$LOCK_FREQUENCY_CONFIG" # Configurable lock frequency
 
     # Get current time in HHMM format
     local CURRENT_TIME=$(date +%H%M)
@@ -1049,13 +1034,7 @@ cmd_daemon() {
     # Loop indefinitely to check the timer
     while true; do
         read_state # Always read the latest state
-        reset_daily_counts
-        local is_new_day=$?
-
-        if [ "$is_new_day" -eq 1 ]; then
-            debug_log "New day detected by daemon, starting a fresh work session..."
-            cmd_start
-        fi
+        reset_daily_counts # Ensure daily reset even if daemon runs continuously
 
         # NEW: Check for evening lock (controlled frequency)
         if [ "$EVENING_LOCK_ENABLED" == "ON" ]; then
@@ -1069,23 +1048,6 @@ cmd_daemon() {
             fi
         else
             debug_log "Evening lock is disabled."
-        fi
-        # END NEW
-
-        # NEW: Unscheduled session reminder
-        if [ "$UNSCHEDULED_REMINDER_ENABLED" == "ON" ]; then
-            local current_timestamp=$(date +%s)
-            if [ "$_status" == "Stopped" ] || [ "$_status" == "Paused" ]; then
-                if (( current_timestamp - _last_unscheduled_reminder_timestamp >= UNSCHEDULED_REMINDER_INTERVAL_SEC )); then
-                    send_notification "Pomodoro Reminder" "No session active! Time to start a new Work session and be mindful."
-                    _last_unscheduled_reminder_timestamp=$current_timestamp
-                    debug_log "Sent unscheduled session reminder."
-                else
-                    debug_log "Skipping unscheduled reminder, too soon. Last attempt: $_last_unscheduled_reminder_timestamp"
-                fi
-            fi
-        else
-            debug_log "Unscheduled reminder is disabled."
         fi
         # END NEW
 
@@ -1148,7 +1110,6 @@ cmd_stop_daemon() {
     if [ -f "$DAEMON_PID_FILE" ]; then
         local pid=$(cat "$DAEMON_PID_FILE")
         if kill -TERM "$pid" 2>/dev/null; then
-            cmd_stop # Stop any active Pomodoro session and screen locking
             echo "Pomodoro daemon (PID: "$pid") stopped." >&2
             rm -f "$DAEMON_PID_FILE"
         else
@@ -1157,7 +1118,12 @@ cmd_stop_daemon() {
     else
         echo "Pomodoro daemon not running (PID file not found)." >&2
     fi
-    kill_break_locker # Fallback to ensure locker is stopped
+    # Kill the break locker process if it's running (fallback)
+    if [ -n "$_break_locker_pid" ] && kill -0 "$_break_locker_pid" 2>/dev/null; then
+        debug_log "Killing break locker process (PID: $_break_locker_pid) from stop-daemon."
+        kill -TERM "$_break_locker_pid" 2>/dev/null
+        _break_locker_pid="" # Clear the PID
+    fi
 }
 
 # --- NEW FUNCTION: cmd_cleanup ---
@@ -1169,8 +1135,6 @@ cmd_cleanup() {
     # Stop the custom daemon if running
     ~/.config/pomodoro_cli/pomodoro_manager.sh stop-daemon &>/dev/null
     echo "Cleanup: Daemon stopped." >&2
-
-    kill_break_locker # Ensure the locker is stopped
 
     # Kill any lingering pomodoro-cli instances
     killall pomodoro-cli 2>/dev/null || true
@@ -1353,10 +1317,6 @@ else
     LONG_BREAK_DURATION="$LONG_BREAK_DURATION_DEFAULT"
     debug_log "Test mode is OFF. Durations set to: Work=$WORK_DURATION, Short Break=$SHORT_BREAK_DURATION, Long Break=$LONG_BREAK_DURATION, Lock Delay=$BREAK_LOCK_DELAY_SEC"
 fi
-
-# Set the lock frequency globally from the config
-LOCK_FREQUENCY_SEC="$LOCK_FREQUENCY_CONFIG"
-debug_log "Lock frequency set to: $LOCK_FREQUENCY_SEC seconds"
 
 # Execute the command
 if [ -z "$COMMAND" ]; then
