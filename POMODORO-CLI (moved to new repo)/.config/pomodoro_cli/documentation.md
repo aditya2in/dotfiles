@@ -116,7 +116,15 @@ A WAV audio file used for desktop notifications.
 
 ### 3.8 `web_gui/`
 
-(If implemented) This directory would contain files for a web-based graphical user interface, typically `app.py` (Flask application), `static/` for static assets, and `templates/` for HTML templates. The `pomodoro_manager.sh web-gui` command would launch this.
+This directory contains files for the web-based graphical user interface.
+
+*   **`app.py` (Flask Application):** The core Python Flask application that provides the web interface. It now uses Python's `logging` module instead of `print()` statements for all its output, directing logs to `pomodoro_web_gui.log`.
+*   **`static/`:** Contains static assets like CSS, JavaScript, and images for the web interface.
+*   **`templates/`:** Stores HTML templates rendered by the Flask application.
+
+### 3.9 `pomodoro_web_gui.log`
+
+A log file located at `$POMODORO_DIR/pomodoro_web_gui.log` that captures all debug, informational, and error messages from the Flask web GUI application. This file is managed by a `RotatingFileHandler` to prevent it from growing indefinitely.
 
 ---
 
@@ -217,7 +225,7 @@ All commands are executed via `pomodoro_manager.sh <command>`.
 *   `stop-daemon`: Stops the background daemon process. **Crucially, it now also calls `cmd_stop` to ensure any active session and screen locking are terminated.**
 *   `cleanup`: Performs a comprehensive cleanup: stops daemon, kills `pomodoro-cli` and `yad` processes, removes state, lock, and PID files (preserving daily logs).
 *   `quick-start`: A convenience command that stops the old daemon, restarts Waybar, starts a new daemon, and then starts a new work session.
-*   `web-gui`: (If implemented) Launches the Python Flask web GUI.
+*   `web-gui`: Launches the Python Flask web GUI. Its output (stdout/stderr) is now redirected to `/dev/null` as the Flask application handles its own logging to `pomodoro_web_gui.log`.
 *   `--testMode=ON|OFF`: Persistently enables or disables test mode in `pomodoro_config.conf`, which uses shorter durations for testing.
 *   `--debug`: Enables verbose debug logging for the current script execution.
 

@@ -5,7 +5,20 @@ from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 import zoneinfo # Python 3.9+ for timezone support
 
+import logging
+from logging.handlers import RotatingFileHandler
+
 app = Flask(__name__)
+
+# Configure logging
+log_file = os.path.join(os.path.expanduser("~/.config/pomodoro_cli"), "pomodoro_web_gui.log")
+handler = RotatingFileHandler(log_file, maxBytes=10000, backupCount=1)
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.DEBUG)
+
 
 # --- Configuration ---
 POMODORO_MANAGER_SCRIPT = os.path.expanduser("~/.config/pomodoro_cli/pomodoro_manager.sh")
@@ -76,11 +89,14 @@ def get_current_config():
             config["LONG_BREAK_DURATION"] = config.get("LONG_BREAK_DURATION_DEFAULT", "N/A")
             config["BREAK_LOCK_DELAY_SEC"] = config.get("BREAK_LOCK_DELAY_SEC_DEFAULT", "N/A")
 
-        # Handle EVENING_LOCK_ENABLED as a boolean for the UI
-        if config.get("EVENING_LOCK_INTERVAL_SEC") and config["EVENING_LOCK_INTERVAL_SEC"] != "0":
-            config["EVENING_LOCK_ENABLED"] = "on"
+        # Normalize EVENING_LOCK_ENABLED for UI as explicit "ON"/"OFF"
+        # Prefer the explicit flag from config; do not infer from interval
+        if "EVENING_LOCK_ENABLED" in config:
+            config["EVENING_LOCK_ENABLED"] = (
+                "ON" if str(config["EVENING_LOCK_ENABLED"]).upper() == "ON" else "OFF"
+            )
         else:
-            config["EVENING_LOCK_ENABLED"] = "off"
+            config["EVENING_LOCK_ENABLED"] = DEFAULT_CONFIG["EVENING_LOCK_ENABLED"]
 
         # Get local timezone for display
         try:
@@ -92,7 +108,7 @@ def get_current_config():
             config["LOCAL_TIMEZONE"] = "Unknown (Install 'tzdata' or use Python 3.9+)"
 
     except FileNotFoundError:
-        print(f"Error: {POMODORO_CONFIG_FILE} not found. Creating with defaults.")
+        app.logger.warning(f"Error: {POMODORO_CONFIG_FILE} not found. Creating with defaults.")
         # If config file not found, create it with defaults and then read
         with open(POMODORO_CONFIG_FILE, 'w') as f:
             f.write("# Pomodoro Configuration\n")
@@ -119,22 +135,25 @@ def get_current_config():
             f.write(f"""THEME_MODE="{DEFAULT_CONFIG['THEME_MODE']}"\n""")
         return get_current_config() # Recurse to read the newly created file
     except Exception as e:
-        print(f"Error reading config: {e}")
+        app.logger.error(f"Error reading config: {e}")
         return None
     return config
 
 def update_config(new_config_values):
-    print(f"DEBUG: Starting update_config with values: {new_config_values}")
+    app.logger.debug(f"Starting update_config with values: {new_config_values}")
     try:
         with open(POMODORO_CONFIG_FILE, 'r') as f:
             config_content = f.readlines()
-        print(f"DEBUG: Original config content length: {len(config_content)}")
+        app.logger.debug(f"Original config content length: {len(config_content)}")
 
         updated_lines = []
         
         # Extract special handling values first
         test_mode_value = new_config_values.pop("TEST_MODE", None)
         evening_lock_enabled_value = new_config_values.pop("EVENING_LOCK_ENABLED", None)
+        if evening_lock_enabled_value is not None:
+            # Normalize incoming values from the form ("ON"/"OFF") to lowercase for comparisons
+            normalized_evening_lock = str(evening_lock_enabled_value).strip().lower()
 
         # Create a set of keys that are explicitly handled to avoid processing them again
         explicitly_handled_keys = {
@@ -153,12 +172,16 @@ def update_config(new_config_values):
                 updated_lines.append(f"""TEST_MODE="{test_mode_value}"\n""")
                 updated = True
             
-            # Handle EVENING_LOCK_ENABLED (which controls EVENING_LOCK_INTERVAL_SEC)
+            # Handle EVENING_LOCK_ENABLED flag itself
+            elif evening_lock_enabled_value is not None and stripped_line.startswith("EVENING_LOCK_ENABLED="):
+                on_off_literal = "ON" if normalized_evening_lock == "on" else "OFF"
+                updated_lines.append(f"""EVENING_LOCK_ENABLED="{on_off_literal}"
+""")
+                updated = True
+
+            # Handle EVENING_LOCK_INTERVAL_SEC in tandem (treat OFF => 0, ON => default interval)
             elif evening_lock_enabled_value is not None and stripped_line.startswith("EVENING_LOCK_INTERVAL_SEC="):
-                if evening_lock_enabled_value == "on":
-                    interval_value = DEFAULT_CONFIG["EVENING_LOCK_INTERVAL_SEC"]
-                else:
-                    interval_value = "0"
+                interval_value = DEFAULT_CONFIG["EVENING_LOCK_INTERVAL_SEC"] if normalized_evening_lock == "on" else "0"
                 updated_lines.append(f"""EVENING_LOCK_INTERVAL_SEC={interval_value}
 """)
                 updated = True
@@ -211,16 +234,16 @@ def update_config(new_config_values):
 
         with open(POMODORO_CONFIG_FILE, 'w') as f:
             f.writelines(updated_lines)
-        print("DEBUG: Config file write successful.")
+        app.logger.debug("Config file write successful.")
 
         # After updating the config file, trigger pomodoro_manager.sh to re-source it
         # This ensures the shell script's internal variables are updated.
         subprocess.run([POMODORO_MANAGER_SCRIPT, "status"], check=False, capture_output=True) # Run a dummy command to trigger sourcing
-        print("DEBUG: Triggered pomodoro_manager.sh to re-source config.")
+        app.logger.debug("Triggered pomodoro_manager.sh to re-source config.")
 
         return True
     except Exception as e:
-        print(f"ERROR: Exception during update_config: {e}")
+        app.logger.error(f"ERROR: Exception during update_config: {e}")
         return False
 
 # --- Utility Functions ---
@@ -270,7 +293,7 @@ def execute_pomodoro_command(command):
     except FileNotFoundError:
         return False
     except subprocess.CalledProcessError as e:
-        print(f"Command '{command}' failed: {e.stderr}")
+        app.logger.error(f"Command '{command}' failed: {e.stderr}")
         return False
 
 # --- Flask Routes ---
@@ -304,6 +327,12 @@ def index():
                         new_config[key] = current_config[key]
             
             if update_config(new_config):
+                # After saving, nudge the manager to pick up new config and, if daemon is running,
+                # ensure it sees the toggle quickly.
+                try:
+                    subprocess.run([POMODORO_MANAGER_SCRIPT, "status"], check=False, capture_output=True)
+                except Exception:
+                    pass
                 return redirect(url_for('index', message='Configuration saved successfully!'))
             else:
                 return redirect(url_for('index', error='Failed to save configuration.'))

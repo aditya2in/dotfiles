@@ -1,4 +1,0 @@
-  File "/home/aditya/.config/pomodoro_cli/web_gui/app.py", line 126
-    updated_lines.append(f"EVENING_LOCK_INTERVAL_SEC={interval_value}
-                         ^
-SyntaxError: unterminated f-string literal (detected at line 126)
