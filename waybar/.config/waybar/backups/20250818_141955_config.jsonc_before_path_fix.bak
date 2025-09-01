@@ -40,12 +40,12 @@
   "custom/pomodoro": {
     "format": "{text}",
     "interval": 1,
-    "exec": "bash \"/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh\" status",
+    "exec": "\"/home/aditya/POMODORO-CLI-applicaiton/pomodoro_manager.sh\" status",
     "return-type": "json",
     "tooltip": true,
-    "on-click": "bash \"/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh\" start",
-    "on-click-right": "bash \"/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh\" stop",
-    "on-click-middle": "bash \"/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh\" toggle_pause"
+    "on-click": "\"/home/aditya/POMODORO-CLI-applicaiton/pomodoro_manager.sh\" start",
+    "on-click-right": "\"/home/aditya/POMODORO-CLI-applicaiton/pomodoro_manager.sh\" stop",
+    "on-click-middle": "\"/home/aditya/POMODORO-CLI-applicaiton/pomodoro_manager.sh\" toggle_pause"
   },
 
   "cpu": {

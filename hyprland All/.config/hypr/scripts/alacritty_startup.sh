@@ -1,0 +1,24 @@
+#!/bin/bash
+script_start_time=$(date +%s)
+echo "Waiting for Pomodoro daemon to start..."
+for i in {1..120}; do
+    if [ -f /tmp/pomodoro_started ]; then
+        daemon_start_time=$(cat /tmp/pomodoro_started)
+        rm /tmp/pomodoro_started
+        startup_duration=$((daemon_start_time - script_start_time))
+        echo "----------------------------------------"
+        echo "Pomodoro daemon started successfully!"
+        echo "Daemon started at: $(date -d @$daemon_start_time)"
+        echo "Startup took: $startup_duration seconds."
+        echo "----------------------------------------"
+        sleep 5
+        exec bash
+    fi
+    echo "Still waiting... ($i/120)"
+    sleep 1
+done
+echo "----------------------------------------"
+echo "Error: Pomodoro daemon did not start within 2 minutes."
+echo "----------------------------------------"
+sleep 5
+exec bash

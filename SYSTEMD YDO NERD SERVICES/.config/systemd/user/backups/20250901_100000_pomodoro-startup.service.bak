@@ -1,0 +1,10 @@
+[Unit]
+Description=Pomodoro CLI Startup Service
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh daemon
+
+[Install]
+WantedBy=graphical-session.target

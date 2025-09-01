@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Enable debug mode
+set -x
+
+# Directory containing your wallpapers
+WALLPAPER_DIR="$HOME/.config/backgrounds"
+
+# Function to set wallpaper
+set_wallpaper() {
+    echo "Setting wallpaper to $1"
+    hyprctl hyprpaper unload all
+    hyprctl hyprpaper preload "$1"
+    hyprctl hyprpaper wallpaper ",$1"
+}
+
+# Function to set lockscreen background
+set_lockscreen() {
+    echo "Setting lockscreen to $1"
+    # Use a temporary file to avoid issues with sed -i
+    sed "s|path = .*|path = $1|" "$HOME/.config/hypr/hyprlock.conf" > "$HOME/.config/hypr/hyprlock.conf.tmp" && mv "$HOME/.config/hypr/hyprlock.conf.tmp" "$HOME/.config/hypr/hyprlock.conf"
+}
+
+# Get a random wallpaper from the directory
+RANDOM_WALLPAPER=$(find "$WALLPAPER_DIR" -type f | shuf -n 1)
+
+# Exit if no wallpaper is found
+if [ -z "$RANDOM_WALLPAPER" ]; then
+    echo "Error: No wallpapers found in $WALLPAPER_DIR"
+    exit 1
+fi
+
+echo "Selected wallpaper: $RANDOM_WALLPAPER"
+
+case "$1" in
+    wallpaper)
+        set_wallpaper "$RANDOM_WALLPAPER"
+        ;;
+    lockscreen)
+        set_lockscreen "$RANDOM_WALLPAPER"
+        ;;
+    all|*)
+        set_wallpaper "$RANDOM_WALLPAPER"
+        set_lockscreen "$RANDOM_WALLPAPER"
+        ;;
+esac
+
+echo "Operation complete. Wallpaper: $RANDOM_WALLPAPER"

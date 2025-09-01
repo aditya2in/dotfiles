@@ -205,11 +205,12 @@ alias td="tmux detach"
 alias tt="tmux" 
 alias tg="tmux new-session -t GeminiSession"
 
-alias ppp="sh ~/.config/pomodoro_cli/pomodoro_manager.sh quick-start"
-alias ppc="sh ~/.config/pomodoro_cli/pomodoro_manager.sh cleanup"
-alias pp="sh ~/.config/pomodoro_cli/pomodoro_manager.sh start"
-alias pr="sh ~/.config/pomodoro_cli/pomodoro_manager.sh reset"
-alias ps="sh ~/.config/pomodoro_cli/pomodoro_manager.sh stop"
+# Properly quoted path with space (invoke via bash)
+alias ppp='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" quick-start'
+alias ppc='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" cleanup'
+alias  pp='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" start'
+alias  pr='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" reset'
+alias  ps='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" stop'
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
@@ -257,3 +258,8 @@ export PATH="/home/aditya/.config/pomodoro_cli/RoutineTaskSubTaskScripts:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/aditya/.lmstudio/bin"
+# End of LM Studio CLI section
+

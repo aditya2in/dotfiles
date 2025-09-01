@@ -1,3 +1,4 @@
+--- Context from: .gemini/GEMINI.md ---
 ### **Recommended `GEMINI.md` Instructions for the CLI**
 
 - check instructions.md and follow it as well along with GEMINI.md files
@@ -16,11 +17,13 @@ These are the most impactful rules for the CLI, as they involve direct actions w
 - **Provide Full Context and Testing Steps:** After a modification, explain how to test the changes and provide the full, modified code if requested.
   - **Example Rule:** "After modifying a file, provide a section named '🧪 **HOW TO TEST THE CHANGES**' with step-by-step instructions for verification."
 - **Analyze Impact:** When changing code, explain what other parts of the system might be affected.
+- **DELETE ALERT:** Before executing a command that deletes any lines from a file, I must begin my reply with a `DELETE ALERT:` heading. Under this heading, I will explain which lines are being deleted and why.
 
 #### **2. Content and Explanation Style**
 
 These rules help ensure the text-based output is clear and useful.
 
+- **QUICK ANSWER & QUICK SUGGESTION Section:** Every response must start with a `QUICK ANSWER:` heading, with a summary of the information or action in the response (minimum one line). Next to it, a `QUICK SUGGESTION:` heading will show suggestions from Gemini.
 - **Provide Comprehensive Explanations:** Explain topics and commands in detail, including full paths and the purpose of commands.
 - **Use Visuals (Text-Based):** When explaining hierarchies or ecosystems (e.g., comparing `cmake` vs. `make`), use text-based tree diagrams.
   - **Example Rule:** "Use text-based diagrams to show relationships, like this:
@@ -70,5 +73,40 @@ These rules help ensure the text-based output is clear and useful.
 - **Proactive AI Teachings.md Updates:** I will proactively update `AI Teachings.md` with new concepts or troubleshooting insights for your learning, even if not explicitly requested, when a new topic is covered or a significant troubleshooting step is taken.
 
 ## Gemini Added Memories
-
 - When adding to the 'AI Teachings.md' file, the 'Missing Knowledge' section should be formatted as a tree diagram showing the topics and sub-topics of the new content.
+
+---
+- All backups should be placed in a backups/ directory within the same directory as the file being backed up.
+- User prefers timestamped backup file names in the format YYYYMMDD_HHMMSS_filename.bak
+
+## Rules from POMODORO-CLI-application
+
+# Rules
+
+1. For all changes to shell file thich is main file here.
+   1. you make update the documentation.md file and see if this file is in sync with the app always.
+   2. make a backup file for the file with date time sec based exteniosn in backups folder uisng cp command in to backups folder.
+   3. there is no use of readinf contetns of files in backups fodlers
+   4. only read file names if needed
+2. before reading any files in the folder remember to ignore the backup fodlers and .bak file named files as they are backups and there is no use of reading them. Z
+# User Instructions: Pathing
+
+- **Always use relative paths:** When interacting with the file system, always use relative paths for files within the project directory.
+- **Convert user-provided paths:** If the user provides an absolute path, convert it to a relative path before using it with any tool.
+- **Suggest relative paths to user:** If the user provides an absolute path, suggest that they use relative paths in the future, explaining that the agent works best with relative paths.
+These rules are in place because Gemini works best with relative paths.
+
+---
+### Backup File Naming Convention
+
+"- **Timestamp First:** Backup filenames should always start with a timestamp in the format `YYYYMMDD_HHMMSS` for easy sorting."
+"- **Backup Folder:** All backups should be placed in the `backups/` directory."
+"- **Example:** `backups/20250818_123456_pomodoro_manager.sh_before_adding_weekday_planner.bak`"
+- **Descriptive Name:** The filename should include the original filename and a brief, descriptive message about the change being made (e.g., `before_adding_feature_X`).
+--- End of Context from: .gemini/GEMINI.md ---
+
+alwsy try to ask me after a task you did and if i say success also ask me if yo uned to commit he chnahe or not and commit if I approeve.
+---
+### **File Specific Rules**
+
+- **`AI Teachings.md`:** Never delete or overwrite the content of this file. Always append new information to the end of the file.

@@ -4,7 +4,7 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/bin/sh -c "sleep 10 && /home/aditya/POMODORO-CLI-app/pomodoro_manager.sh daemon & sleep 5"
+ExecStart=/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh daemon
 ExecStartPost=/bin/sh -c 'date +%s > /tmp/pomodoro_started'
 
 [Install]
