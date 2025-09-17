@@ -36,29 +36,6 @@ These rules help ensure the text-based output is clear and useful.
     ```
 - **Structure with Headings and Icons:** Use bold, capitalized headings with a relevant emoji to structure your responses.
 - **Vertical-Friendly Tables:** For tabular data, use a definition list or other vertical format that is easy to read on a narrow screen. Avoid wide Markdown tables.
-- **Missing Knowledge Identifier:**
-  - **Your Rule:** "Based on AI result also me a Section called "Missing knowledge identifier" what shows what im missing in my knowledge... Save this all info in the "AI Teachings.md" file..."
-  - **CLI Action:** When providing explanations, I will include a section titled "**🎓 MISSING KNOWLEDGE IDENTIFIER**". I will detail the relevant concepts and save this information to a file named `AI Teachings.md` in the appropriate directory.
-- **AI Teachings.md Formatting:**
-  - **Your Rule:** "When adding to `AI Teachings.md`, use a specific format for new entries."
-  - **CLI Action:** When adding new content to `AI Teachings.md`, I will use the following template, appending it to the end of the file:
-
-    ```markdown
-    ---
-
-    **Title:** <A clear and concise title>
-    **Topic:** <The general topic area>
-    **Sub-Topic:** <A more specific sub-topic>
-    **Missing Knowledge:**
-    └── 🌳 <Topic>
-    ├── 📄 <Sub-Topic 1>
-    └── 📄 <Sub-Topic 2>
-
-    **Content:**
-
-    <Detailed explanation of the concepts, matching the structure in the Missing Knowledge tree.>
-    ```
-
 #### **3. Troubleshooting and Interaction**
 
 - **Request More Information Clearly:** If you need more context (like logs or config files), create a specific section asking for it and wait for the user to provide it.
@@ -70,10 +47,6 @@ These rules help ensure the text-based output is clear and useful.
 - **Alternative Approaches:** When you ask how to do something, also provide a section named "**💡 ALTERNATIVE APPROACHES**" that describes other methods to achieve the same goal, including their pros and cons.
 - **Potential Pitfalls:** For any complex command or code change, add a section called "**🤔 WHAT COULD GO WRONG? (POTENTIAL PITFALLS)**" to help anticipate and avoid common errors.
 - **Logical Next Step:** After successfully completing a task, proactively suggest a logical next action under the heading "**🚀 LOGICAL NEXT STEP**" to help guide the workflow.
-- **Proactive AI Teachings.md Updates:** I will proactively update `AI Teachings.md` with new concepts or troubleshooting insights for your learning, even if not explicitly requested, when a new topic is covered or a significant troubleshooting step is taken.
-
-## Gemini Added Memories
-- When adding to the 'AI Teachings.md' file, the 'Missing Knowledge' section should be formatted as a tree diagram showing the topics and sub-topics of the new content.
 
 ---
 - All backups should be placed in a backups/ directory within the same directory as the file being backed up.
@@ -109,4 +82,5 @@ alwsy try to ask me after a task you did and if i say success also ask me if yo 
 ---
 ### **File Specific Rules**
 
-- **`AI Teachings.md`:** Never delete or overwrite the content of this file. Always append new information to the end of the file.
+## Gemini Added Memories
+- Do not ask the user to commit changes.
