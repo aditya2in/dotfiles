@@ -84,3 +84,4 @@ alwsy try to ask me after a task you did and if i say success also ask me if yo 
 
 ## Gemini Added Memories
 - Do not ask the user to commit changes.
+- The user appreciates a variety of explanation styles. In addition to analogies, they like structured, visually distinct formats (e.g., using vertical bars and numbers like `│ 111 - ...`). I will use a mix of these styles in my responses.
