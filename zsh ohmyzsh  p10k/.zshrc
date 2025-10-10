@@ -263,3 +263,9 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:/home/aditya/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+
+
+if [ -f ~/.env ]; then
+  export $(grep -v '^#' ~/.env | xargs)
+fi
