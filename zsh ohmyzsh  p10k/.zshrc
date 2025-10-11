@@ -249,7 +249,8 @@ export PATH="$HOME/.local/bin:$PATH"
 
 
 
-#export GOOGLE_GENERATIVE_AI_API_KEY="AIzaSyB-p4-hJkbg_2xe6noD-E9w4r5G2RsDQuk"
+#export GOOGLE_GENERATIVE_AI_API_KEY=""
+
 # Pomodoro CLI Manager
 export PATH="$HOME/.config/pomodoro_cli:$PATH"
 export PATH="/home/aditya/.config/pomodoro_cli/RoutineTaskSubTaskScripts:$PATH"
@@ -266,6 +267,3 @@ export PATH="$PATH:/home/aditya/.lmstudio/bin"
 
 
 
-if [ -f ~/.env ]; then
-  export $(grep -v '^#' ~/.env | xargs)
-fi

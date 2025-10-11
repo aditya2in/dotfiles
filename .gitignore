@@ -1,2 +1,3 @@
 .DS_Store
 GEMINI CLI/.gemini/oauth_creds.json
+.env
