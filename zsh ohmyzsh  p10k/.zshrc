@@ -211,6 +211,7 @@ alias ppc='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" cleanup'
 alias  pp='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" start'
 alias  pr='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" reset'
 alias  ps='bash "/home/aditya/POMODORO-CLI-app/pomodoro_manager.sh" stop'
+
 ##############################################################################################
 ##############################################################################################
 ##############################################################################################
@@ -265,5 +266,8 @@ export PATH="$PATH:/home/aditya/.lmstudio/bin"
 # End of LM Studio CLI section
 
 
+###Kubernetes
+alias k='kubectl'
+source <(kubectl completion zsh)
 
 
