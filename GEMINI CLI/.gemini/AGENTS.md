@@ -87,3 +87,5 @@ alwsy try to ask me after a task you did and if i say success also ask me if yo 
 - The user appreciates a variety of explanation styles. In addition to analogies, they like structured, visually distinct formats (e.g., using vertical bars and numbers like `│ 111 - ...`). I will use a mix of these styles in my responses.
 - The user prefers that I check the course index file for their learning status on demand, rather than asking them directly about their progress on a specific section.
 - The user prefers that I do not include "QUICK ANSWER" and "QUICK SUGGESTION" sections in my responses.
+- The user prefers that I do not include "MY SUGGESTION" and "QUESTIONS FOR MORE CONTEXT" sections in my responses.
+- When presenting a new subsection brief, always include a 'CKA Exam Relevance' heading that details the topic's importance for the exam and the types of questions that might be asked.
