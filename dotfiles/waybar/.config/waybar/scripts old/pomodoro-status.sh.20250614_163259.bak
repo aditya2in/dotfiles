@@ -1,0 +1,232 @@
+#!/bin/bash
+
+# Path to the pomodoro-cli executable
+POMODORO_CLI="pomodoro-cli"
+
+# Path to the central logger script (for script debug logs only)
+POMODORO_LOGGER_SCRIPT="$HOME/.config/waybar/scripts/pomodoro-logger.sh"
+
+# Path to the current state file (the fast read)
+CURRENT_STATE_FILE="$HOME/.local/share/pomodoro/current_state.txt"
+
+# --- DEBUG LOGGING FUNCTION (uses the central logger) ---
+debug_log() {
+    "$POMODORO_LOGGER_SCRIPT" "SCRIPT_DEBUG" "$*"
+}
+# --- END DEBUG LOGGING FUNCTION ---
+
+debug_log "Script started at $(date +"%Y-%m-%d %H:%M:%S")."
+
+# --- Define default Waybar output in case of errors or early exit ---
+exit_with_waybar_error() {
+    local error_text="$1"
+    local error_tooltip="$2"
+    debug_log "ERROR: Script exiting with Waybar error: '$error_text' - '$error_tooltip'"
+    jq -nc \
+        --arg text "$error_text" \
+        --arg tooltip "$error_tooltip" \
+        --arg class "error" \
+        --argjson percentage 0 \
+        --argjson session_count 0 \
+        '{text: $text, tooltip: $tooltip, class: $class, percentage: $percentage, session_count: $session_count}'
+    exit 1
+}
+
+# --- CHECK FOR ESSENTIAL COMMANDS ---
+if ! command -v "$POMODORO_CLI" &>/dev/null; then
+    exit_with_waybar_error "CLI Missing!" "$POMODORO_CLI not found in PATH. Please install it."
+fi
+
+if ! command -v jq &>/dev/null; then
+    exit_with_waybar_error "jq Missing!" "jq not found in PATH. Cannot parse JSON. Please install it (pacman -S jq)."
+fi
+if [[ ! -x "$POMODORO_LOGGER_SCRIPT" ]]; then
+    # This error cannot be logged by pomodoro-logger.sh itself.
+    echo "Error: pomodoro-logger.sh not found or not executable. Cannot log debug messages." >&2
+    exit_with_waybar_error "Logger Missing!" "pomodoro-logger.sh not found or executable. Check path and permissions."
+fi
+debug_log "Essential commands ($POMODORO_CLI, jq, $POMODORO_LOGGER_SCRIPT) found."
+
+
+# --- READ CURRENT STATE AND SESSION COUNT FROM FILE ---
+# This is the fast part!
+read_current_state_from_file() {
+    local count=0
+    local state="off"
+    local today_date=$(date +"%Y-%m-%d") # Current date for daily reset check
+
+    if [[ -f "$CURRENT_STATE_FILE" ]]; then
+        # Read the file line by line
+        mapfile -t state_info < "$CURRENT_STATE_FILE"
+        local file_session_count="${state_info[0]:-0}"
+        local file_state="${state_info[1]:-off}"
+
+        # If a day has passed since last update, reset session count
+        # This requires storing the date in current_state.txt or re-parsing the activity_log for today's count.
+        # For simplicity AND performance, we will make a small trade-off:
+        # The session count in current_state.txt will now be a *running total for the current active period*.
+        # To get the count *for today only*, we would need to parse the activity_log.
+        # However, you want this to be fast, so we will keep `current_state.txt` with a running total.
+        # If you want "sessions today", the logic here would get complex and slow again.
+
+        # Let's re-evaluate "session count for the day".
+        # If we need this, the current_state.txt should store LAST_DATE as well.
+        # If today is different from LAST_DATE, then reset count to 0 and update LAST_DATE.
+        # Otherwise, use the count from the file.
+
+        # New strategy for session count in current_state.txt:
+        # We will add a third line to current_state.txt: the date of the last session count update.
+        # This makes it easy to reset daily.
+
+        if [ ${#state_info[@]} -ge 3 ]; then
+            local last_update_date="${state_info[2]}"
+            if [[ "$last_update_date" == "$today_date" ]]; then
+                count="$file_session_count"
+                state="$file_state"
+            else
+                # New day, reset count
+                debug_log "New day detected. Resetting session count from $file_session_count to 0."
+                count=0
+                state="off" # Reset state too if it was something like 'work' from yesterday
+                # Also, we should write this reset back to the file
+                echo "$count" > "$CURRENT_STATE_FILE"
+                echo "$state" >> "$CURRENT_STATE_FILE"
+                echo "$today_date" >> "$CURRENT_STATE_FILE"
+            fi
+        else
+            # File exists but is old format (missing date line), initialize with today's date
+            debug_log "current_state.txt in old format or incomplete. Re-initializing."
+            count=0
+            state="off"
+            echo "$count" > "$CURRENT_STATE_FILE"
+            echo "$state" >> "$CURRENT_STATE_FILE"
+            echo "$today_date" >> "$CURRENT_STATE_FILE"
+        fi
+    else
+        # File doesn't exist, initialize it
+        debug_log "Current state file not found. Initializing with session 0, state off, today's date."
+        count=0
+        state="off"
+        echo "$count" > "$CURRENT_STATE_FILE"
+        echo "$state" >> "$CURRENT_STATE_FILE"
+        echo "$today_date" >> "$CURRENT_STATE_FILE"
+        chmod 664 "$CURRENT_STATE_FILE"
+    fi
+    echo "$count" "$state" # Return both values
+}
+
+# --- Get current state and session count from our fast state file ---
+read -r SESSION_COUNT INFERRED_STATE_FROM_FILE <<< $(read_current_state_from_file)
+debug_log "Read from file: SESSION_COUNT='$SESSION_COUNT', INFERRED_STATE_FROM_FILE='$INFERRED_STATE_FROM_FILE'"
+
+# Get the current pomodoro status from pomodoro-cli
+debug_log "Executing: $POMODORO_CLI status --format json --time-format digital"
+pomodoro_output=$("$POMODORO_CLI" status --format json --time-format digital 2>/dev/null || true)
+debug_log "Raw pomodoro_output (JSON): '$pomodoro_output'"
+
+# Default values for Waybar output (assuming timer is off/error)
+waybar_text=" Off"
+waybar_tooltip="Pomodoro timer is not running or an error occurred."
+waybar_class="off"
+waybar_percentage=0
+current_pomodoro_cli_state="off" # This variable tracks what pomodoro-cli *reports*
+time_val="00:00" # Default time display
+tooltip_val="No additional info" # Default tooltip content
+
+# Parse pomodoro-cli output
+if [[ -z "$pomodoro_output" || "$pomodoro_output" == "true" ]]; then
+    debug_log "pomodoro_output is empty or 'true' (likely error from pomodoro-cli or no session)."
+    current_pomodoro_cli_state="off" # Force to off if output is missing or invalid
+elif ! echo "$pomodoro_output" | jq -e . >/dev/null 2>&1; then
+    debug_log "pomodoro_output is not valid JSON. Content: '$pomodoro_output'"
+    current_pomodoro_cli_state="off" # Force to off if JSON is invalid
+else
+    time_val=$(echo "$pomodoro_output" | jq -r '.text // "00:00"')
+    tooltip_val=$(echo "$pomodoro_output" | jq -r '.tooltip // "No additional info"')
+    percentage_val=$(echo "$pomodoro_output" | jq -r '.percentage // 0')
+    current_pomodoro_cli_state=$(echo "$pomodoro_output" | jq -r '.class // "off"') # 'off' if .class is null/missing
+
+    debug_log "Parsed from pomodoro-cli: state='$current_pomodoro_cli_state', time_val='$time_val', tooltip_val='$tooltip_val', percentage_val='$percentage_val'"
+
+    # Set initial Waybar text/class based on pomodoro-cli's direct status
+    case "$current_pomodoro_cli_state" in
+        "running")
+            # This will be refined using INFERRED_STATE_FROM_FILE below.
+            waybar_class="running"
+            waybar_tooltip="Running: $tooltip_val"
+            waybar_percentage="$percentage_val"
+            ;;
+        "finished")
+            waybar_text=" Off"
+            waybar_tooltip="Session Finished."
+            waybar_class="off"
+            waybar_percentage=0
+            ;;
+        "stopped"|"paused")
+            waybar_text="Paused ⏸️ $time_val"
+            waybar_tooltip="Session Paused."
+            waybar_class="paused"
+            waybar_percentage="$percentage_val"
+            ;;
+        "off")
+            waybar_text=" Off"
+            waybar_tooltip="Pomodoro timer is not running."
+            waybar_class="off"
+            waybar_percentage=0
+            ;;
+        *)
+            waybar_text="Unknown State ❓ $time_val"
+            waybar_class="unknown"
+            waybar_tooltip="Unknown Pomodoro State: '$current_pomodoro_cli_state'"
+            waybar_percentage=0
+            debug_log "!!! CRITICAL: Unexpected pomodoro-cli .class value: '$current_pomodoro_cli_state'"
+            ;;
+    esac
+fi
+
+
+# --- Finalize Waybar Text based on INFERRED_STATE_FROM_FILE and pomodoro-cli's time_val ---
+# This combines the "true" state from our state file with the live timer from pomodoro-cli
+case "$INFERRED_STATE_FROM_FILE" in
+    "work")
+        waybar_text="Work 🍅 $time_val"
+        waybar_class="work"
+        waybar_tooltip="Current Session: Work\nTime Left: $time_val"
+        ;;
+    "break")
+        waybar_text="Break ☕ $time_val"
+        waybar_class="break"
+        waybar_tooltip="Current Session: Break\nTime Left: $time_val"
+        ;;
+    "paused")
+        waybar_text="Paused ⏸️ $time_val"
+        waybar_class="paused"
+        waybar_tooltip="Session Paused\nPaused Time: $time_val"
+        ;;
+    "off")
+        waybar_text=" Off"
+        waybar_class="off"
+        waybar_tooltip="Pomodoro timer is off."
+        ;;
+    *)
+        # Fallback if state file content is unexpected (shouldn't happen with robust writes)
+        waybar_text="State Error ❓"
+        waybar_class="error"
+        waybar_tooltip="Error: Unknown state in current_state.txt: '$INFERRED_STATE_FROM_FILE'"
+        debug_log "!!! CRITICAL: Unknown state from current_state.txt: '$INFERRED_STATE_FROM_FILE'"
+        ;;
+esac
+
+# Output for Waybar - Using jq to safely generate JSON
+final_waybar_json=$(jq -nc \
+    --arg text "$waybar_text" \
+    --arg tooltip "$waybar_tooltip" \
+    --arg class "$waybar_class" \
+    --argjson percentage "$waybar_percentage" \
+    --argjson session_count "$SESSION_COUNT" \
+    '{text: $text, tooltip: $tooltip, class: $class, percentage: $percentage, session_count: $session_count}')
+
+debug_log "Final JSON for Waybar: '$final_waybar_json'"
+echo "$final_waybar_json"
+
+debug_log "Script finished."

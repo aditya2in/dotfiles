@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# Enable debug mode
+set -x
+
+# Directory containing your wallpapers
+WALLPAPER_DIR="$HOME/.config/backgrounds"
+# Files to store current and previous wallpaper paths
+STATE_DIR="$HOME/.config/hypr/scripts"
+CURRENT_WALLPAPER_FILE="$STATE_DIR/.current_wallpaper"
+PREVIOUS_WALLPAPER_FILE="$STATE_DIR/.previous_wallpaper"
+HYPRPAPER_CONF="$HOME/.config/hypr/hyprpaper.conf"
+
+# Ensure state directory exists
+mkdir -p "$STATE_DIR"
+
+# Function to update hyprpaper.conf
+update_hyprpaper_conf() {
+    local wallpaper_path="$1"
+    echo "Updating $HYPRPAPER_CONF with $wallpaper_path"
+    # Use sed to replace the wallpaper paths in hyprpaper.conf
+    # This assumes the lines are in the format:
+    # preload = /path/to/image.png
+    # wallpaper = , /path/to/image.png
+    sed -i "s|^preload = .*|preload = $wallpaper_path|" "$HYPRPAPER_CONF"
+    sed -i "s|^wallpaper = , .*|wallpaper = , $wallpaper_path|" "$HYPRPAPER_CONF"
+}
+
+# Function to set wallpaper
+set_wallpaper() {
+    echo "Setting wallpaper to $1"
+    hyprctl hyprpaper unload all
+    hyprctl hyprpaper preload "$1"
+    hyprctl hyprpaper wallpaper ",""$1"
+    update_hyprpaper_conf "$1" # Call the new function to update hyprpaper.conf
+}
+
+# Function to set lockscreen background
+set_lockscreen() {
+    echo "Setting lockscreen to $1"
+    # Use a temporary file to avoid issues with sed -i
+    sed "s|path = .*|path = $1|" "$HOME/.config/hypr/hyprlock.conf" > "$HOME/.config/hypr/hyprlock.conf.tmp" && mv "$HOME/.config/hypr/hyprlock.conf.tmp" "$HOME/.config/hypr/hyprlock.conf"
+}
+
+# Main logic based on argument
+case "$1" in
+    previous)
+        if [ ! -f "$PREVIOUS_WALLPAPER_FILE" ]; then
+            echo "Error: No previous wallpaper to set."
+            exit 1
+        fi
+
+        # Read paths of current and previous wallpapers
+        PREV_WALLPAPER_PATH=$(cat "$PREVIOUS_WALLPAPER_FILE")
+        CURRENT_WALLPAPER_PATH=$(cat "$CURRENT_WALLPAPER_FILE")
+
+        echo "Reverting to previous wallpaper: $PREV_WALLPAPER_PATH"
+
+        # Set wallpaper and lockscreen to the previous one
+        set_wallpaper "$PREV_WALLPAPER_PATH"
+        set_lockscreen "$PREV_WALLPAPER_PATH"
+
+        # Swap the current and previous wallpaper files for toggling
+        echo "$PREV_WALLPAPER_PATH" > "$CURRENT_WALLPAPER_FILE"
+        echo "$CURRENT_WALLPAPER_PATH" > "$PREVIOUS_WALLPAPER_FILE"
+
+        echo "Operation complete. Reverted to previous wallpaper."
+        ;;
+
+    wallpaper|lockscreen|all|*)
+        # Default action: set a new random wallpaper
+
+        # Get a random wallpaper from the directory
+        RANDOM_WALLPAPER=$(find "$WALLPAPER_DIR" -type f | shuf -n 1)
+
+        # Exit if no wallpaper is found
+        if [ -z "$RANDOM_WALLPAPER" ]; then
+            echo "Error: No wallpapers found in $WALLPAPER_DIR"
+            exit 1
+        fi
+
+        echo "Selected new random wallpaper: $RANDOM_WALLPAPER"
+
+        # Update history: move current to previous, and set new current
+        if [ -f "$CURRENT_WALLPAPER_FILE" ]; then
+            mv "$CURRENT_WALLPAPER_FILE" "$PREVIOUS_WALLPAPER_FILE"
+        fi
+        echo "$RANDOM_WALLPAPER" > "$CURRENT_WALLPAPER_FILE"
+
+        # Nested case to handle which screen to update
+        case "$1" in
+            wallpaper)
+                set_wallpaper "$RANDOM_WALLPAPER"
+                ;;
+            lockscreen)
+                set_lockscreen "$RANDOM_WALLPAPER"
+                ;;
+            all|*)
+                set_wallpaper "$RANDOM_WALLPAPER"
+                set_lockscreen "$RANDOM_WALLPAPER"
+                ;;
+        esac
+
+        echo "Operation complete. New wallpaper set."
+        ;;
+esac

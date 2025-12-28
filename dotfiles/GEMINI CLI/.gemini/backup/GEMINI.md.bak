@@ -1,0 +1,16 @@
+## Gemini Added Memories
+
+- I prefer to use zsh instead of bash.
+- prefer to see output content in any visual representation mode when explaining me things for fast readability.
+- Generally I user vertical monitor for reading AL responses.
+
+## Rules wehn you show results
+
+- if there is a modification to the file definitely you take a backup of the file in timestamped format ($(date +%Y%m%d\_%H%M%S) postfix for the backup file before modifying it.
+- Based on AI result also me a Section called "Missing knowledge identifier" what shows what im missing in my knowledge and why i asked AI this partiualar question and then what I need to learn to not repeat asking this. show the information or topic and subtopic I need to master to make this dount never asked again."
+  - Format:
+    - Title: Title of the explanation
+    - Date: Date of the explanation
+    - Explanation: Detailed explanation of the topic and subtopics.
+    - 2nd represetntaion of the info - A Tree diagram: If applicable, a tree diagram to visualize the Missing knowledge and subsequent topics in tree format.
+  - Save this all info in the "AI Teachings.md" file in the same folder as the code or file you are explaining.

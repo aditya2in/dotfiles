@@ -1,0 +1,35 @@
+QUICK RESULT
+No Active Routine
+No Active Category/Action
+--------------------------------------------------------
+INFORMATION ABOUT THE SCRIPT
+--------------------------------------------------------
+Starting Routine, Action List, and Category/Action retrieval for 2025-06-28 at Sat Jun 28 10:21:20 PM IST 2025
+Planner file processed: /home/aditya/obsidian/All Things/Journal/Daily Journal/2025-06-28.md
+--------------------------------------------------------
+ROUTINE DECLARATION
+----------------------------------------
+        DEBUG: Current Time (min): 1341 | Routine '- [ ] [[VIM]] [[NeoVim nvim]] 09:35 - 10:05' Start (min): 575 | End (min): 605
+        DEBUG: Current Time (min): 1341 | Routine '- [ ] / Organise [[Obsidian + VIM]] 09:10 - 09:40' Start (min): 550 | End (min): 580
+No active routine found for the current time.
+
+--------------------------------------------------------
+CRITICAL REVISION: CONSIDERED LISTS
+--------------------------------------------------------
+No routine found, so no subtasks or linked notes to display.
+
+DUPLICATE #CategoryOrAction TAGS CHECK:
+--------------------------------------------------------
+    No duplicate #CategoryOrAction tags found. Only one (or zero) active #CategoryOrAction.
+
+YOUR CURRENT CATEGORY/ACTION :
+----------------------------------------
+No active category/action identified with '#CategoryOrAction' tag.
+
+--------------------------------------------------------
+FINAL CONCLUSION
+--------------------------------------------------------
+Script finished at Sat Jun 28 10:21:20 PM IST 2025
+Output captured in: /home/aditya/.config/pomodoro_cli/current_routine.txt
+--------------------------------------------------------
+

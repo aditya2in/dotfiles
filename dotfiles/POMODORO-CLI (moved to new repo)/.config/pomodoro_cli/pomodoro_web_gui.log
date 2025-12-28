@@ -1,0 +1,32 @@
+2025-08-12 18:34:30,055 - app - DEBUG - Starting update_config with values: {'BREAK_LOCK_DELAY_SEC_TEST': '3', 'SHORT_BREAK_DURATION_DEFAULT': '5m', 'WORK_DURATION_DEFAULT': '25m', 'LOCK_FREQUENCY_CONFIG': '10', 'WORK_DURATION_TEST': '15s', 'SHORT_BREAK_DURATION_TEST': '15s', 'LOCK_START_TIME_CONFIG': '1930', 'OBSIDIAN_VAULT_NAME': 'obsidian', 'LONG_BREAK_DURATION_TEST': '15s', 'BREAK_LOCK_DELAY_SEC_DEFAULT': '30', 'OBSIDIAN_VAULT_PATH': '$HOME/obsidian', 'LONG_BREAK_DURATION_DEFAULT': '15m', 'EVENING_LOCK_ENABLED': 'ON', 'TEST_MODE': 'OFF'}
+2025-08-12 18:34:30,055 - app - DEBUG - Original config content length: 17
+2025-08-12 18:34:30,056 - app - DEBUG - Config file write successful.
+2025-08-12 18:34:30,221 - app - DEBUG - Triggered pomodoro_manager.sh to re-source config.
+2025-08-12 18:34:30,622 - app - DEBUG - Starting update_config with values: {'BREAK_LOCK_DELAY_SEC_TEST': '3', 'SHORT_BREAK_DURATION_DEFAULT': '5m', 'WORK_DURATION_DEFAULT': '25m', 'LOCK_FREQUENCY_CONFIG': '10', 'WORK_DURATION_TEST': '15s', 'SHORT_BREAK_DURATION_TEST': '15s', 'THEME_MODE': 'light', 'LOCK_START_TIME_CONFIG': '1930', 'OBSIDIAN_VAULT_NAME': 'obsidian', 'LONG_BREAK_DURATION_TEST': '15s', 'BREAK_LOCK_DELAY_SEC_DEFAULT': '30', 'OBSIDIAN_VAULT_PATH': '$HOME/obsidian', 'LONG_BREAK_DURATION_DEFAULT': '15m', 'EVENING_LOCK_ENABLED': None, 'TEST_MODE': 'OFF'}
+2025-08-12 18:34:30,623 - app - DEBUG - Original config content length: 17
+2025-08-12 18:34:30,623 - app - DEBUG - Config file write successful.
+2025-08-12 18:34:30,712 - app - DEBUG - Triggered pomodoro_manager.sh to re-source config.
+2025-08-12 18:34:35,224 - app - DEBUG - Starting update_config with values: {'BREAK_LOCK_DELAY_SEC_TEST': '3', 'SHORT_BREAK_DURATION_DEFAULT': '5m', 'WORK_DURATION_DEFAULT': '25m', 'LOCK_FREQUENCY_CONFIG': '10', 'WORK_DURATION_TEST': '15s', 'SHORT_BREAK_DURATION_TEST': '15s', 'LOCK_START_TIME_CONFIG': '1930', 'OBSIDIAN_VAULT_NAME': 'obsidian', 'LONG_BREAK_DURATION_TEST': '15s', 'BREAK_LOCK_DELAY_SEC_DEFAULT': '30', 'OBSIDIAN_VAULT_PATH': '$HOME/obsidian', 'LONG_BREAK_DURATION_DEFAULT': '15m', 'EVENING_LOCK_ENABLED': 'OFF', 'TEST_MODE': 'OFF'}
+2025-08-12 18:34:35,224 - app - DEBUG - Original config content length: 17
+2025-08-12 18:34:35,224 - app - DEBUG - Config file write successful.
+2025-08-12 18:34:35,296 - app - DEBUG - Triggered pomodoro_manager.sh to re-source config.
+2025-08-12 18:34:35,631 - app - DEBUG - Starting update_config with values: {'BREAK_LOCK_DELAY_SEC_TEST': '3', 'SHORT_BREAK_DURATION_DEFAULT': '5m', 'WORK_DURATION_DEFAULT': '25m', 'LOCK_FREQUENCY_CONFIG': '10', 'WORK_DURATION_TEST': '15s', 'SHORT_BREAK_DURATION_TEST': '15s', 'THEME_MODE': 'light', 'LOCK_START_TIME_CONFIG': '1930', 'OBSIDIAN_VAULT_NAME': 'obsidian', 'LONG_BREAK_DURATION_TEST': '15s', 'BREAK_LOCK_DELAY_SEC_DEFAULT': '30', 'OBSIDIAN_VAULT_PATH': '$HOME/obsidian', 'LONG_BREAK_DURATION_DEFAULT': '15m', 'EVENING_LOCK_ENABLED': None, 'TEST_MODE': 'OFF'}
+2025-08-12 18:34:35,631 - app - DEBUG - Original config content length: 17
+2025-08-12 18:34:35,631 - app - DEBUG - Config file write successful.
+2025-08-12 18:34:35,799 - app - DEBUG - Triggered pomodoro_manager.sh to re-source config.
+2025-08-12 18:34:38,270 - app - DEBUG - Starting update_config with values: {'BREAK_LOCK_DELAY_SEC_TEST': '3', 'SHORT_BREAK_DURATION_DEFAULT': '5m', 'WORK_DURATION_DEFAULT': '25m', 'LOCK_FREQUENCY_CONFIG': '10', 'WORK_DURATION_TEST': '15s', 'SHORT_BREAK_DURATION_TEST': '15s', 'LOCK_START_TIME_CONFIG': '1930', 'OBSIDIAN_VAULT_NAME': 'obsidian', 'LONG_BREAK_DURATION_TEST': '15s', 'BREAK_LOCK_DELAY_SEC_DEFAULT': '30', 'OBSIDIAN_VAULT_PATH': '$HOME/obsidian', 'LONG_BREAK_DURATION_DEFAULT': '15m', 'EVENING_LOCK_ENABLED': 'ON', 'TEST_MODE': 'OFF'}
+2025-08-12 18:34:38,270 - app - DEBUG - Original config content length: 17
+2025-08-12 18:34:38,270 - app - DEBUG - Config file write successful.
+2025-08-12 18:34:38,364 - app - DEBUG - Triggered pomodoro_manager.sh to re-source config.
+2025-08-12 18:34:38,677 - app - DEBUG - Starting update_config with values: {'BREAK_LOCK_DELAY_SEC_TEST': '3', 'SHORT_BREAK_DURATION_DEFAULT': '5m', 'WORK_DURATION_DEFAULT': '25m', 'LOCK_FREQUENCY_CONFIG': '10', 'WORK_DURATION_TEST': '15s', 'SHORT_BREAK_DURATION_TEST': '15s', 'THEME_MODE': 'light', 'LOCK_START_TIME_CONFIG': '1930', 'OBSIDIAN_VAULT_NAME': 'obsidian', 'LONG_BREAK_DURATION_TEST': '15s', 'BREAK_LOCK_DELAY_SEC_DEFAULT': '30', 'OBSIDIAN_VAULT_PATH': '$HOME/obsidian', 'LONG_BREAK_DURATION_DEFAULT': '15m', 'EVENING_LOCK_ENABLED': None, 'TEST_MODE': 'OFF'}
+2025-08-12 18:34:38,677 - app - DEBUG - Original config content length: 17
+2025-08-12 18:34:38,678 - app - DEBUG - Config file write successful.
+2025-08-12 18:34:38,853 - app - DEBUG - Triggered pomodoro_manager.sh to re-source config.
+2025-08-12 19:15:47,764 - app - DEBUG - Starting update_config with values: {'BREAK_LOCK_DELAY_SEC_TEST': '3', 'SHORT_BREAK_DURATION_DEFAULT': '5m', 'WORK_DURATION_DEFAULT': '25m', 'LOCK_FREQUENCY_CONFIG': '10', 'WORK_DURATION_TEST': '15s', 'SHORT_BREAK_DURATION_TEST': '15s', 'THEME_MODE': 'light', 'LOCK_START_TIME_CONFIG': '1930', 'OBSIDIAN_VAULT_NAME': 'obsidian', 'LONG_BREAK_DURATION_TEST': '15s', 'BREAK_LOCK_DELAY_SEC_DEFAULT': '30', 'OBSIDIAN_VAULT_PATH': '$HOME/obsidian', 'LONG_BREAK_DURATION_DEFAULT': '15m', 'EVENING_LOCK_ENABLED': None, 'TEST_MODE': 'ON'}
+2025-08-12 19:15:47,765 - app - DEBUG - Original config content length: 17
+2025-08-12 19:15:47,765 - app - DEBUG - Config file write successful.
+2025-08-12 19:15:47,873 - app - DEBUG - Triggered pomodoro_manager.sh to re-source config.
+2025-08-12 20:22:00,975 - app - DEBUG - Starting update_config with values: {'BREAK_LOCK_DELAY_SEC_TEST': '3', 'SHORT_BREAK_DURATION_DEFAULT': '5m', 'WORK_DURATION_DEFAULT': '25m', 'LOCK_FREQUENCY_CONFIG': '10', 'WORK_DURATION_TEST': '15s', 'SHORT_BREAK_DURATION_TEST': '15s', 'THEME_MODE': 'light', 'LOCK_START_TIME_CONFIG': '1930', 'OBSIDIAN_VAULT_NAME': 'obsidian', 'LONG_BREAK_DURATION_TEST': '15s', 'BREAK_LOCK_DELAY_SEC_DEFAULT': '30', 'OBSIDIAN_VAULT_PATH': '$HOME/obsidian', 'LONG_BREAK_DURATION_DEFAULT': '15m', 'EVENING_LOCK_ENABLED': None, 'TEST_MODE': 'ON'}
+2025-08-12 20:22:00,975 - app - DEBUG - Original config content length: 17
+2025-08-12 20:22:00,976 - app - DEBUG - Config file write successful.
+2025-08-12 20:22:01,143 - app - DEBUG - Triggered pomodoro_manager.sh to re-source config.

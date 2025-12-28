@@ -1,0 +1,79 @@
+{
+  "position": "top",
+  "layer": "top",
+  "height": 30,
+  "log-level": "error",
+  "exclusive": true,
+
+  "modules-left": [
+    "hyprland/workspaces",
+    "custom/pomodoro"
+  ],
+  "modules-center": [ 
+  ],
+
+  "modules-right": [
+    "cpu",
+    "custom/memory",
+    "pulseaudio"
+  ],
+
+  "custom/memory": {
+    "format": "<span foreground='#cba6f7'>󰍛</span> {}",
+    "exec": "free -h | awk '/^Mem:/ {print $3}'",
+    "interval": 5,
+    "tooltip": false
+  },
+
+  
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "format-icons": {
+      "1": "1", "2": "2", "3": "3", "4": "4", "5": "5",
+      "6": "6", "7": "7", "8": "8", "9": "9", "10": "10",
+      "default": "·"
+    }
+  },
+
+  "hyprland/window": { "format": "{}", "max-length": 50 },
+  
+  "custom/pomodoro": {
+    "format": "{text}",
+    "interval": 1,
+    "exec": "bash "/home/aditya/POMODORO-CLI-application/pomodoro_manager.sh" status",
+    "return-type": "json",
+    "tooltip": true,
+    "on-click": "bash "/home/aditya/POMODORO-CLI-application/pomodoro_manager.sh" start",
+    "on-click-right": "bash "/home/aditya/POMODORO-CLI-application/pomodoro_manager.sh" stop",
+    "on-click-middle": "bash "/home/aditya/POMODORO-CLI-application/pomodoro_manager.sh" toggle_pause"
+  },
+
+  "cpu": {
+    "format": "<span foreground='#fab387'>󰍛</span> {usage}%",
+    "tooltip-format": "CPU: {usage}% | Avg: {avg_frequency}GHz",
+    "interval": 1
+  },
+  "temperature": {
+    "thermal-zone": 2,
+    "format": "<span foreground='#f9e2af'>{icon}</span> {temperatureC}°C",
+    "format-icons": ["", "", ""]
+  },
+  "tray": { "icon-size": 16, "spacing": 8 },
+  "pulseaudio": {
+    "format": "<span foreground='#94e2d5'>{icon}</span> {volume}%",
+    "format-muted": "",
+    "format-icons": { "default": ["", "", " "] },
+    "on-click": "pavucontrol"
+  },
+  "battery": {
+    "states": { "warning": 30, "critical": 15 },
+    "format": "<span foreground='#a6e3a1'>{icon}</span> {capacity}%",
+    "format-charging": "<span foreground='#a6e3a1'></span> {capacity}%",
+    "format-full": "<span foreground='#a6e3a1'></span> {capacity}%",
+    "format-icons": ["", "", "", "", ""]
+  },
+  "clock": {
+    "format": "<span foreground='#f5c2e7'> </span>{:%a %d %H:%M}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+  }
+}

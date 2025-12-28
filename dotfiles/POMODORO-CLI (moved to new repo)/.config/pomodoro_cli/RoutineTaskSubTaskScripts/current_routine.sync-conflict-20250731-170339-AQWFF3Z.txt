@@ -1,0 +1,5 @@
+[1;33m1. QUICK RESULT ---[0m
+[0;36m1.1 Quick Result Summary:[0m [0;31mError: Journal file '/home/aditya/obsidian/All Things/Journal/Daily Journal/2025-07-30.md' not found.[0m
+
+
+[1;33mQuick Result Generated At:[0m [0;32m2025-07-30 20:40:07[0m

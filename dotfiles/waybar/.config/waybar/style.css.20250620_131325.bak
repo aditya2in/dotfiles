@@ -1,0 +1,168 @@
+/* --- General Waybar styling --- */
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "MesloLGS NF", monospace;
+  font-size: 13px; /* Slightly smaller font for a slimmer bar */
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: rgba(30, 30, 46, 0.9);
+  color: #cdd6f4;
+  border-radius: 8px;
+}
+
+/* --- Color definitions (Catppuccin Macchiato Palette) --- */
+@define-color base #1e1e2e;
+@define-color mantle #181825;
+@define-color crust #11111b;
+@define-color text #cdd6f4;
+@define-color subtext0 #a6adc8;
+@define-color surface0 #313244;
+@define-color surface1 #45475a;
+@define-color surface2 #585b70;
+@define-color blue #89b4fa;
+@define-color red #f38ba8;
+@define-color maroon #eba0ac;
+@define-color peach #fab387;
+@define-color green #a6e3a1;
+@define-color lavender #b4befe;
+@define-color yellow #f9e2af;
+@define-color mauve #cba6f7; /* Adding mauve for more color options if needed */
+
+/* --- Module specific styling --- */
+#workspaces button {
+  padding: 0 8px;
+  background-color: @surface0;
+  color: @subtext0;
+  border-radius: 5px;
+  margin: 3px 3px;
+  transition: all 0.3s ease-in-out;
+  font-size: 16px;
+  min-width: 45px;
+}
+
+#workspaces button:hover {
+  background-color: @surface1;
+  color: @text;
+}
+#workspaces button.active {
+  background-color: @blue;
+  color: @crust;
+  border-radius: 5px;
+  box-shadow: 0 0 5px @blue;
+}
+#workspaces button.occupied {
+  background-color: @surface2;
+  color: @text;
+}
+#workspaces button.urgent {
+  background-color: @red;
+  color: @text;
+}
+#workspaces button.empty {
+  background-color: @mantle;
+  color: @subtext0;
+}
+
+#window {
+  margin: 3px 3px;
+  padding: 0 10px;
+  background-color: @surface0;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* --- General styling for right-side modules --- */
+#clock,
+#battery,
+#cpu,
+#temperature,
+#network,
+#pulseaudio,
+#tray,
+#custom-memory {
+  padding: 0 10px;
+  background-color: @surface0;
+  color: @text;
+  margin: 3px 3px;
+  border-radius: 5px;
+}
+
+/* --- Pomodoro Module Specifics --- */
+#custom-pomo {
+  /* General styling for the module */
+  padding: 0 10px;
+  margin: 3px 3px;
+  border-radius: 5px;
+  font-weight: bold;
+  min-width: 150px; /* Give it a consistent width */
+  /* text-align: center; Removed as it causes an error. Waybar's default rendering often centers text within module. */
+  transition: all 0.3s ease-in-out; /* Smooth transitions for color changes */
+  /* Default background/color when no specific state matches (e.g., initial load, or if module is not 'running', 'paused', 'stopped') */
+  background-color: @mantle; /* A neutral background */
+  color: @subtext0; /* A neutral text color */
+}
+
+#custom-pomo.stopped {
+  background-color: @red;
+  color: @text; /* White text for contrast on red */
+  border-bottom: 2px solid @red; /* Strong bottom border */
+  font-weight: bold;
+  animation: attention-blink 1.5s ease-in-out infinite alternate;
+  box-shadow: 0 0 10px @red; /* More pronounced glow */
+  border-radius: 8px; /* Slightly more rounded for attention */
+}
+
+@keyframes attention-blink {
+  from {
+    background-color: @red;
+    box-shadow: 0 0 10px @red;
+  }
+  to {
+    background-color: @maroon; /* Slightly darker red */
+    box-shadow: 0 0 15px @maroon; /* Expand glow */
+  }
+}
+
+#custom-pomo.paused {
+  background-color: @yellow; /* Yellow for paused */
+  color: @base; /* Dark text for contrast on yellow */
+  border-bottom: 2px solid @yellow;
+  box-shadow: 0 0 5px @yellow;
+}
+
+#custom-pomo.running.work {
+  background-color: @green; /* Green for work */
+  color: @base; /* Dark text for contrast on green */
+  border-bottom: 2px solid @green;
+  box-shadow: 0 0 5px @green;
+}
+
+#custom-pomo.running.break {
+  background-color: @lavender; /* Lavender for short break */
+  color: @crust; /* Dark text for contrast on lavender */
+  border-bottom: 2px solid @lavender;
+  box-shadow: 0 0 5px @lavender;
+}
+
+#custom-pomo.running.long-break {
+  background-color: @blue; /* Blue for long break */
+  color: @crust; /* Dark text for contrast on blue */
+  border-bottom: 2px solid @blue;
+  box-shadow: 0 0 5px @blue;
+}
+
+/* Styling for the bracketed text parts using Pango markup */
+#custom-pomo span.pomo-total {
+  color: @subtext0; /* Subtle color for total pomodoros */
+  font-weight: normal; /* Less emphasis */
+  opacity: 0.8; /* Slightly less opaque */
+}
+
+#custom-pomo span.pomo-cycle {
+  color: @subtext0; /* Subtle color for cycle progress */
+  font-weight: normal; /* Less emphasis */
+  opacity: 0.8; /* Slightly less opaque */
+}

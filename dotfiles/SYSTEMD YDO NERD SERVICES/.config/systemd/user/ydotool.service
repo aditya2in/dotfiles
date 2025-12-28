@@ -1,0 +1,18 @@
+# ~/.config/systemd/user/ydotool.service
+# Systemd user service for ydotool daemon
+
+[Unit]
+Description=ydotool daemon
+Documentation=https://github.com/ydotool/ydotool
+Wants=wayland-session.target # Optional, but good if ydotool depends on Wayland being up
+After=wayland-session.target # Optional, same reason
+
+[Service]
+ExecStart=/usr/bin/ydotoold
+Restart=on-failure
+RestartSec=5
+# StandardOutput=journal # Uncomment if you want ydotool logs in journalctl
+# StandardError=journal  # Uncomment if you want ydotool logs in journalctl
+
+[Install]
+WantedBy=default.target

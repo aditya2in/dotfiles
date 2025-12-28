@@ -1,0 +1,19 @@
+[Unit]
+Description=Nerd Dictation Daemon
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+# Starts the daemon. --no-dmenu prevents a GUI from popping up at login
+ExecStart=/home/aditya/dotfiles/scripts/toggle_nerd_dictation_TERMINAL.sh 
+
+Restart=on-failure
+# Wait 5 seconds before restarting on failure
+RestartSec=5
+
+# Ensure standard output/error are logged, which can help in debugging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

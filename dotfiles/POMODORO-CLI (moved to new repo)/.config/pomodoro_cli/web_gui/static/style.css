@@ -1,0 +1,460 @@
+:root {
+    /* Dark Theme Colors (Catppuccin Macchiato-inspired) */
+    --bg-color: #24273a; /* Base */
+    --container-bg: #363a4f; /* Mantle */
+    --section-bg: #494d64; /* Crust */
+    --text-color: #cad3f5; /* Text */
+    --heading-color: #8aadf4; /* Blue */
+    --success-bg: #a6da95; /* Green */
+    --success-text: #181926; /* Overlay0 */
+    --error-bg: #ed8796; /* Red */
+    --error-text: #181926; /* Overlay0 */
+    --pomodoro-status-color: #f5bde6; /* Pink */
+    --daemon-status-color: #c6a0f6; /* Lavender */
+    --daemon-running-color: #a6da95; /* Green */
+    --daemon-stopped-color: #ed8796; /* Red */
+    --button-bg: #8aadf4; /* Blue */
+    --button-text: #181926; /* Overlay0 */
+    --button-hover-bg: #7dc4e4; /* Sky */
+    --config-group-bg: #5b6078; /* Surface1 */
+    --config-heading-color: #a6da95; /* Green */
+    --input-border: #7b7f96; /* Surface2 */
+    --input-bg: #181926; /* Overlay0 */
+    --input-text: #cad3f5; /* Text */
+    --radio-border: #8aadf4; /* Blue */
+    --radio-checked-bg: #8aadf4; /* Blue */
+    --default-value-color: #b8c0e0; /* Subtext0 */
+    --restore-button-bg: #f5bde6; /* Pink */
+    --restore-button-hover-bg: #f0c6c6; /* Rosewater */
+    --restore-all-button-bg: #ed8796; /* Red */
+    --restore-all-button-hover-bg: #e64553; /* Maroon */
+}
+
+[data-theme="light"] {
+    /* Light Theme Colors (Catppuccin Latte-inspired) */
+    --bg-color: #eff1f5; /* Base */
+    --container-bg: #e6e9ef; /* Mantle */
+    --section-bg: #dce0ee; /* Crust */
+    --text-color: #4c4f69; /* Text */
+    --heading-color: #1e66f5; /* Blue */
+    --success-bg: #40a02b; /* Green */
+    --success-text: #eff1f5; /* Base */
+    --error-bg: #e64553; /* Red */
+    --error-text: #eff1f5; /* Base */
+    --pomodoro-status-color: #ea76cb; /* Pink */
+    --daemon-status-color: #9c40ba; /* Lavender */
+    --daemon-running-color: #40a02b; /* Green */
+    --daemon-stopped-color: #e64553; /* Red */
+    --button-bg: #1e66f5; /* Blue */
+    --button-text: #eff1f5; /* Base */
+    --button-hover-bg: #209fb5; /* Sky */
+    --config-group-bg: #ccd0da; /* Surface1 */
+    --config-heading-color: #40a02b; /* Green */
+    --input-border: #acb0be; /* Surface2 */
+    --input-bg: #eff1f5; /* Base */
+    --input-text: #4c4f69; /* Text */
+    --radio-border: #1e66f5; /* Blue */
+    --radio-checked-bg: #1e66f5; /* Blue */
+    --default-value-color: #6c6f85; /* Subtext0 */
+    --restore-button-bg: #ea76cb; /* Pink */
+    --restore-button-hover-bg: #d20f39; /* Rosewater */
+    --restore-all-button-bg: #e64553; /* Red */
+    --restore-all-button-hover-bg: #d20f39; /* Maroon */
+}
+
+/* Basic Reset & Typography */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    max-width: 98%; /* Use almost full width */
+    width: 100%; /* Ensure it takes full width */
+    margin: 10px auto;
+    background-color: var(--container-bg);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--input-border);
+}
+
+header h1 {
+    margin: 0;
+    text-align: left;
+}
+
+h1, h2, h3 {
+    color: var(--heading-color);
+    text-align: center;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+}
+
+.section {
+    background-color: var(--section-bg);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Left column 1 part, Right column 2 parts */
+    gap: 20px;
+}
+
+.status-actions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.config-section {
+    /* No specific flex/grid properties here, handled by main-grid */
+}
+
+/* Messages */
+.message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.message.success {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+}
+
+.message.error {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+}
+
+/* Status Section */
+.status-section {
+    text-align: center;
+}
+
+.pomodoro-status {
+    font-size: 1.8em; /* Adjusted relative to new base */
+    font-weight: bold;
+    color: var(--pomodoro-status-color);
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+/* Daemon Status */
+.daemon-status {
+    font-size: 0.9em; /* Adjusted relative to new base */
+    color: var(--daemon-status-color);
+    transition: color 0.3s ease;
+}
+
+.daemon-status-running {
+    color: var(--daemon-running-color);
+    font-weight: bold;
+}
+
+.daemon-status-stopped {
+    color: var(--daemon-stopped-color);
+    font-weight: bold;
+}
+
+/* Action Forms */
+.action-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-form button, .config-form button, .action-form .action-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.action-form button:hover, .config-form button:hover, .action-form .action-button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+/* Configuration Forms */
+.config-form .config-group {
+    background-color: var(--config-group-bg);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.config-form .config-group h3 {
+    color: var(--config-heading-color);
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--input-border);
+    padding-bottom: 8px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.form-row label, .form-group label {
+    flex: 1 1 120px;
+    font-weight: bold;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.form-row input[type="text"], .form-group input[type="text"] {
+    flex: 1 1 100px;
+    padding: 5px;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    font-size: 0.85em;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.duration-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid for durations */
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.radio-group input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.radio-group label {
+    position: relative;
+    padding-left: 20px;
+    cursor: pointer;
+    color: var(--text-color);
+    font-weight: normal;
+    transition: color 0.3s ease;
+}
+
+.radio-group label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--radio-border);
+    border-radius: 50%;
+    background-color: var(--input-bg);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.radio-group input[type="radio"]:checked + label::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--radio-checked-bg);
+    transition: background-color 0.3s ease;
+}
+
+.default-value {
+    font-size: 0.75em;
+    color: var(--default-value-color);
+    flex: 0 0 90px;
+    transition: color 0.3s ease;
+}
+
+.restore-individual-button {
+    padding: 4px 8px;
+    font-size: 0.75em;
+    margin-left: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.restore-individual-button:hover {
+    background-color: var(--restore-button-hover-bg);
+}
+
+.form-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form-actions button {
+    margin: 0 8px;
+}
+
+.restore-button {
+    background-color: var(--restore-all-button-bg);
+}
+
+.restore-button:hover {
+    background-color: var(--restore-all-button-hover-bg);
+}
+
+/* Theme Switch Styles */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+    gap: 8px;
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 25px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 25px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .main-grid {
+        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .form-row, .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .form-row label, .form-group label,
+    .default-value {
+        flex: none;
+        width: 100%;
+    }
+
+    .form-row input[type="text"], .form-group input[type="text"] {
+        width: 100%;
+    }
+
+    .restore-individual-button {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .action-form {
+        flex-direction: column;
+    }
+
+    .action-form button {
+        width: 100%;
+    }
+}
