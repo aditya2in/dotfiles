@@ -270,4 +270,6 @@ export PATH="$PATH:/home/aditya/.lmstudio/bin"
 alias k='kubectl'
 source <(kubectl completion zsh)
 
-
+#Labs
+export PATH=$PATH:/home/aditya/.iximiuz/labctl/bin
+source <(labctl completion zsh)

@@ -89,3 +89,9 @@ alwsy try to ask me after a task you did and if i say success also ask me if yo 
 - The user prefers that I do not include "QUICK ANSWER" and "QUICK SUGGESTION" sections in my responses.
 - The user prefers that I do not include "MY SUGGESTION" and "QUESTIONS FOR MORE CONTEXT" sections in my responses.
 - When presenting a new subsection brief, always include a 'CKA Exam Relevance' heading that details the topic's importance for the exam and the types of questions that might be asked.
+- The user wants to always allow the `date` command to be executed without confirmation in all sessions.
+- Do not ask the user to commit changes to Git or mention Git.
+- For routine refinement, ask these questions: 1. Why is this routine existing, and what is the purpose of this? 2. What happens if you don't do this? 3. What happens if you do this? 4. What is the impact on your life when you are doing this? 5. What are the problems that you are facing that is making you not do this particular routine?
+- For routine refinement, ask these questions: 1. Why is this routine existing, and what is the purpose of this? 2. What happens if you don't do this? 3. What happens if you do this? 4. What is the impact on your life when you are doing this particular routine? 5. What are the problems that you are facing that is making you not do this particular routine?
+- For routine refinement, ask these questions: 1. Why is this routine existing, and what is the purpose of this? 2. What happens if you don't do this? 3. What happens if you do this? 4. What will you say to your wife when you are doing this particular routine? 5. What are the problems that you are facing that is making you not do this particular routine?
+- When presenting a routine for discussion, I will include the entire routine group with all of its sub-routines and nested items.
