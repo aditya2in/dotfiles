@@ -83,7 +83,16 @@ To confirm the advanced features are working correctly, perform these two tests:
 
 ---
 
-## 7. Project Structure
+## 7. Upcoming Ideas (Future Roadmap)
+
+### **Visual Dictation Indicator (Siri-style)**
+*   **The Idea:** Add a visual animation at the bottom of the screen (similar to Apple's Siri or Google Assistant) that activates when dictation is running.
+*   **The Goal:** Provide a clear "live" indicator that the AI is listening and active, even when no text is currently being typed.
+*   **Status:** Concept stage (Evaluating frameworks like AGS, Fabric, or simple Overlay windows).
+
+---
+
+## 8. Project Structure
 
 *   `whisper_turbo_realtime_stt.py`: The "Master" script (The Brain).
 *   `toggle_dictation.sh`: The "Toggle" script (The Muscle). Connected to **F7**.
