@@ -42,7 +42,7 @@ def main():
         "device": "cuda",
         "compute_type": "float16",
         "language": "en",
-        "post_speech_silence_duration": 0.6,
+        "post_speech_silence_duration": 0.7,
         "min_gap_between_recordings": 0.05,
         "input_device_index": None,
         "spinner": False,
@@ -75,7 +75,7 @@ def main():
                 if hasattr(recorder, 'is_recording') and recorder.is_recording:
                     # If recording exceeds 15 seconds, trigger a cut
                     start_time = getattr(recorder, 'recording_start_time', 0)
-                    if start_time > 0 and (time.time() - start_time) > 15:
+                    if start_time > 0 and (time.time() - start_time) > 20:
                         print("\n[DEBUG] Safety Cut (15s limit).")
                         recorder.stop()
                 time.sleep(0.5)
