@@ -76,10 +76,10 @@ To confirm the advanced features are working correctly, perform these two tests:
 *   **What to observe:** Around the **15-second mark**, a "burst" of text should appear on your screen even though you haven't stopped talking. 
 *   **Technical Reason:** This confirms the **Safety Cut** is forcing a transcription snapshot to keep the screen updated during long speeches.
 
-### **Test 2: The "Overlap" Test (Verifies Lane 2 Threading)**
-*   **Action:** Say a sentence, and then **immediately** start saying your next sentence while the first one is still being typed onto the screen.
-*   **What to observe:** Both sentences should appear perfectly. The system should not "miss" the start of the second sentence.
-*   **Technical Reason:** This confirms the **Threaded Output (Lane 2)** is working. The "Ear" (AI) is listening to your new words while the "Finger" (Background Thread) is busy typing the old ones.
+### **Test 3: The "Smart Pause" Test (Verifies Focus Detection)**
+*   **Action:** Ensure the Waybar icon is **Green**. Open your browser (Brave) and click on it to focus.
+*   **What to observe:** The icon should turn **Yellow** (Mute icon) within 1 second. Try speaking; no text should be typed into the browser. Click back to your terminal; the icon should return to **Green**.
+*   **Technical Reason:** This confirms the **Hyprland Socket2 Listener** is correctly catching focus events and pausing the recorder to prevent headphone leakage.
 
 ---
 
@@ -100,4 +100,35 @@ To confirm the advanced features are working correctly, perform these two tests:
 *   `venv/`: The "Closet." Contains all the heavy GPU libraries (torch, faster-whisper).
 
 ---
-*Created on: January 26, 2026. This document is your manual for the ultimate dictation experience.*
+
+## 9. The "Smart Pause" & Waybar System (Added Feb 13, 2026)
+
+### **The Problem: Audio Leakage**
+When watching online courses in a browser (Brave), the audio from the headphones can leak into the microphone. The STT engine then transcribes the course content into your active window, causing unwanted text and potential disruptions.
+
+### **The Solution: Focus-Aware Suppression**
+The system now includes an **Event-Driven Smart Pause** mechanism. It automatically stops the microphone recording whenever you are focused on specific "blocked" applications (like your browser).
+
+### **How it Works (The "Expert" Way)**
+*   **Hyprland Socket2:** Instead of constantly checking which window is open (polling), the script connects to Hyprland's native Unix socket (`.socket2.sock`). 
+*   **Zero Overhead:** The script sits idle and only wakes up when Hyprland "pushes" a focus change event. This consumes **0% CPU** while you are working.
+*   **Instant Reaction:** The moment you click on the Brave browser, the engine stops. The moment you click back to your terminal or Obsidian, it resumes.
+
+### **Visual Feedback (Waybar)**
+The system is integrated into your Waybar with a dedicated module that shows the exact state of the engine:
+*   🟢 **Green (Running):** Active and transcribing.
+*   🟡 **Yellow (Smart/Manual Pause):** Muted. The tooltip will tell you if it's because of a manual pause (F8) or because you are focused on a blocked app (Brave).
+*   🔴 **Red (Stopped):** The engine is completely turned off.
+
+### **Future-Proofing: Customization**
+You can control this behavior without touching any code by editing:
+`~/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/whisper_config.json`
+
+| Setting | Value | Description |
+| :--- | :--- | :--- |
+| `smart_pause_enabled` | `true/false` | Master switch for the auto-pause feature. |
+| `ignored_classes` | `["brave-browser"]` | A list of window classes that should trigger a pause. Add more apps here to block them! |
+
+---
+*Updated on: February 13, 2026. Optimized for focus and professional workflow.*
+

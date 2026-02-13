@@ -19,6 +19,9 @@ stop_dictation() {
     pkill -f "$SCRIPT_NAME" 2>/dev/null
     rm -f "/tmp/whisper_paused"
     
+    # Update Waybar to stopped state
+    echo '{"text": "󰍭", "class": "stopped", "alt": "stopped", "tooltip": "Whisper STT: OFF"}' > "/tmp/whisper_status.json"
+    
     notify-send "Whisper STT" "Status: STOPPED" -i microphone-sensitivity-muted -t 2000
 }
 

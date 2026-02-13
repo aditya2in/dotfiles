@@ -5,6 +5,8 @@ import threading
 import queue
 import time
 import signal
+import json
+import socket
 from RealtimeSTT import AudioToTextRecorder
 
 # Force usage of GPU if available
@@ -12,22 +14,56 @@ os.environ["CT2_CUDA_ALLOW_TF32"] = "1"
 
 # Global state for pausing
 is_paused = False
+is_browser_focused = False
 PAUSE_FILE = "/tmp/whisper_paused"
+STATUS_FILE = "/tmp/whisper_status.json"
 recorder = None  # Global reference to allow background interruption
+
+def update_waybar():
+    """Update the status JSON for Waybar."""
+    global is_paused, is_browser_focused
+    state = "running"
+    icon = "󰍬" # Microphone On
+    tooltip = "Whisper STT: Active"
+    
+    if is_paused or is_browser_focused:
+        state = "paused"
+        icon = "󰍭" # Microphone Paused
+        tooltip = "Whisper STT: Paused (Manual)" if is_paused else "Whisper STT: Smart Paused (Brave)"
+        
+    status = {
+        "text": icon,
+        "class": state,
+        "alt": state,
+        "tooltip": tooltip
+    }
+    
+    try:
+        # Atomic write
+        temp_status = STATUS_FILE + ".tmp"
+        with open(temp_status, "w") as f:
+            json.dump(status, f)
+        os.rename(temp_status, STATUS_FILE)
+        log_engine(f"Status file updated: {state}")
+    except Exception as e:
+        log_engine(f"Waybar update failed: {e}")
 
 def pause_watcher():
     """Background thread that watches for a pause file."""
     global is_paused, recorder
     # Ensure file doesn't exist at start
     if os.path.exists(PAUSE_FILE):
-        os.remove(PAUSE_FILE)
+        try:
+            os.remove(PAUSE_FILE)
+        except:
+            pass
         
     last_state = False
     while True:
         current_state = os.path.exists(PAUSE_FILE)
         if current_state != last_state:
             is_paused = current_state
-            status = "PAUSED" if is_paused else "RESUMED"
+            status_text = "PAUSED" if is_paused else "RESUMED"
             icon = "microphone-sensitivity-muted" if is_paused else "microphone-sensitivity-high"
             
             # INSTANT STOP: If we just paused, force the recorder to stop immediately
@@ -37,20 +73,132 @@ def pause_watcher():
                 except Exception:
                     pass
 
-            print(f"\n[INFO] Dictation {status}")
+            log_engine(f"Manual Pause Change: {status_text}")
+            update_waybar()
+            
             subprocess.run([
                 "notify-send", 
                 "Whisper STT", 
-                f"Status: {status}", 
+                f"Status: {status_text}", 
                 "-i", icon, 
                 "-t", "1500",
                 "-h", "string:x-canonical-private-synchronous:whisper-pause"
             ])
             last_state = current_state
-        time.sleep(0.1) # Faster check for snappier response
+        time.sleep(0.1)
 
-# Start the pause watcher thread
-threading.Thread(target=pause_watcher, daemon=True).start()
+def log_engine(msg):
+    """Log to a temporary file for debugging."""
+    try:
+        with open("/tmp/whisper_engine.log", "a") as f:
+            f.write(f"[{time.strftime('%H:%M:%S')}] {msg}\n")
+    except Exception:
+        pass
+
+def signal_handler(sig, frame):
+    """Graceful shutdown on SIGTERM."""
+    log_engine("Received termination signal.")
+    if recorder:
+        try:
+            recorder.stop()
+        except:
+            pass
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, signal_handler)
+
+CONFIG_FILE = os.path.join(os.path.dirname(__file__), "whisper_config.json")
+
+def load_config():
+    """Load configuration from JSON file."""
+    defaults = {
+        "smart_pause_enabled": True,
+        "ignored_classes": ["brave-browser"]
+    }
+    try:
+        if os.path.exists(CONFIG_FILE):
+            with open(CONFIG_FILE, "r") as f:
+                return {**defaults, **json.load(f)}
+    except Exception as e:
+        log_engine(f"Config load error: {e}")
+    return defaults
+
+def hyprland_event_listener():
+    """Listen to Hyprland socket2 for real-time focus changes."""
+    global is_browser_focused, recorder
+    
+    config = load_config()
+    if not config.get("smart_pause_enabled"):
+        log_engine("Smart Pause is disabled in config. Thread exiting.")
+        return
+
+    ignored_apps = config.get("ignored_classes", [])
+    log_engine(f"Starting Smart Pause for: {ignored_apps}")
+    
+    signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
+    if not signature:
+        # Fallback: Try to find signature in /tmp/hypr or /run/user/1000/hypr
+        log_engine("HYPRLAND_INSTANCE_SIGNATURE not in env. Searching...")
+        try:
+            uid = os.getuid()
+            paths = [f"/run/user/{uid}/hypr/", "/tmp/hypr/"]
+            for p in paths:
+                if os.path.exists(p):
+                    dirs = [d for d in os.listdir(p) if len(d) > 30] # Signature is long hex
+                    if dirs:
+                        signature = dirs[0]
+                        log_engine(f"Found signature: {signature}")
+                        break
+        except Exception as e:
+            log_engine(f"Fallback search failed: {e}")
+
+    if not signature:
+        log_engine("CRITICAL: Could not find Hyprland signature.")
+        return
+
+    uid = os.getuid()
+    sock_path = f"/run/user/{uid}/hypr/{signature}/.socket2.sock"
+    if not os.path.exists(sock_path):
+        sock_path = f"/tmp/hypr/{signature}/.socket2.sock"
+    
+    log_engine(f"Using socket path: {sock_path}")
+    
+    while True:
+        try:
+            with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+                client.connect(sock_path)
+                log_engine("Connected to Hyprland Event Socket.")
+                
+                # Line-buffered reading is much more reliable
+                with client.makefile('r') as f:
+                    # Initial Check on startup
+                    res = subprocess.run(["hyprctl", "activewindow", "-j"], capture_output=True, text=True)
+                    if res.returncode == 0:
+                        data = json.loads(res.stdout)
+                        is_browser_focused = (data.get("class") == "brave-browser")
+                        log_engine(f"Initial focus: {data.get('class')} (Brave: {is_browser_focused})")
+                        update_waybar()
+
+                    for line in f:
+                        if "activewindow>>" in line:
+                            try:
+                                window_class = line.split("activewindow>>")[1].split(",")[0].strip()
+                                # Check against the list from our config
+                                new_focus = (window_class in ignored_apps)
+                                
+                                if new_focus != is_browser_focused:
+                                    is_browser_focused = new_focus
+                                    status = f"PAUSED ({window_class})" if is_browser_focused else "RESUMED"
+                                    log_engine(f"Focus changed: {window_class} -> {status}")
+                                    update_waybar()
+                            except Exception as e:
+                                log_engine(f"Parsing error: {e}")
+        except Exception as e:
+            log_engine(f"Socket error: {e}. Retrying...")
+            time.sleep(2)
+        except Exception as e:
+            print(f"[ERROR] Socket error: {e}. Retrying...")
+            time.sleep(2)
 
 # Lane 2: The typing queue and worker
 text_queue = queue.Queue()
@@ -68,16 +216,17 @@ def typing_worker():
             pass
         text_queue.task_done()
 
-# Start the background typing thread immediately
 threading.Thread(target=typing_worker, daemon=True).start()
 
 def main():
-    print("[DEBUG] Script started (Threaded Hybrid Mode).")
+    print("[DEBUG] Script started (Event-Driven Smart Mode).")
     
-    print("\n[INFO] Using SYSTEM DEFAULT audio device.")
-    print("\n[DEBUG] Initializing Whisper Turbo Model...")
+    # Start background threads only after defining recorder
+    threading.Thread(target=pause_watcher, daemon=True).start()
+    threading.Thread(target=hyprland_event_listener, daemon=True).start()
+
+    print("\n[INFO] Initializing Whisper Turbo Model...")
     
-    # Store context for continuity
     last_text = ""
 
     recorder_config = {
@@ -90,71 +239,52 @@ def main():
         "input_device_index": None,
         "spinner": False,
         "use_microphone": True,
-        "silero_sensitivity": 0.4, # Keyboard/Headset Leakage Filter
+        "silero_sensitivity": 0.4,
         "webrtc_sensitivity": 3,
         "min_length_of_recording": 0.3,
-        "beam_size": 1, # Maximize speed, reduce missed words
+        "beam_size": 1,
         "initial_prompt": "This is a continuous dictation session."
     }
 
     def process_text(text):
         nonlocal last_text
-        if is_paused:
-            return  # Instant discard if we are paused
+        if is_paused or is_browser_focused:
+            return 
 
         text = text.strip()
         if text:
-            # Provide full context to the next chunk for perfect grammar
             recorder.initial_prompt = f"Previous text: {last_text}. Continue the thought naturally."
             last_text = text
-            
-            # Drop text into Lane 2 (Typing) and immediately return to listening
             text_queue.put(text + " ")
 
     try:
         global recorder
         recorder = AudioToTextRecorder(**recorder_config)
-        print("[DEBUG] Recorder instantiated successfully.")
-        
-        # SAFETY CUT LOGIC:
-        def safety_monitor():
-            while True:
-                if not is_paused and hasattr(recorder, 'is_recording') and recorder.is_recording:
-                    start_time = getattr(recorder, 'recording_start_time', 0)
-                    if start_time > 0 and (time.time() - start_time) > 20:
-                        print("\n[DEBUG] Safety Cut (15s limit).")
-                        recorder.stop()
-                time.sleep(0.5)
-
-        threading.Thread(target=safety_monitor, daemon=True).start()
-
+        update_waybar() # Set initial green state
         print("\n>>> System Ready! Speak into your microphone.")
 
         while True:
-            if is_paused:
+            if is_paused or is_browser_focused:
                 if getattr(recorder, 'is_recording', False):
-                    print("[DEBUG] Pausing: Stopping recorder...")
                     recorder.stop()
                 time.sleep(0.5)
                 continue
             
             if not getattr(recorder, 'is_recording', False):
-                print("[DEBUG] Resuming: Starting recorder...")
                 recorder.start()
 
-            # This blocks while listening, then calls process_text
             try:
                 recorder.text(process_text)
             except Exception as e:
-                if not is_paused:
+                if not (is_paused or is_browser_focused):
                     print(f"[ERROR] Recorder error: {e}")
                 time.sleep(0.1)
 
     except KeyboardInterrupt:
+        pass
+    finally:
         print("\nStopping...")
         text_queue.put(None)
-    except Exception as e:
-        print(f"\nAn error occurred: {e}")
 
 if __name__ == "__main__":
     main()
