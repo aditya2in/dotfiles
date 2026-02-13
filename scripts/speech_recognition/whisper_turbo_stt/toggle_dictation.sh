@@ -62,9 +62,27 @@ pause_dictation() {
     fi
 }
 
+# Function to toggle smart pause override
+toggle_override() {
+    if [ -f "$PID_FILE" ] && ps -p $(cat "$PID_FILE") > /dev/null; then
+        OVERRIDE_FILE="/tmp/whisper_smart_pause_override"
+        if [ -f "$OVERRIDE_FILE" ]; then
+            rm "$OVERRIDE_FILE"
+            notify-send "Whisper STT" "Smart Pause: RE-ENABLED (Blocked Apps Active)" -i security-high -t 2000
+        else
+            touch "$OVERRIDE_FILE"
+            notify-send "Whisper STT" "Smart Pause: OVERRIDDEN (Dictate Everywhere)" -i security-low -t 2000
+        fi
+    else
+        notify-send "Whisper STT" "Engine is OFF. Press F7 to start first." -i dialog-warning -t 3000
+    fi
+}
+
 # Toggle Logic
 if [ "$1" == "--pause" ]; then
     pause_dictation
+elif [ "$1" == "--toggle-override" ]; then
+    toggle_override
 elif pgrep -f "$SCRIPT_NAME" > /dev/null; then
     stop_dictation
 else

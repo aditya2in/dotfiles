@@ -15,18 +15,28 @@ os.environ["CT2_CUDA_ALLOW_TF32"] = "1"
 # Global state for pausing
 is_paused = False
 is_browser_focused = False
+smart_pause_override = False # New: Global override for smart pause
 PAUSE_FILE = "/tmp/whisper_paused"
+OVERRIDE_FILE = "/tmp/whisper_smart_pause_override"
 STATUS_FILE = "/tmp/whisper_status.json"
 recorder = None  # Global reference to allow background interruption
 
 def update_waybar():
     """Update the status JSON for Waybar."""
-    global is_paused, is_browser_focused
+    global is_paused, is_browser_focused, smart_pause_override
     state = "running"
     icon = "󰍬" # Microphone On
     tooltip = "Whisper STT: Active"
     
-    if is_paused or is_browser_focused:
+    # If override is active, we show a special "God Mode" state
+    if smart_pause_override:
+        icon = "󰍮" # Microphone with plus/override
+        tooltip = "Whisper STT: Override Active (Global)"
+        if is_paused:
+            state = "paused"
+            icon = "󰍭"
+            tooltip = "Whisper STT: Paused (Manual)"
+    elif is_paused or is_browser_focused:
         state = "paused"
         icon = "󰍭" # Microphone Paused
         tooltip = "Whisper STT: Paused (Manual)" if is_paused else "Whisper STT: Smart Paused (Brave)"
@@ -44,9 +54,26 @@ def update_waybar():
         with open(temp_status, "w") as f:
             json.dump(status, f)
         os.rename(temp_status, STATUS_FILE)
-        log_engine(f"Status file updated: {state}")
+        log_engine(f"Status file updated: {state} (Override: {smart_pause_override})")
     except Exception as e:
         log_engine(f"Waybar update failed: {e}")
+
+def override_watcher():
+    """Background thread that watches for the smart pause override file."""
+    global smart_pause_override
+    if os.path.exists(OVERRIDE_FILE):
+        try: os.remove(OVERRIDE_FILE)
+        except: pass
+    
+    last_state = False
+    while True:
+        current_state = os.path.exists(OVERRIDE_FILE)
+        if current_state != last_state:
+            smart_pause_override = current_state
+            log_engine(f"Smart Pause Override: {'ENABLED' if smart_pause_override else 'DISABLED'}")
+            update_waybar()
+            last_state = current_state
+        time.sleep(0.2)
 
 def pause_watcher():
     """Background thread that watches for a pause file."""
@@ -223,6 +250,7 @@ def main():
     
     # Start background threads only after defining recorder
     threading.Thread(target=pause_watcher, daemon=True).start()
+    threading.Thread(target=override_watcher, daemon=True).start()
     threading.Thread(target=hyprland_event_listener, daemon=True).start()
 
     print("\n[INFO] Initializing Whisper Turbo Model...")
@@ -248,7 +276,8 @@ def main():
 
     def process_text(text):
         nonlocal last_text
-        if is_paused or is_browser_focused:
+        # Logic: Pause only if manually paused OR (browser is focused AND override is NOT active)
+        if is_paused or (is_browser_focused and not smart_pause_override):
             return 
 
         text = text.strip()
@@ -264,7 +293,10 @@ def main():
         print("\n>>> System Ready! Speak into your microphone.")
 
         while True:
-            if is_paused or is_browser_focused:
+            # Logic: Pause only if manually paused OR (browser is focused AND override is NOT active)
+            effective_pause = is_paused or (is_browser_focused and not smart_pause_override)
+            
+            if effective_pause:
                 if getattr(recorder, 'is_recording', False):
                     recorder.stop()
                 time.sleep(0.5)
@@ -276,7 +308,7 @@ def main():
             try:
                 recorder.text(process_text)
             except Exception as e:
-                if not (is_paused or is_browser_focused):
+                if not effective_pause:
                     print(f"[ERROR] Recorder error: {e}")
                 time.sleep(0.1)
 
