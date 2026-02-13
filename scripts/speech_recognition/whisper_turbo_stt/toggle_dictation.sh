@@ -17,6 +17,7 @@ stop_dictation() {
     fi
     # Thorough cleanup
     pkill -f "$SCRIPT_NAME" 2>/dev/null
+    rm -f "/tmp/whisper_paused"
     
     notify-send "Whisper STT" "Status: STOPPED" -i microphone-sensitivity-muted -t 2000
 }
@@ -43,8 +44,25 @@ start_dictation() {
     fi
 }
 
+# Function to toggle pause
+pause_dictation() {
+    # Check if PID file exists and process is alive
+    if [ -f "$PID_FILE" ] && ps -p $(cat "$PID_FILE") > /dev/null; then
+        PAUSE_FILE="/tmp/whisper_paused"
+        if [ -f "$PAUSE_FILE" ]; then
+            rm "$PAUSE_FILE"
+        else
+            touch "$PAUSE_FILE"
+        fi
+    else
+        notify-send "Whisper STT" "Engine is OFF. Press F7 to start first." -i dialog-warning -t 3000
+    fi
+}
+
 # Toggle Logic
-if pgrep -f "$SCRIPT_NAME" > /dev/null; then
+if [ "$1" == "--pause" ]; then
+    pause_dictation
+elif pgrep -f "$SCRIPT_NAME" > /dev/null; then
     stop_dictation
 else
     start_dictation
