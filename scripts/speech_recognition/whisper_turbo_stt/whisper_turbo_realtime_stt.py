@@ -262,15 +262,15 @@ def main():
         "device": "cuda",
         "compute_type": "float16",
         "language": "en",
-        "post_speech_silence_duration": 0.65,
+        "post_speech_silence_duration": 0.7,
         "min_gap_between_recordings": 0.0,
         "input_device_index": None,
         "spinner": False,
         "use_microphone": True,
-        "silero_sensitivity": 0.4,
+        "silero_sensitivity": 0.3,
         "webrtc_sensitivity": 3,
         "min_length_of_recording": 0.3,
-        "beam_size": 1,
+        "beam_size": 5,
         "initial_prompt": "This is a continuous dictation session."
     }
 

@@ -1,6 +1,7 @@
 {
     "smart_pause_enabled": true,
     "ignored_classes": [
-        "brave-browser"
+        "brave-browser",
+        "obsidian"
     ]
 }
