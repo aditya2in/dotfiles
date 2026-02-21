@@ -160,7 +160,8 @@ def hyprland_event_listener():
         return
 
     ignored_apps = config.get("ignored_classes", [])
-    log_engine(f"Starting Smart Pause for: {ignored_apps}")
+    allowed_titles = config.get("allowed_titles", [])
+    log_engine(f"Starting Smart Pause for: {ignored_apps} (Exceptions: {allowed_titles})")
     
     signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
     if not signature:
@@ -202,29 +203,41 @@ def hyprland_event_listener():
                     res = subprocess.run(["hyprctl", "activewindow", "-j"], capture_output=True, text=True)
                     if res.returncode == 0:
                         data = json.loads(res.stdout)
-                        is_browser_focused = (data.get("class") == "brave-browser")
-                        log_engine(f"Initial focus: {data.get('class')} (Brave: {is_browser_focused})")
+                        window_class = data.get("class", "")
+                        window_title = data.get("title", "")
+                        
+                        # Logic: Block if app is ignored UNLESS title is allowed
+                        app_ignored = (window_class in ignored_apps)
+                        title_allowed = any(t in window_title for t in allowed_titles)
+                        
+                        is_browser_focused = (app_ignored and not title_allowed)
+                        log_engine(f"Initial focus: {window_class} | {window_title} (Blocked: {is_browser_focused})")
                         update_waybar()
 
                     for line in f:
                         if "activewindow>>" in line:
                             try:
-                                window_class = line.split("activewindow>>")[1].split(",")[0].strip()
-                                # Check against the list from our config
-                                new_focus = (window_class in ignored_apps)
+                                # Format is: activewindow>>[class],[title]
+                                payload = line.split("activewindow>>")[1].strip()
+                                parts = payload.split(",")
+                                window_class = parts[0].strip()
+                                window_title = ",".join(parts[1:]).strip() # Rejoin if title has commas
+                                
+                                # Logic: Block if app is ignored UNLESS title is allowed
+                                app_ignored = (window_class in ignored_apps)
+                                title_allowed = any(t in window_title for t in allowed_titles)
+                                
+                                new_focus = (app_ignored and not title_allowed)
                                 
                                 if new_focus != is_browser_focused:
                                     is_browser_focused = new_focus
                                     status = f"PAUSED ({window_class})" if is_browser_focused else "RESUMED"
-                                    log_engine(f"Focus changed: {window_class} -> {status}")
+                                    log_engine(f"Focus changed: {window_class} | {window_title} -> {status}")
                                     update_waybar()
                             except Exception as e:
                                 log_engine(f"Parsing error: {e}")
         except Exception as e:
             log_engine(f"Socket error: {e}. Retrying...")
-            time.sleep(2)
-        except Exception as e:
-            print(f"[ERROR] Socket error: {e}. Retrying...")
             time.sleep(2)
 
 # Lane 2: The typing queue and worker
