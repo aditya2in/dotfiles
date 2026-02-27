@@ -132,3 +132,23 @@ You can control this behavior without touching any code by editing:
 ---
 *Updated on: February 13, 2026. Optimized for focus and professional workflow.*
 
+
+## Future Improvements & Efficiency Ideas (Feb 22, 2026)
+
+Based on recent system recovery and optimization analysis, here are the top ideas for improving the dictation engine:
+
+1. **Engine Optimization (Faster-Whisper):**
+   - **Action:** Transition from the standard OpenAI Whisper library to **Faster-Whisper** using **CTranslate2**.
+   - **Benefit:** Up to 4x faster transcription speed and ~50% reduction in VRAM usage (Int8 quantization).
+
+2. **Ultra-Low Latency (SenseVoiceSmall):**
+   - **Action:** Experiment with the **SenseVoiceSmall** model for real-time streaming.
+   - **Benefit:** Significantly lower latency than Whisper, better handling of non-speech audio (laughter, noise), and minimal VRAM footprint.
+
+3. **VRAM Efficiency (Distil-Whisper):**
+   - **Action:** Replace the current `large-v3-turbo` with **distil-large-v3**.
+   - **Benefit:** Maintains identical accuracy to full models while being 50% faster and much smaller, allowing more headroom for other GPU-heavy tasks (like Witcher 3).
+
+4. **Integration Audit:**
+   - **Action:** Audit the redundancy between this script and **Voxtype**.
+   - **Benefit:** Consolidate model storage to reclaim the ~15 GB currently used by duplicate venvs if features can be merged.
