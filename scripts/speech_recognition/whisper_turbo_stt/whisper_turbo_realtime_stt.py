@@ -223,6 +223,20 @@ def hyprland_event_listener():
                                 window_class = parts[0].strip()
                                 window_title = ",".join(parts[1:]).strip() # Rejoin if title has commas
                                 
+                                # AUTO-FLOAT LOGIC: If scratchpad focused and not floating, fix it instantly.
+                                if any(t in window_title for t in allowed_titles):
+                                    # Double check floating status with hyprctl
+                                    res = subprocess.run(["hyprctl", "activewindow", "-j"], capture_output=True, text=True)
+                                    if res.returncode == 0:
+                                        data = json.loads(res.stdout)
+                                        if not data.get("floating", False):
+                                            log_engine(f"Auto-Floating scratchpad: {window_title}")
+                                            # Execute multiple commands to set the look
+                                            subprocess.run(["hyprctl", "dispatch", "togglefloating", "active"], capture_output=False)
+                                            subprocess.run(["hyprctl", "dispatch", "resizeactive", "exact", "400", "500"], capture_output=False)
+                                            subprocess.run(["hyprctl", "dispatch", "centerwindow"], capture_output=False)
+                                            subprocess.run(["hyprctl", "dispatch", "pin", "active"], capture_output=False)
+
                                 # Logic: Block if app is ignored UNLESS title is allowed
                                 app_ignored = (window_class in ignored_apps)
                                 title_allowed = any(t in window_title for t in allowed_titles)
