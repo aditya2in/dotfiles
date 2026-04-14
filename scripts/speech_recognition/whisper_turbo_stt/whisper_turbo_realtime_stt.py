@@ -285,7 +285,10 @@ def main():
     last_text = ""
 
     recorder_config = {
-        "model": "large-v3-turbo",
+        # Model: OpenAI Whisper Large-v3-Turbo (Faster-Whisper/CTranslate2 Format)
+        # Source Repo: https://huggingface.co/Systran/faster-whisper-large-v3-turbo
+        # Local Path: ~/AI_MODELS/dictation_models/
+        "model": "/home/adityaws/AI_MODELS/dictation_models",
         "device": "cuda",
         "compute_type": "float16",
         "language": "en",

@@ -6,7 +6,9 @@
 
 COMMAND=$1
 MODEL_NAME="Large-v3-Turbo"
-MODEL_PATH="/home/adityaws/.local/share/voxtype/models/ggml-large-v3-turbo.bin"
+# Original Model: OpenAI Whisper Large-v3-Turbo (GGML Format for whisper.cpp)
+# Centralized Location: ~/AI_MODELS/dictation_models/ggml-large-v3-turbo.bin
+MODEL_PATH="/home/adityaws/AI_MODELS/dictation_models/ggml-large-v3-turbo.bin"
 
 # Handle the Master Power Toggle (Shift + F12)
 if [ "$COMMAND" == "toggle-power" ]; then
