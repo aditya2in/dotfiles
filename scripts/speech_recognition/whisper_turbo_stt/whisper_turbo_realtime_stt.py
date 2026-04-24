@@ -233,7 +233,8 @@ def hyprland_event_listener():
                                             log_engine(f"Auto-Floating scratchpad: {window_title}")
                                             # Execute multiple commands to set the look
                                             subprocess.run(["hyprctl", "dispatch", "togglefloating", "active"], capture_output=False)
-                                            subprocess.run(["hyprctl", "dispatch", "resizeactive", "exact", "400", "500"], capture_output=False)
+                                            # Previous size: 400x500
+                                            subprocess.run(["hyprctl", "dispatch", "resizeactive", "exact", "400", "560"], capture_output=False)
                                             subprocess.run(["hyprctl", "dispatch", "centerwindow"], capture_output=False)
                                             subprocess.run(["hyprctl", "dispatch", "pin", "active"], capture_output=False)
 
