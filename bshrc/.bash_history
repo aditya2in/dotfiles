@@ -1,304 +1,1314 @@
-pacman -S timeshift
-sudo pacman -S timeshift
-sudo pacman -S brave
-curl -fsS https://dl.brave.com/install.sh | sh
-pacman -S --needed git base-devel
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-sudo pacman -S --needed base-devel git
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-cd
-yay --version
-yay -S brave
-yay -S brave
-sudo pacman -s firefox
-sudo pacman -S firefox
-yay -S brave
-xx
-cd /etc/pacman.d/
 ls
-cat mirrorlist 
-sudo cp mirrorlist mirrorlist.bak
+cd 2.\ CKAD_Certification_Course_-_Certified_Kubernetes_Application_Developer_Course/
 ls
-sudo nvim mirrorlist
-yay -S brave
-rm -rf ~/.cache/yay/brave # Or wherever yay stores its build cache
-yay -S brave-bin
-yay -Rns brave-bin
-sudo pacman -S stow 
-sudo pacman -S git
-sudo pacman -S github-cli
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-sudo pacman -S base-devel
-sudo pacman -S git
-sudo pacman -S pkgconf
-sudo make install
-sudo pacman -S base-devel
-sudp  pacman -S alacritty
-yay  -S alacritty
-yay  -S wezterm
-cd
-d
-ccd
-sudo pacman -S neovim
-neovim
-gh 
-gh auth
-gh auth:
-gh auth:
-gh auth
-gh auth:
-gh
-gh auth:
-gh auth login
-gh auth login
-gh auth login
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-pwd
-cd
-cd
-c
-d
-pwd
-git init
-git status
-git add .
-git status
+gemini 
+ollama launch claude
+ollama launch claude --config
+ollama launch claude
+claude --model qwen2.5-coder:7b
+ollama launch claude
+ollama launch claude --config
+ollama
+ollama launch claude --config
+ollama launch claude
+ollama launch claude --config
+cd 
+ls
+lsa
+curl -fsSL https://claude.ai/install.sh | bash
+nvim ~/.zshrc
+export PATH="$HOME/.local/bin:$PATH
 
-git restore . 
-git status
-git restore --staged .
-git status
+
+
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+gemini 
+cd
+gemini 
+cd 
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+waybar &
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+exit
+cd Task
+gemini 
+l s
+ls 
+cd kube
+ls
+cd ckad
+ls
+gemini 
+shutdown -h now
+cd ckad
+gemini 
+cd
+gemini 
+cd ckad
+gemini 
+cd obs
+ls 
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd ckad
+gemini 
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd dot
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+You. ge
+gemini
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd scripts
+ls
+cd speech_recognition/
+ls
+cd whisper_turbo_stt/
+ls
+gemini 
+cd turbo
+gemini 
+cd dot
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd dot 
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+shutdown -h now
+cd turbo
+gemini 
+cd ckad
+gemini 
+cd
+gemini 
+shutdown -h now
+cd ckad
+gemini 
+shutdown -h now
+cd ckad
+ls
+gemini -
+gemini --resume
+cd turbo
+gemini --resume
+gemini 
+gemini --resume
+cd
+systemctl restart logid.service 
+shutdown -h now
+cd ckad
+gemini --resume
+hyprctl reload 
+shutdown -h now
+cd ckad
+gemini --resume
+yay -S google-chrome
+shutdown -h now
+cd ckad
+gemini --resume
+cd turbo
+gemini --resume
+cd dot
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+d obs
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd log
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd  \
+cd turbo
+gemini --resume
+cd ckad
+gemini --resume
+cd
+shutdown -h now
+cd 
+cd tasks
+ls
+cd tasks
+ls
+cd 
+cd tasks
+ls
+shutdown -h now
+cd ckad
+gemini --resume
+gemini 
+cd 
+gemini 
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd log
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd dot 
+git co
+git commit -m "learning ckad with dictation"
+git push origin new 
+gemini 
+cd clad
+cd ckad
+ls
+gemini --re
+gemini --resume
+sudo snapper list
+shutdown -h now
+gemini 
+cd
+gemini 
+shutdown -h now
+cd ckad
+gemini --res
+gemini --resume
+vvim
+nvim
+cd
+
+gemini 
+nvim 
+vim ~/.config/nvim/lua/config/lazy.lua
+nvim ~/.config/nvim/lua/config/lazy.lua
+nvim
+nvim +Tutor
+nvim
+gemini 
+vim +Tutor
+nvim +Tutor
+nvim tutor
+nvim Tutor
+nvim +Tutor
+cd ckad
+ls 
+gemini --resume
+sThank you. 
+shutdown -h now
+nvim +tutor
+nvim +Tutor
+shutdown -h now
+cd ckad
+gemini 
+cd ckad
+gemini --
+gemini --resume
+cd 
+gemini --resume
+gemini 
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd dot
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd Log
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+hyprctl reload
+gemini --
+cd turbo
+gemini 
+gemini --resume
+cd 
+cd akad
+cd ckad
+gemini --resume
+cd cdkad
+cd ckad
+gemini --resume
+shutdown -h now
+nvim +Tutor
+shutdown -h now
+cd cka
+d
+gemini --resume
+gemini 
+gemini --resume
+shutdown -h now
+cd ckad
+gemini --resume
+shutdown -h now
+cd ckad
+gemini --resume
+shutdown -h now
+cd ckad
+gemini --resume
+shutdown -h now
+cd ckad
+gemini --resume
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd log
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd 
+cd dot 
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+shutdown -h now
+cd ckad
+gemini --resume
+cd
+systemctl restart logid.service 
+shutdown -h now
+cd ckad
+gemini --resume
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+shutdown -h now
+cd ckad
+gemini --resume
+cd home
+gemini --resume
+gemini 
+pkill steam 
+cd home
+gemini --resume
+gemi
+gemini 
+cd ckad
+gemini --resume
+cd
+gemini --resume
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd Log
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd dot
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd ckad
+cd
+gemini --resume
+pkill brave 
+pkill Brave 
+shutdown -h now
+cd ckad
+gemini --resume
+gemini
+shutdown -h now
+cd ckad
+gemini
+gemini --resume
+gemini
+cd
+gemini
+claude 
+yay -S google-chrome
+cd
+shutdown -h now
+gecdmini
+cd
+gemini
+cd ckad
+gemini --resume
+cd ckad
+gemini --resume
+cd 
+cd dayt
+cd day
+cd template
+ls 
+cd Day\ Template/
+ls
+gemini
+shutdown -h now
+sudo reboot 
+cd day
+ls
+gemini --resume
+sudo reboot 
+cd day
+ls
+gemini --resume
+shutdown -h now
+cd day
+gemini --resume
+shutdown -h now
+cd day
+gemini --resume
+gemini
+cd obs
+cd day
+gemini --resume
+systemctl restart logid.service 
+sThank you. h
+shutdown -h now
+cd  day
+gemini --resume
+pkill brave 
+shutdown -h now
+cd day
+gemini --resume
+pkill witcher3.exe 
+gemini
+olamma 
+olama
+sudo systemctl enable --now ollama
+sudo systemctl start ollama
+curl http://localhost:11434
+ollama run qwen3.5:9b
+yay -Syu ollama
+ollama run qwen3.5:9b
+ollama serve
+cd hypr 
+cd .hypr
+cd ~/.hypr
+cd ~/.config/hypr
+ls
+vim autostart.conf 
+nvim autostart.conf 
+reboot
+gemini
+reboot
+cd dayt
+cd day
+l s
+ls 
+gemini
+npm i -g @openai/codex
+codex
+olama run q 
+olamma run  
+olamma r
+
+olamma list  
+olamma --help
+olamma
+ollama --version
+ollama \
+ollama 
+ollama list
+ollama run qwen3.5:9b
+systemctl stop ollama
+claude-qwen
+nvidia-smi
+nvidia-smi --query-compute-apps=pid,process_name,used_gpu_memory --format=csv
+nvidia-smi
+nvidia-smi --query-compute-apps=pid,process_name,used_gpu_memory --format=csv
+claude-qwen
+systemctl restart ollama.service 
+claude-qwen
+pkill ollama 
+systemctl stop ollama.service 
+systemctl status ollama.service 
+systemctl disable ollama.service 
+shutdown -h now
+cd dat
+cd day
+codex
+codex --resume
+codex
+sh
+cd day\
+cd day
+ls
+codex
+shutdown -h now
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+hermes
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+hermes setup
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Added for Hermes Agent / uv
+export PATH="$HOME/.local/bin:$PATH"
+# 1. Add the path to .zshrc if it's not already there
+if ! grep -q '.local/bin' ~/.zshrc; then   echo -e "\n# Added for Hermes Agent / uv\nexport PATH=\"\$HOME/.local/bin:\$PATH\"" >> ~/.zshrc;   echo "Path added to ~/.zshrc"; fi
+# 2. Source the config to apply changes immediately
+source ~/.zshrc
+# 3. Re-run the Hermes installer
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+hermes s
+hermes setup
+hermes model
+shutdown -h now
+cd day
+ls
+codex
+nvidia-smi
+poweroff
+cd home
+cd Down
+ls
+codex 
+cd
+gemini
+poweroff
+nvidia-smi
+gemini
+hyprctl reload
+hyprctl monitors all
+gemini
+shI took any gift. utdown -h now
+shutdown -h now
+cd day
+gemini
+zsh
+chsh -s $(which zsh)
+which sh
+chsh -s $(which zsh)
+exec zsh
+echo $0
+echo $SHELL
+cd lab
+gemini
+ps -p $$
+logout
+chsh -s $(which sh)
+cd
+bash
+chsh -s /bin/bash
+exec zsh
+cat ~/.bashrc
+zsh
+chsh -s $(which bash)
+nvim ~/.bashrc 
+ps -p $$
+gemini
+cd home
+gemini 
+gemini --resume
+exec bash
+starship preset tokyo-night -o ~/.config/starship.toml
+Okay, I'm not okay. 
+
+
+
+
 c d
 cd
-sudo pacman -S reflector
-reflector --help
-sudo reflector -c India -c China -p https -p http --sort rate --save /etc/pacman.d/mirrorlist
-ls
-sudo reflector -c India  -p https -p http --sort rate --save /etc/pacman.d/mirrorlist
-sudo pacman -S nautilus
-yay -S brave
-rm -rf ~/.cache/yay/brave/
-du -sh ~/.cache/yay/brave/
-yay -Sc
-yay -Scc
-firefox
-browser
-web
-sudo pacman -S firefox
-cd download
-cd downloads
-pwd
-cd download
-Download
-Downloads
-cd Downloads
-ls
-git 
-git pull www.github.com/aditya2in/dotfiles
-git pull www.github.com/aditya2in/dotfiles/
-git clone https://github.com/aditya2in/dotfiles.git
-nutalis
-git switch 
-git switch dotfiles/.git/
-git git branch -a
-git branch -a
-git branch -a
-gh repo clone aditya2in/dotfiles
-git branch -r
-cd dotfiles/
-git branch -r
-git branch -r
+cd 
+starship preset gruvbox-rainbow -o ~/.config/starship.toml
 cd
-c
-d
-c
+[200~starship preset catppuccin-powerline -o ~/.config/starship.toml~
+starship preset catppuccin-powerline -o ~/.config/starship.toml
 cd
-pwd
-cd Downloads/
+starship preset gruvbox-rainbow -o ~/.config/starship.toml
+starship preset catppuccin-powerline -o ~/.config/starship.toml
+Thank you. 
+hyprctl reload
+xsh
+zsh
+cd home
+codex
+cd hyprt
+cd hypr
 ls 
-git clone https://github.com/aditya2in/dotfiles.git 
-git switch new
-cd dotfiles/
-git switch new
+nvim looknfeel.conf 
+cd fot
+cd dot
 ls
-git status
-git push new 
-git remote -V
-git remote -v
-git push origin new
-git add .
-git status
-git push origin new
-git fetch
-git status
-git commit -m 
-git commit -m "test"
-git config --gloval user.email "aditya2in@gmail.com"
-git config --global user.email "aditya2in@gmail.com"
-git commit -m "test"
-git config --global user.name "aditya"
-git commit -m "test"
-git push origin new
-cd
-cd Downloads/dotfiles/
+cd hyprland\ All/
 ls
-stow hyprland\ Main/
-cd
-cd
-cd dotfiles/
-ls
-stow hyprland\ Main/
-stow hyprland\ Main/
-hypr reload
-hyprland reload
-hyprctl reload
-sudo pacman -S gemmastep
-sudo pacman -S gammastep
-gammastep
-hyprland reload
-hyprctl reload
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-sudo pacman -S cmake make
-sudo pacman -S base-devel cmake libevdev libconfig systemd-libs glib2
-curl -fsS https://dl.brave.com/install.sh | sh
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-cd Dcd
-cd
-cd
-cd Downloads/
-[aditya@archlinux build]$ mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-CMake Warning:
-  Ignoring extra path from command line:
-   ".."
-CMake Error: The source directory "/home/aditya/dotfiles/build" does not appear to contain CMakeLists.txt.
-Specify --help for usage, or press the help button on the CMake GUI.
-make: *** No targets specified and no makefile found.  Stop.
-[aditya@archlinux build]$ [aditya@archlinux build]$ mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-CMake Warning:
-  Ignoring extra path from command line:
-   ".."
-CMake Error: The source directory "/home/aditya/dotfiles/build" does not appear to contain CMakeLists.txt.
-Specify --help for usage, or press the help button on the CMake GUI.
-make: *** No targets specified and no makefile found.  Stop.
-[aditya@archlinux build]$ 
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-sudo make install
-cd
-cd Downloads/
-cd logiops-main
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-sudo make install
+stow 
+sudo pacman -S stow
+pwd
 cd ..
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-# Go to your Downloads directory
-cd /home/aditya/Downloads/
-# Remove the incomplete logiops-main directory
-rm -rf logiops-main/
-cd logiops/
-mkdir build
-cd build
-cmake ..
-make -j$(nproc)
-sudo make install
-sudo systemctl enable logiops.service
-sudo systemctl start logiops.service
-sudo nvim /etc/logiops.conf # Edit your configuration
-sudo systemctl restart logiops.service
-sudo make install
-sudo systemctl enable logiops.service
-udo make install
-sudo make install
-sudo systemctl enable logid
-sudo systemctl enable --now logid
-sudo systemctl status logid
-sudo systemctl status logid
-reboot
-mkdir build
-cd build
-cmake ..
-make -j$(nproc)
-git clone --recursive https://github.com/PixlOne/logiops.git
+ls
+stow hyprland\ All/
+clea
+cleart
+clear
+hi
+sudo 
+ls
+clear
+ls
+cd 
+k get al
+kubectl
+kubectl 
+alias k=kubectl 
+k
+zsh
+cd hypr
+ls
+hypr looknfeel.conf 
+nvim looknfeel.conf 
+hyprctl reload 
+nvim looknfeel.conf 
+hyprctl reload 
+nvim looknfeel.conf 
+hyprctl reload 
+nvim looknfeel.conf 
+cs
+cd
+zsh
+cd dot
+zsh
+k get all
+ls
+clera
+cleart
+clear
+starship preset jetpack -o ~/.config/starship.toml
+starship preset pastel-powerline -o ~/.config/starship.toml
+8;6ustarship preset catppuccin-powerline -o ~/.config/starship.toml
+starship preset catppuccin-powerline -o ~/.config/starship.toml
+hi
+cd hypr
+nvim looknfeel.conf 
+cd hypr
+hyprctl reload 
+nvim looknfeel.conf 
+ls
+cd hypr
+nvim looknfeel.conf 
+hyprctl reload 
+clear
+++++++++
+clear
+cd home
+l
+clear
+cd
+shutdown -h now
 cd
 c
-d
-cd Downloads/
-git clone --recursive https://github.com/PixlOne/logiops.git
-sudo systemctl status logif
-sudo systemctl status logid
-sudo systemctl status logid
-sudo systemctl stop  logid
-sudo systemctl status logid
-sudo systemctl start logid
-sudo systemctl status logid
-sudo systemctl restart  logid
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-sudo pacman -S zsh
-which zsh
-chsh -s $(which zsh)
-stow alacritty/
-stow logidforLinux/
-stow logidforLinux/ -t /etc/
-sudo stow logidforLinux/ -t /etc/
-sudo stow logidforLinux/ -t /etc/
-sudo stow logidforLinux/ -t /etc
-7899
-cd /
+cd
+cd home
+codex
+cd lab
+gemini --resume
+lear
+clear
+xsh
+zsh
 ls
-cd etc
-ls -la
-rmdir etc
-sudo rmdir etc
-rm etc
-sudo rm etc
-cd
-cd
-cd dotfiles/
-ls
-sudo stow logidforLinux\ \(target\ to\ etc\ folder\)/ -t /etc/
-sudo systemctl restart logid
-sudo systemctl restart logid.service
-sudo systemctl status  logid.service
-cd
-cd
+zsh
+clear
+zsh
+exec zsh
+exec bash
+zsh
 c
-d
-cd
-cd
-cd dotfiles/
-git status
-git push origin new
+code
+cd hypr
+nvim looknfeel.conf 
+hyprctl reload 
+nvim looknfeel.conf 
+shutdown -h now
+codex 
+cd home
+ls
+gemini --resume
+cd dot
 git add .
-git status
-git commit -m "arch3 begins"
-git push origin new
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+source ~/.bashrc
+cd 
+/usr/bin/bash
+source ~/.zshrc
+source ~/.bshrc
+ls
+ls -a
+source .bashrc 
+cd
+cd /home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/HomeLab/local-ai-setup/
+cd loda
+sudo pacman -S llama-cpp
+cd local-ai-setup/
+ls
+gemini --resume
+nvidia-smi
+reboot
+run watch -n 1 nvidia-smi
+watch -n 1 nvidia-smi
+ail -f /tmp/vllm_gemma4.log
+tail -f /tmp/vllm_gemma4.log
+cd
+nvidia-smi
+home
+cd home
+ls
+cd local-ai-setup/
+;sa
+ls
+./setup-hfcli-env.sh 
+ls
+./setup-hfcli-env.sh 
+source local-ai-setup/hfcli-env/bin/activate
+ls
+source hfcli-env/bin/activate
+huggingface-cli login
+curl -LsSf https://hf.co/cli/install.sh | bash
+huggingface-cli login
+hf auth login
+python3 -m hf auth login
+python3 -m huggingface_hub.cli login
+python3 -m huggingface_hub.cli.hf auth login
+mkdir -p ~/models/gemma4
+python3 -m huggingface_hub.cli.hf download bartowski/google_gemma-4-E4B-it-GGUF        --include "google_gemma-4-E4B-it-Q4_K_M.gguf"        --local-dir ~/models/gemma4
+CUDA_VISIBLE_DEVICES=1 vllm run ~/models/gemma4/google_gemma-4-E4B-it-Q4_K_M.gguf     --context-length 2048 --tensor-parallel-size 1
+sudo pacman -S --needed python-pyenv base-devel openssl zlib xz
+sudo pacman -S --needed pyenv base-devel openssl zlib xz tk libffi
+export PYENV_ROOT="$HOME/.pyenv"
+./setup-hfcli-env.sh 
+pip install vllm
+ls
+hfcli-env/bin/python3 -m pip install vllm
+python3 -m pip install vllm
+sudo pacman -S --needed pyenv base-devel openssl zlib xz tk libffi
+nvim ~/.bashrc 
+source ~/.bashrc
+sudo chown -R adityaws:adityaws ~/.pyenv
+nvim ~/.bashrc 
+. 
+source . 
+cd
+source .
+cd home
+ls
+cd local-ai-setup/
+ls
+source ~/.bashrc
+builtin cd -- /home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_\(around_KUBESTRONAUT\)/HomeLab/local-ai-setup/hfcli-env/lib/python3.14/site-packages/pip/_vendor/distro
+cd local-ai-setup/
+cd local
+ls
+sudo chown -R adityaws:adityaws ~/.pyenv
+ls
+cd hfcli-env/
+ls
+ls -a
+cd local
+ls
+source hfcli-env/bin/activate
+ls -lh ~/models/gemma4
+./manage-local-ai.sh 
+source hfcli-env/bin/activate
+sudo pacman -S ollama-cuda
+sudo systemctl enable --now ollama
+CUDA_VISIBLE_DEVICES=1 ollama run gemma:4b
+echo "FROM /home/adityaws/models/gemma4/google_gemma-4-E4B-it-Q4_K_M.gguf" > Modelfile
+ollama create gemma4-local -f Modelfile
+CUDA_VISIBLE_DEVICES=1 ollama run gemma4-local
+chmod 644 /home/adityaws/models/gemma4/google_gemma-4-E4B-it-Q4_K_M.gguf
+ollama rm gemma4-local
+ollama create gemma4-local -f Modelfile
+ollama run gemma4-local
+cd home
+ls
+codex
+shutdown -h now
+CUDA_VISIBLE_DEVICES=1 ollama run gemma4:e4
+CUDA_VISIBLE_DEVICES=1 ollama run gemma4:e4b
+ollama stop
+ollama serve stop
+ollama serve -h
+nvidia-smi -l 1
+olamma list  
+ollama list
+ollama run gemma4:e4b 
+olamma ps
+ollama ps
+ollama stop -h
+ollama stop gemma4:e4b
+CUDA_VISIBLE_DEVICES=1 ollama run gemma4-tiny
+ollama run gemma4:26b
+curl -fsSL https://ollama.com/install.sh | sh
+ollama run gemma4:26b
+nvidia-smi -l 1
+nvidia-smi
+CUDA_VISIBLE_DEVICES=1 ollama run gemma4-micro
+olamma list
+ollama list
+olamma ps
+ollama
+ollama pos
+ollama ps
+ollama stop gemma4-micro:latest
+ollama list
+ollama run gemma4:26b
+ollama serve
+codex
+htop
+top
+#!/bin/bash
+LOGFILE="vram_test_log.txt"
+echo "Starting VRAM check. Log will be saved to: $(pwd)/$LOGFILE" | tee $LOGFILE
+echo "--- PRE-LOAD STATS ---" >> $LOGFILE
+nvidia-smi --query-gpu=timestamp,name,memory.used,memory.free --format=csv >> $LOGFILE
+echo "Running model test for 30 seconds..."
+# Replace the command below with your actual inference command
+# Example: llama-cli -m gemma-4-26b-q4.gguf -p "Hello" -n 10 &
+sleep 30
+echo "--- POST-LOAD/PEAK STATS ---" >> $LOGFILE
+nvidia-smi --query-gpu=timestamp,name,memory.used,memory.free --format=csv >> $LOGFILE
+echo "Script finished. Please upload $LOGFILE." | tee -a $LOGFILE
+cat vram_test_log.txt 
+./launch-ai.sh 26b
+ls
+cd hypr
+cd local
+./launch-ai.s
+ls
+./launch-ai.sh 
+./launch-ai.sh 26b
+./launch-ai.sh 
+./launch-ai.sh 26b
+cd ..
+ls
+./hypr_knobs.py 
+shutdown -h now
+./launch-ai.sh 31b
+./launch-ai.sh 26b
+./launch-ai.sh 31b
+./launch-ai.sh 26b
+./launch-ai.sh 31b
+./launch-ai.sh_BACKUP_2026-04-05_16-12-51.sh 31b
+./launch-ai.sh 31b
+./launch-ai.sh_BACKUP_2026-04-05_16-12-51.sh 31b
+./launch-ai.sh 
+gemini --resume
+gemini 
+cd home
+cd local-ai-setup/
+gemini --resume
+gemini
+cd vox
+cd scrip
+ls
+cd speech_recognition/
+ls
+cd vox
+cd VoxType/
+cd ..
+ls
+gemini
+cd speech
+ls
+cd whisper_turbo_stt/
+ls
+gemini
+cd
+gemini
+cd
+gemini
+reboot
+cd home
+cd local-ai-setup/
+gemini 
+gemini --resume
+hey
+hi
+cd
+gemini 
+cd speech
+ls
+gemini --resume
+codex
+l
+sls
+ls
+cd home
+cd local-ai-setup
+./launch-ai.sh -h
+./launch-ai.sh 31b=fp4
+./launch-ai.sh 31b-fp4
+./launch-ai.sh 31b
+./launch-ai.sh 26b
+ls
+./launch-ai.sh_BACKUP_2026-04-06_16-16-21_MONOLITH.sh -h
+./launch-ai.sh_BACKUP_2026-04-06_16-16-21_MONOLITH.sh 27b
+./launch-ai.sh_BACKUP_2026-04-06_16-16-21_MONOLITH.sh 26b
+./launch-ai.sh_BACKUP_2026-04-05_16-22-21.sh 
+ls
+./launch-ai.sh -h
+./launch-ai.sh 31b-fp4
+./launch-ai.sh -h
+./launch-ai.sh e2b
+./launch-ai.sh -h
+./launch-ai.sh e4b
+codex
+cd local
+gemini 
+cd
+gemini 
+gemini --resume
+shutdown -h now
+cd local
+./launch-ai.sh 
+./launch-ai.sh e2b
+./launch-ai.sh e4b
+./launch-ai.sh -h
+./launch-ai.sh 26b
+./launch-ai.sh -h
+./launch-ai.sh e4b
+./launch-ai.sh -h
+./launch-ai.sh 31b-fp4
+./launch-ai.sh -h
+./launch-ai.sh 31b
+./launch-ai.sh -h
+./launch-ai.sh 31b
+./launch-ai.sh -h
+./launch-ai.sh 34b
+./launch-ai.sh e4b
+./launch-ai.sh 31b
+cd local
+ls
+gemini --resume
+./launch-ai.sh -h
+./launch-ai.sh 26b
+./launch-ai.sh -h
+./launch-ai.sh test-bottom
+shutdown -h now
+cd local
+gemini --resume
+reboot
+cd
+gemini 
+cd local
+gemini --resume
+reboot
+gemini --resume
+shutdown -h now
+cd
+gemini --resume
+cd local
+gemini --resume
+./launch-ai.sh -h
+./launch-ai.sh e4b
+cd day
+codex 
+c dckad
+cd ckad
+codex
+cd obs
+codex
+shutdown -h now
+cd day
+gemini --resume
+cd ckad
+codex
+codex --resume
+codex -h
+codex rseume
+codex resume
+cd ckad 
+geemini --resume
+gemini --resume
+codex rseume
+codex resume
+shutdown -h now
+cd ckad
+gemini --resume
+gemini 
+nvidia-smi
+
+sudo pacman -Sy
+shutdown -h now
+cd
+codex
+cd 
+cd ckad
+gemini --resume
+hi
+shutdown -h now
+cd dayt
+cd day
+codex 
+codex resume
+shutdown -h now
+cd day
+codex resume
+cd obs
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+cd log
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+c d
+cd 
+cd dot
+git add .
+git commit -m "learning ckad with dictation"
+git push origin new 
+du
+df -h
++
+lsblk
+cd day
+codex resume
+codex 
+shutdown -h now
+cd day
+codex resume
+shutdown -h now
+cd
+gemini --resume
+gemini 
+cd homr
+gemini 
+cd
+gemini 
+cd day
+codex resume
+sudo pacman -Rns supergfxctl
+cd ckad
+gemini --resume
+cat etc/os/release
+cat /etc/os/release
+cat /etc/os-release
+cat /etc/
+cat /etc/os-release 
+wezterm
+sudo pacman -S wezterm
+clear
+8;6u
+shutdown -h now
+cd day
+
+ge
+gemini --re
+gemini --resume
+cd ..
+ls
+cd d
+cd ..
+cd day
+ls
+cd all things
+ls
+cd Template/
+ls
+cd Day_Template/
+ls
+gemini --resume
+gemini 
+codex
+cd day
+ls
+diff "000 Default Day Template.md" "2026-04-19.md"
+shutdown -h now
+cd day
+codex
+gemini 
+shutdown -h now
+kj
+exit
+ssh aditya@master01
+cd dat
+tt
+tmux
+cd day
+gemini 
+ssh aditya@192.168.29.204
+ping 192.168.29.204
+ssh aditya@192.168.29.204
+ping 192.168.29.204
+ssh aditya@192.168.29.246
+ssh aditya@192.168.29.204
+cd
+ssh u0_a449@192.168.29.246
+ssh u0_a449@192.168.29.246 -p 8022
+cd home
+gemini 
+cd
+ssh aditya@192.168.29.204
+codex
+c
+ssh aditya@worker01 
+shutdown -h now
+systemctl status logid.service 
+systemctl restart logid.service 
+systemctl enable logid.service 
+systemctl stop logid.service 
+systemctl start logid.service 
+gemini 
+shutdown -h now
+cd day
+cd /home/adityaws/Obsidian/All Things/Agents
+cd obs
+ls 
+cd All\ Things/
+cd A
+cd All\ Things/Agents/
+ls
+gemini
+shutdown -h now
+cd agents
+gemini --resume
+cd dot
+git  
+git commit -m "learning ckad with dictation"
+git push origin new 
+hyprctl reload
+cd dot
+git 
+git commit -m "started linux rwxrob"
+git push origin new 
+journalctl --user -f | rg 'uwsm_app-daemon|xdg-terminal-exec|wezterm'
+cd obs
+git c
+git commit -m "learning ckad with dictation"
+git push origin new 
+sudo pacman -S firefox
+c d
+cd agents
+ls
+echo $TERM
+cd 
+codex
+cd
+ls
+codex
+cd
+ls
+cd 
+cd home
+cd day
+cd things
+ls
+cd things
+cd kube
+cd .. 
+ls
+cd .. 
+ls
+cd high
+cd High_level_over_view/
+ls
+ls 
+gem
+gemini
+codex resume
+hyprctl reload
+nvim .wezterm.lua
+ls 
+c
+lsa
+cd ~/.config/
+ls
+cd ..
+ls
+fzf
+ls
+sudo pacman -S podman
+podman
+starship preset gruvbox-rainbow -o ~/.config/starship.toml
+ls
+podman build -t boost https://github.com/rwxrob/boost.git
+podman -h
+podman images 
+podman run -it --hostname boost --name boost boost
+podman 
+podman -h
+podman start -a boost
+podman run -it --hostname boost --name boost boost
+podman start -a boost
+shutdown -h now
+cd linux
+cd obs
+ls
+cd Project_K8s_-_KUBESTRONAUT/
+ls
+cd Tasks_or_Projects_\(around_KUBESTRONAUT\)/
+ls
+cd Linux
+cd 1. 
+cd tasks
+ls
+cd 1.\ Project_Linux_\&_CLI_Mastery/
+ls
+cd ..
+cd linux
+codex
+cd things
+cd thing
+cd obs
+ls
+cd Project
+;s
+ls
+cd ..
+ls
+cd High_level_over_view/
+lsa
+codex 
+shutdown -h now
+opencode
+code
+cd
+opencode
+shutdown -h now
+opencode 
+cd obs
+cd things
+ls
+cd things
+cd kube
+cd..
+cd //
+cd ..
+ls
+Tchank you. 
+cd
+ls
+cd obs
+cd high
+ls
+npm install -g groq-code-cli@latest
+groq
+nvidia-smi
+exit
+tmux
+tmux
+cd 
+cd dot
+cd tmux/
+ls
+lsa
+cd .tmux/
+ls
+cd
+cd tmux
+cd ..
+cd
+ls
+lsa
+cd tmux
+cd ..
+stow tmux/
+tmux
+curl -fsSL https://gh.io/copilot-install | bash
+copilot
+opencode
+cd main
+ls
+cd home
+cd Main
+cd things
+cd home
+ls
+cd ..
+ls
+cd ..
+ls
+cd high
+ls
+opencode
+gemini
+systemctl --user daemon-reload
+systemctl --user enable --now xremap.service
+systemctl --user status xremap.service --no-pager
+sudo usermod -aG input adityaws
+systemctl --user restart xremap.service
+set -o vi
+unset -o vi
+mkdir rwxrob
+ls
+cd rwxrob/
+ls
+codex
+cd tasks
+cd linux
+codex
+cd rwxrob/
+ls
+codex
+codex resumwe
+r
+cd 
+nvim ~/.tmux.conf 
+tmux
+tmux source-file ~/.tmux.conf
+tmux
+t
+sudo /home/adityaws/.local/bin/xremap /home/adityaws/.config/xremap/config.yml
+AW
+sudo /home/adityaws/.local/bin/xremap /home/adityaws/.config/xremap/config.yml
+c
+w
+tmux source-file ~/.tmux.conf
+W
+exir
+exit
+TT
+TM
+tt
+t
+And so this 
+exit
+tmux source-file ~/.tmux.conf
+sudo /home/adityaws/.local/bin/xremap /home/adityaws/.config/xremap/config.yml
+tmux
+exit
+tmux source-file ~/.tmux.conf
+.
+tmux
+tmuxc
+tt
+tmux
+w
+a
+w\
+tmux source-file ~/.tmux.conf
+cd dot
+ls
+cd DOTfiles/
+ls
+stow bshrc/
+exit
+e
+exit
+ls
+c
+tt
+c d
+cd
+gemini
+j
+jl
+H
+;
+tmux
+jj
