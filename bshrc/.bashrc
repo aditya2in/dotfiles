@@ -2,6 +2,9 @@
 # 🚀 BASH ULTIMATE CONFIGURATION (Stable & Clean)
 # ==========================================================
 
+# Clear any conflicting aliases before loading functions
+unalias ga 2>/dev/null
+
 # --- [ 1. Omarchy Dynamic Sync ] ---
 # Loads the official developer magic
 [[ -f ~/.local/share/omarchy/default/bash/rc ]] && source ~/.local/share/omarchy/default/bash/rc
@@ -28,10 +31,12 @@ export VISUAL="nvim"
 
 alias c="clear"
 alias e="exit"
+
+# GitHub Essentials
 alias gs="git status"
-alias ga="git add ."
-alias gc="git commit -v" 
-alias gp="git push origin new"
+alias gadd="git add ."
+alias gc="git commit -v"
+alias gp='git push origin $(git branch --show-current)'
 alias gr="git remote -v"
 
 # Claude Code / Ollama
