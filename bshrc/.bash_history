@@ -1312,3 +1312,18 @@ H
 ;
 tmux
 jj
+cd rwxrob/
+cd linux
+ls
+cd rwxrob/
+ls
+gemini --resume
+9;133ucd
+cd
+gemini
+cd linux
+
+cd
+
+gemini
+gemini

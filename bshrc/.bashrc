@@ -2,12 +2,16 @@
 # 🚀 BASH ULTIMATE CONFIGURATION (Stable & Clean)
 # ==========================================================
 
-# Clear any conflicting aliases before loading functions
+# Clear conflicting alias BEFORE loading system functions
 unalias ga 2>/dev/null
 
 # --- [ 1. Omarchy Dynamic Sync ] ---
 # Loads the official developer magic
 [[ -f ~/.local/share/omarchy/default/bash/rc ]] && source ~/.local/share/omarchy/default/bash/rc
+
+# Rename system 'ga' to 'gwt' and reclaim 'ga' for Git Add
+alias gwt=ga
+unalias ga 2>/dev/null
 
 # --- [ 2. Starship Theme (Clean 2-Line) ] ---
 eval "$(starship init bash)"
@@ -34,7 +38,7 @@ alias e="exit"
 
 # GitHub Essentials
 alias gs="git status"
-alias gadd="git add ."
+alias ga="git add ."
 alias gc="git commit -v"
 alias gp='git push origin $(git branch --show-current)'
 alias gr="git remote -v"
