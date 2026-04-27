@@ -234,7 +234,7 @@ def hyprland_event_listener():
                                             # Execute multiple commands to set the look
                                             subprocess.run(["hyprctl", "dispatch", "togglefloating", "active"], capture_output=False)
                                             # Previous size: 400x500
-                                            subprocess.run(["hyprctl", "dispatch", "resizeactive", "exact", "560", "560"], capture_output=False)
+                                            subprocess.run(["hyprctl", "dispatch", "resizeactive", "exact", "400", "560"], capture_output=False)
                                             subprocess.run(["hyprctl", "dispatch", "centerwindow"], capture_output=False)
                                             subprocess.run(["hyprctl", "dispatch", "pin", "active"], capture_output=False)
 
@@ -265,12 +265,8 @@ def typing_worker():
         if text is None:
             break
         try:
-            # High-speed ydotool execution to fix WezTerm number issue
-            # Option B: 2ms delay (Gold Standard - Ultimate Stability - ACTIVE)
-            subprocess.run(["ydotool", "type", "-d", "2", "-H", "2", text], check=True)
-
-            # Option A: 1ms delay (Archived Performance Mode)
-            # subprocess.run(["ydotool", "type", "-d", "1", "-H", "1", text], check=True)
+            # High-speed wtype execution
+            subprocess.run(["wtype", text], check=True)
         except Exception:
             pass
         text_queue.task_done()
@@ -297,7 +293,7 @@ def main():
         "device": "cuda",
         "compute_type": "float16",
         "language": "en",
-        "post_speech_silence_duration": 1.0,
+        "post_speech_silence_duration": 0.7,
         "min_gap_between_recordings": 0.0,
         "input_device_index": None,
         "spinner": False,
