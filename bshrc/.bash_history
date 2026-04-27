@@ -1422,3 +1422,43 @@ sudo su
 cd dot
 ls
 stow wezterm/
+cd
+cd dot
+gs
+ga
+gs
+gc
+gp
+gs
+ga
+gs
+gc
+gp
+reboot
+exho $SHELL
+echo $SHELL
+echo $-
+   echo "TMUX: $TMUX"; echo "TERM_PROGRAM: $TERM_PROGRAM"
+ echo "TMUX is: $TMUX"; echo "Shell is: $0"; grep "Tmux Launcher" ~/.bashrc -A 5
+w
+sw
+sour
+c
+d
+cd
+gemini
+tmux end session
+tmux detach
+gemini --resume
+cd rwx
+ls
+podman run -it -h
+podman -h
+echo $SHELL
+echo $-
+   echo "TMUX: $TMUX"; echo "TERM_PROGRAM: $TERM_PROGRAM"
+tmux end session
+tmux detach-client 
+gemini --resume
+tmux source-file ~/.tmux.conf
+tmux detach-client 

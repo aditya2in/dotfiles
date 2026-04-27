@@ -35,6 +35,7 @@ export VISUAL="nvim"
 
 alias c="clear"
 alias e="exit"
+alias tfix="ps aux | grep 'tmux -S' | grep -v grep | awk '{print \$2}' | xargs -r kill -9"
 
 # GitHub Essentials
 alias gs="git status"
@@ -64,6 +65,9 @@ eval "$(pyenv init -)"
 
 # --- [ 6. Smart Tmux Launcher ] ---
 if [[ -z "$TMUX" && $- == *i* ]]; then
+    # Safety Guard: Clear any ghost processes with empty sockets before starting
+    ps aux | grep "tmux -S" | grep -v grep | awk '{print $2}' | xargs -r kill -9 2>/dev/null
+
     # Get session names and prepend a "NEW SESSION" option
     sessions=$(tmux ls -F '#S' 2>/dev/null)
     

@@ -1,0 +1,13 @@
+pane	22	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	23	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	rwxrob	0	0	:-	0	◇  Ready (adityaws)                                                             	:/home/adityaws	0	node	:node /home/adityaws/.local/share/mise/installs/node/25.2.1/bin/gemini
+pane	rwxrob	0	0	:-	1	adityaws@gpuworker01:~/DOTfiles	:/home/adityaws/DOTfiles	1	bash	:
+pane	rwxrob	1	1	:*	0	◇  Ready (adityaws)                                                             	:/home/adityaws	1	node	:node /home/adityaws/.local/share/mise/installs/node/25.2.1/bin/gemini --resume
+pane	rwxrob	2	0	:Z	0	◇  Ready (rwxrob)                                                               	:/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1.\ Project_Linux_&_CLI_Mastery/rwxrob	0	node	:node /home/adityaws/.local/share/mise/installs/node/25.2.1/bin/gemini --resume
+pane	rwxrob	2	0	:Z	1	adityaws@gpuworker01:~/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1. Project_Linux_&_CLI_Mastery/rwxrob	:/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1.\ Project_Linux_&_CLI_Mastery/rwxrob	1	bash	:
+window	22	0	:adityaws	1	:*	db88,94x34,0,0,29	:
+window	23	0	:adityaws	1	:*	5b60,46x34,0,0,30	:
+window	rwxrob	0	:HOME	0	:-	8383,96x74,0,0[96x36,0,0,1,96x37,0,37,31]	off
+window	rwxrob	1	:GEMINI	1	:*	bfa0,96x74,0,0,3	off
+window	rwxrob	2	:rwxrob	0	:Z	038c,96x74,0,0[96x36,0,0,5,96x37,0,37,32]	off
+state	rwxrob	
