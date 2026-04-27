@@ -1462,3 +1462,4 @@ tmux detach-client
 gemini --resume
 tmux source-file ~/.tmux.conf
 tmux detach-client 
+gemini 
