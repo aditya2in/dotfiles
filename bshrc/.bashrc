@@ -64,7 +64,24 @@ eval "$(pyenv init -)"
 
 # --- [ 6. Auto-Start Tmux ] ---
 if [[ -z "$TMUX" && $- == *i* ]]; then
-    # Create a new session with the config file explicitly loaded if it doesn't exist
-    tmux has-session -t default 2>/dev/null || tmux -f ~/.tmux.conf new-session -d -s default
-    tmux attach-session -t default
+    # Get the number of active sessions
+    session_count=$(tmux ls 2>/dev/null | wc -l)
+
+    if [ "$session_count" -eq 0 ]; then
+        # No sessions? Create 'default' and jump in
+        tmux new-session -s default
+    elif [ "$session_count" -eq 1 ]; then
+        # Exactly one session? Jump in automatically (even if renamed)
+        tmux attach-session
+    else
+        # Multiple sessions? Show a menu (Most recent at the top)
+        # We use fzf to let you pick instantly
+        selected=$(tmux ls -F '#S' | fzf --height 40% --reverse --header="Select Tmux Workspace:" --prompt="⚡ ")
+        if [ -n "$selected" ]; then
+            tmux attach-session -t "$selected"
+        else
+            # If you hit ESC, just stay in the normal shell
+            echo "Direct shell access (tmux avoided)."
+        fi
+    fi
 fi

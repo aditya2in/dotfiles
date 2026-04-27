@@ -1327,3 +1327,73 @@ cd
 
 gemini
 gemini
+tmux source-file ~/.tmux.conf
+cd 
+gemini
+cd rob
+gemini
+podman -h
+podman start -a boost
+podman ls
+podman -h
+ls
+cd 
+cd dot 
+git add ,
+git add .
+git commit -m "started TMUX"
+git push origin new 
+git stattus
+git status
+source ~/.bashrc 
+Thank you. 
+source ~/.bashrc 
+cd
+cd dot
+git add .
+gs
+ga
+git add .
+ga
+gs
+ga
+gadd
+gc
+gp
+cd obs
+gs
+gadd
+gc
+gp
+ps
+aux
+ls
+cd
+cd obs
+gs
+gadd
+gc
+cd dot
+gs
+ga
+source ~/.bashrc 
+sudo pacman 
+ls
+gs
+ga
+gc
+gp
+cd obs
+gs
+shutdown -h now
+exit
+tmux ls
+exit
+tmux ls
+ls
+c
+tmux ls
+tmux -h
+tmux sessions
+gemini
+gemini --resume
