@@ -8,14 +8,14 @@ local config = wezterm.config_builder()
 
 config.color_scheme = "Batman"
 
-config.font = wezterm.font("MesloLGS Nerd Font Mono")
-config.font_size = 15
+config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
+config.font_size = 14
 
 -- config.enable_tab_bar = false
 
 -- config.window_decorations = " RESIZE"
 
-config.window_background_opacity = 0.9
+config.window_background_opacity = 1.0
 config.macos_window_background_blur = 9
 
 -- Add this line to disable the quit confirmation prompt
@@ -24,10 +24,38 @@ config.window_close_confirmation = "NeverPrompt"
 -- Add this line to enable blur on Linux:
 -- config.window_background_blur = true
 
--- my coolnight colorscheme:
+-- Tab Bar Settings
+config.use_fancy_tab_bar = false
+config.hide_tab_bar_if_only_one_tab = true
+config.tab_bar_at_bottom = false
+
+-- Match Tab Bar colors to the background for a "transparent" look
 config.colors = {
-	foreground = "#CBE0F0",
-	background = "#011423",
+	tab_bar = {
+		background = "#121212",
+		active_tab = {
+			bg_color = "#333333",
+			fg_color = "#bebebe",
+		},
+		inactive_tab = {
+			bg_color = "#121212",
+			fg_color = "#8a8a8d",
+		},
+		inactive_tab_hover = {
+			bg_color = "#1e1e2e",
+			fg_color = "#bebebe",
+		},
+		new_tab = {
+			bg_color = "#121212",
+			fg_color = "#bebebe",
+		},
+		new_tab_hover = {
+			bg_color = "#333333",
+			fg_color = "#ffffff",
+		},
+	},
+	foreground = "#bebebe",
+	background = "#121212",
 	cursor_bg = "#47FF9C",
 	cursor_border = "#47FF9C",
 	cursor_fg = "#011423",

@@ -62,26 +62,32 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 
-# --- [ 6. Auto-Start Tmux ] ---
+# --- [ 6. Smart Tmux Launcher ] ---
 if [[ -z "$TMUX" && $- == *i* ]]; then
-    # Get the number of active sessions
-    session_count=$(tmux ls 2>/dev/null | wc -l)
-
-    if [ "$session_count" -eq 0 ]; then
-        # No sessions? Create 'default' and jump in
+    # Get session names and prepend a "NEW SESSION" option
+    sessions=$(tmux ls -F '#S' 2>/dev/null)
+    
+    if [ -z "$sessions" ]; then
+        # No sessions? Just start a default one
         tmux new-session -s default
-    elif [ "$session_count" -eq 1 ]; then
-        # Exactly one session? Jump in automatically (even if renamed)
-        tmux attach-session
     else
-        # Multiple sessions? Show a menu (Most recent at the top)
-        # We use fzf to let you pick instantly
-        selected=$(tmux ls -F '#S' | fzf --height 40% --reverse --header="Select Tmux Workspace:" --prompt="⚡ ")
-        if [ -n "$selected" ]; then
-            tmux attach-session -t "$selected"
-        else
-            # If you hit ESC, just stay in the normal shell
-            echo "Direct shell access (tmux avoided)."
-        fi
+        # Show menu with existing sessions + option for a new one
+        selection=$(echo -e "++ NEW SESSION ++\n$sessions" | fzf --height 40% --reverse --header="Select Tmux Workspace:" --prompt="⚡ ")
+
+        case "$selection" in
+            "++ NEW SESSION ++")
+                # Ask for a name, or default to a timestamp if empty
+                read -p "Session Name: " session_name
+                tmux new-session -s "${session_name:-$(date +%Y%m%d_%H%M%S)}"
+                ;;
+            "")
+                # If ESC is pressed, just stay in the normal shell
+                echo "Direct shell access (tmux avoided)."
+                ;;
+            *)
+                # Attach to the selected session
+                tmux attach-session -t "$selection"
+                ;;
+        esac
     fi
 fi

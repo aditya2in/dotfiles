@@ -1397,3 +1397,28 @@ tmux -h
 tmux sessions
 gemini
 gemini --resume
+ls
+cd
+cd obs
+gs
+ga
+gs
+gc
+gp
+cd dot
+gs
+ls
+stow ghostty/
+gs
+ga
+gs
+gc
+gp
+cd
+sudo su
+akj
+sudo su -
+sudo su 
+cd dot
+ls
+stow wezterm/
