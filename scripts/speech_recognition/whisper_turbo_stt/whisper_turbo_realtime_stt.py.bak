@@ -234,9 +234,11 @@ def hyprland_event_listener():
                                             # Execute multiple commands to set the look
                                             subprocess.run(["hyprctl", "dispatch", "togglefloating", "active"], capture_output=False)
                                             # Previous size: 400x500
-                                            subprocess.run(["hyprctl", "dispatch", "resizeactive", "exact", "400", "560"], capture_output=False)
+                                            subprocess.run(["hyprctl", "dispatch", "resizeactive", "exact", "560", "560"], capture_output=False)
                                             subprocess.run(["hyprctl", "dispatch", "centerwindow"], capture_output=False)
                                             subprocess.run(["hyprctl", "dispatch", "pin", "active"], capture_output=False)
+                                            # Apply transparency (v0.54 syntax)
+                                            subprocess.run(["hyprctl", "dispatch", "setprop", "activewindow", "opacity", "0.8"], capture_output=False)
 
                                 # Logic: Block if app is ignored UNLESS title is allowed
                                 app_ignored = (window_class in ignored_apps)

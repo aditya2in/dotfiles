@@ -1463,3 +1463,131 @@ gemini --resume
 tmux source-file ~/.tmux.conf
 tmux detach-client 
 gemini 
+cd dot
+stow tmux/
+gs
+ga
+gs
+gc
+gp
+gemini
+cd 
+gemini --resume
+   echo "TMUX: $TMUX"; echo "TERM_PROGRAM: $TERM_PROGRAM"
+podman run -it --hostname boost --name boost boost
+podman run -it boost:latest 
+podman run -it kalilinux/kali--rolling:latest
+podman run -it kalilinux/kali-rolling:latest
+podman run -it ubuntu
+podman run -it kalilinux/kali-rolling
+podman -h
+podman images
+podman image
+podman images
+podman run -it docker.io/kalilinux/kali-rolling
+df
+/ls
+/kali
+./
+.
+ls .
+ls
+lsa
+lsla
+ls -la
+ 
+cd 
+cd repos/github.com/rwxrob/
+ls
+ls -a
+cd ..
+ls
+cd aditya2in/
+ls
+shutdown -h now
+gs
+ga
+gs
+gc
+gp
+V
+curl -fsSL https://claude.ai/install.sh | bash
+claude
+source ~/.bashrc 
+gh
+gh 
+ga
+cd dot
+gs
+ga
+gs
+gc
+gp
+gh
+copilot
+cd
+cd -
+cd
+mkdir repos
+cd repos/
+mkdir github
+ls
+cd github/
+cd -
+rmdir github/
+ls
+mkdir github.com
+ls
+cd github.com/
+cd
+gh
+cd -
+ls
+mkdir rwxrob
+ls
+cd rwxrob/
+gh auth login
+ls
+cd ..
+mkdir aditya2in
+ls
+cd aditya2in/
+gh -h
+gh repo create -h
+gh repo create notes
+gh repo create
+cd -
+ls
+cd rwxrob/
+gh repo create 
+gh repo clone
+gh repo clone -h
+cd rob
+cd
+gemini 
+gemini --resume
+shutdown -h now
+codex
+cd agents
+gemini --resume
+gemini 
+cd agents
+gemini 
+gemini
+gemini --resume
+gemini  
+gemini --resume
+cd obs
+gs
+ga
+gs
+gc
+gp
+cd
+cd obs
+cd
+codex
+gemini 
+shutdown -h now
+cd obs
+obsidian

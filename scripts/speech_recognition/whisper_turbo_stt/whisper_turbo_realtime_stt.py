@@ -220,34 +220,48 @@ def hyprland_event_listener():
                                 # Format is: activewindow>>[class],[title]
                                 payload = line.split("activewindow>>")[1].strip()
                                 parts = payload.split(",")
-                                window_class = parts[0].strip()
-                                window_title = ",".join(parts[1:]).strip() # Rejoin if title has commas
+                                socket_class = parts[0].strip()
+                                socket_title = ",".join(parts[1:]).strip()
                                 
-                                # AUTO-FLOAT LOGIC: If scratchpad focused and not floating, fix it instantly.
-                                if any(t in window_title for t in allowed_titles):
-                                    # Double check floating status with hyprctl
-                                    res = subprocess.run(["hyprctl", "activewindow", "-j"], capture_output=True, text=True)
-                                    if res.returncode == 0:
-                                        data = json.loads(res.stdout)
-                                        if not data.get("floating", False):
-                                            log_engine(f"Auto-Floating scratchpad: {window_title}")
-                                            # Execute multiple commands to set the look
-                                            subprocess.run(["hyprctl", "dispatch", "togglefloating", "active"], capture_output=False)
-                                            # Previous size: 400x500
-                                            subprocess.run(["hyprctl", "dispatch", "resizeactive", "exact", "400", "560"], capture_output=False)
-                                            subprocess.run(["hyprctl", "dispatch", "centerwindow"], capture_output=False)
-                                            subprocess.run(["hyprctl", "dispatch", "pin", "active"], capture_output=False)
+                                # AUTO-FLOAT & RELOCATE LOGIC: Identify and target the scratchpad precisely
+                                if socket_class == "obsidian" and any(t in socket_title for t in allowed_titles):
+                                    # Query ALL clients to find the unique address of our scratchpad
+                                    res_clients = subprocess.run(["hyprctl", "clients", "-j"], capture_output=True, text=True)
+                                    if res_clients.returncode == 0:
+                                        clients = json.loads(res_clients.stdout)
+                                        # Filter for the specific scratchpad window
+                                        scratchpad = next((c for c in clients if c.get("class") == "obsidian" and any(t in c.get("title") for t in allowed_titles)), None)
+                                        
+                                        if scratchpad:
+                                            addr = scratchpad.get("address")
+                                            curr_work = str(scratchpad.get("workspace", {}).get("name", ""))
+                                            is_float = scratchpad.get("floating", False)
+
+                                            # 1. Teleport to Workspace 1 (Targeted by Address)
+                                            if curr_work != "1":
+                                                log_engine(f"Teleporting scratchpad {addr} from {curr_work} to Workspace 1")
+                                                subprocess.run(["hyprctl", "dispatch", "movetoworkspace", f"1,address:{addr}"], capture_output=False)
+                                            
+                                            # 2. Precision Resize (Targeted by Address)
+                                            subprocess.run(["hyprctl", "dispatch", "resizewindowpixel", f"exact 560 560,address:{addr}"], capture_output=False)
+
+                                            # 3. Initial Setup (Targeted by Address)
+                                            if not is_float:
+                                                log_engine(f"Auto-Floating scratchpad {addr}")
+                                                subprocess.run(["hyprctl", "dispatch", "togglefloating", f"address:{addr}"], capture_output=False)
+                                                subprocess.run(["hyprctl", "dispatch", "movewindowpixel", f"exact 510 10,address:{addr}"], capture_output=False)
+                                                subprocess.run(["hyprctl", "dispatch", "pin", f"address:{addr}"], capture_output=False)
 
                                 # Logic: Block if app is ignored UNLESS title is allowed
-                                app_ignored = (window_class in ignored_apps)
-                                title_allowed = any(t in window_title for t in allowed_titles)
+                                app_ignored = (socket_class in ignored_apps)
+                                title_allowed = any(t in socket_title for t in allowed_titles)
                                 
                                 new_focus = (app_ignored and not title_allowed)
                                 
                                 if new_focus != is_browser_focused:
                                     is_browser_focused = new_focus
-                                    status = f"PAUSED ({window_class})" if is_browser_focused else "RESUMED"
-                                    log_engine(f"Focus changed: {window_class} | {window_title} -> {status}")
+                                    status = f"PAUSED ({socket_class})" if is_browser_focused else "RESUMED"
+                                    log_engine(f"Focus changed: {socket_class} | {socket_title} -> {status}")
                                     update_waybar()
                             except Exception as e:
                                 log_engine(f"Parsing error: {e}")
