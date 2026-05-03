@@ -1591,3 +1591,14 @@ gemini
 shutdown -h now
 cd obs
 obsidian
+Saving done. sh
+shutdown -h now
+gemini 
+pkill obsidian
+cd dot
+gs
+ga
+gs
+gc
+gp
+shutdown -h now
