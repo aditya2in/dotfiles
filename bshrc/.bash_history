@@ -1661,3 +1661,25 @@ gc
 fp
 gp
 cd dot
+cd dot 
+gs
+ga
+gs
+gc
+gp
+gs
+ga
+gs
+cd obs
+gs
+ga
+gs
+gc
+gp
+gs
+ga
+gs
+cd
+gemini -
+gemini --resume
+reboot
