@@ -14,21 +14,24 @@ os.environ["CT2_CUDA_ALLOW_TF32"] = "1"
 
 # Global state for pausing
 is_paused = False
+is_paused_by_voxtype = False  # The Blue Sign
+last_voxtype_interrupt_time = 0  # Cooldown Timer
 is_browser_focused = False
 smart_pause_override = False # New: Global override for smart pause
 PAUSE_FILE = "/tmp/whisper_paused"
+VOXTYPE_PAUSE_FILE = "/tmp/whisper_paused_by_voxtype"  # New: Dedicated lock file
 OVERRIDE_FILE = "/tmp/whisper_smart_pause_override"
 STATUS_FILE = "/tmp/whisper_status.json"
 recorder = None  # Global reference to allow background interruption
 
 def update_waybar():
     """Update the status JSON for Waybar."""
-    global is_paused, is_browser_focused, smart_pause_override
+    global is_paused, is_paused_by_voxtype, is_browser_focused, smart_pause_override
     state = "running"
     icon = "󰍬" # Microphone On
     tooltip = "Whisper STT: Active"
     
-    # If override is active, we show a special "God Mode" state
+    # Priority Logic for Icons/Status
     if smart_pause_override:
         icon = "󰍮" # Microphone with plus/override
         tooltip = "Whisper STT: Override Active (Global)"
@@ -36,10 +39,18 @@ def update_waybar():
             state = "paused"
             icon = "󰍭"
             tooltip = "Whisper STT: Paused (Manual)"
-    elif is_paused or is_browser_focused:
+    elif is_paused:
+        state = "paused"
+        icon = "󰍭"
+        tooltip = "Whisper STT: Paused (Manual)"
+    elif is_paused_by_voxtype:
+        state = "interrupted"
+        icon = "󰍭"
+        tooltip = "Whisper STT: Interrupted by VoxType"
+    elif is_browser_focused:
         state = "paused"
         icon = "󰍭" # Microphone Paused
-        tooltip = "Whisper STT: Paused (Manual)" if is_paused else "Whisper STT: Smart Paused (Brave)"
+        tooltip = "Whisper STT: Smart Paused (Brave)"
         
     status = {
         "text": icon,
@@ -54,7 +65,7 @@ def update_waybar():
         with open(temp_status, "w") as f:
             json.dump(status, f)
         os.rename(temp_status, STATUS_FILE)
-        log_engine(f"Status file updated: {state} (Override: {smart_pause_override})")
+        log_engine(f"Status updated: {state} (Manual: {is_paused}, VoxType: {is_paused_by_voxtype})")
     except Exception as e:
         log_engine(f"Waybar update failed: {e}")
 
@@ -76,42 +87,39 @@ def override_watcher():
         time.sleep(0.2)
 
 def pause_watcher():
-    """Background thread that watches for a pause file."""
-    global is_paused, recorder
-    # Ensure file doesn't exist at start
-    if os.path.exists(PAUSE_FILE):
-        try:
-            os.remove(PAUSE_FILE)
-        except:
-            pass
-        
-    last_state = False
+    """Background thread that watches for pause files."""
+    global is_paused, is_paused_by_voxtype, last_voxtype_interrupt_time, recorder
+    
+    last_manual_state = False
+    last_voxtype_state = False
+    
     while True:
-        current_state = os.path.exists(PAUSE_FILE)
-        if current_state != last_state:
-            is_paused = current_state
-            status_text = "PAUSED" if is_paused else "RESUMED"
-            icon = "microphone-sensitivity-muted" if is_paused else "microphone-sensitivity-high"
-            
-            # INSTANT STOP: If we just paused, force the recorder to stop immediately
-            if is_paused and recorder:
-                try:
-                    recorder.stop()
-                except Exception:
-                    pass
+        manual_state = os.path.exists(PAUSE_FILE)
+        voxtype_state = os.path.exists(VOXTYPE_PAUSE_FILE)
+        
+        # Check if either state has changed
+        if manual_state != last_manual_state or voxtype_state != last_voxtype_state:
+            # If VoxType just stopped, record the time for the Cooldown Timer
+            if last_voxtype_state is True and voxtype_state is False:
+                last_voxtype_interrupt_time = time.time()
+                log_engine(f"VoxType ended. Cooldown started at: {last_voxtype_interrupt_time}")
 
-            log_engine(f"Manual Pause Change: {status_text}")
+            is_paused = manual_state
+            is_paused_by_voxtype = voxtype_state
+            
+            # Safe logic: Do NOT stop the recorder hardware here. 
+            # The main loop and process_text will handle the software mute.
             update_waybar()
             
-            subprocess.run([
-                "notify-send", 
-                "Whisper STT", 
-                f"Status: {status_text}", 
-                "-i", icon, 
-                "-t", "1500",
-                "-h", "string:x-canonical-private-synchronous:whisper-pause"
-            ])
-            last_state = current_state
+            # Notifications only for manual changes to avoid spamming during VoxType use
+            if manual_state != last_manual_state:
+                status_text = "PAUSED" if is_paused else "RESUMED"
+                icon = "microphone-sensitivity-muted" if is_paused else "microphone-sensitivity-high"
+                subprocess.run(["notify-send", "Whisper STT", f"Status: {status_text}", "-i", icon, "-t", "1500", "-h", "string:x-canonical-private-synchronous:whisper-pause"])
+            
+            last_manual_state = manual_state
+            last_voxtype_state = voxtype_state
+            
         time.sleep(0.1)
 
 def log_engine(msg):
@@ -255,8 +263,9 @@ def hyprland_event_listener():
                                 # Logic: Block if app is ignored UNLESS title is allowed
                                 app_ignored = (socket_class in ignored_apps)
                                 title_allowed = any(t in socket_title for t in allowed_titles)
-                                
+
                                 new_focus = (app_ignored and not title_allowed)
+
                                 
                                 if new_focus != is_browser_focused:
                                     is_browser_focused = new_focus
@@ -321,8 +330,15 @@ def main():
 
     def process_text(text):
         nonlocal last_text
-        # Logic: Pause only if manually paused OR (browser is focused AND override is NOT active)
-        if is_paused or (is_browser_focused and not smart_pause_override):
+        # COOLDOWN TIMER LOGIC: Discard text if VoxType is recording OR if it finished 
+        # less than 1.5 seconds ago. This prevents the overlapping audio buffer 
+        # from being typed out as double-text.
+        current_time = time.time()
+        cooldown_active = (current_time - last_voxtype_interrupt_time) < 1.5
+        
+        if is_paused or is_paused_by_voxtype or cooldown_active or (is_browser_focused and not smart_pause_override):
+            if cooldown_active and not is_paused_by_voxtype:
+                log_engine(f"Cooldown active: Discarding overlap text: '{text[:20]}...'")
             return 
 
         text = text.strip()
@@ -338,23 +354,23 @@ def main():
         print("\n>>> System Ready! Speak into your microphone.")
 
         while True:
-            # Logic: Pause only if manually paused OR (browser is focused AND override is NOT active)
-            effective_pause = is_paused or (is_browser_focused and not smart_pause_override)
-            
-            if effective_pause:
-                if getattr(recorder, 'is_recording', False):
-                    recorder.stop()
+            # Logic: STABLE MODE - Never stop the hardware recorder to prevent muting/hanging.
+            # Just manage the state and clear queue if interrupted.
+            if is_paused or is_paused_by_voxtype:
+                # Flush the queue so no stale text is typed when we resume
+                while not text_queue.empty():
+                    try: text_queue.get_nowait(); text_queue.task_done()
+                    except: break
                 time.sleep(0.5)
                 continue
-            
+
             if not getattr(recorder, 'is_recording', False):
                 recorder.start()
 
             try:
                 recorder.text(process_text)
             except Exception as e:
-                if not effective_pause:
-                    print(f"[ERROR] Recorder error: {e}")
+                print(f"[ERROR] Recorder error: {e}")
                 time.sleep(0.1)
 
     except KeyboardInterrupt:

@@ -32,27 +32,70 @@ MODEL_NAME="Large-v3-Turbo"
 # Centralized Location: ~/AI_MODELS/dictation_models/ggml-large-v3-turbo.bin
 MODEL_PATH="/home/adityaws/AI_MODELS/dictation_models/ggml-large-v3-turbo.bin"
 
+# Update Waybar JSON
+update_voxtype_status() {
+    local state=$1
+    local text="󰍬" # Default Mic icon
+    local tooltip="VoxType: Standby"
+    
+    if [ "$state" == "recording" ]; then
+        tooltip="VoxType: RECORDING (Interjecting)"
+    elif [ "$state" == "stopped" ]; then
+        text="󰍭"
+        tooltip="VoxType: OFF"
+    fi
+    
+    echo "{\"text\": \"$text\", \"class\": \"$state\", \"alt\": \"$state\", \"tooltip\": \"$tooltip\"}" > "/tmp/voxtype_status.json"
+}
+
 # Handle the Master Power Toggle (Shift + F1)
-if [ "$COMMAND" == "toggle-power" ]; then
-    if systemctl --user is-active --quiet voxtype.service; then
+if [ "$COMMAND" == "toggle-power" ] || [ "$COMMAND" == "power-on" ] || [ "$COMMAND" == "power-off" ]; then
+    IS_ACTIVE=$(systemctl --user is-active --quiet voxtype.service && echo "yes" || echo "no")
+    
+    # Logic to determine if we should START
+    SHOULD_START="no"
+    if [ "$COMMAND" == "power-on" ]; then SHOULD_START="yes"; fi
+    if [ "$COMMAND" == "toggle-power" ] && [ "$IS_ACTIVE" == "no" ]; then SHOULD_START="yes"; fi
+    
+    if [ "$SHOULD_START" == "yes" ]; then
+        if [ "$IS_ACTIVE" == "yes" ]; then
+            notify-send "VoxType" "Engine is already RUNNING" -i information -t 1000
+        else
+            notify-send "VoxType" "POWER ON (Model: $MODEL_NAME)" -i microphone-sensitivity-high -t 3000
+            systemctl --user start voxtype.service
+            update_voxtype_status "standby"
+            # Open wiremix to recording tab
+            ghostty --class=org.omarchy.wiremix -e wiremix -v recording &
+        fi
+    else
+        # This branch handles 'power-off' or 'toggle-power' when already active
         systemctl --user stop voxtype.service
         # Close wiremix if it's running
         pkill -f "ghostty --class=org.omarchy.wiremix"
+        update_voxtype_status "stopped"
         notify-send "VoxType" "POWER OFF (RAM Freed)" -i microphone-sensitivity-muted -t 2000
-    else
-        notify-send "VoxType" "POWER ON (Model: $MODEL_NAME)" -i microphone-sensitivity-high -t 3000
-        
-        systemctl --user start voxtype.service
-        # Open wiremix to recording tab
-        ghostty --class=org.omarchy.wiremix -e wiremix -v recording &
     fi
     exit 0
 fi
 
 # Handle the Action Button (F1)
 if systemctl --user is-active --quiet voxtype.service; then
-    # Service is running, behave normally (Toggle Recording)
-    voxtype record toggle
+    # SMART SHIFTING: Check current status to manage Whisper Pause
+    CURRENT_STATUS=$(voxtype status)
+    
+    if [ "$CURRENT_STATUS" == "idle" ]; then
+        # Starting a recording -> Drop the Blue Sign for Whisper
+        touch /tmp/whisper_paused_by_voxtype
+        # Synchronization delay to ensure Whisper is silent
+        sleep 0.2
+        update_voxtype_status "recording"
+        voxtype record start
+    else
+        # Stopping a recording -> Remove the Blue Sign
+        update_voxtype_status "standby"
+        voxtype record stop
+        (sleep 0.5 && rm -f /tmp/whisper_paused_by_voxtype) &
+    fi
 else
     # Service is NOT running, warn the user
     notify-send "VoxType" "ERROR: Engine is OFF. Press Shift+F1 first." -i dialog-error -t 3000
