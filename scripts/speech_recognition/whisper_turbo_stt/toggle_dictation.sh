@@ -1,8 +1,35 @@
 #!/bin/bash
 
+# ==============================================================================
+# 🛠 RECOVERY & FUTURE-PROOFING HEADER
+# ==============================================================================
+# If this script or the environment is ever lost, follow these steps:
+#
+# 1. VIRTUAL ENVIRONMENT (VENV):
+#    Location: ~/venvs/whisper_turbo_stt
+#    Setup:
+#      mkdir -p ~/venvs
+#      python -m venv ~/venvs/whisper_turbo_stt
+#      source ~/venvs/whisper_turbo_stt/bin/activate
+#      pip install RealtimeSTT faster-whisper hf-transfer
+#
+# 2. MODEL DETAILS:
+#    Name: Whisper Large-v3-Turbo
+#    Format: CTranslate2 (faster-whisper)
+#    Central Path: ~/AI_MODELS/dictation_models/
+#    Download: 
+#      export HF_HUB_ENABLE_HF_TRANSFER=1
+#      huggingface-cli download m-baccari/faster-whisper-large-v3-turbo --local-dir ~/AI_MODELS/dictation_models
+#
+# 3. SYSTEM DEPENDENCIES:
+#    - PortAudio (for microphone access)
+#    - NVIDIA CUDA & cuDNN (for GPU acceleration)
+#    - wtype (for text injection)
+# ==============================================================================
+
 # Configuration
 PROJECT_DIR="/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt"
-VENV_PYTHON="$PROJECT_DIR/venv/bin/python"
+VENV_PYTHON="/home/adityaws/venvs/whisper_turbo_stt/bin/python"
 SCRIPT_NAME="whisper_turbo_realtime_stt.py"
 SCRIPT_PATH="$PROJECT_DIR/$SCRIPT_NAME"
 PID_FILE="/tmp/whisper_dictation.pid"

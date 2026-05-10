@@ -6,4 +6,4 @@ echo "Starting Whisper Turbo Streaming STT (Technical Mode)..."
 pkill -f "whisper_turbo_realtime_stt.py" 2>/dev/null
 rm -f /tmp/whisper_dictation.pid
 
-$PROJECT_DIR/venv/bin/python $PROJECT_DIR/whisper_turbo_realtime_stt.py
+/home/adityaws/venvs/whisper_turbo_stt/bin/python $PROJECT_DIR/whisper_turbo_realtime_stt.py

@@ -1,5 +1,30 @@
 # Whisper Turbo Real-Time STT: The Definitive Guide & Plan
 
+## 🛠 RECONSTRUCTION GUIDE (Future-Proofing)
+If this application needs to be set up on a new machine or from scratch, follow these exact steps:
+
+### 1. The Virtual Environment (Outside of DOTfiles)
+The heavy Python environment is kept in your home folder to prevent git bloat.
+```bash
+mkdir -p ~/venvs
+python -m venv ~/venvs/whisper_turbo_stt
+source ~/venvs/whisper_turbo_stt/bin/activate
+pip install RealtimeSTT faster-whisper hf-transfer
+```
+
+### 2. The AI Model
+Download the **Large-v3-Turbo** model in CTranslate2 format:
+```bash
+export HF_HUB_ENABLE_HF_TRANSFER=1
+huggingface-cli download m-baccari/faster-whisper-large-v3-turbo --local-dir ~/AI_MODELS/dictation_models
+```
+
+### 3. System Requirements
+- **Arch Linux:** `sudo pacman -S portaudio wtype`
+- **GPU:** NVIDIA Driver + CUDA + cuDNN.
+
+---
+
 ## 1. Project Vision
 To create a "Professional-Grade" streaming dictation tool for Arch Linux/Hyprland. Unlike standard tools that wait for you to finish speaking, this system provides a **real-time flow** of text using your NVIDIA RTX 3060 GPU, ensuring world-class accuracy with near-zero latency.
 

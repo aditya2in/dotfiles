@@ -11,7 +11,7 @@ PYTHON_SCRIPT_NAME="stream.py"
 
 # Get the absolute path of the directory where this script is located.
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-PYTHON_SCRIPT_COMMAND="$SCRIPT_DIR/venv/bin/python $SCRIPT_DIR/$PYTHON_SCRIPT_NAME"
+PYTHON_SCRIPT_COMMAND="/home/adityaws/venvs/whisper_turbo_stt/bin/python $SCRIPT_DIR/$PYTHON_SCRIPT_NAME"
 
 # Function to log messages
 log_message() {

@@ -1,4 +1,26 @@
 #!/bin/bash
+# ==============================================================================
+# 🛠 RECOVERY & FUTURE-PROOFING HEADER
+# ==============================================================================
+# If this setup is lost, follow these steps:
+#
+# 1. APPLICATION:
+#    Name: VoxType
+#    Description: A compiled Rust/C++ push-to-talk dictation tool.
+#    Installation: Check AUR for 'voxtype-bin' or 'voxtype-git'.
+#
+# 2. MODEL DETAILS:
+#    Name: Whisper Large-v3-Turbo
+#    Format: GGML (for whisper.cpp/voxtype)
+#    Central Path: ~/AI_MODELS/dictation_models/ggml-large-v3-turbo.bin
+#    Download: 
+#      wget https://huggingface.co/guillaumekln/faster-whisper-large-v3-turbo/resolve/main/ggml-large-v3-turbo.bin -O ~/AI_MODELS/dictation_models/ggml-large-v3-turbo.bin
+#
+# 3. SERVICE:
+#    File: ~/.config/systemd/user/voxtype.service
+#    Setup: systemctl --user enable --now voxtype.service
+# ==============================================================================
+
 # Smart wrapper for VoxType - Final Version with Wiremix & Large-v3-Turbo
 # Shortcuts:
 #   Shift + F1 -> Master Power (Toggle Service On/Off)

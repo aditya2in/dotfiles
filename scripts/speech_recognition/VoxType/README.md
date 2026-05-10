@@ -1,3 +1,24 @@
+# VoxType (F1)
+
+## 🛠 RECONSTRUCTION GUIDE (Future-Proofing)
+If this setup is lost, follow these steps to restore functionality:
+
+### 1. The Application
+- **Name:** VoxType
+- **Installation:** Check AUR for `voxtype-bin`.
+- **Service:** The script relies on a user service at `~/.config/systemd/user/voxtype.service`.
+
+### 2. The AI Model (GGML)
+Download the **Large-v3-Turbo** model in GGML format:
+```bash
+wget https://huggingface.co/guillaumekln/faster-whisper-large-v3-turbo/resolve/main/ggml-large-v3-turbo.bin -O ~/AI_MODELS/dictation_models/ggml-large-v3-turbo.bin
+```
+
+### 3. Verification
+Run `smart_voxtype.sh toggle-power` (Shift+F1) to verify the service starts and connects to `wiremix`.
+
+---
+
 # VoxType (F12)
 
 Fast, lightweight Push-to-Talk dictation tool.

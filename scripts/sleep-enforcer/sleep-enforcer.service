@@ -1,0 +1,6 @@
+[Unit]
+Description=Sleep Enforcer: Automated shutdown to prevent late-night computer usage and protect sleep (10 PM - 5 AM)
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/shutdown -h now

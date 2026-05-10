@@ -1602,3 +1602,62 @@ gs
 gc
 gp
 shutdown -h now
+gemini 
+exit
+gemini 
+gemini 
+/topic
+gemini 
+gemini --resume
+cd Personal_Finance_OS/
+ls
+cd ..
+gemini --resume
+shutdown -h now
+gemini --re
+gemini --resume
+gs
+ga
+gs
+gc
+gp
+cd
+nvim ~/.gemini/settings.json
+shutdown -h now
+cd obs
+gs
+ga
+gs
+gc
+cd day
+gemini --resume
+gemini 
+cd routine
+cd agetns
+cd agents
+ls
+cd Routine_OS/
+ls
+gemini 
+gemini --resume
+ huggingface-cli login
+sudo pacman -S python-huggingface-hub
+ huggingface-cli login
+hf login
+hf auth
+hf auth login
+shutdown -h now
+gemini --resume
+gemini 
+shutdown -h now
+groq
+gemini 
+gemini --resume
+gemini  
+cd obs
+gs
+ga
+gc
+fp
+gp
+cd dot
