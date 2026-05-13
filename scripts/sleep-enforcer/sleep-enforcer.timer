@@ -3,7 +3,7 @@ Description=Sleep Enforcer Timer: Triggers shutdown every 5 mins during restrict
 
 [Timer]
 OnCalendar=*-*-* 22..23,00..04:0/5:00
-Persistent=false
+Persistent=true
 
 [Install]
 WantedBy=timers.target
