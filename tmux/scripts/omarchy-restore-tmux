@@ -1,0 +1,48 @@
+#!/bin/bash
+# omarchy-restore-tmux: Emergency restore script for Tmux sessions
+
+RESURRECT_DIR="$HOME/.config/tmux/resurrect"
+if [ ! -d "$RESURRECT_DIR" ]; then 
+    echo "Error: Directory not found"
+    exit 1
+fi
+
+echo "Scanning for healthy Tmux backups..."
+
+# Find the newest file larger than 1000 bytes
+# We use a simple loop here to avoid complex find syntax that might trigger safety blocks
+LATEST_HEAVY=""
+MAX_TIME=0
+
+for f in "$RESURRECT_DIR"/tmux_resurrect_*.txt; do
+    if [ -f "$f" ]; then
+        SIZE=$(stat -c%s "$f")
+        if [ "$SIZE" -gt 1000 ]; then
+            TIME=$(stat -c%Y "$f")
+            if [ "$TIME" -gt "$MAX_TIME" ]; then
+                MAX_TIME=$TIME
+                LATEST_HEAVY=$f
+            fi
+        fi
+    fi
+done
+
+if [ -z "$LATEST_HEAVY" ]; then 
+    echo "Error: No heavy backup found (files > 1KB)."
+    exit 1
+fi
+
+echo "Found healthy backup: $(basename "$LATEST_HEAVY")"
+
+# Update the symlink
+rm -f "$RESURRECT_DIR/last"
+ln -s "$LATEST_HEAVY" "$RESURRECT_DIR/last"
+
+echo "Triggering tmux-resurrect restore script..."
+RESTORE_SCRIPT="$HOME/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh"
+if [ -f "$RESTORE_SCRIPT" ]; then
+    bash "$RESTORE_SCRIPT"
+    echo "Restore command sent. Check your tmux status."
+else
+    echo "Error: tmux-resurrect restore script not found."
+fi
