@@ -162,6 +162,8 @@ def hyprland_event_listener():
     """Listen to Hyprland socket2 for real-time focus changes."""
     global is_browser_focused, recorder
     
+    last_scratchpad_launch_time = 0
+
     config = load_config()
     if not config.get("smart_pause_enabled"):
         log_engine("Smart Pause is disabled in config. Thread exiting.")
@@ -232,15 +234,18 @@ def hyprland_event_listener():
                                 socket_title = ",".join(parts[1:]).strip()
                                 
                                 # AUTO-FLOAT & RELOCATE LOGIC: Identify and target the scratchpad precisely
-                                if socket_class == "obsidian" and any(t in socket_title for t in allowed_titles):
+                                if socket_class == "obsidian":
+                                    is_scratchpad_focused = any(t in socket_title for t in allowed_titles)
+                                    
                                     # Query ALL clients to find the unique address of our scratchpad
                                     res_clients = subprocess.run(["hyprctl", "clients", "-j"], capture_output=True, text=True)
                                     if res_clients.returncode == 0:
                                         clients = json.loads(res_clients.stdout)
-                                        # Filter for the specific scratchpad window
+                                        # Filter for the specific scratchpad window anywhere in the system
                                         scratchpad = next((c for c in clients if c.get("class") == "obsidian" and any(t in c.get("title") for t in allowed_titles)), None)
                                         
-                                        if scratchpad:
+                                        if scratchpad and is_scratchpad_focused:
+                                            # It exists, and we just focused it: do the teleport/resize!
                                             addr = scratchpad.get("address")
                                             curr_work = str(scratchpad.get("workspace", {}).get("name", ""))
                                             is_float = scratchpad.get("floating", False)
@@ -251,7 +256,7 @@ def hyprland_event_listener():
                                                 subprocess.run(["hyprctl", "dispatch", "movetoworkspace", f"1,address:{addr}"], capture_output=False)
                                             
                                             # 2. Precision Resize (Targeted by Address)
-                                            subprocess.run(["hyprctl", "dispatch", "resizewindowpixel", f"exact 560 560,address:{addr}"], capture_output=False)
+                                            subprocess.run(["hyprctl", "dispatch", "resizewindowpixel", f"exact 860 560,address:{addr}"], capture_output=False)
 
                                             # 3. Initial Setup (Targeted by Address)
                                             if not is_float:
@@ -259,6 +264,19 @@ def hyprland_event_listener():
                                                 subprocess.run(["hyprctl", "dispatch", "togglefloating", f"address:{addr}"], capture_output=False)
                                                 subprocess.run(["hyprctl", "dispatch", "movewindowpixel", f"exact 510 10,address:{addr}"], capture_output=False)
                                                 subprocess.run(["hyprctl", "dispatch", "pin", f"address:{addr}"], capture_output=False)
+                                                
+                                        elif not scratchpad:
+                                            # It doesn't exist anywhere! We focused the main obsidian window.
+                                            # Launch it, with a 5-second debounce.
+                                            current_time = time.time()
+                                            if (current_time - last_scratchpad_launch_time) > 5.0:
+                                                log_engine("Scratchpad missing while focusing Obsidian! Launching it automatically...")
+                                                last_scratchpad_launch_time = current_time
+                                                cmd = [
+                                                    "/home/adityaws/.local/bin/obsidian",
+                                                    "obsidian://open?vault=Obsidian&file=Project_K8s_-_KUBESTRONAUT%2FTasks_or_Projects_%28around_KUBESTRONAUT%29%2F2.%20Project_kubernetes%2F2.%20CKAD_Certification_Course_-_Certified_Kubernetes_Application_Developer_Course%2F000_SCRATCHPAD_Brain_Dump&paneType=window"
+                                                ]
+                                                subprocess.Popen(cmd)
 
                                 # Logic: Block if app is ignored UNLESS title is allowed
                                 app_ignored = (socket_class in ignored_apps)

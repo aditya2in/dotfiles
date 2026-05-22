@@ -13,6 +13,10 @@ unalias ga 2>/dev/null
 alias gwt=ga
 unalias ga 2>/dev/null
 
+# --- [ DeepSeek API Key & Balance Checker ] ---
+[[ -f ~/.config/deepseek/env ]] && source ~/.config/deepseek/env
+alias deepseek-balance='curl -s https://api.deepseek.com/user/balance -H "Authorization: Bearer $DEEPSEEK_API_KEY" | jq'
+
 # --- [ 2. Starship Theme (Clean 2-Line) ] ---
 eval "$(starship init bash)"
 

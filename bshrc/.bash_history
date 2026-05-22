@@ -1683,3 +1683,96 @@ cd
 gemini -
 gemini --resume
 reboot
+gemini -
+cd
+ echo "GEMINI_API_KEY=AIzaSyB-8Ys_Z3gk4a0gTB0WDRp883AJgYZgffU" > "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/Voice_Orchestrator/.env"
+shutdown -h now
+gemini --resume
+cd 
+dot 
+cd dot
+gs
+ga
+gs
+gc
+gp
+cd obs
+gs
+ga
+gs
+gc
+g
+gp
+shutdown -h now
+gemini --resume
+rboot
+reboot
+gemini --resume
+gemini 
+cd
+/home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/Voice_Orchestrator/sovereign_soul.py"
+ezit
+gemini 
+gemini --resume
+cd Routine_OS/
+/home/adityaws/venvs/voice_orchestrator/bin/python Voice_Pilot_Basic/basic_voice.py
+./start_gemini_live.sh 
+gemini --resume
+cd ..
+gemini --resume
+ /home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/Voice_Orchestrator/sovereign_soul.py"
+/home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All
+   Things/Agents/Routine_OS/Voice_Orchestrator/mic_energy_probe.py"
+/home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/Voice_Orchestrator/mic_energy_probe.py"
+/home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All
+   Things/Agents/Routine_OS/Voice_Orchestrator/mic_energy_probe.py"
+/home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All
+   Things/Agents/Routine_OS/Voice_Orchestrator/mic_energy_probe.py"
+ /home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/Voice_Orchestrator/sovereign_soul.py"
+odex
+ /home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/Voice_Orchestrator/sovereign_soul.py"
+codex
+ /home/adityaws/venvs/voice_orchestrator/bin/python "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/Voice_Orchestrator/sovereign_soul.py"
+cd
+cd routine
+cd Voice_Pilot_Basic/
+ls
+./b
+ls
+./basic_voice_.py
+./basic_voice.py
+ls
+codex
+cd ..
+code
+codex
+bash "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/start_gemini_live.sh"
+./start_gemini_live.sh 
+bash "/home/adityaws/Obsidian/All Things/Agents/Routine_OS/start_gemini_live.sh"
+gemini --resume
+w
+gemini --resume
+shutdown -h now
+hermes se
+hermes setup
+opencode
+cd ckad
+opencode
+opencode resumne
+opencode resume
+opencode 
+tmux swap-window -s 6 -t 1
+codex
+
+V
+run source ~/.bashrc
+source ~/.bashrc
+deepseek-balance 
+gemini --resume
+deepseek-balance 
+opencode 
+shutdown -h now
+opencode 
+gemini 
+curl -fsSL https://antigravity.google/cli/install.sh | bash
+agy

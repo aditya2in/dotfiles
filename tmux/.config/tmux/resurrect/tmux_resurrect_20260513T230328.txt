@@ -1,0 +1,19 @@
+pane	rwxrob	0	0	:Z	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	rwxrob	0	0	:Z	1	adityaws@gpuworker01:~/Obsidian	:/home/adityaws/Obsidian	0	bash	:
+pane	rwxrob	1	0	:	0	adityaws@gpuworker01:~/Obsidian	:/home/adityaws/Obsidian	1	bash	:
+pane	rwxrob	2	0	:Z	0	adityaws@gpuworker01:~/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1. Project_Linux_&_CLI_Mastery/rwxrob	:/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1.\ Project_Linux_&_CLI_Mastery/rwxrob	1	bash	:
+pane	rwxrob	2	0	:Z	1	adityaws@gpuworker01:~/repos/github.com/aditya2in	:/home/adityaws/repos/github.com/aditya2in	0	bash	:
+pane	rwxrob	3	0	:-	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Routine_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Routine_OS	1	bash	:
+pane	rwxrob	4	1	:*	0	◇  Ready (Agents)                                                               	:/home/adityaws/Obsidian/All\ Things/Agents	0	node	:node /home/adityaws/.local/share/mise/installs/node/25.2.1/bin/gemini
+pane	rwxrob	4	1	:*	1	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:/home/adityaws/venvs/voice_orchestrator/bin/python /home/adityaws/Obsidian/All Things/Agents/Routine_OS/Voice_Orchestrator/sovereign_soul.py
+pane	rwxrob	5	0	:Z	0	adityaws@gpuworker01:~/Obsidian	:/home/adityaws/Obsidian	1	bash	:
+pane	rwxrob	5	0	:Z	1	adityaws@gpuworker01:~/Obsidian	:/home/adityaws/Obsidian	0	bash	:
+pane	rwxrob	6	0	:	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+window	rwxrob	0	:HOME	0	:Z	0ab8,94x72,0,0[94x43,0,0,3,94x28,0,44,4]	off
+window	rwxrob	1	:GEMINI	0	:	b6a2,94x72,0,0,5	off
+window	rwxrob	2	:rwxrob	0	:Z	a245,94x72,0,0[94x34,0,0,6,94x37,0,35,7]	off
+window	rwxrob	3	:Routines	0	:-	b6a5,94x72,0,0,8	off
+window	rwxrob	4	:Agents	1	:*	00f0,94x73,0,0[94x36,0,0,9,94x36,0,37,10]	off
+window	rwxrob	5	:Obsidian	0	:Z	8d54,94x72,0,0[94x35,0,0,11,94x36,0,36,12]	off
+window	rwxrob	6	:Hermus	0	:	5b82,94x72,0,0,13	off
+state	rwxrob	
