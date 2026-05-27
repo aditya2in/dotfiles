@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # 1. Wyoming Faster-Whisper Server (Port 10300) - Tailored for the "Flo" Android App
+  wyoming-whisper:
+    image: lscr.io/linuxserver/faster-whisper:gpu
+    container_name: wyoming-whisper
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - PUID: 1000
+      - PGID: 1000
+      - TZ: Asia/Kolkata
+      - WHISPER_MODEL: large-v3-turbo
+      - WHISPER_LANG: en
+    volumes:
+      - /home/adityaws/AI_MODELS/dictation_models:/config
+    ports:
+      - 10300:10300
+    restart: unless-stopped
+
+  # 2. OpenAI-Compatible API Server (Port 8000) - Tailored for "Phone Whisper" or "Whisper To Input"
+  openai-whisper:
+    image: fedirz/faster-whisper-server:latest-cuda
+    container_name: openai-whisper
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - WHISPER_MODEL: large-v3-turbo
+      - WHISPER_DEVICE: cuda
+      - WHISPER_COMPUTE_TYPE: float16
+    volumes:
+      - /home/adityaws/AI_MODELS/dictation_models:/root/.cache/huggingface
+    ports:
+      - 8000:8000
+    restart: unless-stopped

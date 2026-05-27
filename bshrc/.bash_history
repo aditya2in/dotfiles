@@ -1776,3 +1776,54 @@ opencode
 gemini 
 curl -fsSL https://antigravity.google/cli/install.sh | bash
 agy
+  
+9;5u9;5u9;5u
+clear
+agy
+sudo systemctl restart logid
+cd diot
+cd dot
+gs
+ga
+gs
+gc
+gp
+cd obs
+gs
+ga
+gs
+gc
+gp
+shutdown -h now
+opencode 
+sudo systemctl restart logid
+opencode
+agy
+agy
+shutdown -h now
+opencode
+agent
+shutdown -h now
+opencode -h
+opencode session -h
+opencode session list
+op
+opencode
+agy
+Thank you. 
+agy
+opencode
+npm install -g freebuff
+freebuff
+agy
+cd
+cd agents
+opencode
+freebuff
+opencode
+shutdown -h now
+agy
+opencode
+cd ckad
+opencode
+agy

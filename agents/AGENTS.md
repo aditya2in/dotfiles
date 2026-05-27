@@ -2,6 +2,7 @@
 
 ## Filesystem Rule: Obsidian .md Extension
 All files created in the Obsidian vault MUST use the `.md` extension. Never `.markdown`, `.txt`, or any other extension. Obsidian only recognizes `.md` files for internal linking and rendering.
+**AGENTS.md filename casing:** On Linux, filenames are case-sensitive. OpenCode looks for `AGENTS.md` (lowercase `.md`). Always use `AGENTS.md` — never `AGENTS.MD`, `AGENTS.Md`, or any other variant. The file MUST be `AGENTS.md` with all lowercase `.md` extension.
 
 ## Permission Before Action
 Before making any file changes, configuration edits, deletions, or other actions that modify the workspace, first ask for explicit permission and wait for the user's confirmation.
@@ -61,10 +62,11 @@ Any file creation, script generation (shell, python, etc.), or system-wide modif
 ## Global Localization & Cost Tracking (ALWAYS)
 - **Time:** ALL timestamps — without exception — MUST be in **IST (Indian Standard Time, UTC+5:30)**. Never display UTC, EST, or any other timezone. Always convert.
 - **Currency:** ALL prices/costs MUST be displayed in **INR (₹)**. Fetch the live exchange rate from exchangerate-api.com on every use. Every mention of USD MUST have the INR equivalent in brackets immediately after (e.g., "$330 (~₹31,716)").
-- **Balance Tracking:** When the user asks for DeepSeek balance:
+- **Balance Tracking (Automatic):** Every time the user asks for DeepSeek balance, the AI MUST automatically log it — no separate instruction needed.
   1. Source `~/.config/deepseek/env`, then run the `deepseek-balance` alias
   2. Show: remaining USD, INR equivalent, and session cost estimate in both USD and INR
   3. **APPEND** an entry to the balance log with date (IST), USD balance, INR balance, change in USD, change in INR, and notes
+  4. **Plan Mode handling:** If in read-only/plan mode, present the data and plan the log entry. Execute the append immediately when switched to build mode, including the present check and any pending ones.
 - **Scope:** Applies to EVERY response — chat, study, labs, Q&A. Not just generated files.
 
 ### Balance Log Path
