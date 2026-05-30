@@ -1,9 +1,0 @@
-pane	rwxrob	0	1	:*Z	0	✦  Working… (adityaws)                                                          	:/home/adityaws	1	node	:node /home/adityaws/.local/share/mise/installs/node/25.2.1/bin/gemini --resume
-pane	rwxrob	0	1	:*Z	1	adityaws@gpuworker01:~/DOTfiles	:/home/adityaws/DOTfiles	0	bash	:
-pane	rwxrob	1	0	:	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
-pane	rwxrob	2	0	:-	0	✋  Action Required (rwxrob)                                                     	:/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1.\ Project_Linux_&_CLI_Mastery/rwxrob	0	node	:node /home/adityaws/.local/share/mise/installs/node/25.2.1/bin/gemini
-pane	rwxrob	2	0	:-	1	adityaws@gpuworker01:~/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1. Project_Linux_&_CLI_Mastery/rwxrob	:/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1.\ Project_Linux_&_CLI_Mastery/rwxrob	1	bash	:
-window	rwxrob	0	:HOME	1	:*Z	e9c2,94x73,0,0[94x45,0,0,4,94x27,0,46,9]	off
-window	rwxrob	1	:GEMINI	0	:	d083,104x87,0,0,6	off
-window	rwxrob	2	:rwxrob	0	:-	524e,94x73,0,0[94x35,0,0,7,94x37,0,36,8]	off
-state	rwxrob	

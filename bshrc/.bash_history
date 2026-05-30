@@ -1827,3 +1827,23 @@ opencode
 cd ckad
 opencode
 agy
+opencode
+gs
+ga
+gs
+gc
+Zgp
+go
+gp
+cd dot 
+gs
+ga
+gs
+gc
+gp
+opencode
+agy
+opencode
+shutdown -h now
+opencode
+opencode

@@ -72,6 +72,19 @@ Any file creation, script generation (shell, python, etc.), or system-wide modif
 ### Balance Log Path
 `/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/3.Project_AI_Mastery/deepseek_balance_log.md`
 
+## Sudo/Privilege Escalation (Polkit Method)
+When you need to run a command that requires `sudo` but the terminal cannot prompt for a password (no TTY, no askpass), use `pkexec` instead. This triggers a graphical polkit authentication pop-up on the user's Hyprland desktop. The user sees the pop-up, types their password, and the authentication is cached for subsequent commands.
+
+```bash
+# Instead of: sudo cp file /etc/path/
+pkexec cp /path/to/source /etc/path/target
+
+# Instead of: sudo systemctl daemon-reload
+pkexec systemctl daemon-reload
+```
+
+If `pkexec` fails with a D-Bus error, try again once — it often works after the initial error resolves. The user has already authenticated once via a pop-up, so subsequent `pkexec` calls should work without prompting.
+
 ## Gemini Added Memories
 - The user is running Arch Linux with Btrfs and Snapper for system snapshots.
 - Always greet the user as "Aditya" at the start of a session.

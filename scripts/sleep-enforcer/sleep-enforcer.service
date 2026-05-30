@@ -1,5 +1,5 @@
 [Unit]
-Description=Sleep Enforcer: Automated shutdown (10 PM - 5 AM)
+Description=Sleep Enforcer: Automated shutdown (9:30 PM - 5 AM)
 After=network.target
 
 [Service]
