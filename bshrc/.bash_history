@@ -1847,3 +1847,41 @@ opencode
 shutdown -h now
 opencode
 opencode
+cd Break_OS/
+opencode
+gs
+ga
+gs
+gc
+gp
+cd dot
+gs
+ga
+gs
+gc
+gp
+opencode
+opencode
+shutdown -h now
+opencode
+cd routines
+cd dat
+cd day
+cd agents
+cd Day_Routine_OS/
+ls
+opencode
+opencode mcp add
+agy
+opencode
+opencode
+agy
+wexit
+exit
+cd
+agy
+shutdown -h now
+agy
+cd
+agy
+shutdown -h now

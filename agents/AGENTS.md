@@ -66,7 +66,10 @@ Any file creation, script generation (shell, python, etc.), or system-wide modif
   1. Source `~/.config/deepseek/env`, then run the `deepseek-balance` alias
   2. Show: remaining USD, INR equivalent, and session cost estimate in both USD and INR
   3. **APPEND** an entry to the balance log with date (IST), USD balance, INR balance, change in USD, change in INR, and notes
-  4. **Plan Mode handling:** If in read-only/plan mode, present the data and plan the log entry. Execute the append immediately when switched to build mode, including the present check and any pending ones.
+  4. **ANALYZE** after every balance check: AI computes total spend, avg per day, weekday vs weekend breakdown, heaviest day, and predicted depletion date using full log history. Append an analysis row with `—` for monetary columns showing: usage days, total spent, avg/day, heaviest day, and predicted remaining days (e.g., `~25d left at current rate (est. Jun 26 — projection, not guaranteed)`).
+  5. **Plan Mode handling:** If in read-only/plan mode, present the data and plan the log entry + analysis. Execute the append immediately when switched to build mode, including the present check and any pending ones.
+
+**Method:** AI-driven analysis (Python used only for arithmetic). No separate script needed.
 - **Scope:** Applies to EVERY response — chat, study, labs, Q&A. Not just generated files.
 
 ### Balance Log Path
