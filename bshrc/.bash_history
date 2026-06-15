@@ -1885,3 +1885,6 @@ agy
 cd
 agy
 shutdown -h now
+opencode
+]]]
+opencode
