@@ -1,0 +1,15 @@
+{
+    "smart_pause_enabled": true,
+    "ignored_classes": [
+        "brave-browser",
+        "obsidian"
+    ],
+    "allowed_titles": [
+        "000_SCRATCHPAD_Brain_Dump"
+    ],
+    "model": "en",
+    "language": "en-US",
+    "silero_sensitivity": 0.5,
+    "post_speech_silence_duration": 0.8,
+    "min_length_of_recording": 0.5
+}
