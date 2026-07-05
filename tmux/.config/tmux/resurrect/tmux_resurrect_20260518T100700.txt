@@ -1,6 +1,0 @@
-pane	default	0	1	:*	0	✋  Action Required (adityaws)                                                   	:/home/adityaws	1	node	:node /home/adityaws/.local/share/mise/installs/node/25.2.1/bin/gemini --resume
-pane	rwxrob	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	0	bash	:
-pane	rwxrob	0	1	:*	1	adityaws@gpuworker01:~/Obsidian	:/home/adityaws/Obsidian	1	bash	:
-window	default	0	:node	1	:*	ba9e,94x73,0,0,1	:
-window	rwxrob	0	:bash	1	:*	e9b7,94x73,0,0[94x26,0,0,2,94x46,0,27,3]	:
-state	default	rwxrob

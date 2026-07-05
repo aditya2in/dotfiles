@@ -1,3 +1,0 @@
-pane	default	0	1	:*	0	◇  Ready (adityaws)                                                             	:/home/adityaws	1	node	:node /home/adityaws/.npm/_npx/d07ada7b4a99c96e/node_modules/.bin/gemini --resume
-window	default	0	:node	1	:*	ba9d,94x73,0,0,0	:
-state	default	

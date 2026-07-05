@@ -1888,3 +1888,46 @@ shutdown -h now
 opencode
 ]]]
 opencode
+sudo pacman -Syu
+cd
+cd obs
+gs
+ga
+gs
+gc
+gp
+cd dot
+gs
+ga
+gs
+gc
+gp
+cd log
+ls
+ga
+gs
+gc
+gp
+shutdown -h now
+agy
+pkexec systemctl stop sleep-enforcer.timer
+systemctl stop sleep-enforcer.timer
+agy
+sudo pacman -Syu
+systemctl stop sleep-enforcer.timer
+shutdown -h now
+opencode
+cd office
+ls
+cd Office_Tasks_OS/
+ls
+opencode
+cd kitchen
+ls
+opencode
+agy
+shutdown -h now
+pkill witcher3.exe 
+shutdown -h now
+sudo systemctl stop sleep-enforcer.timer 
+agy
