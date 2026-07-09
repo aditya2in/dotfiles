@@ -1,0 +1,12 @@
+[Unit]
+Description=Tmux Terminal Multiplexer (Autostart & Restore)
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/tmux new-session -d
+ExecStop=/home/adityaws/.config/tmux/plugins/tmux-resurrect/scripts/save.sh quiet; /usr/bin/tmux kill-server
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

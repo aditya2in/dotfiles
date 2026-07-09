@@ -1931,3 +1931,23 @@ pkill witcher3.exe
 shutdown -h now
 sudo systemctl stop sleep-enforcer.timer 
 agy
+cd obs
+gs
+ga
+gs
+gc
+gp
+cd dot
+gs
+ga
+gs
+gc
+gp
+cd log
+gs
+ga
+gs
+gc
+gp
+agy
+shutdown -h now
