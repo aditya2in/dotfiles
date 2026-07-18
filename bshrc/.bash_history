@@ -1951,3 +1951,46 @@ gc
 gp
 agy
 shutdown -h now
+cd dot
+gs
+ga
+gs
+gc
+gp
+cd 
+cd obs
+gs
+ga
+gs
+gc
+gp
+cd Log
+gs
+ga
+gs
+ga
+gs
+git status
+ls
+tree
+ls -f
+lsa
+lsa =h
+lsa -h
+ls -h
+ls 
+shutdown -h now
+agy
+shutdown -h now
+cd
+agy
+shutdown -h now
+opencode
+agy
+opcncode
+opencode
+opencode agent create
+opencode
+agy
+cd homelab
+agy

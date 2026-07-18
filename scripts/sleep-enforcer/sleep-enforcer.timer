@@ -1,8 +1,9 @@
 [Unit]
-Description=Sleep Enforcer Timer (9:30 PM)
+Description=Sleep Enforcer Timer (9:30 PM - 5 AM, Aggressive 2-Min Loop)
 
 [Timer]
-OnCalendar=*-*-* 21:30:00
+OnCalendar=*-*-* 21:30..58/2:00
+OnCalendar=*-*-* 22..23,00..04:0/2:00
 Persistent=false
 Unit=sleep-enforcer.service
 
