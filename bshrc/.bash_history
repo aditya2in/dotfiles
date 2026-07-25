@@ -1994,3 +1994,40 @@ opencode
 agy
 cd homelab
 agy
+cd log
+gs
+ga
+gs
+gc
+gp
+cd obs
+ga
+gs
+ga
+gc
+gp
+cd dot
+gs
+ga
+gs
+gc
+gp
+cd 
+c
+agy
+lsusb
+iplink
+ip link
+lsusb
+agy
+opencode
+/home/adityaws/Builds/voicebox/tauri/src-tauri/target/release/voicebox
+/home/adityaws/Builds/voicebox/start_voicebox.sh
+pkill witcher3.exe 
+agy
+pkill jamesdsp 
+~/run_voicebox.sh
+sudo systemctl stop sleep-enforcer.timer 
+shutdown -h now
+sudo systemctl stop sleep-enforcer.timer 
+shutdown -h now

@@ -660,3 +660,148 @@ Exception: Selected device validation failed
 2026-02-13 20:07:59.134 - RealTimeSTT: realtimestt - DEBUG - Opening stream with device index 24, sample_rate=16000, chunk_size=1024
 2026-02-13 20:07:59.170 - RealTimeSTT: realtimestt - INFO - Microphone connected and validated (device index: 24, sample rate: 16000, chunk size: 1024)
 2026-02-13 20:07:59.170 - RealTimeSTT: realtimestt - DEBUG - Audio recording initialized successfully at 16000 Hz, reading 1024 frames at a time
+2026-07-18 19:26:37.895 - RealTimeSTT: realtimestt - INFO - Starting RealTimeSTT
+2026-07-18 19:26:37.953 - RealTimeSTT: realtimestt - INFO - Initializing audio recording (creating pyAudio input stream, sample rate: 16000 buffer size: 512
+2026-07-18 19:26:37.953 - RealTimeSTT: realtimestt - DEBUG - Starting audio data worker with target_sample_rate=16000, buffer_size=512, input_device_index=None
+2026-07-18 19:26:37.953 - RealTimeSTT: realtimestt - INFO - Initializing WebRTC voice with Sensitivity 3
+2026-07-18 19:26:37.953 - RealTimeSTT: realtimestt - DEBUG - Creating PyAudio interface...
+2026-07-18 19:26:37.954 - RealTimeSTT: realtimestt - DEBUG - WebRTC VAD voice activity detection engine initialized successfully
+2026-07-18 19:26:38.122 - RealTimeSTT: realtimestt - DEBUG - No device index supplied; using default device 25
+2026-07-18 19:26:38.122 - RealTimeSTT: realtimestt - DEBUG - Retrieving highest sample rate for device index 25: {'index': 25, 'structVersion': 2, 'name': 'default', 'hostApi': 0, 'maxInputChannels': 128, 'maxOutputChannels': 128, 'defaultLowInputLatency': 0.008707482993197279, 'defaultLowOutputLatency': 0.008707482993197279, 'defaultHighInputLatency': 0.034829931972789115, 'defaultHighOutputLatency': 0.034829931972789115, 'defaultSampleRate': 44100.0}
+2026-07-18 19:26:38.122 - RealTimeSTT: realtimestt - DEBUG - Highest supported sample rate for device index 25 is 44100
+2026-07-18 19:26:38.122 - RealTimeSTT: realtimestt - DEBUG - Sample rates to try for device 25: [16000, 44100]
+2026-07-18 19:26:38.122 - RealTimeSTT: realtimestt - DEBUG - Attempting to initialize audio stream at 16000 Hz.
+2026-07-18 19:26:38.122 - RealTimeSTT: realtimestt - DEBUG - Found 39 total audio devices on the system.
+2026-07-18 19:26:38.123 - RealTimeSTT: realtimestt - DEBUG - Available input devices with input channels: [2, 17, 18, 19, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38]
+2026-07-18 19:26:38.123 - RealTimeSTT: realtimestt - DEBUG - Validating device index 25 with info: {'index': 25, 'structVersion': 2, 'name': 'default', 'hostApi': 0, 'maxInputChannels': 128, 'maxOutputChannels': 128, 'defaultLowInputLatency': 0.008707482993197279, 'defaultLowOutputLatency': 0.008707482993197279, 'defaultHighInputLatency': 0.034829931972789115, 'defaultHighOutputLatency': 0.034829931972789115, 'defaultSampleRate': 44100.0}
+2026-07-18 19:26:38.204 - RealTimeSTT: realtimestt - DEBUG - Silero VAD voice activity detection engine initialized successfully
+2026-07-18 19:26:38.204 - RealTimeSTT: realtimestt - DEBUG - Starting realtime worker
+2026-07-18 19:26:38.204 - RealTimeSTT: realtimestt - DEBUG - Waiting for main transcription model to start
+2026-07-18 19:26:38.264 - RealTimeSTT: realtimestt - DEBUG - Device index 25 successfully validated.
+2026-07-18 19:26:38.264 - RealTimeSTT: realtimestt - DEBUG - Opening stream with device index 25, sample_rate=16000, chunk_size=1024
+2026-07-18 19:26:38.315 - RealTimeSTT: realtimestt - INFO - Microphone connected and validated (device index: 25, sample rate: 16000, chunk size: 1024)
+2026-07-18 19:26:38.315 - RealTimeSTT: realtimestt - DEBUG - Audio recording initialized successfully at 16000 Hz, reading 1024 frames at a time
+2026-07-18 19:26:39.352 - RealTimeSTT: realtimestt - DEBUG - Main transcription model ready
+2026-07-18 19:26:39.353 - RealTimeSTT: realtimestt - DEBUG - RealtimeSTT initialization completed successfully
+2026-07-18 19:26:39.353 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:39.353 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:39.353 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:39.353 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:39.391 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:40.415 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:40.416 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:40.418 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 16896
+2026-07-18 19:26:40.418 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:40.418 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:40.418 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:40.419 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:40.434 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:40.434 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.02 seconds
+2026-07-18 19:26:40.434 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:40.435 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:40.435 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:40.435 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:41.440 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:41.440 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:41.442 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 15872
+2026-07-18 19:26:41.442 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:41.442 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:41.442 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:41.443 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:41.456 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:41.457 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.01 seconds
+2026-07-18 19:26:41.457 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:41.457 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:41.457 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:41.457 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:42.463 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:42.464 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:42.465 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 15872
+2026-07-18 19:26:42.465 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:42.465 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:42.465 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:42.466 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:42.489 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:42.490 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.02 seconds
+2026-07-18 19:26:42.490 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:42.490 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:42.491 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:42.491 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:43.487 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:43.552 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:43.561 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 16896
+2026-07-18 19:26:43.561 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:43.561 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:43.561 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:43.561 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:43.578 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:43.578 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.02 seconds
+2026-07-18 19:26:43.579 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:43.579 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:43.579 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:43.579 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:44.511 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:44.640 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:44.641 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 16896
+2026-07-18 19:26:44.641 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:44.641 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:44.641 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:44.642 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:44.669 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:44.670 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.03 seconds
+2026-07-18 19:26:44.670 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:44.670 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:44.670 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:44.670 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:45.536 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:45.728 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:45.729 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 16896
+2026-07-18 19:26:45.730 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:45.730 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:45.730 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:45.730 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:45.737 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:45.737 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.01 seconds
+2026-07-18 19:26:45.738 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:45.738 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:45.738 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:45.738 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:46.559 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:46.752 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:46.752 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 15872
+2026-07-18 19:26:46.752 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:46.752 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:46.752 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:46.753 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:46.768 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:46.768 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.02 seconds
+2026-07-18 19:26:46.768 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:46.768 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:46.768 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:46.768 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:47.583 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:47.776 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:47.776 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 15872
+2026-07-18 19:26:47.776 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:47.776 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:47.776 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:47.777 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:47.782 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:47.782 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.01 seconds
+2026-07-18 19:26:47.782 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:47.782 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:47.782 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:47.782 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-07-18 19:26:48.607 - RealTimeSTT: realtimestt - DEBUG - _audio_data_worker writing audio data into queue.
+2026-07-18 19:26:48.800 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-07-18 19:26:48.800 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 15872
+2026-07-18 19:26:48.800 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-07-18 19:26:48.800 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-07-18 19:26:48.800 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-07-18 19:26:48.801 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-07-18 19:26:48.812 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-07-18 19:26:48.812 - RealTimeSTT: realtimestt - DEBUG - Model /home/adityaws/AI_MODELS/dictation_models completed transcription in 0.01 seconds
+2026-07-18 19:26:48.812 - RealTimeSTT: realtimestt - INFO - recording started
+2026-07-18 19:26:48.813 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'recording'
+2026-07-18 19:26:48.813 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-07-18 19:26:48.813 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop

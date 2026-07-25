@@ -1,0 +1,7 @@
+{
+  "voicebox_url": "http://127.0.0.1:17493",
+  "voice_profile": "Jarvis",
+  "deepseek_model": "deepseek-chat",
+  "audio_player": "pw-play",
+  "system_prompt": "You are a helpful AI assistant. Keep your responses highly concise and conversational since they will be read aloud. Avoid markdown tables or formatting that is difficult to speak."
+}

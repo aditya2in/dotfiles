@@ -52,21 +52,15 @@ Any file creation, script generation (shell, python, etc.), or system-wide modif
 7.  **Index Format Example:**
     `| YYYY-MM-DD | FileName.md | Brief description of the change |`
 
-### Git Version Control Mandate (Consolidated Workflow)
-- For every file modified by the AI, the AI must prepare a consolidated command including navigation, staging, and committing.
-- The AI must ask for explicit permission once: "Shall I proceed with the git add and commit?"
-- Once approved, the AI must execute the combined command.
-- **Example:** `cd /home/adityaws/DOTfiles && git add <files> && git commit -m "<message>"`
-- The AI must NOT push to remote repositories unless explicitly instructed.
 
 ## Global Localization & Cost Tracking (ALWAYS)
 - **Time:** ALL timestamps — without exception — MUST be in **IST (Indian Standard Time, UTC+5:30)**. Never display UTC, EST, or any other timezone. Always convert.
-- **Currency:** ALL prices/costs MUST be displayed in **INR (₹)**. Fetch the live exchange rate from exchangerate-api.com on every use. Every mention of USD MUST have the INR equivalent in brackets immediately after (e.g., "$330 (~₹31,716)").
+- **Currency:** ALL prices/costs MUST be displayed in **INR (₹)**. Fetch the live exchange rate from exchangerate-api.com on every use. Every mention of USD MUST have the INR equivalent in brackets immediately after (e.g., "$330 (~₹31,716)"). The exchange rate (1 USD = X INR) MUST always be explicitly displayed alongside any balance or spend output so the user knows the exact conversion rate used.
 - **Balance Tracking (Automatic):** Every time the user asks for DeepSeek balance, the AI MUST automatically log it — no separate instruction needed.
   1. Source `~/.config/deepseek/env`, then run the `deepseek-balance` alias
-  2. Show: remaining USD, INR equivalent, and session cost estimate in both USD and INR
+  2. Show: remaining USD, INR equivalent, exchange rate (1 USD = X INR), and session cost estimate in both USD and INR
   3. **APPEND** an entry to the balance log with date (IST), USD balance, INR balance, change in USD, change in INR, and notes
-  4. **ANALYZE** after every balance check: AI computes total spend, avg per day, weekday vs weekend breakdown, heaviest day, and predicted depletion date using full log history. Append an analysis row with `—` for monetary columns showing: usage days, total spent, avg/day, heaviest day, and predicted remaining days (e.g., `~25d left at current rate (est. Jun 26 — projection, not guaranteed)`).
+  4. **ANALYZE** after every balance check: AI computes total spend, avg per day, weekday vs weekend breakdown, heaviest day, and predicted depletion date using full log history. The exchange rate (1 USD = X INR) MUST be explicitly displayed alongside the analysis. Append an analysis row with `—` for monetary columns showing: usage days, total spent, avg/day, heaviest day, and predicted remaining days (e.g., `~25d left at current rate (est. Jun 26 — projection, not guaranteed)`).
   5. **Plan Mode handling:** If in read-only/plan mode, present the data and plan the log entry + analysis. Execute the append immediately when switched to build mode, including the present check and any pending ones.
 
 **Method:** AI-driven analysis (Python used only for arithmetic). No separate script needed.
