@@ -69,15 +69,19 @@ When Aditya explicitly indicates that a topic/subject is "closed" or resolved, t
 * **Authorized Repositories:** Git commands are only configured and allowed to run in the following three specific directories:
   1. `~/DOTfiles` (the dot files folder)
   2. `~/Obsidian` (the Obsidian folder)
-  3. `~/logseq` (the Logseq folder containing a date in the folder name)
+  3. `~/Logseq Sync 17Sep2025` (the Logseq folder containing a date in the folder name)
 * **Branch and Remote Settings:** All repositories use the exact same branch name **`new`** and the remote target **`origin new`** (matching the system shell aliases).
 
 #### **Mandatory Final Git Output (Git Commit Report Table):**
 At the very end of any final response where Git commands are suggested or executed, the AI MUST output a section titled `## 📦 Git Commit Report` structured as a Markdown table.
+* **Vertical Monitor Optimization:** To prevent horizontal scrolling on vertical screens:
+  1. All files in the "Staged Files" column must be stacked vertically using `<br>` tags.
+  2. Long directory lists must be summarized (e.g., `folder/ (X untracked files)`).
 * **Example Output Table:**
   | Repository | Staged Files | Branch/Remote | Commit Message | Command |
   | :--- | :--- | :--- | :--- | :--- |
   | `~/Obsidian` | `HomeLab/file.md` | `new` (`origin new`) | `docs: commit message` | `git -C ~/Obsidian add . && git -C ~/Obsidian commit -m "docs: commit message" && git -C ~/Obsidian push origin new` |
+
 
 
 
