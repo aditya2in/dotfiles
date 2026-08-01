@@ -2031,3 +2031,62 @@ sudo systemctl stop sleep-enforcer.timer
 shutdown -h now
 sudo systemctl stop sleep-enforcer.timer 
 shutdown -h now
+cd
+cd obs
+ga
+gs
+gc
+gp
+cd 
+cd dot
+gs
+ga
+gs
+gc
+gp
+cd log
+gs
+ga
+gs
+gc
+shutdown -h now
+opencode
+cd rwx
+opencode
+opencode
+cd task
+cd ..
+ls
+cd Tasks_OS/
+opencode
+opencode
+sudo systemctl restart logid
+sudo systemctl restart logid.service 
+cd obs
+ga
+gs
+ga
+gc
+gp
+gs
+ga
+gs
+gc
+gp
+shutdown -h now
+opencode
+sudo systemctl stop sleep-enforcer.timer 
+opencode
+tmux 
+opencode
+bash "/home/adityaws/Obsidian/All Things/Agents/Idea_OS/scripts/sync_audit.sh
+
+
+ls
+cd scripts/
+./sync_audit.sh 
+sudo systemctl stop sleep-enforcer.timer 
+cd
+agy
+agy -resume
+agy 

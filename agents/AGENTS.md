@@ -39,18 +39,46 @@ Omarchy (Arch Linux + Hyprland) user home directory, not a traditional code repo
 ## Prior Changes
 Opacity rules set to `1.0 1.0` to disable transparency. To enable transparency/blur, edit `~/.config/hypr/looknfeel.conf`.
 
-## Core Rule: Documentation for System Tweaks & Scripting
-Any file creation, script generation (shell, python, etc.), or system-wide modification/tweak performed by the AI MUST be documented.
+## Core Rule: Documentation for System Tweaks, Scripting, and Engineering Logs
 
-1.  **Immediate Documentation:** All system modifications or script creations must be documented as soon as the change is verified.
-2.  **User Approval:** The AI must ask to document the change. Once the user approves, the documentation must be saved in the Obsidian directory.
-3.  **Indexing:** The AI must update the `AI_documentation_index.md` file in the Obsidian directory with an entry for the new document, including the file path and a brief description.
-4.  **Scope:** This applies specifically to system tweaks, scripting, and configurations (not necessarily to academic or course-related content generation).
-5.  **Mandatory Path:** All documentation MUST be saved in the HomeLab folder:
+### 🎯 Intention: Why and How We Document
+We document to maintain a single, cohesive source of truth for joint engineering research, diagnostics, and workspace configurations. This live engineering log enables both Aditya and the AI to build on past context, troubleshoot faster, and preserve technical details across session restarts or context window truncations.
+
+### 📝 Document Lifecycle Rules
+1. **Ongoing Topic/Subject (Same File):** If the research or troubleshooting session on a specific topic is still active, the AI must continuously update the **same file**. Every new finding, command output, or step in the troubleshooting chain must be added to the existing document as the session progresses.
+2. **Close of Subject:** When the issue is resolved (e.g., system is confirmed stable with zero errors), the current file is finalized and the subject is marked **closed**.
+3. **New Topic/Subject (New File):** When a new topic, project, or problem is initiated, the AI must create a **new document** and add a corresponding entry to `AI_documentation_index.md`.
+
+### ⚡ Execution Rules
+1. **Immediate Documentation:** All system modifications, diagnostic updates, or script creations must be documented as soon as they are verified.
+2. **Automatic Execution (No Permission Required):** The AI must perform all documentation edits, file creations, and index updates automatically without asking for permission. This overrides the 'Permission Before Action' mandate for documentation files.
+3. **Mandatory Final Output (Documentation Report):** At the very end of its final response, the AI MUST output a section titled `## 📂 Documentation Report` listing the file name, absolute path, and file link of every documentation file created or updated during the turn.
+4. **Indexing:** The AI must update the `AI_documentation_index.md` file in the Obsidian directory with an entry for any new document, including the file path and a brief description.
+5. **Scope:** This applies specifically to system tweaks, scripting, configurations, and diagnostics (not academic or course-related content generation).
+6. **Mandatory Path:** All documentation MUST be saved in the HomeLab folder:
     `/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/HomeLab/`
-6.  **Append-Only Index:** The `AI_documentation_index.md` in the HomeLab folder must **NEVER** be deleted or fully overwritten. New entries must be **APPENDED** to the table in the exact format shown below.
-7.  **Index Format Example:**
+7. **Append-Only Index:** The `AI_documentation_index.md` in the HomeLab folder must **NEVER** be deleted or fully overwritten. New entries must be **APPENDED** to the table.
+8. **Index Format Example:**
     `| YYYY-MM-DD | FileName.md | Brief description of the change |`
+9. **Atomic Execution Priority:** Documentation and index updates MUST be written immediately after the change is verified, in the very same model turn/response, before delivering any conversational responses, secondary analysis, or answering unrelated questions.
+
+### 📦 Git Push at Close of Subject
+When Aditya explicitly indicates that a topic/subject is "closed" or resolved, the AI must suggest the exact git commands (or aliases `ga`, `gc`, `gp` in sequence) to commit the newly completed documentation and configurations to the remote repository.
+
+#### **Git Configuration & Repository Limits:**
+* **Authorized Repositories:** Git commands are only configured and allowed to run in the following three specific directories:
+  1. `~/DOTfiles` (the dot files folder)
+  2. `~/Obsidian` (the Obsidian folder)
+  3. `~/logseq` (the Logseq folder containing a date in the folder name)
+* **Branch and Remote Settings:** All repositories use the exact same branch name **`new`** and the remote target **`origin new`** (matching the system shell aliases).
+
+#### **Mandatory Final Git Output (Git Commit Report Table):**
+At the very end of any final response where Git commands are suggested or executed, the AI MUST output a section titled `## 📦 Git Commit Report` structured as a Markdown table.
+* **Example Output Table:**
+  | Repository | Staged Files | Branch/Remote | Commit Message | Command |
+  | :--- | :--- | :--- | :--- | :--- |
+  | `~/Obsidian` | `HomeLab/file.md` | `new` (`origin new`) | `docs: commit message` | `git -C ~/Obsidian add . && git -C ~/Obsidian commit -m "docs: commit message" && git -C ~/Obsidian push origin new` |
+
 
 
 ## Global Localization & Cost Tracking (ALWAYS)

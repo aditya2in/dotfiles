@@ -1,0 +1,12 @@
+[Unit]
+Description=Set NVIDIA GPU Power Limit to 130W
+After=nvidia-persistenced.service
+Wants=nvidia-persistenced.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/nvidia-smi -pl 130
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -14,5 +14,8 @@ if [ "$DX_VER" = "11" ] || [ "$DX_VER" = "12" ]; then
     sed -i 's/"fallback": "DirectX [0-9]*"/"fallback": "DirectX '$DX_VER'"/' "$CONFIG_FILE"
 fi
 
+# Force MangoHUD to use our custom configuration file, bypassing Proton sandbox isolation
+export MANGOHUD_CONFIGFILE="/home/adityaws/.config/mangohud/MangoHud.conf"
+
 # Run the game launcher exactly as Steam intended
 exec "$@"
