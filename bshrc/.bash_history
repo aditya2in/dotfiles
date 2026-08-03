@@ -2090,3 +2090,6 @@ cd
 agy
 agy -resume
 agy 
+watch -n 1 nvidia-smi
+gputest /test=fur /width=1920 /height=1080 /fullscreen=0
+agy

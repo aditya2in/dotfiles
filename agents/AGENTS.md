@@ -72,6 +72,31 @@ When Aditya explicitly indicates that a topic/subject is "closed" or resolved, t
   3. `~/Logseq Sync 17Sep2025` (the Logseq folder containing a date in the folder name)
 * **Branch and Remote Settings:** All repositories use the exact same branch name **`new`** and the remote target **`origin new`** (matching the system shell aliases).
 
+## 🗂️ TASKS OS QUERY (Stage 4 — Day Routine OS)
+
+Tasks OS is queried via the Obsidian Base, NOT by checking a deliverable file. The query filters task files in `Tasks_OS/tasks/` tagged `#todays-task`. Reusable command (never reformulate):
+
+```bash
+obscli eval code="(function(){ const files = app.vault.getMarkdownFiles().filter(f => f.path.startsWith('All Things/Agents/Tasks_OS/tasks')); let rows = []; files.forEach(f => { const fm = app.metadataCache.getFileCache(f)?.frontmatter; if(!fm) return; const tags = JSON.stringify(fm.tags || []); if(tags.includes('todays-task')){ rows.push({id: fm.id, title: fm.title, status: fm.status, matrix: fm.eisenhower_matrix, duration: fm.duration, when: fm.when, preferred_time_slot: fm.preferred_time_slot || ''}); }}); return JSON.stringify({scheduled_for_today: rows.length, tasks: rows}); })()"
+```
+
+**Scheduling rules (mandatory):**
+- Tasks are scheduled **SEQUENTIALLY** — never stacked. Multiple tasks in the same `preferred_time_slot` get consecutive blocks by duration.
+- Schedule each task exactly at its `preferred_time_slot` metadata. If empty → auto-place in a free gap.
+- Tasks with `when` ≠ today are skipped.
+- If `scheduled_for_today = 0` → auto-switch user to tmux Tasks window (K8:10), no permission.
+- `base:query` is UNRELIABLE — always use `obscli eval` (see base:query UNRELIABILITY REPORT).
+
+## 👀 TODAY AT A GLANCE (MANDATORY OUTPUT)
+
+Every time the Day Routine OS daily note generation completes (end of Stage 2, after Stage 4, and after finalization), the AI MUST:
+1. Inject a `## 👀 Today at a Glance` section at the **very top** of the daily note (under `# Day planner`, before the Night Sleep block) — **expanded by default**.
+2. **Also show the exact same glance block in chat** — never omit it.
+
+Glance structure: `🎯 Goal · 🏠 Work · 🍽️ Meals · ✅ Tasks · ⏰ Key slots · 🔥 Events · ⚠️ Alerts · 🌙 Tonight`. Sources: Goal→user, Work→Office OS, Meals→Kitchen OS, Tasks→Tasks OS query, Slots→Day Planner timed blocks, Events→injected events, Alerts→expiring/overdue flags, Tonight→Kitchen OS prerequisites.
+
+**Meals line rule:** The `🍽️ Meals` line MUST include **ALL expiring items inline with ⚠️** (e.g., "⚠️ Methi-Potato Curry (expires today!)"). Every Kitchen-deliverable item flagged `expires today` / 🔴 T1 / near `expiry_date` appears in this line — never omit one. The `🌙 Tonight` line MUST capture Kitchen OS prerequisites (soaks, prep, tomorrow's breakfast) plus sleep-prep items.
+
 #### **Mandatory Final Git Output (Git Commit Report Table):**
 At the very end of any final response where Git commands are suggested or executed, the AI MUST output a section titled `## 📦 Git Commit Report` structured as a Markdown table.
 * **Vertical Monitor Optimization:** To prevent horizontal scrolling on vertical screens:
