@@ -2093,3 +2093,31 @@ agy
 watch -n 1 nvidia-smi
 gputest /test=fur /width=1920 /height=1080 /fullscreen=0
 agy
+opencode
+opencode
+opencode
+cd '/home/adityaws/Obsidian/All Things/Agents/Ascent_OS' && clear
+opencode
+opencode
+cd ..
+ls
+opencode
+deepseek-balance 
+opencode
+shutdown -h now
+opencode
+shutdown -h now
+opencode
+sudo systemctl stop sleep-enforcer.timer 
+shutdown -h now
+sudo systemctl stop sleep-enforcer.timer 
+agy
+furmark --p1080 --benchmark
+furmark --demo furmark-vk --width 1920 --height 1080 --vsync 0 --benchmark
+And you know what he did He did. DISPLAY=:0 furmark --demo furmark-vk --width 1920 --height 1080 --vsync 0 --benchmark
+DISPLAY=:0 furmark --demo furmark-vk --width 1920 --height 1080 --vsync 0 --benchmark
+furmark-gui 
+agy
+furmark-gui 
+agy
+cd '/home/adityaws/Obsidian/All Things/Agents/Learning_&_HomeLab_OS' && clear

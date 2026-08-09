@@ -54,13 +54,15 @@ We document to maintain a single, cohesive source of truth for joint engineering
 2. **Automatic Execution (No Permission Required):** The AI must perform all documentation edits, file creations, and index updates automatically without asking for permission. This overrides the 'Permission Before Action' mandate for documentation files.
 3. **Mandatory Final Output (Documentation Report):** At the very end of its final response, the AI MUST output a section titled `## 📂 Documentation Report` listing the file name, absolute path, and file link of every documentation file created or updated during the turn.
 4. **Indexing:** The AI must update the `AI_documentation_index.md` file in the Obsidian directory with an entry for any new document, including the file path and a brief description.
-5. **Scope:** This applies specifically to system tweaks, scripting, configurations, and diagnostics (not academic or course-related content generation).
+5. **Scope:** This applies specifically to system tweaks, scripting, configurations, diagnostics, technical research, and purchase/upgrade decision logs (not academic or general content generation).
 6. **Mandatory Path:** All documentation MUST be saved in the HomeLab folder:
-    `/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/HomeLab/`
+    `/home/adityaws/Obsidian/All Things/Agents/Learning_&_HomeLab_OS/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/HomeLab/`
 7. **Append-Only Index:** The `AI_documentation_index.md` in the HomeLab folder must **NEVER** be deleted or fully overwritten. New entries must be **APPENDED** to the table.
 8. **Index Format Example:**
     `| YYYY-MM-DD | FileName.md | Brief description of the change |`
 9. **Atomic Execution Priority:** Documentation and index updates MUST be written immediately after the change is verified, in the very same model turn/response, before delivering any conversational responses, secondary analysis, or answering unrelated questions.
+10. **Context Retrieval via Index:** When context retrieval or historical workspace understanding is needed, the AI MUST check the documentation index file `AI_documentation_index.md` to align itself on the current workspace state, past configurations, and previous diagnostics, avoiding duplication.
+
 
 ### 📦 Git Push at Close of Subject
 When Aditya explicitly indicates that a topic/subject is "closed" or resolved, the AI must suggest the exact git commands (or aliases `ga`, `gc`, `gp` in sequence) to commit the newly completed documentation and configurations to the remote repository.
@@ -124,7 +126,7 @@ At the very end of any final response where Git commands are suggested or execut
 - **Scope:** Applies to EVERY response — chat, study, labs, Q&A. Not just generated files.
 
 ### Balance Log Path
-`/home/adityaws/Obsidian/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/3.Project_AI_Mastery/deepseek_balance_log.md`
+`/home/adityaws/Obsidian/All Things/Agents/Learning_&_HomeLab_OS/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/3.Project_AI_Mastery/deepseek_balance_log.md`
 
 ## Sudo/Privilege Escalation (Polkit Method)
 When you need to run a command that requires `sudo` but the terminal cannot prompt for a password (no TTY, no askpass), use `pkexec` instead. This triggers a graphical polkit authentication pop-up on the user's Hyprland desktop. The user sees the pop-up, types their password, and the authentication is cached for subsequent commands.

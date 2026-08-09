@@ -274,7 +274,7 @@ def hyprland_event_listener():
                                                 last_scratchpad_launch_time = current_time
                                                 cmd = [
                                                     "/home/adityaws/.local/bin/obsidian",
-                                                    "obsidian://open?vault=Obsidian&file=Project_K8s_-_KUBESTRONAUT%2FTasks_or_Projects_%28around_KUBESTRONAUT%29%2F2.%20Project_kubernetes%2F2.%20CKAD_Certification_Course_-_Certified_Kubernetes_Application_Developer_Course%2F000_SCRATCHPAD_Brain_Dump&paneType=window"
+                                                    "obsidian://open?vault=Obsidian&file=All%20Things%2FAgents%2FLearning_%26_HomeLab_OS%2FProject_K8s_-_KUBESTRONAUT%2FTasks_or_Projects_%28around_KUBESTRONAUT%29%2F2.%20Project_kubernetes%2F2.%20CKAD_Certification_Course_-_Certified_Kubernetes_Application_Developer_Course%2F000_SCRATCHPAD_Brain_Dump&paneType=window"
                                                 ]
                                                 subprocess.Popen(cmd)
 
