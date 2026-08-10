@@ -65,7 +65,9 @@ We document to maintain a single, cohesive source of truth for joint engineering
 
 
 ### 📦 Git Push at Close of Subject
-When Aditya explicitly indicates that a topic/subject is "closed" or resolved, the AI must suggest the exact git commands (or aliases `ga`, `gc`, `gp` in sequence) to commit the newly completed documentation and configurations to the remote repository.
+When Aditya explicitly indicates that a topic/subject is "closed" or resolved (which includes direct success confirmations such as "it is working", "it works", "fixed", "resolved", or "no errors now"), the AI must suggest the exact git commands (or aliases `ga`, `gc`, `gp` in sequence) to commit the newly completed documentation and configurations to the remote repository.
+
+**Timing Constraint:** Git suggestions and the `## 📦 Git Commit Report` table MUST NOT be generated during intermediate troubleshooting turns. They are strictly reserved and MUST only be displayed at the end of the topic/subject, specifically when Aditya explicitly indicates that the topic is closed, resolved, or successfully working.
 
 #### **Git Configuration & Repository Limits:**
 * **Authorized Repositories:** Git commands are only configured and allowed to run in the following three specific directories:
@@ -100,7 +102,7 @@ Glance structure: `🎯 Goal · 🏠 Work · 🍽️ Meals · ✅ Tasks · ⏰ K
 **Meals line rule:** The `🍽️ Meals` line MUST include **ALL expiring items inline with ⚠️** (e.g., "⚠️ Methi-Potato Curry (expires today!)"). Every Kitchen-deliverable item flagged `expires today` / 🔴 T1 / near `expiry_date` appears in this line — never omit one. The `🌙 Tonight` line MUST capture Kitchen OS prerequisites (soaks, prep, tomorrow's breakfast) plus sleep-prep items.
 
 #### **Mandatory Final Git Output (Git Commit Report Table):**
-At the very end of any final response where Git commands are suggested or executed, the AI MUST output a section titled `## 📦 Git Commit Report` structured as a Markdown table.
+At the very end of any final response where Git commands are suggested or executed (which MUST only occur when a topic is explicitly closed/resolved by Aditya), the AI MUST output a section titled `## 📦 Git Commit Report` structured as a Markdown table.
 * **Vertical Monitor Optimization:** To prevent horizontal scrolling on vertical screens:
   1. All files in the "Staged Files" column must be stacked vertically using `<br>` tags.
   2. Long directory lists must be summarized (e.g., `folder/ (X untracked files)`).

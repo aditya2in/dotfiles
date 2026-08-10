@@ -7,6 +7,11 @@ if [ "$MONITOR_COUNT" -gt 1 ]; then
     # Currently have multiple monitors, switch to SINGLE (Gaming)
     notify-send -a "Monitor Switch" "Switching to Game Mode (Single Monitor)"
     
+    # Move all workspaces to the main monitor DP-1 to prevent trapped windows
+    for ws in {1..10}; do
+        hyprctl dispatch moveworkspacetomonitor "$ws" DP-1
+    done
+    
     # Disable secondary monitors
     hyprctl keyword monitor "HDMI-A-1, disable"
     hyprctl keyword monitor "DP-2, disable"

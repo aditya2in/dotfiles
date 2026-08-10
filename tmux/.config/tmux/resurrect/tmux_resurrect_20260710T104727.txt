@@ -1,5 +1,0 @@
-pane	1	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
-pane	default	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
-window	1	0	:bash	1	:*	b25e,80x24,0,0,1	:
-window	default	0	:bash	1	:*	ba9d,94x73,0,0,0	:
-state	default	
