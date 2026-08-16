@@ -1,0 +1,82 @@
+{
+  "bar": {
+    "centerAnchor": "omarchy.clock",
+    "layout": {
+      "center": [
+        {
+          "id": "omarchy.indicators"
+        },
+        {
+          "id": "voxtype",
+          "type": "command",
+          "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/shell_status.sh",
+          "interval": 1,
+          "tooltip": "VoxType",
+          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh"
+        },
+        {
+          "format": "dddd HH:mm",
+          "formatAlt": "d MMMM 'W'ww yyyy",
+          "id": "omarchy.clock",
+          "verticalFormat": "HH\n—\nmm"
+        },
+        {
+          "id": "whisper",
+          "type": "command",
+          "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/waybar_status.sh",
+          "interval": 1,
+          "tooltip": "Whisper STT",
+          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/toggle_dictation.sh"
+        },
+        {
+          "id": "omarchy.keyboard-layout"
+        },
+        {
+          "id": "omarchy.weather"
+        },
+        {
+          "id": "omarchy.system-update"
+        }
+      ],
+      "left": [
+        {
+          "id": "omarchy.menu"
+        },
+        {
+          "id": "omarchy.workspaces"
+        }
+      ],
+      "right": [
+        {
+          "id": "omarchy.tray"
+        },
+        {
+          "id": "omarchy.agents"
+        },
+        {
+          "id": "omarchy.bluetooth"
+        },
+        {
+          "id": "omarchy.network"
+        },
+        {
+          "id": "omarchy.audio"
+        },
+        {
+          "id": "omarchy.monitor"
+        },
+        {
+          "id": "omarchy.power"
+        }
+      ]
+    },
+    "position": "top",
+    "transparent": false
+  },
+  "idle": {
+    "lock": 300,
+    "screensaver": 150
+  },
+  "plugins": [],
+  "version": 1
+}
