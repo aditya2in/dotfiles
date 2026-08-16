@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "instructions": [
+    "AGENTS.md",
+    "All Things/Agents/AGENTS.md",
+    "All Things/Agents/Routine_OS/AGENTS.md"
+  ],
+  "skills": {
+    "paths": [
+      "/home/adityaws/.opencode/skills/obsidian-skills/skills"
+    ]
+  },
+  "mcp": {
+    "voicebox": {
+      "type": "remote",
+      "url": "http://127.0.0.1:17493/mcp",
+      "enabled": true
+    }
+  }
+}
