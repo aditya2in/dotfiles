@@ -50,7 +50,7 @@ We document to maintain a single, cohesive source of truth for joint engineering
 3. **New Topic/Subject (New File):** When a new topic, project, or problem is initiated, the AI must create a **new document** and add a corresponding entry to `AI_documentation_index.md`.
 
 ### ⚡ Execution Rules
-1. **Immediate Documentation:** All system modifications, diagnostic updates, or script creations must be documented as soon as they are verified.
+1. **Immediate Documentation:** All system modifications, diagnostic updates, or script creations must be documented immediately. This includes initiating a new document at the very start of a troubleshooting session to log initial diagnostics and step-by-step progress, rather than waiting for the final resolution.
 2. **Automatic Execution (No Permission Required):** The AI must perform all documentation edits, file creations, and index updates automatically without asking for permission. This overrides the 'Permission Before Action' mandate for documentation files.
 3. **Mandatory Final Output (Documentation Report):** At the very end of its final response, the AI MUST output a section titled `## 📂 Documentation Report` listing the file name, absolute path, and file link of every documentation file created or updated during the turn.
 4. **Indexing:** The AI must update the `AI_documentation_index.md` file in the Obsidian directory with an entry for any new document, including the file path and a brief description.
@@ -62,6 +62,8 @@ We document to maintain a single, cohesive source of truth for joint engineering
     `| YYYY-MM-DD | FileName.md | Brief description of the change |`
 9. **Atomic Execution Priority:** Documentation and index updates MUST be written immediately after the change is verified, in the very same model turn/response, before delivering any conversational responses, secondary analysis, or answering unrelated questions.
 10. **Context Retrieval via Index:** When context retrieval or historical workspace understanding is needed, the AI MUST check the documentation index file `AI_documentation_index.md` to align itself on the current workspace state, past configurations, and previous diagnostics, avoiding duplication.
+11. **Manual Reproducibility Command Mandate**: Every documentation file created or updated for system modifications, configuration tweaks, or git-branch operations MUST include complete command lines, descriptions of the command flags, and a step-by-step walkthrough explaining how a human user can perform the identical task manually in the future. Never just state what was changed; always provide the exact commands and explanations to make the changes fully reproducible and future-proof.
+
 
 
 ### 📦 Git Push at Close of Subject
