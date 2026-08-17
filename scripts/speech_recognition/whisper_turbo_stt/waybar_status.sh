@@ -11,7 +11,7 @@ CLASS=$(echo "$DATA" | jq -r '.class // "stopped"')
 TEXT=$(echo "$DATA" | jq -r '.text // "󰍭"')
 TOOLTIP=$(echo "$DATA" | jq -r '.tooltip // ""')
 
-COLOR="#f38ba8" # Default Red (stopped)
+COLOR="#6c7086" # Default Gray / Off (stopped)
 if [ "$CLASS" == "running" ]; then
     COLOR="#a6e3a1" # Green
 elif [ "$CLASS" == "paused" ]; then
