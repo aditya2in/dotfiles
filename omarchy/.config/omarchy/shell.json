@@ -48,6 +48,14 @@
       ],
       "right": [
         {
+          "id": "custom_cpu",
+          "type": "command",
+          "exec": "/home/adityaws/DOTfiles/scripts/cpu_status.sh",
+          "interval": 2,
+          "tooltip": "CPU Usage",
+          "onClick": "omarchy-launch-or-focus-tui btop"
+        },
+        {
           "id": "omarchy.tray"
         },
         {
@@ -83,14 +91,6 @@
         },
         {
           "id": "omarchy.power"
-        },
-        {
-          "id": "custom_cpu",
-          "type": "command",
-          "exec": "/home/adityaws/DOTfiles/scripts/cpu_status.sh",
-          "interval": 2,
-          "tooltip": "CPU Usage",
-          "onClick": "omarchy-launch-or-focus-tui btop"
         }
       ]
     },
