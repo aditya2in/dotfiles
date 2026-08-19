@@ -1,5 +1,5 @@
 [Unit]
-Description=Set NVIDIA GPU Power Limit to 250W
+Description=Set NVIDIA GPU Power Limit to 250W (gpuworker01 - RTX 3080 Ti)
 After=nvidia-persistenced.service
 Wants=nvidia-persistenced.service
 
