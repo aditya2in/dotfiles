@@ -57,6 +57,15 @@
           "onClick": "omarchy-launch-or-focus-tui btop"
         },
         {
+          "id": "custom_net",
+          "type": "command",
+          "exec": "/home/adityaws/DOTfiles/scripts/net_graph.sh",
+          "interval": 2,
+          "fontSize": 12,
+          "tooltip": "Network Flow",
+          "onClick": "omarchy-launch-or-focus-tui nload"
+        },
+        {
           "id": "omarchy.tray"
         },
         {
