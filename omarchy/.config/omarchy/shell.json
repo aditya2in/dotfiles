@@ -48,15 +48,6 @@
       ],
       "right": [
         {
-          "id": "custom_cpu",
-          "type": "command",
-          "exec": "/home/adityaws/DOTfiles/scripts/cpu_status.sh",
-          "interval": 2,
-          "fontSize": 13,
-          "tooltip": "CPU Usage",
-          "onClick": "omarchy-launch-or-focus-tui btop"
-        },
-        {
           "id": "custom_net",
           "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/net_graph.sh",
@@ -64,6 +55,15 @@
           "fontSize": 12,
           "tooltip": "Network Flow",
           "onClick": "omarchy-launch-or-focus-tui nload"
+        },
+        {
+          "id": "custom_cpu",
+          "type": "command",
+          "exec": "/home/adityaws/DOTfiles/scripts/cpu_status.sh",
+          "interval": 2,
+          "fontSize": 13,
+          "tooltip": "CPU Usage",
+          "onClick": "omarchy-launch-or-focus-tui btop"
         },
         {
           "id": "omarchy.tray"
