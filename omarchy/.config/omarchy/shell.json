@@ -52,6 +52,7 @@
           "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/cpu_status.sh",
           "interval": 2,
+          "fontSize": 13,
           "tooltip": "CPU Usage",
           "onClick": "omarchy-launch-or-focus-tui btop"
         },
@@ -63,6 +64,7 @@
           "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/gamemode_status.sh",
           "interval": 2,
+          "fontSize": 13,
           "tooltip": "Toggle Game Mode",
           "onClick": "/home/adityaws/DOTfiles/scripts/monitor-switch.sh"
         },
@@ -71,6 +73,7 @@
           "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/breakmode_status.sh",
           "interval": 2,
+          "fontSize": 13,
           "tooltip": "Toggle Break Mode",
           "onClick": "/home/adityaws/DOTfiles/scripts/break-monitor-toggle.sh"
         },
