@@ -7,9 +7,9 @@ if [ "$MONITOR_COUNT" -gt 1 ]; then
     # Currently have multiple monitors, switch to SINGLE (Gaming)
     notify-send -a "Monitor Switch" "Switching to Game Mode (Single Monitor)"
     
-    # Move all workspaces to the main monitor DP-1 to prevent trapped windows
+    # Move all workspaces to the main monitor DP-3 to prevent trapped windows
     for ws in {1..10}; do
-        hyprctl dispatch moveworkspacetomonitor "$ws" DP-1
+        hyprctl dispatch moveworkspacetomonitor "$ws" DP-3
     done
     
     # Disable secondary monitors
@@ -20,12 +20,12 @@ if [ "$MONITOR_COUNT" -gt 1 ]; then
     # -------------------------------------------------------------
     # SETUP 2: native Ultrawide (Active)
     # -------------------------------------------------------------
-    hyprctl keyword monitor "DP-1, 3440x1440@60, 0x0, 1"
+    hyprctl keyword monitor "DP-3, 3440x1440@60, 0x0, 1"
     
     # -------------------------------------------------------------
     # SETUP 1: standard 1080p (Inactive)
     # -------------------------------------------------------------
-    # hyprctl keyword monitor "DP-1, 1920x1080@60, 0x0, 1"
+    # hyprctl keyword monitor "DP-3, 1920x1080@60, 0x0, 1"
 else
     # Currently have single monitor, switch to MULTI (Work)
     notify-send -a "Monitor Switch" "Switching to Work Mode (Multi Monitor)"
@@ -36,7 +36,7 @@ else
     # SETUP 2: NEW L-C-R SETUP (Vertical - Ultrawide - Vertical) - ACTIVE
     # -------------------------------------------------------------
     # 1. Move Main monitor back to its position
-    hyprctl keyword monitor "DP-1, 3440x1440@60, 1080x240, 1"
+    hyprctl keyword monitor "DP-3, 3440x1440@60, 1080x240, 1"
     # 2. Enable Left Vertical (Inverted)
     hyprctl keyword monitor "HDMI-A-1, 1920x1080@60, 0x0, 1, transform, 3"
     # 3. Enable Right Vertical
