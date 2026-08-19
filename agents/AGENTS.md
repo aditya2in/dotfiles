@@ -148,6 +148,14 @@ If `pkexec` fails with a D-Bus error, try again once — it often works after th
 ## Gemini Added Memories
 - The user is running Arch Linux with Btrfs and Snapper for system snapshots.
 - Always greet the user as "Aditya" at the start of a session.
-- The user's machine has an Intel Xeon W-2133 CPU, NVIDIA GeForce RTX 3060 GPU, and 32GB of RAM.
+- The user's machine has an Intel Xeon W-2133 CPU, NVIDIA GeForce RTX 3080 Ti GPU, and 32GB of RAM.
 - The user's monitor is an LG 34WN750-B (Ultrawide). They are running Arch Linux with Hyprland. The Hyprland configuration is modular, with monitor settings stored specifically in `~/.config/hypr/monitors.conf`, separate from the main config.
 - The Gemini CLI is ALWAYS displayed on a vertical monitor. All formatted outputs (TUI briefs, tables, diagrams) MUST be optimized for a narrow, vertical display to ensure readability and prevent horizontal wrapping.
+
+## Speech-to-Text (STT) Homophone and Mis-transcription Mapping
+The user interacts using a high-powered dynamic microphone and a real-time STT transcoder. When parsing requests, the AI must automatically resolve common speech homophones:
+1. "dot empty" / "agents.empty" / "empty file" -> "dot md" / "agents.md" / ".md extension"
+2. "GB worker" / "GB worker 2" / "gbworker" -> "gpuworker01" / "gpuworker02"
+3. "olx" -> Used market / pre-owned GPU purchases
+4. Automatically align phonetic/homophone sound-alikes to hostnames, paths, and configs.
+

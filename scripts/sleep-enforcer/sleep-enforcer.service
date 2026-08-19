@@ -4,4 +4,4 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/shutdown -h now
+ExecStart=/bin/bash -c 'hour=$$(date +%%-H); min=$$(date +%%-M); if (( hour > 21 || (hour == 21 && min >= 30) || hour < 5 )); then /usr/bin/shutdown -h now; fi'

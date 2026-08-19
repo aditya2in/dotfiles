@@ -2124,3 +2124,20 @@ cd '/home/adityaws/Obsidian/All Things/Agents/Learning_&_HomeLab_OS' && clear
 opencode
 cd '/home/adityaws/Obsidian/All Things/Agents/Learning_&_HomeLab_OS/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1. Project_Linux_&_CLI_Mastery/rwxrob' && clear
 sudo systemctl stop sleep-enforcer.timer 
+agy
+shutdown -h now
+agy
+opencode
+sudo systemctl stop sleep-enforcer.timer 
+agy
+shutdown -h now
+furmark-gui 
+agy
+agy --conversation=d647a081-cb12-4399-88ba-5d079dcc900b
+sudo systemctl stop sleep-enforcer.timer 
+agy
+shutdown -h now
+agy
+agy 
+sudo systemctl stop sleep-enforcer.timer 
+agy 
