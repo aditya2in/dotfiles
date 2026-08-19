@@ -10,8 +10,8 @@ STATE_FILE="/tmp/break-monitor-mode"
 if [ -f "$STATE_FILE" ]; then
     # Break mode is active → restore center + right monitors
     rm "$STATE_FILE"
-    hyprctl eval 'hl.monitor({ output = "DP-3", mode = "3440x1440@60", position = "1080x240", scale = 1 })' >/dev/null
-    hyprctl eval 'hl.monitor({ output = "DP-2", mode = "1920x1080@60", position = "4520x0", scale = 1, transform = 3 })' >/dev/null
+    hyprctl eval 'hl.monitor({ output = "DP-3", mode = "3440x1440@60", position = "1080x240", scale = 1, disabled = false })' >/dev/null
+    hyprctl eval 'hl.monitor({ output = "DP-2", mode = "1920x1080@60", position = "4520x0", scale = 1, transform = 3, disabled = false })' >/dev/null
     echo "BREAK:OFF | HDMI-A-1: keep | DP-3: on | DP-2: on"
     notify-send -a "Break Mode" "Center + right monitors restored" >/dev/null 2>&1
 else
