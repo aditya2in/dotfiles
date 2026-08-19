@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+    export HYPRLAND_INSTANCE_SIGNATURE=$(ls /run/user/1000/hypr/ 2>/dev/null | head -1)
+fi
+
 # Check how many monitors are currently enabled
 MONITOR_COUNT=$(hyprctl monitors | grep "Monitor" | wc -l)
 
