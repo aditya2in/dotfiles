@@ -57,8 +57,4 @@ o.window({ class = "md.obsidian.Obsidian", workspace = "3" }, { fullscreen = 0 }
 -- Scratchpad Custom Look
 o.window({ title = ".*000_SCRATCHPAD_Brain_Dump.*" }, { opacity = "1.0 0.1 override" })
 
--- Floating TUI App Sizing (Fixes btop/nload size requirements with font size 14)
-o.window("org.omarchy.btop", { tag = "-floating-window" })
-o.window("org.omarchy.btop", { float = true, center = true, size = { 1000, 700 } })
-o.window("org.omarchy.nload", { tag = "-floating-window" })
-o.window("org.omarchy.nload", { float = true, center = true, size = { 1000, 700 } })
+
