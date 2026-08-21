@@ -2141,3 +2141,6 @@ agy
 agy 
 sudo systemctl stop sleep-enforcer.timer 
 agy 
+nvidia-smi
+agy
+sudo systemctl stop sleep-enforcer.timer 

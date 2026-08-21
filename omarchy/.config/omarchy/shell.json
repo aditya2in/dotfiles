@@ -7,12 +7,12 @@
           "id": "omarchy.indicators"
         },
         {
-          "id": "voxtype",
-          "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/shell_status.sh",
+          "id": "voxtype",
           "interval": 1,
+          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh",
           "tooltip": "VoxType",
-          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh"
+          "type": "command"
         },
         {
           "format": "dddd HH:mm",
@@ -21,12 +21,12 @@
           "verticalFormat": "HH\n—\nmm"
         },
         {
-          "id": "whisper",
-          "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/waybar_status.sh",
+          "id": "whisper",
           "interval": 1,
+          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/toggle_dictation.sh",
           "tooltip": "Whisper STT",
-          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/toggle_dictation.sh"
+          "type": "command"
         },
         {
           "id": "omarchy.keyboard-layout"
@@ -48,43 +48,43 @@
       ],
       "right": [
         {
-          "id": "custom_net",
-          "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/net_graph.sh",
-          "interval": 2,
           "fontSize": 12,
+          "id": "custom_net",
+          "interval": 2,
+          "onClick": "omarchy-launch-or-focus-tui nload",
           "tooltip": "Network Flow",
-          "onClick": "omarchy-launch-or-focus-tui nload"
+          "type": "command"
         },
         {
-          "id": "custom_cpu",
-          "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/cpu_status.sh",
-          "interval": 2,
           "fontSize": 13,
+          "id": "custom_cpu",
+          "interval": 2,
+          "onClick": "omarchy-launch-or-focus-tui btop",
           "tooltip": "CPU Usage",
-          "onClick": "omarchy-launch-or-focus-tui btop"
+          "type": "command"
         },
         {
           "id": "omarchy.tray"
         },
         {
-          "id": "gamemode",
-          "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/gamemode_status.sh",
-          "interval": 2,
           "fontSize": 13,
+          "id": "gamemode",
+          "interval": 2,
+          "onClick": "/home/adityaws/DOTfiles/scripts/monitor-switch.sh",
           "tooltip": "Toggle Game Mode",
-          "onClick": "/home/adityaws/DOTfiles/scripts/monitor-switch.sh"
+          "type": "command"
         },
         {
-          "id": "breakmode",
-          "type": "command",
           "exec": "/home/adityaws/DOTfiles/scripts/breakmode_status.sh",
-          "interval": 2,
           "fontSize": 13,
+          "id": "breakmode",
+          "interval": 2,
+          "onClick": "/home/adityaws/DOTfiles/scripts/break-monitor-toggle.sh",
           "tooltip": "Toggle Break Mode",
-          "onClick": "/home/adityaws/DOTfiles/scripts/break-monitor-toggle.sh"
+          "type": "command"
         },
         {
           "id": "omarchy.agents"
