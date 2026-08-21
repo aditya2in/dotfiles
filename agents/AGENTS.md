@@ -67,9 +67,9 @@ We document to maintain a single, cohesive source of truth for joint engineering
 
 
 ### 📦 Git Push at Close of Subject
-When Aditya explicitly indicates that a topic/subject is "closed" or resolved (which includes direct success confirmations such as "it is working", "it works", "fixed", "resolved", or "no errors now"), the AI must suggest the exact git commands (or aliases `ga`, `gc`, `gp` in sequence) to commit the newly completed documentation and configurations to the remote repository.
-
-**Timing Constraint:** Git suggestions and the `## 📦 Git Commit Report` table MUST NOT be generated during intermediate troubleshooting turns. They are strictly reserved and MUST only be displayed at the end of the topic/subject, specifically when Aditya explicitly indicates that the topic is closed, resolved, or successfully working.
+1. **No Premature Git Commands**: Git commits, pushes, and the `## 📦 Git Commit Report` table MUST NOT be generated, suggested, or executed during intermediate troubleshooting turns.
+2. **End-of-Topic Protocol**: When the AI believes a task is complete, it must ask: "Is everything good?" to seek final verification.
+3. **Execution Condition**: Once Aditya explicitly confirms (e.g., "good", "yes", "it works", "it is working", "fixed", "resolved", "no errors now"), the AI must automatically execute the Git commit and push commands in that same turn and present the `## 📦 Git Commit Report` table. Do not run or propose Git commands before this explicit confirmation.
 
 #### **Git Configuration & Repository Limits:**
 * **Authorized Repositories:** Git commands are only configured and allowed to run in the following three specific directories:
