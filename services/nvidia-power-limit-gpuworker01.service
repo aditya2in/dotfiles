@@ -1,11 +1,11 @@
 [Unit]
-Description=Set NVIDIA GPU Power Limit to 220W (gpuworker01 - RTX 3080 Ti)
+Description=Set NVIDIA GPU Power Limit to 170W (gpuworker01 - RTX 3080 Ti)
 After=nvidia-persistenced.service
 Wants=nvidia-persistenced.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/nvidia-smi -pl 220
+ExecStart=/usr/bin/nvidia-smi -pl 170
 RemainAfterExit=yes
 
 [Install]

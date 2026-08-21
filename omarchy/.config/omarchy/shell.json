@@ -52,7 +52,7 @@
           "fontSize": 12,
           "id": "custom_net",
           "interval": 2,
-          "onClick": "omarchy-launch-or-focus org.omarchy.nload 'ghostty --class=org.omarchy.nload --font-size=11 -e nload'",
+          "onClick": "omarchy-launch-or-focus org.omarchy.nload 'ghostty --class=org.omarchy.nload --font-size=12 -e nload'",
           "tooltip": "Network Flow",
           "type": "command"
         },
@@ -61,7 +61,7 @@
           "fontSize": 13,
           "id": "custom_cpu",
           "interval": 2,
-          "onClick": "omarchy-launch-or-focus org.omarchy.btop 'ghostty --class=org.omarchy.btop --font-size=11 -e btop'",
+          "onClick": "omarchy-launch-or-focus org.omarchy.btop 'ghostty --class=org.omarchy.btop --font-size=12 -e btop'",
           "tooltip": "CPU Usage",
           "type": "command"
         },
