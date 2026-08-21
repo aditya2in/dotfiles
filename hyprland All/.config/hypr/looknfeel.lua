@@ -57,4 +57,9 @@ o.window({ class = "md.obsidian.Obsidian", workspace = "3" }, { fullscreen = 0 }
 -- Scratchpad Custom Look
 o.window({ title = ".*000_SCRATCHPAD_Brain_Dump.*" }, { opacity = "1.0 0.1 override" })
 
+-- Spacious Floating TUI App Sizing
+o.window({ class = "org.omarchy.btop", tag = "floating-window" }, { size = { 1050, 700 } })
+o.window({ class = "org.omarchy.nload", tag = "floating-window" }, { size = { 1050, 700 } })
+
+
 
