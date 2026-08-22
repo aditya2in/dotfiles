@@ -2146,3 +2146,4 @@ agy
 sudo systemctl stop sleep-enforcer.timer 
 agy
 shutdown -h now
+agy

@@ -1,0 +1,10 @@
+{
+    "smart_pause_enabled": true,
+    "ignored_classes": [
+        "brave-browser",
+        "obsidian"
+    ],
+    "allowed_titles": [
+        "000_SCRATCHPAD_Brain_Dump"
+    ]
+}

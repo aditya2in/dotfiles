@@ -73,6 +73,11 @@ We document to maintain a single, cohesive source of truth for joint engineering
 1. **No Premature Git Commands**: Git commits, pushes, and the `## 📦 Git Commit Report` table MUST NOT be generated, suggested, or executed during intermediate troubleshooting turns.
 2. **End-of-Topic Protocol**: When the AI believes a task is complete, it must ask: "Is everything good?" to seek final verification.
 3. **Execution Condition**: Once Aditya explicitly confirms (e.g., "good", "yes", "it works", "it is working", "fixed", "resolved", "no errors now"), the AI must automatically execute the Git commit and push commands in that same turn and present the `## 📦 Git Commit Report` table. Do not run or propose Git commands before this explicit confirmation.
+4. **Unified Single Compound Command Mandate**: The AI MUST NEVER execute Git commands as multiple, fragmented tool calls or sequential approval steps across repositories. All Git staging, commits, and pushes across all modified repositories (`~/DOTfiles`, `~/Obsidian`, `~/Logseq Sync 17Sep2025`) MUST be chained into **ONE SINGLE compound command string** (using `&&` and `;`) so the user only approves once, and all repositories are committed and pushed together in a single execution.
+   * **Mandatory Compound Command Example:**
+     ```bash
+     git -C ~/DOTfiles add . && git -C ~/DOTfiles commit -m "<msg>" && git -C ~/DOTfiles push origin new; git -C ~/Obsidian add . && git -C ~/Obsidian commit -m "<msg>" && git -C ~/Obsidian push origin new; git -C ~/Logseq\ Sync\ 17Sep2025 add . && git -C ~/Logseq\ Sync\ 17Sep2025 commit -m "<msg>" && git -C ~/Logseq\ Sync\ 17Sep2025 push origin new
+     ```
 
 #### **Git Configuration & Repository Limits:**
 * **Authorized Repositories:** Git commands are only configured and allowed to run in the following three specific directories:

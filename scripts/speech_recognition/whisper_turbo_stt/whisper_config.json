@@ -1,9 +1,6 @@
 {
-    "smart_pause_enabled": true,
-    "ignored_classes": [
-        "brave-browser",
-        "obsidian"
-    ],
+    "target_mode": "ghostty_background",
+    "tmux_target_session": "K8",
     "allowed_titles": [
         "000_SCRATCHPAD_Brain_Dump"
     ]
