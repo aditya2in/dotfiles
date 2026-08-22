@@ -17,6 +17,9 @@ Omarchy (Arch Linux + Hyprland) user home directory, not a traditional code repo
 - GPU: NVIDIA GeForce RTX 3060
 - RAM: 32 GB
 - Monitor: LG 34WN750-B (Ultrawide)
+- Audio Output: GPU HDMI/DP -> LG Monitor -> 3.5mm AUX -> External Speakers
+- KVM & Peripherals: UGREEN 2-in 4-out USB Sharing Switch (toggles accessories between Personal PC and Office Laptop; connects Maono PD300X Mic, Realme Studio H1, Logitech mouse receiver, Dell keyboard)
+- Microphone: Maono PD300X Dynamic USB/XLR Microphone
 - Filesystem: Btrfs with Snapper snapshots
 
 ## Key Config Paths

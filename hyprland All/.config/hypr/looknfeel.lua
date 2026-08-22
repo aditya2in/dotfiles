@@ -3,15 +3,15 @@
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#general
 hl.config({
   general = {
-    gaps_in = 1,
-    gaps_out = 1,
-    border_size = 1,
+    gaps_in = 2,
+    gaps_out = 2,
+    border_size = 2,
     ["col.active_border"] = { colors = { "rgba(33ccffff)", "rgba(00ff99ff)" }, angle = 45 },
     ["col.inactive_border"] = "rgba(595959ff)",
     layout = "dwindle",
   },
   decoration = {
-    rounding = 1,
+    rounding = 0,
     active_opacity = 1.0,
     inactive_opacity = 1.0,
     dim_inactive = false,
@@ -60,6 +60,19 @@ o.window({ title = ".*000_SCRATCHPAD_Brain_Dump.*" }, { opacity = "1.0 0.1 overr
 -- Spacious Floating TUI App Sizing
 o.window({ class = "org.omarchy.btop", tag = "floating-window" }, { size = { 1050, 700 } })
 o.window({ class = "org.omarchy.nload", tag = "floating-window" }, { size = { 1050, 700 } })
+
+-- Gaming Window Rules (Focus lock, true fullscreen, and low-latency tearing)
+o.window("^(witcher3.exe|steam_app_.*|gamescope)$", {
+  fullscreen = true,
+  immediate = true,
+  stay_focused = true,
+})
+o.window({ title = ".*Witcher 3.*" }, {
+  fullscreen = true,
+  immediate = true,
+  stay_focused = true,
+})
+
 
 
 
