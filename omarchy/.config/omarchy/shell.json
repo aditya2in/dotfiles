@@ -11,7 +11,7 @@
           "id": "voxtype",
           "interval": 1,
           "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh",
-          "tooltip": "VoxType",
+          "tooltip": "VoxType (F2)",
           "type": "command"
         },
         {

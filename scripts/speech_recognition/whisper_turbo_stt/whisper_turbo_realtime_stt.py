@@ -15,6 +15,7 @@ os.environ["CT2_CUDA_ALLOW_TF32"] = "1"
 # Global state for pausing & routing
 is_paused = False
 is_paused_by_voxtype = False  # The Blue Sign
+is_top_bar_hovered = False   # Top bar mouse parking mute
 last_voxtype_interrupt_time = 0  # Cooldown Timer
 is_scratchpad_focused = False
 smart_pause_override = False
@@ -48,9 +49,22 @@ def load_config():
         log_engine(f"Config load error: {e}")
     return defaults
 
+def is_cursor_on_top_bar(x, y):
+    """Accurately checks if cursor is resting in the top bar zone of any of the 3 monitors."""
+    # Left Vertical (0 <= x < 1080, top=0)
+    if 0 <= x < 1080 and 0 <= y <= 28:
+        return True
+    # Center Ultrawide (1080 <= x < 4520, top=240 due to vertical offset)
+    elif 1080 <= x < 4520 and 240 <= y <= 268:
+        return True
+    # Right Vertical (x >= 4520, top=0)
+    elif x >= 4520 and 0 <= y <= 28:
+        return True
+    return False
+
 def update_waybar():
     """Update the status JSON for Waybar."""
-    global is_paused, is_paused_by_voxtype, is_scratchpad_focused
+    global is_paused, is_paused_by_voxtype, is_top_bar_hovered, is_scratchpad_focused
     state = "running"
     icon = "󰍬"  # Microphone On
     tooltip = "Whisper STT: Active (Ghostty Target)"
@@ -63,6 +77,10 @@ def update_waybar():
         state = "interrupted"
         icon = "󰍭"
         tooltip = "Whisper STT: Interrupted by VoxType"
+    elif is_top_bar_hovered:
+        state = "paused"
+        icon = "󰍭"
+        tooltip = "Whisper STT: Paused (Bar Hover)"
     elif is_scratchpad_focused:
         tooltip = "Whisper STT: Active (Scratchpad Focus)"
         
@@ -78,9 +96,32 @@ def update_waybar():
         with open(temp_status, "w") as f:
             json.dump(status, f)
         os.rename(temp_status, STATUS_FILE)
-        log_engine(f"Status updated: {state} (Manual: {is_paused}, VoxType: {is_paused_by_voxtype})")
+        log_engine(f"Status updated: {state} (Manual: {is_paused}, VoxType: {is_paused_by_voxtype}, BarHover: {is_top_bar_hovered})")
     except Exception as e:
         log_engine(f"Waybar update failed: {e}")
+
+def cursor_hover_watcher():
+    """Polls cursor position to provide instant, zero-touch top-bar mute."""
+    global is_top_bar_hovered
+    last_hover_state = False
+    
+    while True:
+        try:
+            res = subprocess.run(["hyprctl", "cursorpos", "-j"], capture_output=True, text=True)
+            if res.returncode == 0:
+                pos = json.loads(res.stdout)
+                hovered = is_cursor_on_top_bar(pos.get("x", 0), pos.get("y", 0))
+                if hovered != last_hover_state:
+                    is_top_bar_hovered = hovered
+                    last_hover_state = hovered
+                    update_waybar()
+                    if hovered:
+                        log_engine("Top bar hovered: STT paused.")
+                    else:
+                        log_engine("Top bar unhovered: STT resumed.")
+        except Exception:
+            pass
+        time.sleep(0.12)
 
 def override_watcher():
     """Background thread that watches for the smart pause override file."""
@@ -309,10 +350,11 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGTERM, signal_handler)
 
 def main():
-    print("[DEBUG] Script started (Direct Ghostty Target Injection Mode).")
+    print("[DEBUG] Script started (Direct Ghostty Target Injection & Top-Bar Hover Mute Active).")
     
     threading.Thread(target=pause_watcher, daemon=True).start()
     threading.Thread(target=override_watcher, daemon=True).start()
+    threading.Thread(target=cursor_hover_watcher, daemon=True).start()
     threading.Thread(target=hyprland_event_listener, daemon=True).start()
 
     print("\n[INFO] Initializing Whisper Turbo Model...")
@@ -341,7 +383,7 @@ def main():
         current_time = time.time()
         cooldown_active = (current_time - last_voxtype_interrupt_time) < 1.5
         
-        if is_paused or is_paused_by_voxtype or cooldown_active:
+        if is_paused or is_paused_by_voxtype or is_top_bar_hovered or cooldown_active:
             if cooldown_active and not is_paused_by_voxtype:
                 log_engine(f"Cooldown active: Discarding overlap text: '{text[:20]}...'")
             return 
@@ -356,14 +398,14 @@ def main():
         global recorder
         recorder = AudioToTextRecorder(**recorder_config)
         update_waybar()
-        print("\n>>> System Ready! Speak into your microphone (Direct Ghostty Injection Active).")
+        print("\n>>> System Ready! Speak into your microphone (Direct Ghostty Injection & Top-Bar Mute Active).")
 
         while True:
-            if is_paused or is_paused_by_voxtype:
+            if is_paused or is_paused_by_voxtype or is_top_bar_hovered:
                 while not text_queue.empty():
                     try: text_queue.get_nowait(); text_queue.task_done()
                     except: break
-                time.sleep(0.5)
+                time.sleep(0.2)
                 continue
 
             if not getattr(recorder, 'is_recording', False):

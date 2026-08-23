@@ -46,8 +46,9 @@ o.bind("SUPER + SHIFT + ALT + X", "X Post", 'omarchy-launch-webapp "https://x.co
 o.bind("F7", "Toggle Whisper Turbo STT", "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/toggle_dictation.sh")
 o.bind("F8", "Toggle Dictation Pause", "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/toggle_dictation.sh --pause")
 o.bind("F6", "Toggle Smart Pause Override", "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/toggle_dictation.sh --toggle-override")
-o.bind("F1", "VoxType Dictation", "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh")
-o.bind("SHIFT + F1", "Toggle VoxType Power", "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh toggle-power")
+o.bind("F1", "Submit Prompt to Ghostty", "/home/adityaws/DOTfiles/scripts/speech_recognition/submit_to_ghostty.sh")
+o.bind("F2", "VoxType Dictation", "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh")
+o.bind("SHIFT + F2", "Toggle VoxType Power", "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh toggle-power")
 o.bind("SUPER + code:49", "Toggle Obsidian Scratch Pad", "bash /home/adityaws/DOTfiles/scripts/focus_obsidian_scratchpad.sh")
 
 -- Nemotron Dictation (NVIDIA Nemotron ASR Streaming)
