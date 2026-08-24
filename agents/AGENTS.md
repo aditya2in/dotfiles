@@ -66,6 +66,8 @@ We document to maintain a single, cohesive source of truth for joint engineering
 9. **Atomic Execution Priority:** Documentation and index updates MUST be written immediately after the change is verified, in the very same model turn/response, before delivering any conversational responses, secondary analysis, or answering unrelated questions.
 10. **Context Retrieval via Index:** When context retrieval or historical workspace understanding is needed, the AI MUST check the documentation index file `AI_documentation_index.md` to align itself on the current workspace state, past configurations, and previous diagnostics, avoiding duplication.
 11. **Manual Reproducibility Command Mandate**: Every documentation file created or updated for system modifications, configuration tweaks, or git-branch operations MUST include complete command lines, descriptions of the command flags, and a step-by-step walkthrough explaining how a human user can perform the identical task manually in the future. Never just state what was changed; always provide the exact commands and explanations to make the changes fully reproducible and future-proof.
+12. **Internal Document Table of Contents & Append-Only Evolutionary History Mandate**: Every technical engineering or troubleshooting document MUST include a structured Table of Contents / Index at the top of the file, and an append-only Chronological Iteration & Evolution Log preserving every phase, diagnostic attempt, root cause, and evolutionary refinement. Prior history and failed attempts must NEVER be deleted; they must remain documented in sequence so future AI agents and human engineers can understand the full context, previous roadblocks, and exact path to resolution.
+
 
 
 

@@ -51,10 +51,10 @@ o.bind("F2", "VoxType Dictation", "/home/adityaws/DOTfiles/scripts/speech_recogn
 o.bind("SHIFT + F2", "Toggle VoxType Power", "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh toggle-power")
 o.bind("SUPER + code:49", "Toggle Obsidian Scratch Pad", "bash /home/adityaws/DOTfiles/scripts/focus_obsidian_scratchpad.sh")
 
--- Nemotron Dictation (NVIDIA Nemotron ASR Streaming)
-o.bind("F9", "Toggle Nemotron STT", "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh")
-o.bind("SHIFT + F9", "Nemotron STT Start", "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh --start")
-o.bind("F10", "Toggle Nemotron Pause", "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh --pause")
+-- NVIDIA Nemotron ASR Streaming Dictation
+o.bind("F4", "Toggle Nemotron STT", "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh")
+o.bind("SHIFT + F4", "Toggle Nemotron Pause", "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh --pause")
+o.bind("CTRL + F4", "Toggle Smart Pause Override", "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh --toggle-override")
 
 -- Toggle to previously active workspace on SUPER + TAB
 hl.unbind("SUPER + TAB")

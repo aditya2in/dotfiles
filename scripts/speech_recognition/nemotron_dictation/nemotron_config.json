@@ -1,15 +1,10 @@
 {
-    "smart_pause_enabled": true,
-    "ignored_classes": [
-        "brave-browser",
-        "obsidian"
-    ],
-    "allowed_titles": [
-        "000_SCRATCHPAD_Brain_Dump"
-    ],
-    "model": "en",
-    "language": "en-US",
-    "silero_sensitivity": 0.5,
-    "post_speech_silence_duration": 0.8,
-    "min_length_of_recording": 0.5
+    "silence_duration_seconds": 0.40,
+    "silence_energy_threshold": 0.0015,
+    "min_speech_duration_seconds": 0.25,
+    "audio_block_size_samples": 1280,
+    "device": "cuda",
+    "compute_type": "float16",
+    "model_path": "/home/adityaws/AI_MODELS/dictation_models/nemotron/en",
+    "typing_target": "active_window"
 }

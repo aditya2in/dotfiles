@@ -1,211 +1,303 @@
-import os, sys, subprocess, threading, queue, time, signal, json, socket
+#!/usr/bin/env python3
+"""
+NVIDIA Nemotron ASR Streaming - SentencePiece Whitespace Streamer (F4)
+Architecture:
+- Official NVIDIA Nemotron FastConformer-RNNT on CUDA
+- DirectTokenStreamer with SentencePiece subword whitespace reconstruction (▁ /  )
+- Emits words with proper natural spacing and syllable attachment in real-time
+- Automatic Zero-Padding Flush Frame on speech pauses
+- Injects keystrokes directly into active cursor via wtype
+- Instant kernel-level termination with os._exit(0)
+"""
+
+import os
+import sys
+import json
+import subprocess
+import threading
+import queue
+import time
+import signal
 import numpy as np
 import sounddevice as sd
 import torch
 from transformers import AutoProcessor, AutoModelForRNNT
-import warnings; warnings.filterwarnings("ignore")
+from transformers.generation.streamers import BaseStreamer
 
-os.environ["CT2_CUDA_ALLOW_TF32"] = "1"
-
-SAMPLE_RATE, CHANNELS, BLOCK_SIZE = 16000, 1, 512
-is_paused = is_browser_focused = smart_pause_override = False
-audio_buffer = []; audio_lock = threading.Lock()
-
-PAUSE_FILE = "/tmp/nemotron_paused"
-OVERRIDE_FILE = "/tmp/nemotron_smart_pause_override"
-STATUS_FILE = "/tmp/nemotron_status.json"
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "nemotron_config.json")
 PID_FILE = "/tmp/nemotron_dictation.pid"
-MODEL_DIR_EN = "/home/adityaws/AI_MODELS/dictation_models/nemotron/en"
-MODEL_DIR_MULTI = "/home/adityaws/AI_MODELS/dictation_models/nemotron/multi"
+PAUSE_FILE = "/tmp/nemotron_paused"
+SAMPLE_RATE = 16000
 
-processor = model = None
-device = "cuda" if torch.cuda.is_available() else "cpu"
-last_text = ""
-last_typed_len = 0
-typing_queue = queue.Queue()
-CONFIG_FILE = os.path.join(os.path.dirname(__file__), "nemotron_config.json")
-
-def log(m): 
-    try:
-        with open("/tmp/nemotron_engine.log", "a") as f:
-            f.write(f"[{time.strftime('%H:%M:%S')}] {m}\n")
-    except: pass
-
-def update_waybar():
-    s = "running"; i = "\uf130"; t = "Nemotron STT: Active"
-    if smart_pause_override and is_paused: s = "paused"
-    elif is_paused: s = "paused"; i = "\uf131"
-    elif is_browser_focused: s = "paused"; i = "\uf131"
-    try:
-        temp = STATUS_FILE + ".tmp"
-        with open(temp, "w") as f: json.dump({"text": i, "class": s, "alt": s, "tooltip": t}, f)
-        os.rename(temp, STATUS_FILE)
-    except: pass
-
-signal.signal(signal.SIGTERM, lambda s, f: sys.exit(0))
+DEFAULT_CONFIG = {
+    "lookahead_latency_tokens": 6,
+    "silence_flush_seconds": 0.35,
+    "silence_energy_threshold": 0.0015,
+    "device": "cuda",
+    "compute_type": "float16",
+    "model_path": "/home/adityaws/AI_MODELS/dictation_models/nemotron/en",
+    "typing_target": "active_window"
+}
 
 def load_config():
-    d = {"smart_pause_enabled": True, "ignored_classes": ["brave-browser", "obsidian"],
-         "allowed_titles": ["000_SCRATCHPAD_Brain_Dump"], "model": "en", "language": "en-US"}
     try:
-        if os.path.exists(CONFIG_FILE):
-            with open(CONFIG_FILE) as f: return {**d, **json.load(f)}
-    except: pass
-    return d
+        if os.path.exists(CONFIG_PATH):
+            with open(CONFIG_PATH, "r") as f:
+                return {**DEFAULT_CONFIG, **json.load(f)}
+    except Exception:
+        pass
+    return DEFAULT_CONFIG
 
-def hyprland_event_listener():
-    global is_browser_focused
-    c = load_config()
-    if not c.get("smart_pause_enabled"): return
-    ia, at = c.get("ignored_classes", []), c.get("allowed_titles", [])
-    sig = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
-    if not sig:
-        try:
-            uid = os.getuid()
-            for p in [f"/run/user/{uid}/hypr/", "/tmp/hypr/"]:
-                if os.path.exists(p):
-                    ds = [d for d in os.listdir(p) if len(d) > 30]
-                    if ds: sig = ds[0]; break
-        except: pass
-    if not sig: return
-    uid = os.getuid()
-    sp = f"/run/user/{uid}/hypr/{sig}/.socket2.sock"
-    if not os.path.exists(sp): sp = f"/tmp/hypr/{sig}/.socket2.sock"
-    while True:
-        try:
-            with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as cl:
-                cl.connect(sp)
-                with cl.makefile('r') as f:
-                    r = subprocess.run(["hyprctl","activewindow","-j"], capture_output=True, text=True)
-                    if r.returncode == 0:
-                        d = json.loads(r.stdout)
-                        is_browser_focused = (d.get("class","") in ia) and not any(t in d.get("title","") for t in at)
-                        update_waybar()
-                    for line in f:
-                        if "activewindow>>" in line:
-                            try:
-                                p = line.split("activewindow>>")[1].strip().split(",")
-                                wc, wt = p[0].strip(), ",".join(p[1:]).strip()
-                                f2 = (wc in ia) and not any(t in wt for t in at)
-                                if f2 != is_browser_focused: is_browser_focused = f2; update_waybar()
-                            except: pass
-        except: time.sleep(2)
+# State
+is_paused = False
+is_running = True
+audio_queue = queue.Queue()
+typing_queue = queue.Queue()
+
+class DirectTokenStreamer(BaseStreamer):
+    """
+    Direct Token Streamer with SentencePiece Whitespace Reconstruction:
+    - Restores leading whitespace whenever subwords start with ▁ or  
+    - Connects word syllables seamlessly
+    - Emits words with zero caching delay
+    """
+    def __init__(self, tokenizer):
+        self.tokenizer = tokenizer
+
+    def put(self, value):
+        if value is None:
+            return
+        if isinstance(value, torch.Tensor):
+            tokens = value.tolist()
+        else:
+            tokens = [value]
+        
+        # Flatten batch dimension if present
+        if isinstance(tokens, list) and len(tokens) > 0 and isinstance(tokens[0], list):
+            tokens = tokens[0]
+
+        for token_id in tokens:
+            try:
+                token_str = self.tokenizer.convert_ids_to_tokens(token_id)
+                if token_str is None or token_str == "<unk>" or token_str.startswith("<"):
+                    continue
+                # SentencePiece space prefix check
+                if token_str.startswith("▁") or token_str.startswith(" ") or token_str.startswith(" "):
+                    clean_text = " " + token_str[1:]
+                else:
+                    clean_text = token_str
+                
+                if clean_text:
+                    typing_queue.put(clean_text)
+            except Exception:
+                pass
+
+    def end(self):
+        pass
+
+def signal_handler(sig, frame):
+    global is_running
+    is_running = False
+    try:
+        if os.path.exists(PID_FILE):
+            os.remove(PID_FILE)
+    except Exception:
+        pass
+    os._exit(0)
+
+signal.signal(signal.SIGTERM, signal_handler)
+signal.signal(signal.SIGINT, signal_handler)
 
 def pause_watcher():
     global is_paused
-    l = False
-    while True:
-        c = os.path.exists(PAUSE_FILE)
-        if c != l: is_paused = c; update_waybar(); l = c
-        time.sleep(0.2)
-
-def override_watcher():
-    global smart_pause_override
-    l = False
-    while True:
-        c = os.path.exists(OVERRIDE_FILE)
-        if c != l: smart_pause_override = c; update_waybar(); l = c
-        time.sleep(0.2)
+    last_state = False
+    while is_running:
+        current_state = os.path.exists(PAUSE_FILE)
+        if current_state != last_state:
+            is_paused = current_state
+            last_state = current_state
+        time.sleep(0.15)
 
 def typing_worker():
-    while True:
-        t = typing_queue.get()
-        if t is None: break
-        try: subprocess.run(["wtype", t], check=True)
-        except: pass
+    """Consumes real-time streaming tokens and types them via wtype."""
+    while is_running:
+        try:
+            text = typing_queue.get(timeout=0.1)
+        except queue.Empty:
+            continue
+        if text is None:
+            break
+        try:
+            subprocess.run(["wtype", text], check=False)
+        except Exception:
+            pass
         typing_queue.task_done()
 
-def load_model():
-    global processor, model
-    c = load_config()
-    mp = MODEL_DIR_EN if c.get("model","en") == "en" else MODEL_DIR_MULTI
-    log(f"Loading: {c.get('model','en')}")
-    try:
-        processor = AutoProcessor.from_pretrained(mp)
-        model = AutoModelForRNNT.from_pretrained(mp, dtype=torch.float16 if device=="cuda" else torch.float32).to(device)
-        model.eval()
-        log(f"Loaded on {device.upper()}")
-        return True
-    except Exception as e:
-        log(f"Model load failed: {e}")
-        return False
+def compute_rms(audio_chunk):
+    if len(audio_chunk) == 0:
+        return 0.0
+    return float(np.sqrt(np.mean(audio_chunk ** 2)))
 
-def transcribe(audio):
-    if len(audio) < 1600: return ""
-    try:
-        c = load_config()
-        lang = c.get("language", "en-US")
-        if c.get("model","en") == "multi":
-            inputs = processor(audio, sampling_rate=SAMPLE_RATE, language=lang, return_tensors="pt")
-        else:
-            inputs = processor(audio, sampling_rate=SAMPLE_RATE, return_tensors="pt")
-        feats = inputs["input_features"].to(device).to(torch.float16)
-        attn = inputs["attention_mask"].to(device)
-        nlt = inputs.get("num_lookahead_tokens", 13)
-        with torch.no_grad():
-            gen = model.generate(input_features=feats, attention_mask=attn, num_lookahead_tokens=nlt, return_dict_in_generate=True)
-        return processor.decode(gen.sequences[0], skip_special_tokens=True).strip()
-    except Exception as e:
-        log(f"Transcribe error: {e}")
-        return ""
-
-def audio_cb(indata, frames, time_info, status):
-    with audio_lock: audio_buffer.append(indata[:, 0].copy())
-
-def get_audio():
-    with audio_lock:
-        if not audio_buffer: return np.array([], dtype=np.float32)
-        return np.concatenate(audio_buffer)
-
-def clear_audio():
-    with audio_lock: audio_buffer.clear()
+def audio_callback(indata, frames, time_info, status):
+    if not is_paused:
+        audio_queue.put(indata[:, 0].copy())
 
 def main():
-    global last_text, last_typed_len
-    log("Starting...")
-    print("[INFO] Nemotron STT Sliding-Window starting...")
+    global is_running
+    config = load_config()
+
+    device = config.get("device", "cuda") if torch.cuda.is_available() else "cpu"
+    dtype = torch.float16 if (device == "cuda" and config.get("compute_type") == "float16") else torch.float32
+    lookahead = config.get("lookahead_latency_tokens", 6)
+    silence_flush_dur = config.get("silence_flush_seconds", 0.35)
+    silence_thresh = config.get("silence_energy_threshold", 0.0015)
+    model_path = config.get("model_path", DEFAULT_CONFIG["model_path"])
+
+    print("================================================================")
+    print("🚀 Starting SentencePiece Spaced Nemotron Engine (F4)")
+    print(f"⚡ Device: {device.upper()} | Lookahead: {lookahead} tokens | Natural Spacing")
+    print("================================================================")
+
+    try:
+        with open(PID_FILE, "w") as f:
+            f.write(str(os.getpid()))
+    except Exception:
+        pass
+
     threading.Thread(target=pause_watcher, daemon=True).start()
-    threading.Thread(target=override_watcher, daemon=True).start()
-    threading.Thread(target=hyprland_event_listener, daemon=True).start()
     threading.Thread(target=typing_worker, daemon=True).start()
-    if not load_model(): 
-        subprocess.run(["notify-send","Nemotron STT","Model load FAILED","-i","dialog-error","-t","2000"])
-        return
-    update_waybar()
+
+    # 1. Load Official Model
     try:
-        with open(PID_FILE, "w") as f: f.write(str(os.getpid()))
-    except: pass
-    subprocess.run(["notify-send","Nemotron STT","Ready","-t","1500"])
-    
-    stream = sd.InputStream(samplerate=SAMPLE_RATE, channels=CHANNELS,
-                            blocksize=BLOCK_SIZE, callback=audio_cb, dtype=np.float32)
+        processor = AutoProcessor.from_pretrained(model_path)
+        model = AutoModelForRNNT.from_pretrained(model_path, dtype=dtype).to(device)
+        model.eval()
+        processor.set_num_lookahead_tokens(lookahead)
+    except Exception as e:
+        subprocess.run(["notify-send", "Nemotron STT", f"Model Load Failed: {e}", "-i", "dialog-error", "-t", "4000"])
+        sys.exit(1)
+
+    subprocess.run(["notify-send", "Nemotron STT", "Ready — streaming with natural spaces", "-i", "microphone-sensitivity-high", "-t", "2000"])
+
+    # 2. Start Microphone Stream (1280 samples / 80ms chunks)
+    stream = sd.InputStream(
+        samplerate=SAMPLE_RATE,
+        channels=1,
+        blocksize=1280,
+        callback=audio_callback,
+        dtype=np.float32
+    )
     stream.start()
-    print(">>> Speak — text appears in real-time.")
-    
+
+    first_chunk_size = processor.num_samples_first_audio_chunk
+    per_chunk_size = processor.num_samples_per_audio_chunk
+
+    def get_audio_samples(required_samples, timeout=0.1):
+        collected = []
+        collected_len = 0
+        start_t = time.time()
+        while is_running and collected_len < required_samples:
+            try:
+                chunk = audio_queue.get(timeout=timeout)
+                collected.append(chunk)
+                collected_len += len(chunk)
+            except queue.Empty:
+                if (time.time() - start_t) > 0.5:
+                    break
+                continue
+        if collected:
+            arr = np.concatenate(collected)
+            if len(arr) > required_samples:
+                excess = arr[required_samples:]
+                audio_queue.queue.appendleft(excess)
+                return arr[:required_samples]
+            elif len(arr) < required_samples:
+                pad = np.zeros(required_samples - len(arr), dtype=np.float32)
+                return np.concatenate([arr, pad])
+            return arr
+        return np.zeros(required_samples, dtype=np.float32)
+
+    # 3. Native Streaming Loop
     try:
-        while True:
-            if is_paused or (is_browser_focused and not smart_pause_override):
-                clear_audio(); last_text = ""; last_typed_len = 0; time.sleep(0.2); continue
-            audio = get_audio()
-            if len(audio) < 4800:  # At least 0.3s
-                time.sleep(0.05); continue
-            text = transcribe(audio)
-            if text and len(text) > last_typed_len:
-                new_part = text[last_typed_len:]
-                if new_part.strip():
-                    typing_queue.put(new_part + " ")
-                    log(f"Typed: +{len(new_part)} chars")
-                last_typed_len = len(text)
-            last_text = text or last_text
-            time.sleep(0.15)
-    except KeyboardInterrupt: pass
-    except Exception as e: log(f"Fatal: {e}")
+        while is_running:
+            # Collect first chunk
+            first_audio = get_audio_samples(first_chunk_size)
+            if not is_running:
+                break
+
+            first_inputs = processor(
+                first_audio,
+                sampling_rate=SAMPLE_RATE,
+                is_streaming=True,
+                is_first_audio_chunk=True,
+                return_tensors="pt"
+            ).to(device, dtype=model.dtype)
+
+            def input_features_generator():
+                yield first_inputs.input_features[:, : processor.num_mel_frames_first_audio_chunk, :]
+
+                last_speech_time = time.time()
+                has_spoken = False
+                flushed = False
+
+                while is_running and not is_paused:
+                    next_audio = get_audio_samples(per_chunk_size)
+                    if not is_running or is_paused:
+                        break
+
+                    energy = compute_rms(next_audio)
+                    if energy > silence_thresh:
+                        last_speech_time = time.time()
+                        has_spoken = True
+                        flushed = False
+                    
+                    next_inputs = processor(
+                        next_audio,
+                        sampling_rate=SAMPLE_RATE,
+                        is_streaming=True,
+                        is_first_audio_chunk=False,
+                        return_tensors="pt"
+                    ).to(device, dtype=model.dtype)
+
+                    yield next_inputs.input_features
+
+                    # Automatic silence flush to release trailing lookahead tokens
+                    if has_spoken and not flushed and (time.time() - last_speech_time) >= silence_flush_dur:
+                        silent_flush = np.zeros(per_chunk_size, dtype=np.float32)
+                        flush_inputs = processor(
+                            silent_flush,
+                            sampling_rate=SAMPLE_RATE,
+                            is_streaming=True,
+                            is_first_audio_chunk=False,
+                            return_tensors="pt"
+                        ).to(device, dtype=model.dtype)
+                        yield flush_inputs.input_features
+                        flushed = True
+                        has_spoken = False
+
+            streamer = DirectTokenStreamer(processor.tokenizer)
+            gen_kwargs = {
+                **first_inputs,
+                "input_features": input_features_generator(),
+                "streamer": streamer
+            }
+
+            gen_thread = threading.Thread(target=model.generate, kwargs=gen_kwargs, daemon=True)
+            gen_thread.start()
+            gen_thread.join()
+
+    except KeyboardInterrupt:
+        pass
     finally:
-        stream.stop(); stream.close()
+        is_running = False
+        stream.stop()
+        stream.close()
         typing_queue.put(None)
-        try: os.remove(PID_FILE)
-        except: pass
-        print("Stopped.")
+        try:
+            if os.path.exists(PID_FILE):
+                os.remove(PID_FILE)
+        except Exception:
+            pass
 
 if __name__ == "__main__":
     main()

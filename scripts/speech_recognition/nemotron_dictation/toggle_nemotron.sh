@@ -38,10 +38,10 @@ stop_dictation() {
     echo "Stopping Nemotron Dictation..."
     if [ -f "$PID_FILE" ]; then
         PID=$(cat "$PID_FILE")
-        kill "$PID" 2>/dev/null
-        rm "$PID_FILE" 2>/dev/null
+        kill -9 "$PID" 2>/dev/null
+        rm -f "$PID_FILE" 2>/dev/null
     fi
-    pkill -f "$SCRIPT_NAME" 2>/dev/null
+    pkill -9 -f "$SCRIPT_NAME" 2>/dev/null
     rm -f "/tmp/nemotron_paused" 2>/dev/null
     echo '{"text": "STOP", "class": "stopped", "alt": "stopped", "tooltip": "Nemotron STT: OFF"}' > "/tmp/nemotron_status.json"
     notify-send "Nemotron STT" "Status: STOPPED" -i microphone-sensitivity-muted -t 2000
@@ -49,7 +49,7 @@ stop_dictation() {
 
 # Function to start
 start_dictation() {
-    pkill -f "$SCRIPT_NAME" 2>/dev/null
+    pkill -9 -f "$SCRIPT_NAME" 2>/dev/null
     rm -f "$PID_FILE" 2>/dev/null
     echo "Starting Nemotron Dictation..."
     $VENV_PYTHON "$SCRIPT_PATH" > /dev/null 2>&1 &
@@ -69,18 +69,34 @@ pause_dictation() {
     if [ -f "$PID_FILE" ] && ps -p $(cat "$PID_FILE") > /dev/null; then
         PAUSE_FILE="/tmp/nemotron_paused"
         if [ -f "$PAUSE_FILE" ]; then
-            rm "$PAUSE_FILE" 2>/dev/null
+            rm -f "$PAUSE_FILE" 2>/dev/null
+            notify-send "Nemotron STT" "Status: RESUMED" -i microphone-sensitivity-high -t 2000
         else
             touch "$PAUSE_FILE"
+            notify-send "Nemotron STT" "Status: PAUSED" -i microphone-sensitivity-muted -t 2000
         fi
     else
-        notify-send "Nemotron STT" "Engine is OFF. Press F9 to start first." -i dialog-warning -t 3000
+        notify-send "Nemotron STT" "Engine is OFF. Press F4 to start first." -i dialog-warning -t 3000
+    fi
+}
+
+# Function to toggle smart pause override
+override_dictation() {
+    OVERRIDE_FILE="/tmp/nemotron_smart_pause_override"
+    if [ -f "$OVERRIDE_FILE" ]; then
+        rm -f "$OVERRIDE_FILE" 2>/dev/null
+        notify-send "Nemotron STT" "Smart Pause: AUTO" -i dialog-information -t 2000
+    else
+        touch "$OVERRIDE_FILE"
+        notify-send "Nemotron STT" "Smart Pause: FORCED ON" -i dialog-information -t 2000
     fi
 }
 
 # Toggle Logic
 if [ "$1" == "--pause" ]; then
     pause_dictation
+elif [ "$1" == "--toggle-override" ]; then
+    override_dictation
 elif [ "$1" == "--start" ]; then
     start_dictation
 elif pgrep -f "$SCRIPT_NAME" > /dev/null; then
