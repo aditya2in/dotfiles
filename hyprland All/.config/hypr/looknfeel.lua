@@ -50,6 +50,7 @@ o.window("steam", { workspace = "4" })
 
 -- Stability Rules
 o.window("(com.mitchellh.ghostty|brave-browser|obsidian)", { suppress_event = "maximize" })
+o.window("com.mitchellh.ghostty", { focus_on_activate = false })
 o.window({ class = "com.mitchellh.ghostty", workspace = "1" }, { fullscreen = 1 })
 o.window({ class = "brave-browser", workspace = "2" }, { fullscreen = 0 })
 o.window({ class = "md.obsidian.Obsidian", workspace = "3" }, { fullscreen = 0 })
