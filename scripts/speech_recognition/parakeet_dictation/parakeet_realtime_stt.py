@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-NVIDIA Parakeet 1.1B ASR Dictation Engine (F9 Setup)
+NVIDIA Parakeet 1.1B ASR Dictation Engine with Silero VAD + Pre-Roll (F9 Setup)
 Architecture:
 - Official NVIDIA Parakeet FastConformer-RNNT (1.1B Parameters) on CUDA FP16
+- Neural Silero VAD with 160ms Lookback Ring Buffer to prevent initial consonant clipping
+- Softened VAD sensitivity (0.35 threshold) for effortless quiet/conversational speech
 - Instant Bracketed Buffer Injection (tmux set-buffer + paste-buffer -p) for 0ms CLI insertion
-- Energy-Gated (0.0045 RMS) VAD + Phantom Noise / Breath Filtering
 - 0.40s Speech Pause Threshold for natural human conversational cadence
 - In-Python Hardware-Gated "READY" Notification upon 100% CUDA load
 - Software Pause/Resume toggle via F9 without touching system mic hardware
@@ -18,6 +19,7 @@ import time
 import queue
 import signal
 import socket
+import collections
 import threading
 import subprocess
 import numpy as np
@@ -34,7 +36,8 @@ is_scratchpad_focused = False
 # Noise & Breath Hallucination Filter List
 NOISE_FILLERS = {
     "mm", "mmhm", "m", "h", "ah", "uh", "um", "hmm", "hm", 
-    "m m h h", "m m h h r a h", "r", "eh", "ha", "sh", "ts"
+    "m m h h", "m m h h r a h", "r", "eh", "ha", "sh", "ts",
+    "no", "no no", "n o n o", "not", "no no no"
 }
 
 def signal_handler(sig, frame):
@@ -49,7 +52,7 @@ def load_config():
     config_path = os.path.join(os.path.dirname(__file__), "parakeet_config.json")
     default_config = {
         "silence_pause_seconds": 0.40,
-        "silence_energy_threshold": 0.0045,
+        "vad_threshold": 0.35,
         "device": "cuda",
         "compute_type": "float16",
         "model_path": "/home/adityaws/AI_MODELS/dictation_models/parakeet/rnnt_1.1b",
@@ -169,11 +172,6 @@ def typing_worker(config):
         inject_text(text, config)
         typing_queue.task_done()
 
-def compute_rms(audio_chunk):
-    if len(audio_chunk) == 0:
-        return 0.0
-    return float(np.sqrt(np.mean(audio_chunk ** 2)))
-
 def audio_callback(indata, frames, time_info, status):
     if not is_paused:
         audio_queue.put(indata[:, 0].copy())
@@ -185,11 +183,23 @@ def main():
     compute_type = torch.float16 if config.get("compute_type") == "float16" else torch.float32
     model_path = config.get("model_path")
     silence_pause_seconds = config.get("silence_pause_seconds", 0.40)
-    silence_energy_threshold = config.get("silence_energy_threshold", 0.0045)
+    vad_threshold = config.get("vad_threshold", 0.35)
     allowed_titles = config.get("allowed_titles", ["000_SCRATCHPAD_Brain_Dump"])
 
-    print(f"[Parakeet 1.1B] Loading model from: {model_path} on {device} (FP16)...", flush=True)
-    
+    print(f"[Parakeet 1.1B] Loading Silero VAD neural network...", flush=True)
+    try:
+        vad_model, _ = torch.hub.load(
+            repo_or_dir='snakers4/silero-vad',
+            model='silero_vad',
+            force_reload=False,
+            onnx=False
+        )
+        vad_model.eval()
+    except Exception as e:
+        print(f"[Parakeet 1.1B] Failed to load Silero VAD: {e}", flush=True)
+        sys.exit(1)
+
+    print(f"[Parakeet 1.1B] Loading Parakeet 1.1B model from: {model_path} on {device} (FP16)...", flush=True)
     try:
         processor = AutoProcessor.from_pretrained(model_path)
         model = AutoModelForRNNT.from_pretrained(
@@ -203,14 +213,14 @@ def main():
         subprocess.run(["notify-send", "Parakeet 1.1B STT", "Status: ERROR (Failed to Load)", "-i", "dialog-error", "-t", "4000"], check=False)
         sys.exit(1)
 
-    print("[Parakeet 1.1B] Model successfully loaded on CUDA!", flush=True)
+    print("[Parakeet 1.1B] Both Silero VAD & Parakeet 1.1B loaded on CUDA!", flush=True)
 
     # Hardware-gated notification
     subprocess.run(["notify-send", "Parakeet 1.1B STT", "Status: READY (Loaded in VRAM — Speak Now)", "-i", "microphone-sensitivity-high", "-t", "3000"], check=False)
 
     sample_rate = 16000
-    block_samples = 400  # 25ms polling blocks
-    silence_blocks_needed = int(silence_pause_seconds / 0.025)
+    block_samples = 512  # Exact 32ms chunk required by Silero VAD
+    silence_blocks_needed = int(silence_pause_seconds / 0.032)
     if silence_blocks_needed < 4:
         silence_blocks_needed = 4
 
@@ -220,7 +230,9 @@ def main():
     threading.Thread(target=typing_worker, args=(config,), daemon=True).start()
 
     def transcription_worker():
-        nonlocal processor, model, sample_rate, silence_blocks_needed, silence_energy_threshold
+        nonlocal processor, model, vad_model, sample_rate, silence_blocks_needed, vad_threshold
+        # Rolling 160ms pre-roll buffer (5 chunks * 32ms) to preserve soft initial consonants
+        preroll_buffer = collections.deque(maxlen=5)
         speech_buffer = []
         is_speaking = False
         consecutive_silent_blocks = 0
@@ -231,13 +243,21 @@ def main():
             except queue.Empty:
                 continue
 
-            energy = compute_rms(block)
+            tensor_chunk = torch.from_numpy(block).float()
+            with torch.no_grad():
+                speech_prob = vad_model(tensor_chunk, sample_rate).item()
 
-            if energy > silence_energy_threshold:
-                is_speaking = True
-                consecutive_silent_blocks = 0
-                speech_buffer.append(block)
+            if speech_prob >= vad_threshold:
+                if not is_speaking:
+                    # Speech began! Prepend the 160ms pre-roll audio so zero words are clipped
+                    is_speaking = True
+                    consecutive_silent_blocks = 0
+                    speech_buffer = list(preroll_buffer) + [block]
+                else:
+                    consecutive_silent_blocks = 0
+                    speech_buffer.append(block)
             else:
+                preroll_buffer.append(block)
                 if is_speaking:
                     consecutive_silent_blocks += 1
                     speech_buffer.append(block)
@@ -248,18 +268,18 @@ def main():
                         is_speaking = False
                         consecutive_silent_blocks = 0
 
-                        # Minimum 0.35s speech duration required to filter out mouth clicks/breaths
-                        if len(full_audio) >= sample_rate * 0.35:
+                        # Minimum 0.30s genuine speech duration required
+                        if len(full_audio) >= sample_rate * 0.30:
                             inputs = processor(full_audio, sampling_rate=sample_rate, return_tensors="pt").to(device)
                             with torch.inference_mode():
                                 outputs = model.generate(inputs.input_features.to(dtype=compute_type))
                                 tokens = outputs.sequences[0].tolist()
                                 text = processor.tokenizer.decode(tokens, skip_special_tokens=True).strip()
 
-                            # Filter out noise filler hallucinations and single character artefacts
+                            # Strict noise & hallucination filter
                             cleaned_lower = text.lower().strip()
                             if cleaned_lower in NOISE_FILLERS or len(cleaned_lower) <= 1:
-                                print(f"[Parakeet 1.1B] Ignored noise/breath artefact: {text}", flush=True)
+                                print(f"[Parakeet 1.1B] Silenced non-speech artefact: {text}", flush=True)
                                 continue
 
                             if text:
@@ -275,7 +295,7 @@ def main():
             callback=audio_callback,
             blocksize=block_samples
         ):
-            print(f"[Parakeet 1.1B] Ready and listening for sentences @ {sample_rate}Hz...", flush=True)
+            print(f"[Parakeet 1.1B] Ready with Silero VAD + Pre-Roll (0.40s pause) @ {sample_rate}Hz...", flush=True)
             while is_running:
                 time.sleep(0.5)
     except Exception as e:

@@ -1,6 +1,6 @@
 {
     "silence_pause_seconds": 0.40,
-    "silence_energy_threshold": 0.0045,
+    "vad_threshold": 0.35,
     "device": "cuda",
     "compute_type": "float16",
     "model_path": "/home/adityaws/AI_MODELS/dictation_models/parakeet/rnnt_1.1b",
