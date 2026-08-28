@@ -1,10 +1,9 @@
 {
-    "lookahead_latency_tokens": 6,
-    "silence_flush_seconds": 0.35,
-    "silence_energy_threshold": 0.0015,
+    "silence_pause_seconds": 0.40,
+    "silence_energy_threshold": 0.0045,
     "device": "cuda",
     "compute_type": "float16",
-    "model_path": "/home/adityaws/AI_MODELS/dictation_models/nemotron/en",
+    "model_path": "/home/adityaws/AI_MODELS/dictation_models/parakeet/rnnt_1.1b",
     "typing_target": "ghostty_background",
     "tmux_target_session": "K8",
     "allowed_titles": ["000_SCRATCHPAD_Brain_Dump"]

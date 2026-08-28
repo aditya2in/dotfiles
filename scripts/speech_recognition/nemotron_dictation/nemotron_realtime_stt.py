@@ -5,8 +5,8 @@ Architecture:
 - Official NVIDIA Nemotron FastConformer-RNNT on CUDA
 - DirectTokenStreamer with SentencePiece subword whitespace reconstruction (▁ /  )
 - Emits words with proper natural spacing and syllable attachment in real-time
+- Direct Background Target Injection (Ghostty / Tmux Session K8 on Workspace 1)
 - Automatic Zero-Padding Flush Frame on speech pauses
-- Injects keystrokes directly into active cursor via wtype
 - Instant kernel-level termination with os._exit(0)
 """
 
@@ -18,6 +18,7 @@ import threading
 import queue
 import time
 import signal
+import socket
 import numpy as np
 import sounddevice as sd
 import torch
@@ -36,7 +37,9 @@ DEFAULT_CONFIG = {
     "device": "cuda",
     "compute_type": "float16",
     "model_path": "/home/adityaws/AI_MODELS/dictation_models/nemotron/en",
-    "typing_target": "active_window"
+    "typing_target": "ghostty_background",
+    "tmux_target_session": "K8",
+    "allowed_titles": ["000_SCRATCHPAD_Brain_Dump"]
 }
 
 def load_config():
@@ -51,6 +54,7 @@ def load_config():
 # State
 is_paused = False
 is_running = True
+is_scratchpad_focused = False
 audio_queue = queue.Queue()
 typing_queue = queue.Queue()
 
@@ -118,8 +122,132 @@ def pause_watcher():
             last_state = current_state
         time.sleep(0.15)
 
-def typing_worker():
-    """Consumes real-time streaming tokens and types them via wtype."""
+def hyprland_event_listener():
+    """Listen to Hyprland socket2 for real-time focus changes (to identify Scratchpad)."""
+    global is_scratchpad_focused
+    config = load_config()
+    allowed_titles = config.get("allowed_titles", ["000_SCRATCHPAD_Brain_Dump"])
+
+    signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
+    if not signature:
+        try:
+            uid = os.getuid()
+            paths = [f"/run/user/{uid}/hypr/", "/tmp/hypr/"]
+            for p in paths:
+                if os.path.exists(p):
+                    dirs = [d for d in os.listdir(p) if len(d) > 30]
+                    if dirs:
+                        signature = dirs[0]
+                        break
+        except Exception:
+            pass
+
+    if not signature:
+        return
+
+    uid = os.getuid()
+    sock_path = f"/run/user/{uid}/hypr/{signature}/.socket2.sock"
+    if not os.path.exists(sock_path):
+        sock_path = f"/tmp/hypr/{signature}/.socket2.sock"
+
+    while is_running:
+        try:
+            with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client:
+                client.connect(sock_path)
+                with client.makefile('r') as f:
+                    # Initial check
+                    res = subprocess.run(["hyprctl", "activewindow", "-j"], capture_output=True, text=True)
+                    if res.returncode == 0:
+                        try:
+                            data = json.loads(res.stdout)
+                            w_class = data.get("class", "")
+                            w_title = data.get("title", "")
+                            is_scratchpad_focused = (w_class == "obsidian" and any(t in w_title for t in allowed_titles))
+                        except Exception:
+                            pass
+
+                    for line in f:
+                        if not is_running:
+                            break
+                        if "activewindow>>" in line:
+                            try:
+                                payload = line.split("activewindow>>")[1].strip()
+                                parts = payload.split(",")
+                                socket_class = parts[0].strip()
+                                socket_title = ",".join(parts[1:]).strip()
+                                if socket_class == "obsidian":
+                                    is_scratchpad_focused = any(t in socket_title for t in allowed_titles)
+                                else:
+                                    is_scratchpad_focused = False
+                            except Exception:
+                                pass
+        except Exception:
+            time.sleep(2)
+
+def inject_text(text, config):
+    """
+    Direct Background Target Injection:
+    1. If Scratchpad is active -> type into Scratchpad via wtype.
+    2. If ghostty_background mode -> send keys directly into Ghostty/Tmux (Session K8) in background.
+    3. Fallback -> active window via wtype.
+    """
+    typing_target = config.get("typing_target", "ghostty_background")
+    target_session = config.get("tmux_target_session", "K8")
+
+    # 1. Scratchpad check
+    if is_scratchpad_focused:
+        try:
+            subprocess.run(["wtype", text], check=False)
+            return
+        except Exception:
+            pass
+
+    # 2. Direct injection into target tmux session (K8)
+    if typing_target == "ghostty_background":
+        try:
+            res = subprocess.run(["tmux", "send-keys", "-t", target_session, "-l", text], capture_output=True)
+            if res.returncode == 0:
+                return
+        except Exception:
+            pass
+
+        # Fallback: Find any attached tmux session
+        try:
+            res_sessions = subprocess.run(
+                ["tmux", "list-sessions", "-F", "#{session_name} #{session_attached}"],
+                capture_output=True, text=True
+            )
+            if res_sessions.returncode == 0:
+                for line in res_sessions.stdout.strip().splitlines():
+                    parts = line.split()
+                    if len(parts) >= 2 and parts[1] == "1":
+                        sname = parts[0]
+                        res_inj = subprocess.run(["tmux", "send-keys", "-t", sname, "-l", text], capture_output=True)
+                        if res_inj.returncode == 0:
+                            return
+        except Exception:
+            pass
+
+        # Fallback if no tmux session: type only if Ghostty is the active window
+        try:
+            res_win = subprocess.run(["hyprctl", "activewindow", "-j"], capture_output=True, text=True)
+            if res_win.returncode == 0:
+                win_data = json.loads(res_win.stdout)
+                if win_data.get("class") == "com.mitchellh.ghostty":
+                    subprocess.run(["wtype", text], check=False)
+                    return
+        except Exception:
+            pass
+        return
+
+    # 3. Active window mode
+    try:
+        subprocess.run(["wtype", text], check=False)
+    except Exception:
+        pass
+
+def typing_worker(config):
+    """Consumes real-time streaming tokens and dispatches to target."""
     while is_running:
         try:
             text = typing_queue.get(timeout=0.1)
@@ -127,10 +255,7 @@ def typing_worker():
             continue
         if text is None:
             break
-        try:
-            subprocess.run(["wtype", text], check=False)
-        except Exception:
-            pass
+        inject_text(text, config)
         typing_queue.task_done()
 
 def compute_rms(audio_chunk):
@@ -155,7 +280,7 @@ def main():
 
     print("================================================================")
     print("🚀 Starting SentencePiece Spaced Nemotron Engine (F4)")
-    print(f"⚡ Device: {device.upper()} | Lookahead: {lookahead} tokens | Natural Spacing")
+    print(f"⚡ Device: {device.upper()} | Lookahead: {lookahead} tokens | Target: {config.get('typing_target')}")
     print("================================================================")
 
     try:
@@ -165,7 +290,8 @@ def main():
         pass
 
     threading.Thread(target=pause_watcher, daemon=True).start()
-    threading.Thread(target=typing_worker, daemon=True).start()
+    threading.Thread(target=hyprland_event_listener, daemon=True).start()
+    threading.Thread(target=typing_worker, args=(config,), daemon=True).start()
 
     # 1. Load Official Model
     try:
@@ -177,7 +303,7 @@ def main():
         subprocess.run(["notify-send", "Nemotron STT", f"Model Load Failed: {e}", "-i", "dialog-error", "-t", "4000"])
         sys.exit(1)
 
-    subprocess.run(["notify-send", "Nemotron STT", "Ready — streaming with natural spaces", "-i", "microphone-sensitivity-high", "-t", "2000"])
+    subprocess.run(["notify-send", "Nemotron STT", "Ready — Ghostty Terminal Target Active", "-i", "microphone-sensitivity-high", "-t", "2000"])
 
     # 2. Start Microphone Stream (1280 samples / 80ms chunks)
     stream = sd.InputStream(

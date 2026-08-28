@@ -13,17 +13,16 @@
 #      pip install sounddevice silero-vad
 #
 # 2. MODEL DETAILS:
-#    Name: NVIDIA Nemotron ASR Streaming (English) / Nemotron 3.5 ASR (Multilingual)
-#    Central Path: ~/AI_MODELS/dictation_models/nemotron/
+#    Name: NVIDIA Nemotron ASR Streaming (English 0.6B FastConformer-RNNT)
+#    Central Path: ~/AI_MODELS/dictation_models/nemotron/en
 #    Download:
 #      export HF_HUB_ENABLE_HF_TRANSFER=1
 #      huggingface-cli download nvidia/nemotron-speech-streaming-en-0.6b --local-dir ~/AI_MODELS/dictation_models/nemotron/en
-#      huggingface-cli download nvidia/nemotron-3.5-asr-streaming-0.6b --local-dir ~/AI_MODELS/dictation_models/nemotron/multi
 #
 # 3. SYSTEM DEPENDENCIES:
 #    - PortAudio (for microphone access)
 #    - NVIDIA CUDA & cuDNN (for GPU acceleration)
-#    - wtype (for text injection)
+#    - wtype / tmux (for text injection)
 # ==============================================================================
 
 # Configuration
@@ -32,51 +31,61 @@ VENV_PYTHON="/home/adityaws/venvs/whisper_turbo_stt/bin/python"
 SCRIPT_NAME="nemotron_realtime_stt.py"
 SCRIPT_PATH="$PROJECT_DIR/$SCRIPT_NAME"
 PID_FILE="/tmp/nemotron_dictation.pid"
+PAUSE_FILE="/tmp/nemotron_paused"
 
-# Function to stop
+# Function to stop (unloads VRAM)
 stop_dictation() {
-    echo "Stopping Nemotron Dictation..."
+    echo "Stopping Nemotron Dictation & Unloading VRAM..."
     if [ -f "$PID_FILE" ]; then
         PID=$(cat "$PID_FILE")
         kill -9 "$PID" 2>/dev/null
         rm -f "$PID_FILE" 2>/dev/null
     fi
     pkill -9 -f "$SCRIPT_NAME" 2>/dev/null
-    rm -f "/tmp/nemotron_paused" 2>/dev/null
+    rm -f "$PAUSE_FILE" 2>/dev/null
     echo '{"text": "STOP", "class": "stopped", "alt": "stopped", "tooltip": "Nemotron STT: OFF"}' > "/tmp/nemotron_status.json"
-    notify-send "Nemotron STT" "Status: STOPPED" -i microphone-sensitivity-muted -t 2000
+    notify-send "Nemotron STT" "Status: STOPPED (VRAM Unloaded)" -i microphone-sensitivity-muted -t 2000
 }
 
-# Function to start
+# Function to start (loads model into VRAM)
 start_dictation() {
     pkill -9 -f "$SCRIPT_NAME" 2>/dev/null
     rm -f "$PID_FILE" 2>/dev/null
+    rm -f "$PAUSE_FILE" 2>/dev/null
     echo "Starting Nemotron Dictation..."
     $VENV_PYTHON "$SCRIPT_PATH" > /dev/null 2>&1 &
     NEW_PID=$!
     echo $NEW_PID > "$PID_FILE"
     sleep 1
     if ps -p $NEW_PID > /dev/null; then
-        notify-send "Nemotron STT" "Status: STARTED" -i microphone-sensitivity-high -t 3000
+        notify-send "Nemotron STT" "Status: STARTED (Loaded in VRAM)" -i microphone-sensitivity-high -t 3000
     else
         notify-send "Nemotron STT" "Status: ERROR (Failed to Start)" -i dialog-error -t 4000
         rm -f "$PID_FILE" 2>/dev/null
     fi
 }
 
-# Function to toggle pause
-pause_dictation() {
-    if [ -f "$PID_FILE" ] && ps -p $(cat "$PID_FILE") > /dev/null; then
-        PAUSE_FILE="/tmp/nemotron_paused"
+# Function to toggle power (Shift + F4)
+toggle_power() {
+    if pgrep -f "$SCRIPT_NAME" > /dev/null; then
+        stop_dictation
+    else
+        start_dictation
+    fi
+}
+
+# Function to toggle software pause (F4)
+toggle_pause() {
+    if pgrep -f "$SCRIPT_NAME" > /dev/null; then
         if [ -f "$PAUSE_FILE" ]; then
             rm -f "$PAUSE_FILE" 2>/dev/null
-            notify-send "Nemotron STT" "Status: RESUMED" -i microphone-sensitivity-high -t 2000
+            notify-send "Nemotron STT" "Status: RESUMED (Listening)" -i microphone-sensitivity-high -t 1500
         else
             touch "$PAUSE_FILE"
-            notify-send "Nemotron STT" "Status: PAUSED" -i microphone-sensitivity-muted -t 2000
+            notify-send "Nemotron STT" "Status: PAUSED (Software Mute)" -i microphone-sensitivity-muted -t 1500
         fi
     else
-        notify-send "Nemotron STT" "Engine is OFF. Press F4 to start first." -i dialog-warning -t 3000
+        notify-send "Nemotron STT" "Engine is OFF. Press SHIFT + F4 to start." -i dialog-warning -t 3000
     fi
 }
 
@@ -92,15 +101,18 @@ override_dictation() {
     fi
 }
 
-# Toggle Logic
-if [ "$1" == "--pause" ]; then
-    pause_dictation
+# Command Line Routing
+if [ "$1" == "--power" ] || [ "$1" == "--toggle-power" ]; then
+    toggle_power
+elif [ "$1" == "--pause" ] || [ "$1" == "--toggle-pause" ]; then
+    toggle_pause
 elif [ "$1" == "--toggle-override" ]; then
     override_dictation
 elif [ "$1" == "--start" ]; then
     start_dictation
-elif pgrep -f "$SCRIPT_NAME" > /dev/null; then
+elif [ "$1" == "--stop" ]; then
     stop_dictation
 else
-    start_dictation
+    # Default without args: Software Pause Toggle (F4)
+    toggle_pause
 fi

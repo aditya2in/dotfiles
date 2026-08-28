@@ -2147,3 +2147,8 @@ sudo systemctl stop sleep-enforcer.timer
 agy
 shutdown -h now
 agy
+~/DOTfiles/scripts/speech_recognition/nemotron_dictation/run_official_test.sh
+shutdown -h now
+opencode
+sudo systemctl stop sleep-enforcer.timer 
+agy
