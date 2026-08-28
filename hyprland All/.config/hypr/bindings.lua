@@ -9,7 +9,7 @@
 -- 1. Custom Application Overrides
 o.bind("SUPER + ALT + RETURN", "Tmux", "env WAYLAND_DISPLAY= DISPLAY=:1 wezterm start --always-new-process --cwd \"$(omarchy-cmd-terminal-cwd)\"")
 o.bind("SUPER + SHIFT + W", "Typora", "uwsm-app -- typora --enable-wayland-ime")
-o.bind("SUPER + SHIFT + T", "Activity", "omarchy-launch-tui btop")
+o.bind("SUPER + SHIFT + T", "Activity", "uwsm-app -- ghostty --class=org.omarchy.btop --font-size=10 -e btop")
 o.bind("SUPER + Z", "Hyprshot Region", "hyprshot -m region")
 
 -- 2. Scratchpad Window Manager
