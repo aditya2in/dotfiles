@@ -7,26 +7,20 @@
           "id": "omarchy.indicators"
         },
         {
-          "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/shell_status.sh",
-          "id": "voxtype",
+          "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/shell_status.sh",
+          "id": "nemotron_stt",
           "interval": 1,
-          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/VoxType/smart_voxtype.sh",
-          "tooltip": "VoxType (F2)",
+          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh --power",
+          "tooltip": "Nemotron STT (F4)",
           "type": "command"
         },
         {
+          "id": "omarchy.clock",
           "format": "dddd HH:mm",
           "formatAlt": "d MMMM 'W'ww yyyy",
-          "id": "omarchy.clock",
-          "verticalFormat": "HH\n—\nmm"
-        },
-        {
-          "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/waybar_status.sh",
-          "id": "whisper",
-          "interval": 1,
-          "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/whisper_turbo_stt/toggle_dictation.sh",
-          "tooltip": "Whisper STT",
-          "type": "command"
+          "verticalFormat": "HH\n—\nmm",
+          "birthYear": 1995,
+          "lifeExpectancy": 75
         },
         {
           "id": "omarchy.keyboard-layout"
@@ -73,7 +67,7 @@
           "fontSize": 13,
           "id": "gamemode",
           "interval": 2,
-          "onClick": "/home/adityaws/DOTfiles/scripts/monitor-switch.sh",
+          "onClick": "/home/adityaws/DOTfiles/scripts/gamemode_toggle.sh",
           "tooltip": "Toggle Game Mode",
           "type": "command"
         },
