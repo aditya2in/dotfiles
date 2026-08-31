@@ -141,29 +141,7 @@ Item {
 
   Rectangle {
     anchors.fill: parent
-    color: Color.background
-
-    Image {
-      id: wallpaper
-      anchors.fill: parent
-      source: root.loadBackground ? root.fileUrl(root.backgroundPath) : ""
-      fillMode: Image.PreserveAspectCrop
-      asynchronous: true
-      cache: false
-      sourceSize.width: width
-      sourceSize.height: height
-    }
-
-    MultiEffect {
-      anchors.fill: wallpaper
-      source: wallpaper
-      autoPaddingEnabled: false
-      blurEnabled: root.loadBackground && wallpaper.status === Image.Ready
-      blur: 1.0
-      blurMax: 128
-      blurMultiplier: 1.25
-      contrast: -0.08
-    }
+    color: "#08080c"
 
     MouseArea {
       anchors.fill: parent

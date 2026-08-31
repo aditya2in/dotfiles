@@ -9,9 +9,9 @@ Item {
   property real cardWidth: 160
   property real cardHeight: 230
   property real cardRadius: Math.max(8, cardWidth * 0.08)
-  property color cardBackground: "#181825"
-  property color cardBorderColor: "#313244"
-  property color textColor: "#cdd6f4"
+  property color cardBackground: "#14141e"
+  property color cardBorderColor: "#2a2a3e"
+  property color textColor: "#f5f5fa"
   property real fontSize: Math.floor(cardHeight * 0.62)
   property int animationDuration: 300
 
@@ -24,7 +24,7 @@ Item {
     }
   }
 
-  // Background card base with subtle drop shadow border
+  // Background card base with subtle mechanical card border
   Rectangle {
     anchors.fill: parent
     radius: root.cardRadius
@@ -169,7 +169,7 @@ Item {
     anchors.centerIn: parent
     width: parent.width
     height: Math.max(2, Math.round(root.cardHeight * 0.01))
-    color: "#11111b"
+    color: "#08080c"
     z: 10
   }
 
