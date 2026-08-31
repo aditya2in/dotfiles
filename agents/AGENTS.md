@@ -169,3 +169,15 @@ The user interacts using a high-powered dynamic microphone and a real-time STT t
 3. "olx" -> Used market / pre-owned GPU purchases
 4. Automatically align phonetic/homophone sound-alikes to hostnames, paths, and configs.
 
+## GUI Application & Browser Launching (Wayland / Hyprland Environment)
+When opening URLs in the user's browser (e.g. Brave) or launching GUI applications from subshells, the AI MUST explicitly supply the Wayland session environment variables (`WAYLAND_DISPLAY=wayland-1` and `XDG_RUNTIME_DIR=/run/user/1000`). Subshells run in isolated headless contexts without these graphical variables, which causes GUI commands to silently fail or drop requests.
+
+### Mandatory Working Example:
+```bash
+# Open URLs directly into the active Brave browser session:
+for url in "https://github.com/rodrigojacarei/omarchy-pomodoro" "https://github.com/crmne/omarchy-hyprmoncfg"; do
+  WAYLAND_DISPLAY=wayland-1 XDG_RUNTIME_DIR=/run/user/1000 xdg-open "$url"
+done
+```
+
+

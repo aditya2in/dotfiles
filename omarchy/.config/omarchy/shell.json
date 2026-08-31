@@ -2,10 +2,15 @@
   "bar": {
     "centerAnchor": "omarchy.clock",
     "layout": {
-      "center": [
+      "left": [
         {
-          "id": "omarchy.indicators"
+          "id": "omarchy.menu"
         },
+        {
+          "id": "omarchy.workspaces"
+        }
+      ],
+      "center": [
         {
           "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/shell_status.sh",
           "id": "nemotron_stt",
@@ -13,6 +18,9 @@
           "onClick": "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh --power",
           "tooltip": "Nemotron STT (F4)",
           "type": "command"
+        },
+        {
+          "id": "omarchy.indicators"
         },
         {
           "id": "omarchy.clock",
@@ -23,38 +31,21 @@
           "lifeExpectancy": 75
         },
         {
-          "id": "omarchy.keyboard-layout"
+          "id": "omarchy.weather"
         },
         {
-          "id": "omarchy.weather"
+          "id": "omarchy.keyboard-layout"
         },
         {
           "id": "omarchy-pomodoro",
           "showIconInBar": true,
           "autoStartBreaks": true,
           "showOnlyWhenRunning": false
-        },
-        {
-          "id": "omarchy.system-update"
-        }
-      ],
-      "left": [
-        {
-          "id": "omarchy.menu"
-        },
-        {
-          "id": "omarchy.workspaces"
         }
       ],
       "right": [
         {
-          "exec": "/home/adityaws/DOTfiles/scripts/net_graph.sh",
-          "fontSize": 12,
-          "id": "custom_net",
-          "interval": 2,
-          "onClick": "omarchy-launch-or-focus org.omarchy.nload 'ghostty --class=org.omarchy.nload --font-size=10 -e nload'",
-          "tooltip": "Network Flow",
-          "type": "command"
+          "id": "jankeesvw.notification-center"
         },
         {
           "exec": "/home/adityaws/DOTfiles/scripts/cpu_status.sh",
@@ -66,7 +57,13 @@
           "type": "command"
         },
         {
-          "id": "omarchy.tray"
+          "exec": "/home/adityaws/DOTfiles/scripts/net_graph.sh",
+          "fontSize": 12,
+          "id": "custom_net",
+          "interval": 2,
+          "onClick": "omarchy-launch-or-focus org.omarchy.nload 'ghostty --class=org.omarchy.nload --font-size=10 -e nload'",
+          "tooltip": "Network Flow",
+          "type": "command"
         },
         {
           "exec": "/home/adityaws/DOTfiles/scripts/gamemode_status.sh",
@@ -87,7 +84,19 @@
           "type": "command"
         },
         {
+          "id": "omakdeconnect"
+        },
+        {
+          "id": "crmne.hyprmoncfg"
+        },
+        {
+          "id": "omarchy.system-update"
+        },
+        {
           "id": "omarchy.agents"
+        },
+        {
+          "id": "omarchy.tray"
         },
         {
           "id": "omarchy.bluetooth"
@@ -97,9 +106,6 @@
         },
         {
           "id": "omarchy.audio"
-        },
-        {
-          "id": "omarchy.monitor"
         },
         {
           "id": "omarchy.power"

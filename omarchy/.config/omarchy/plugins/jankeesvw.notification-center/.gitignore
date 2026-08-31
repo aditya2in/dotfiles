@@ -1,0 +1,7 @@
+# Nothing anybody was sent belongs in this tree. The archive lives in
+# ~/.local/state/omarchy-notification-center/, well outside it, but a stray
+# copy is an easy thing to make and a hard thing to take back out of a public
+# history.
+archive.jsonl
+*.jsonl
+*.local.*
