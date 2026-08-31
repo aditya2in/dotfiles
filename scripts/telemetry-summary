@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+"""
+Telemetry Summary & Forensic Analyzer
+Reads the latest gaming telemetry session and displays peak/avg metrics and the final seconds before termination.
+"""
+
+import sys
+import os
+import glob
+import csv
+import argparse
+
+LOG_DIR = os.path.expanduser("~/.local/share/gaming_telemetry")
+
+def get_latest_log():
+    logs = sorted(glob.glob(os.path.join(LOG_DIR, "telemetry_*.csv")), key=os.path.getmtime)
+    return logs[-1] if logs else None
+
+def list_logs():
+    logs = sorted(glob.glob(os.path.join(LOG_DIR, "telemetry_*.csv")), key=os.path.getmtime, reverse=True)
+    if not logs:
+        print("No telemetry logs found in", LOG_DIR)
+        return
+    print("Available Telemetry Logs:")
+    for log in logs[:10]:
+        size_kb = os.path.getsize(log) / 1024
+        print(f"  • {os.path.basename(log)} ({size_kb:.1f} KB)")
+
+def analyze_log(filepath, tail_count=10):
+    if not os.path.exists(filepath):
+        print(f"Error: Log file '{filepath}' not found.")
+        return
+
+    rows = []
+    with open(filepath, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append(row)
+
+    if not rows:
+        print(f"Log file {os.path.basename(filepath)} is empty.")
+        return
+
+    # Extract statistics
+    gpu_temps = [float(r["gpu_temp_c"]) for r in rows if r.get("gpu_temp_c")]
+    gpu_powers = [float(r["gpu_power_w"]) for r in rows if r.get("gpu_power_w")]
+    cpu_temps = [float(r["cpu_pkg_temp_c"]) for r in rows if r.get("cpu_pkg_temp_c")]
+    vrams = [float(r["vram_used_mb"]) for r in rows if r.get("vram_used_mb")]
+    rams = [float(r["ram_used_mb"]) for r in rows if r.get("ram_used_mb")]
+
+    start_time = rows[0]["timestamp_ist"]
+    end_time = rows[-1]["timestamp_ist"]
+    game_title = rows[0].get("game_name", "Unknown Game")
+    total_samples = len(rows)
+
+    print("\n=======================================================")
+    print(f"🎮 Session Report: {game_title}")
+    print(f"📅 Start: {start_time} IST  |  End: {end_time} IST")
+    print(f"⏱️ Duration: {total_samples} samples ({total_samples // 60}m {total_samples % 60}s)")
+    print("=======================================================")
+    print("📊 Metric Summary:")
+    if gpu_temps:
+        print(f"  • GPU Temp:      Min {min(gpu_temps):.0f}°C | Avg {sum(gpu_temps)/len(gpu_temps):.1f}°C | Peak {max(gpu_temps):.0f}°C")
+    if gpu_powers:
+        print(f"  • GPU Power:     Min {min(gpu_powers):.1f}W | Avg {sum(gpu_powers)/len(gpu_powers):.1f}W | Peak {max(gpu_powers):.1f}W")
+    if cpu_temps:
+        print(f"  • CPU Package:   Min {min(cpu_temps):.0f}°C | Avg {sum(cpu_temps)/len(cpu_temps):.1f}°C | Peak {max(cpu_temps):.0f}°C")
+    if vrams:
+        print(f"  • VRAM Usage:    Peak {max(vrams):.0f} MB")
+    if rams:
+        print(f"  • System RAM:    Peak {max(rams):.0f} MB")
+
+    print(f"\n🔍 Final {min(tail_count, len(rows))} Seconds Before Session End / Power Cut:")
+    print("-----------------------------------------------------------------------------------------")
+    print(f"{'Time (IST)':<9} | {'Game':<12} | {'GPU °C':<6} | {'GPU (W)':<7} | {'Fan%':<4} | {'CPU °C':<6} | {'RAM (MB)':<8}")
+    print("-----------------------------------------------------------------------------------------")
+    for r in rows[-tail_count:]:
+        t = r["timestamp_ist"].split()[-1]
+        g = r.get("game_name", "")[:12]
+        gt = r.get("gpu_temp_c", "")
+        gp = r.get("gpu_power_w", "")
+        gf = r.get("gpu_fan_pct", "")
+        ct = r.get("cpu_pkg_temp_c", "")
+        rm = r.get("ram_used_mb", "")
+        print(f"{t:<9} | {g:<12} | {gt:<6} | {gp:<7} | {gf:<4} | {ct:<6} | {rm:<8}")
+    print("-----------------------------------------------------------------------------------------\n")
+
+def main():
+    parser = argparse.ArgumentParser(description="Telemetry Summary & Forensic Analyzer")
+    parser.add_argument("-f", "--file", help="Specific CSV log file to analyze")
+    parser.add_argument("-n", "--tail", type=int, default=10, help="Number of final seconds to display (default: 10)")
+    parser.add_argument("-l", "--list", action="store_true", help="List available recorded logs")
+
+    args = parser.parse_args()
+
+    if args.list:
+        list_logs()
+        return
+
+    target_file = args.file if args.file else get_latest_log()
+    if not target_file:
+        print("No telemetry sessions recorded yet in ~/.local/share/gaming_telemetry/")
+        return
+
+    analyze_log(target_file, tail_count=args.tail)
+
+if __name__ == "__main__":
+    main()
