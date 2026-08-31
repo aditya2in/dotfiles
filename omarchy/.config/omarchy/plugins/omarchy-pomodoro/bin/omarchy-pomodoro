@@ -5,6 +5,11 @@
 
 set -euo pipefail
 
+if [[ -z "${WAYLAND_DISPLAY:-}" ]]; then
+  socket=$(ls -t "${XDG_RUNTIME_DIR:-/run/user/$UID}"/wayland-[0-9]* 2>/dev/null | grep -v '\.lock$' | head -n1)
+  [[ -n $socket ]] && export WAYLAND_DISPLAY=${socket##*/}
+fi
+
 usage() {
   cat <<EOF
 Usage: omarchy-pomodoro [command] [args...]

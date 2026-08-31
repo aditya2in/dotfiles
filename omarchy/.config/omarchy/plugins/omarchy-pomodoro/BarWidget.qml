@@ -29,6 +29,9 @@ BarWidget {
   property int totalSeconds: durationForPhase(Model.PHASE_WORK)
   property int timeLeft: totalSeconds
 
+  property bool isMasterTimer: false
+  property bool syncingFromShared: false
+
   readonly property bool isRunning: state === Model.STATE_RUNNING
   readonly property bool isPaused: state === Model.STATE_PAUSED
   readonly property bool isIdle: state === Model.STATE_IDLE
@@ -60,30 +63,42 @@ BarWidget {
     return workMinutes * 60
   }
 
+  function claimMaster() {
+    isMasterTimer = true
+  }
+
   function start() {
+    claimMaster()
     if (timeLeft <= 0) {
       timeLeft = durationForPhase(phase)
       totalSeconds = timeLeft
     }
     state = Model.STATE_RUNNING
+    broadcastState()
   }
 
   function pause() {
+    claimMaster()
     state = Model.STATE_PAUSED
+    broadcastState()
   }
 
   function togglePlayPause() {
+    claimMaster()
     if (isRunning) pause()
     else start()
   }
 
   function reset() {
+    claimMaster()
     state = Model.STATE_IDLE
     totalSeconds = durationForPhase(phase)
     timeLeft = totalSeconds
+    broadcastState()
   }
 
   function setPhase(newPhase, autoStart) {
+    claimMaster()
     phase = newPhase
     totalSeconds = durationForPhase(newPhase)
     timeLeft = totalSeconds
@@ -92,18 +107,22 @@ BarWidget {
     } else {
       state = Model.STATE_IDLE
     }
+    broadcastState()
   }
 
   function skipPhase() {
+    claimMaster()
     var nextInfo = Model.nextPhaseInfo(phase, completedSessions, longBreakInterval)
     completedSessions = nextInfo.completedSessions
     setPhase(nextInfo.nextPhase, false)
   }
 
   function adjustTime(secondsDelta) {
+    claimMaster()
     var next = Model.clamp(timeLeft + secondsDelta, 5, 7200)
     timeLeft = next
     if (next > totalSeconds) totalSeconds = next
+    broadcastState()
   }
 
   function finishSession() {
@@ -138,6 +157,26 @@ BarWidget {
     setPhase(nextPhase, autoStart)
   }
 
+  function broadcastState() {
+    if (syncingFromShared) return
+    var isBreak = (phase === Model.PHASE_SHORT_BREAK || phase === Model.PHASE_LONG_BREAK)
+    var stateJson = JSON.stringify({
+      phase: phase,
+      phaseTitle: Model.phaseTitle(phase),
+      phaseIcon: Model.phaseIcon(phase),
+      state: state,
+      timeLeft: timeLeft,
+      totalSeconds: totalSeconds,
+      completedSessions: completedSessions,
+      longBreakInterval: longBreakInterval,
+      progress: progress,
+      timeString: timeString,
+      isBreak: isBreak,
+      isRunning: isRunning
+    })
+    Quickshell.execDetached(["bash", "-c", "echo '" + stateJson.replace(/'/g, "'\\''") + "' > \"${XDG_RUNTIME_DIR:-/tmp}/omarchy-pomodoro-state.json\""])
+  }
+
   function tick() {
     if (timeLeft > 1) {
       timeLeft -= 1
@@ -145,18 +184,50 @@ BarWidget {
       timeLeft = 0
       finishSession()
     }
+    broadcastState()
   }
 
   function resetSessionsCount() {
+    claimMaster()
     completedSessions = 0
+    broadcastState()
   }
 
-  // 1-second interval timer
+  // Multi-Monitor Synchronization Watcher
+  FileView {
+    id: sharedStateFile
+    path: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/omarchy-pomodoro-state.json"
+    watchChanges: true
+    printErrors: false
+    onFileChanged: reload()
+    onLoaded: root.syncFromSharedState(text())
+  }
+
+  function syncFromSharedState(raw) {
+    if (isMasterTimer) return
+    var content = String(raw || "").trim()
+    if (!content) return
+    try {
+      var d = JSON.parse(content)
+      if (!d) return
+      syncingFromShared = true
+      if (d.phase !== undefined && phase !== d.phase) phase = d.phase
+      if (d.state !== undefined && state !== d.state) state = d.state
+      if (d.timeLeft !== undefined && timeLeft !== d.timeLeft) timeLeft = d.timeLeft
+      if (d.totalSeconds !== undefined && totalSeconds !== d.totalSeconds) totalSeconds = d.totalSeconds
+      if (d.completedSessions !== undefined && completedSessions !== d.completedSessions) completedSessions = d.completedSessions
+      syncingFromShared = false
+    } catch (e) {
+      syncingFromShared = false
+    }
+  }
+
+  // 1-second interval timer (runs on master instance)
   Timer {
     id: countdownTimer
     interval: 1000
     repeat: true
-    running: root.isRunning
+    running: root.isRunning && root.isMasterTimer
     onTriggered: root.tick()
   }
 
@@ -196,7 +267,6 @@ BarWidget {
   onBarChanged: injectPanel()
   onSettingsChanged: {
     injectPanel()
-    // If idle, refresh current total seconds based on possibly updated settings
     if (isIdle) {
       totalSeconds = durationForPhase(phase)
       timeLeft = totalSeconds
