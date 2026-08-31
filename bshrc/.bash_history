@@ -2152,3 +2152,4 @@ shutdown -h now
 opencode
 sudo systemctl stop sleep-enforcer.timer 
 agy
+sudo systemctl stop sleep-enforcer.timer 

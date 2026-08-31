@@ -20,4 +20,4 @@ elif [ "$CLASS" == "interrupted" ]; then
     COLOR="#89b4fa" # Blue
 fi
 
-echo "{\"text\": \"<font color='$COLOR'>$TEXT</font>\", \"class\": \"$CLASS\", \"tooltip\": \"$TOOLTIP\"}"
+echo "{\"text\": \"$TEXT\", \"class\": \"$CLASS\", \"tooltip\": \"$TOOLTIP\"}"

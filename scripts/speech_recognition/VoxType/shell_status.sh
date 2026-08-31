@@ -15,4 +15,4 @@ elif [ "$CLASS" == "recording" ]; then
     COLOR="#f38ba8" # Red
 fi
 
-echo "{\"text\": \"<font color='$COLOR'>$TEXT</font>\", \"class\": \"$CLASS\", \"tooltip\": \"$TOOLTIP\"}"
+echo "{\"text\": \"$TEXT\", \"class\": \"$CLASS\", \"tooltip\": \"$TOOLTIP\"}"

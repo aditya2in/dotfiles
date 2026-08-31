@@ -29,4 +29,4 @@ else
     TOOLTIP="Nemotron STT: OFF (Click or Shift+F4 to Power On)"
 fi
 
-echo "{\"text\": \"<font color='$COLOR'>$TEXT</font>\", \"class\": \"$CLASS\", \"tooltip\": \"$TOOLTIP\"}"
+echo "{\"text\": \"$TEXT\", \"class\": \"$CLASS\", \"tooltip\": \"$TOOLTIP\"}"

@@ -15,4 +15,4 @@ if [ "$total_d" -eq 0 ]; then
 else
     usage=$(((total_d - idle_d) * 100 / total_d))
 fi
-echo "{\"text\": \"󰻠 <font color='#89b4fa'>${usage}%</font>\", \"tooltip\": \"CPU Usage: ${usage}%\"}"
+echo "{\"text\": \"󰻠 ${usage}%\", \"tooltip\": \"CPU Usage: ${usage}%\"}"

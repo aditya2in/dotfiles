@@ -29,6 +29,12 @@
           "id": "omarchy.weather"
         },
         {
+          "id": "omarchy-pomodoro",
+          "showIconInBar": true,
+          "autoStartBreaks": true,
+          "showOnlyWhenRunning": false
+        },
+        {
           "id": "omarchy.system-update"
         }
       ],
