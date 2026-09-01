@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
@@ -39,6 +40,9 @@ Item {
   property bool pomodoroIsBreak: false
   property bool pomodoroIsRunning: false
 
+  property var breakTasks: []
+  readonly property bool isUltrawideDualPane: (root.width > 2000 && root.pomodoroIsBreak)
+
   property string systemClockString: "00:00"
   property string systemDateString: ""
 
@@ -73,6 +77,25 @@ Item {
       passwordInput.text = root.passwordText
     }
     syncingPasswordText = false
+  }
+
+  function parseBreakChecklist(raw) {
+    var rawText = (typeof raw === "string") ? raw : (breakChecklistFile.loaded ? breakChecklistFile.text() : "")
+    var tasks = []
+    if (!rawText) {
+      breakTasks = []
+      return
+    }
+    var lines = String(rawText).split("\n")
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim()
+      // Match unchecked markdown tasks: - [ ] <task>
+      var m = line.match(/^-\s*\[\s*\]\s+(.+)/)
+      if (m && m[1]) {
+        tasks.push(m[1].trim())
+      }
+    }
+    breakTasks = tasks
   }
 
   function updatePomodoroState(raw) {
@@ -111,6 +134,7 @@ Item {
     syncPasswordText()
     updateSystemClock()
     updatePomodoroState()
+    parseBreakChecklist()
     if (inputEnabled) Qt.callLater(forcePasswordFocus)
   }
 
@@ -121,6 +145,15 @@ Item {
     printErrors: false
     onFileChanged: reload()
     onLoaded: root.updatePomodoroState(text())
+  }
+
+  FileView {
+    id: breakChecklistFile
+    path: Quickshell.env("HOME") + "/Obsidian/All Things/break_routine.md"
+    watchChanges: true
+    printErrors: false
+    onFileChanged: reload()
+    onLoaded: root.parseBreakChecklist(text())
   }
 
   Timer {
@@ -150,15 +183,136 @@ Item {
       onPositionChanged: root.wakeRequested()
     }
 
-    // --- Colossal Responsive 3D Flip Clock (Dominates Top/Center 88% of Screen) ---
+    // --- Left Pane: Live Break Action Checklist (Ultrawide Landscape Only) ---
+    Rectangle {
+      id: checklistPanel
+      visible: root.isUltrawideDualPane
+      width: Math.min(1050, Math.round(root.width * 0.34))
+      anchors.left: parent.left
+      anchors.leftMargin: 70
+      anchors.top: parent.top
+      anchors.topMargin: 40
+      anchors.bottom: inputField.top
+      anchors.bottomMargin: 30
+      color: "#101018"
+      border.color: "#252538"
+      border.width: 1.5
+      radius: 18
+      clip: true
+
+      Column {
+        anchors.fill: parent
+        anchors.margins: 28
+        spacing: 18
+
+        // Panel Header
+        Row {
+          width: parent.width
+          spacing: 12
+
+          Text {
+            text: "☕"
+            font.pixelSize: 26
+            verticalAlignment: Text.AlignVCenter
+          }
+
+          Text {
+            text: "BREAK ACTION LIST"
+            color: "#f5f5fa"
+            font.family: Style.font.family
+            font.pixelSize: 22
+            font.bold: true
+            verticalAlignment: Text.AlignVCenter
+          }
+
+          Item { width: 1; height: 1; Layout.fillWidth: true }
+
+          Rectangle {
+            anchors.verticalCenter: parent.verticalCenter
+            height: 28
+            width: taskBadgeText.implicitWidth + 20
+            color: "#1e3a29"
+            border.color: "#a6e3a1"
+            border.width: 1
+            radius: 14
+
+            Text {
+              id: taskBadgeText
+              anchors.centerIn: parent
+              text: root.breakTasks.length + " Pending"
+              color: "#a6e3a1"
+              font.family: Style.font.family
+              font.pixelSize: 13
+              font.bold: true
+            }
+          }
+        }
+
+        Rectangle {
+          width: parent.width
+          height: 1
+          color: "#252538"
+        }
+
+        // Checklist Items
+        ListView {
+          width: parent.width
+          height: parent.height - 70
+          clip: true
+          spacing: 12
+          model: root.breakTasks
+
+          delegate: Rectangle {
+            width: parent.width
+            height: Math.max(52, taskTextItem.implicitHeight + 20)
+            color: "#161622"
+            border.color: "#2a2a3e"
+            border.width: 1
+            radius: 12
+
+            Row {
+              anchors.fill: parent
+              anchors.margins: 14
+              spacing: 14
+
+              Text {
+                text: "○"
+                color: "#a6e3a1"
+                font.family: Style.font.family
+                font.pixelSize: 20
+                font.bold: true
+                anchors.verticalCenter: parent.verticalCenter
+              }
+
+              Text {
+                id: taskTextItem
+                width: parent.width - 40
+                text: modelData
+                color: "#f5f5fa"
+                font.family: Style.font.family
+                font.pixelSize: 17
+                wrapMode: Text.WordWrap
+                anchors.verticalCenter: parent.verticalCenter
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // --- Colossal Responsive 3D Flip Clock ---
     FlipClock {
       id: flipClock
       anchors.top: parent.top
       anchors.topMargin: 20
       anchors.bottom: inputField.top
       anchors.bottomMargin: 24
-      anchors.horizontalCenter: parent.horizontalCenter
-      availableWidth: root.width
+      anchors.left: root.isUltrawideDualPane ? checklistPanel.right : undefined
+      anchors.leftMargin: root.isUltrawideDualPane ? 40 : 0
+      anchors.right: root.isUltrawideDualPane ? parent.right : undefined
+      anchors.rightMargin: root.isUltrawideDualPane ? 70 : 0
+      anchors.horizontalCenter: root.isUltrawideDualPane ? undefined : parent.horizontalCenter
+      availableWidth: root.isUltrawideDualPane ? Math.round(root.width * 0.58) : root.width
       availableHeight: Math.max(300, root.height - root.fieldHeight - 70)
 
       timeString: root.pomodoroIsRunning ? root.pomodoroTimeString : root.systemClockString

@@ -21,6 +21,8 @@ BarWidget {
   readonly property bool showTimerInBar: setting("showTimerInBar", true)
   readonly property bool showIconInBar: setting("showIconInBar", true)
   readonly property bool showOnlyWhenRunning: setting("showOnlyWhenRunning", false)
+  readonly property bool autoStartOnBoot: setting("autoStartOnBoot", true)
+  readonly property string home: Quickshell.env("HOME")
 
   // Pomodoro State
   property string phase: Model.PHASE_WORK
@@ -67,6 +69,13 @@ BarWidget {
     isMasterTimer = true
   }
 
+  readonly property string soundDispatcher: home + "/DOTfiles/scripts/Pomodoro_and_LockScreen_Integration/pomodoro_sound.sh"
+
+  function playSound(action) {
+    if (!soundEnabled) return
+    Quickshell.execDetached([soundDispatcher, action])
+  }
+
   function start() {
     claimMaster()
     if (timeLeft <= 0) {
@@ -74,12 +83,14 @@ BarWidget {
       totalSeconds = timeLeft
     }
     state = Model.STATE_RUNNING
+    playSound("start")
     broadcastState()
   }
 
   function pause() {
     claimMaster()
     state = Model.STATE_PAUSED
+    playSound("stop")
     broadcastState()
   }
 
@@ -94,6 +105,7 @@ BarWidget {
     state = Model.STATE_IDLE
     totalSeconds = durationForPhase(phase)
     timeLeft = totalSeconds
+    playSound("stop")
     broadcastState()
   }
 
@@ -104,6 +116,7 @@ BarWidget {
     timeLeft = totalSeconds
     if (autoStart) {
       state = Model.STATE_RUNNING
+      playSound("start")
     } else {
       state = Model.STATE_IDLE
     }
@@ -146,11 +159,11 @@ BarWidget {
     }
 
     // Audio Chime
-    if (soundEnabled) {
-      Quickshell.execDetached([
-        "paplay",
-        "/usr/share/sounds/freedesktop/stereo/complete.oga"
-      ])
+    playSound("stop")
+
+    // Automatic Lock on Break Start
+    if (oldPhase === Model.PHASE_WORK && (nextPhase === Model.PHASE_SHORT_BREAK || nextPhase === Model.PHASE_LONG_BREAK)) {
+      Quickshell.execDetached(["omarchy-system-lock"])
     }
 
     var autoStart = (nextPhase === Model.PHASE_WORK) ? autoStartWork : autoStartBreaks
@@ -180,6 +193,18 @@ BarWidget {
   function tick() {
     if (timeLeft > 1) {
       timeLeft -= 1
+      if (phase === Model.PHASE_WORK && timeLeft === 5) {
+        playSound("grace")
+        if (notifyEnabled) {
+          Quickshell.execDetached([
+            "omarchy-notification-send",
+            "-g", "🔒",
+            "-u", "critical",
+            "Focus Session Complete in 5s",
+            "Break starting — auto-locking desktop in 5 seconds..."
+          ])
+        }
+      }
     } else {
       timeLeft = 0
       finishSession()
@@ -229,6 +254,49 @@ BarWidget {
     repeat: true
     running: root.isRunning && root.isMasterTimer
     onTriggered: root.tick()
+  }
+
+  // Native auto-start on boot & crash recovery hook
+  Timer {
+    id: autoStartBootTimer
+    interval: 500
+    repeat: false
+    running: true
+    onTriggered: {
+      if (!root.syncingFromShared && !root.isMasterTimer) {
+        var rawState = sharedStateFile.loaded ? sharedStateFile.text() : ""
+        if (!rawState) {
+          if (root.autoStartOnBoot && root.isIdle) root.start()
+        } else {
+          try {
+            var d = JSON.parse(rawState)
+            if (d && d.isRunning === true && d.timeLeft > 0) {
+              // Crash Recovery: Resume exact in-flight session!
+              root.claimMaster()
+              root.phase = d.phase || Model.PHASE_WORK
+              root.timeLeft = d.timeLeft
+              root.totalSeconds = d.totalSeconds || root.durationForPhase(root.phase)
+              root.completedSessions = d.completedSessions || 0
+              root.state = Model.STATE_RUNNING
+              root.broadcastState()
+            } else if (d && d.state === Model.STATE_PAUSED && d.timeLeft > 0) {
+              // Restore paused session
+              root.claimMaster()
+              root.phase = d.phase || Model.PHASE_WORK
+              root.timeLeft = d.timeLeft
+              root.totalSeconds = d.totalSeconds || root.durationForPhase(root.phase)
+              root.completedSessions = d.completedSessions || 0
+              root.state = Model.STATE_PAUSED
+              root.broadcastState()
+            } else if (root.autoStartOnBoot && root.isIdle) {
+              root.start()
+            }
+          } catch (e) {
+            if (root.autoStartOnBoot && root.isIdle) root.start()
+          }
+        }
+      }
+    }
   }
 
   // Contract for shell.summon / hide / toggle and Bar panel routing
@@ -310,8 +378,9 @@ BarWidget {
     bar: root.bar
     text: root.vertical ? root.verticalBarLabel : root.barLabel
     hasVisualContent: true
-    active: root.isRunning
-    activeColor: Color.accent
+    active: root.isIdle
+    activeColor: "#f38ba8"
+    foreground: root.isIdle ? "#f38ba8" : (root.isRunning ? (root.isBreak ? "#a6e3a1" : "#89b4fa") : (root.bar ? root.bar.barForeground : Color.foreground))
     dimmed: root.isPaused
     horizontalMargin: 8.5
     verticalPadding: 6

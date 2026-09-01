@@ -33,6 +33,47 @@ Item {
   property string lastEventAt: ""
   property bool strandedLock: false
   property bool strandedLockResolved: false
+  property bool pomodoroBreakActive: false
+  readonly property string soundDispatcher: home + "/DOTfiles/scripts/Pomodoro_and_LockScreen_Integration/pomodoro_sound.sh"
+
+  function playSound(action) {
+    Quickshell.execDetached([soundDispatcher, action])
+  }
+
+  function updatePomodoroState(raw) {
+    var rawText = (typeof raw === "string") ? raw : (pomodoroStateFile.loaded ? pomodoroStateFile.text() : "")
+    if (!rawText) {
+      pomodoroBreakActive = false
+      return
+    }
+    try {
+      var d = JSON.parse(rawText)
+      pomodoroBreakActive = (d && d.isBreak === true && d.isRunning === true && d.timeLeft > 0)
+    } catch (e) {
+      pomodoroBreakActive = false
+    }
+  }
+
+  FileView {
+    id: pomodoroStateFile
+    path: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/omarchy-pomodoro-state.json"
+    watchChanges: true
+    printErrors: false
+    onFileChanged: reload()
+    onLoaded: root.updatePomodoroState(text())
+  }
+
+  Timer {
+    id: breakRelockTimer
+    interval: 5000
+    repeat: false
+    onTriggered: {
+      if (root.pomodoroBreakActive && !root.locked) {
+        root.logEvent("break-guardian: auto-relocking")
+        root.beginLock()
+      }
+    }
+  }
 
   readonly property bool locked: lockRequested || sessionLock.locked || sessionLock.secure
   readonly property bool authenticating: authenticatingPassword || fingerprintAuthenticating
@@ -157,6 +198,18 @@ Item {
     sessionLock.locked = false
     logEvent("unlocked")
     runWake()
+
+    if (pomodoroBreakActive) {
+      playSound("block")
+      Quickshell.execDetached([
+        "omarchy-notification-send",
+        "-g", "🔒",
+        "-u", "critical",
+        "Break Is Active!",
+        "Please step away from the computer. Screen will re-lock in 5 seconds!"
+      ])
+      breakRelockTimer.restart()
+    }
   }
 
   function armBlankTimer() {
@@ -176,6 +229,10 @@ Item {
   function submitPassword(value) {
     var password = String(value || "")
     if (!lockRequested || authenticatingPassword || password.length === 0) return
+
+    if (pomodoroBreakActive) {
+      playSound("block")
+    }
 
     runWake()
     pendingPassword = password
