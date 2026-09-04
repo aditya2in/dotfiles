@@ -54,7 +54,7 @@ EOF
 
     hyprctl eval 'hl.monitor({ output = "HDMI-A-1", disabled = true })'
     hyprctl eval 'hl.monitor({ output = "DP-1", disabled = true })'
-    hyprctl eval 'hl.monitor({ output = "DP-2", mode = "3440x1440@60", position = "0x0", scale = 1 })'
+    hyprctl eval 'hl.monitor({ output = "DP-2", mode = "3440x1440@75", position = "0x0", scale = 1 })'
 
     notify-send -a "Game Mode" "🎮 Game Mode ON" "Single Ultrawide Active · F4 & Brave Cleared"
 
@@ -64,10 +64,11 @@ else
     # --------------------------------------------------------------------------
 
     # 1. Restore 3-Monitor Geometry
-    hyprctl eval 'hl.monitor({ output = "DP-2", mode = "3440x1440@60", position = "1080x240", scale = 1, disabled = false })'
+    hyprctl eval 'hl.monitor({ output = "DP-2", mode = "3440x1440@75", position = "1080x240", scale = 1, disabled = false })'
     hyprctl eval 'hl.monitor({ output = "HDMI-A-1", mode = "1920x1080@60", position = "0x0", scale = 1, transform = 1, disabled = false })'
     hyprctl eval 'hl.monitor({ output = "DP-1", mode = "1920x1080@60", position = "4520x0", scale = 1, transform = 3, disabled = false })'
     hyprctl reload
+    xrandr --output DP-2 --primary 2>/dev/null || true
 
     # 2. Restore F4 and Brave from state snapshot
     if [ -f "$STATE_FILE" ]; then

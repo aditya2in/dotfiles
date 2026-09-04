@@ -20,5 +20,8 @@ export MANGOHUD_CONFIGFILE="/home/adityaws/.config/mangohud/MangoHud.conf"
 # Hardware frame rate cap: Lock at 72 FPS (75Hz monitor minus 3 FPS rule for zero tearing & lowest input latency)
 export DXVK_FRAME_RATE=72
 
+# Ensure Ultrawide DP-2 is set as Primary in XWayland so Proton exposes native 3440x1440p in multi-monitor mode
+xrandr --output DP-2 --primary 2>/dev/null || true
+
 # Run the game launcher exactly as Steam intended
 exec "$@"

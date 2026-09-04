@@ -161,11 +161,6 @@ BarWidget {
     // Audio Chime
     playSound("stop")
 
-    // Automatic Lock on Break Start
-    if (oldPhase === Model.PHASE_WORK && (nextPhase === Model.PHASE_SHORT_BREAK || nextPhase === Model.PHASE_LONG_BREAK)) {
-      Quickshell.execDetached(["omarchy-system-lock"])
-    }
-
     var autoStart = (nextPhase === Model.PHASE_WORK) ? autoStartWork : autoStartBreaks
     setPhase(nextPhase, autoStart)
   }
@@ -198,10 +193,10 @@ BarWidget {
         if (notifyEnabled) {
           Quickshell.execDetached([
             "omarchy-notification-send",
-            "-g", "🔒",
-            "-u", "critical",
+            "-g", "☕",
+            "-u", "normal",
             "Focus Session Complete in 5s",
-            "Break starting — auto-locking desktop in 5 seconds..."
+            "Break starting in 5 seconds..."
           ])
         }
       }

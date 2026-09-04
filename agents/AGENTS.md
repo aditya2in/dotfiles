@@ -170,14 +170,15 @@ The user interacts using a high-powered dynamic microphone and a real-time STT t
 4. Automatically align phonetic/homophone sound-alikes to hostnames, paths, and configs.
 
 ## GUI Application & Browser Launching (Wayland / Hyprland Environment)
-When opening URLs in the user's browser (e.g. Brave) or launching GUI applications from subshells, the AI MUST explicitly supply the Wayland session environment variables (`WAYLAND_DISPLAY=wayland-1` and `XDG_RUNTIME_DIR=/run/user/1000`). Subshells run in isolated headless contexts without these graphical variables, which causes GUI commands to silently fail or drop requests.
-
-### Mandatory Working Example:
-```bash
-# Open URLs directly into the active Brave browser session:
-for url in "https://github.com/rodrigojacarei/omarchy-pomodoro" "https://github.com/crmne/omarchy-hyprmoncfg"; do
-  WAYLAND_DISPLAY=wayland-1 XDG_RUNTIME_DIR=/run/user/1000 xdg-open "$url"
-done
-```
-
-
+When opening web URLs, local PDFs, or HTML documents in the user's browser (Brave) or launching GUI applications from subshells:
+1. **Explicit Wayland Environment Variables:** The AI MUST explicitly supply `WAYLAND_DISPLAY=wayland-1` and `XDG_RUNTIME_DIR=/run/user/1000`. Subshells run in isolated headless contexts without these graphical variables, causing GUI commands to fail silently.
+2. **Local File vs. Web URL Launching Mandate:**
+   - **For Local Files (PDFs, HTML files, markdown renders):** DO NOT rely on generic `xdg-open` because `xdg-open` routes to default desktop document viewers (e.g., zathura, evince) instead of Brave. ALWAYS invoke the Brave binary directly:
+     ```bash
+     WAYLAND_DISPLAY=wayland-1 XDG_RUNTIME_DIR=/run/user/1000 /opt/brave-bin/brave "file:///path/to/document.pdf"
+     ```
+   - **For Web URLs (http/https):**
+     ```bash
+     WAYLAND_DISPLAY=wayland-1 XDG_RUNTIME_DIR=/run/user/1000 /opt/brave-bin/brave "https://github.com/example/repo"
+     ```
+   - **No Background Discard (`& >/dev/null`):** Do not send browser IPC commands to background subshells with redirected null streams that terminate before the singleton IPC handshake completes. Call synchronously so the existing browser process confirms: `Opening in existing browser session.`
