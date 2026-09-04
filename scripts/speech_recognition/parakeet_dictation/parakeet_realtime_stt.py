@@ -145,6 +145,11 @@ def inject_text(text, config):
 
     if target == "ghostty_background":
         try:
+            # Auto-snap: Exit tmux copy-mode (scrollback) so speech is never dropped or garbled into blue selection
+            mode_chk = subprocess.run(["tmux", "display-message", "-p", "-t", session, "#{pane_in_mode}"], capture_output=True, text=True)
+            if mode_chk.returncode == 0 and mode_chk.stdout.strip() == "1":
+                subprocess.run(["tmux", "send-keys", "-t", session, "-X", "cancel"], capture_output=True)
+
             set_buf = subprocess.run(["tmux", "set-buffer", text], capture_output=True, text=True)
             if set_buf.returncode == 0:
                 res_paste = subprocess.run(["tmux", "paste-buffer", "-t", session, "-d", "-p"], capture_output=True, text=True)

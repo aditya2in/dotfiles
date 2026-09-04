@@ -17,5 +17,8 @@ fi
 # Force MangoHUD to use our custom configuration file, bypassing Proton sandbox isolation
 export MANGOHUD_CONFIGFILE="/home/adityaws/.config/mangohud/MangoHud.conf"
 
+# Hardware frame rate cap: Lock at 72 FPS (75Hz monitor minus 3 FPS rule for zero tearing & lowest input latency)
+export DXVK_FRAME_RATE=72
+
 # Run the game launcher exactly as Steam intended
 exec "$@"

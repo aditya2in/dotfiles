@@ -1,11 +1,12 @@
 [Unit]
-Description=Set NVIDIA GPU Power Limit to 170W (gpuworker01 - RTX 3080 Ti)
+Description=Set NVIDIA GPU Power Limit (150W) and Clock Clamp (1400MHz) (gpuworker01 - RTX 3080 Ti)
 After=nvidia-persistenced.service
 Wants=nvidia-persistenced.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/nvidia-smi -pl 170
+ExecStart=/usr/bin/nvidia-smi -pl 150
+ExecStart=/usr/bin/nvidia-smi -lgc 210,1400
 RemainAfterExit=yes
 
 [Install]

@@ -205,6 +205,11 @@ def inject_text(text, config):
     # 2. Direct injection into target tmux session (K8)
     if typing_target == "ghostty_background":
         try:
+            # Auto-snap: Exit tmux copy-mode (scrollback) so speech is never dropped or garbled into blue selection
+            mode_chk = subprocess.run(["tmux", "display-message", "-p", "-t", target_session, "#{pane_in_mode}"], capture_output=True, text=True)
+            if mode_chk.returncode == 0 and mode_chk.stdout.strip() == "1":
+                subprocess.run(["tmux", "send-keys", "-t", target_session, "-X", "cancel"], capture_output=True)
+
             res = subprocess.run(["tmux", "send-keys", "-t", target_session, "-l", text], capture_output=True)
             if res.returncode == 0:
                 return
