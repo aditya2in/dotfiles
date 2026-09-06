@@ -11,6 +11,8 @@ Item {
   property int totalCycleSessions: 4
   property bool isBreak: false
   property bool isRunning: false
+  property bool isPaused: false
+  property bool isIdle: false
 
   property real availableWidth: 1000
   property real availableHeight: 800
@@ -56,8 +58,8 @@ Item {
       height: Math.max(40, Math.round(root.cardHeight * 0.09))
       width: badgeRow.implicitWidth + Math.max(36, Math.round(root.cardWidth * 0.18))
       radius: height / 2
-      color: root.isBreak ? "#a6e3a125" : "#89b4fa25"
-      border.color: root.isBreak ? "#a6e3a1" : "#89b4fa"
+      color: root.isBreak ? "#a6e3a125" : (root.isPaused ? "#fab38725" : (root.isIdle ? "#f38ba825" : "#89b4fa25"))
+      border.color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
       border.width: Math.max(1, Math.round(root.cardWidth * 0.008))
 
       Row {
@@ -69,7 +71,7 @@ Item {
           text: root.phaseIcon
           font.family: Style.font.family
           font.pixelSize: Math.max(18, Math.round(root.cardHeight * 0.055))
-          color: root.isBreak ? "#a6e3a1" : "#89b4fa"
+          color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
           verticalAlignment: Text.AlignVCenter
         }
 
@@ -79,7 +81,7 @@ Item {
           font.pixelSize: Math.max(15, Math.round(root.cardHeight * 0.045))
           font.weight: Font.DemiBold
           font.letterSpacing: 2.5
-          color: root.isBreak ? "#a6e3a1" : "#89b4fa"
+          color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
           verticalAlignment: Text.AlignVCenter
         }
       }
@@ -96,7 +98,7 @@ Item {
         cardHeight: root.cardHeight
         fontSize: root.fontSize
         text: root.parsedDigits.m1
-        textColor: root.isBreak ? "#a6e3a1" : "#cdd6f4"
+        textColor: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
       }
 
       // Minute 2
@@ -105,7 +107,7 @@ Item {
         cardHeight: root.cardHeight
         fontSize: root.fontSize
         text: root.parsedDigits.m2
-        textColor: root.isBreak ? "#a6e3a1" : "#cdd6f4"
+        textColor: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
       }
 
       // Colon Divider
@@ -119,13 +121,13 @@ Item {
             width: Math.max(10, Math.round(root.cardWidth * 0.06))
             height: width
             radius: width / 2
-            color: root.isBreak ? "#a6e3a1" : (root.isRunning ? "#89b4fa" : "#6c7086")
+            color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
           }
           Rectangle {
             width: Math.max(10, Math.round(root.cardWidth * 0.06))
             height: width
             radius: width / 2
-            color: root.isBreak ? "#a6e3a1" : (root.isRunning ? "#89b4fa" : "#6c7086")
+            color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
           }
         }
       }
@@ -136,7 +138,7 @@ Item {
         cardHeight: root.cardHeight
         fontSize: root.fontSize
         text: root.parsedDigits.s1
-        textColor: root.isBreak ? "#a6e3a1" : "#cdd6f4"
+        textColor: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
       }
 
       // Second 2
@@ -145,7 +147,7 @@ Item {
         cardHeight: root.cardHeight
         fontSize: root.fontSize
         text: root.parsedDigits.s2
-        textColor: root.isBreak ? "#a6e3a1" : "#cdd6f4"
+        textColor: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
       }
     }
 
@@ -162,10 +164,10 @@ Item {
           height: width
           radius: width / 2
           color: index < (root.completedSessions % root.totalCycleSessions)
-            ? (root.isBreak ? "#a6e3a1" : "#89b4fa")
+            ? (root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa")))
             : "#45475a"
           border.color: index < (root.completedSessions % root.totalCycleSessions)
-            ? (root.isBreak ? "#a6e3a1" : "#89b4fa")
+            ? (root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa")))
             : "#585b70"
           border.width: 1
         }

@@ -40,17 +40,40 @@ Item {
     Quickshell.execDetached([soundDispatcher, action])
   }
 
+  Timer {
+    id: breakRelockTimer
+    interval: 5000
+    repeat: false
+    onTriggered: {
+      if (root.pomodoroBreakActive && !root.locked) {
+        playSound("block")
+        root.beginLock()
+      }
+    }
+  }
+
   function updatePomodoroState(raw) {
     var rawText = (typeof raw === "string") ? raw : (pomodoroStateFile.loaded ? pomodoroStateFile.text() : "")
     if (!rawText) {
       pomodoroBreakActive = false
+      breakRelockTimer.stop()
       return
     }
     try {
       var d = JSON.parse(rawText)
-      pomodoroBreakActive = (d && d.isBreak === true && d.isRunning === true && d.timeLeft > 0)
+      var active = (d && d.isBreak === true && d.isRunning === true && d.state === "running" && d.timeLeft > 0)
+      pomodoroBreakActive = active
+      if (!active) {
+        breakRelockTimer.stop()
+      } else if (!root.locked && !root.lockRequested) {
+        if (!breakRelockTimer.running) {
+          playSound("block")
+          breakRelockTimer.start()
+        }
+      }
     } catch (e) {
       pomodoroBreakActive = false
+      breakRelockTimer.stop()
     }
   }
 
@@ -166,6 +189,9 @@ Item {
     logEvent("lock-requested")
     queueSessionLock()
 
+    // Universal Screen Lock Hook: Trigger F4 pause if dictation is currently listening
+    Quickshell.execDetached(["bash", "-c", "if pgrep -f nemotron_realtime_stt.py >/dev/null && [ ! -f /tmp/nemotron_paused ]; then touch /tmp/nemotron_paused_by_lock; \"" + home + "/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh\"; fi"])
+
     Qt.callLater(function() {
       root.refreshBackground()
       root.refreshFingerprintStatus()
@@ -181,11 +207,21 @@ Item {
     pendingSessionLock = false
     sessionLockStabilizeTimer.stop()
     pendingSessionLockTimer.stop()
+    breakRelockTimer.stop()
     resetAuthenticationState()
     idleBlankTimer.stop()
     sessionLock.locked = false
     logEvent("unlocked")
     runWake()
+
+    // Universal Screen Unlock Hook: Trigger F4 resume if it was paused by screen lock
+    Quickshell.execDetached(["bash", "-c", "if [ -f /tmp/nemotron_paused_by_lock ]; then rm -f /tmp/nemotron_paused_by_lock; if [ -f /tmp/nemotron_paused ]; then \"" + home + "/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh\"; fi; fi"])
+
+    // If unlocked during an active break, arm 5s relock guardian
+    if (pomodoroBreakActive) {
+      playSound("block")
+      breakRelockTimer.start()
+    }
   }
 
   function armBlankTimer() {
@@ -207,6 +243,12 @@ Item {
     if (!lockRequested || authenticatingPassword || password.length === 0) return
 
     runWake()
+
+    // Anti-Unlock Blocker: Play warning chime if break is actively running
+    if (pomodoroBreakActive) {
+      playSound("block")
+    }
+
     pendingPassword = password
     failureMessage = ""
     authenticatingPassword = true
@@ -459,7 +501,7 @@ Item {
     }
     try {
       var d = JSON.parse(rawText)
-      pomodoroInhibitBlank = (d.isBreak === true || d.phase === "short_break" || d.phase === "long_break") && d.isRunning === true
+      pomodoroInhibitBlank = (d && (d.isBreak === true || d.phase === "short_break" || d.phase === "long_break") && d.isRunning === true && d.state === "running" && d.timeLeft > 0)
     } catch(e) {
       pomodoroInhibitBlank = false
     }

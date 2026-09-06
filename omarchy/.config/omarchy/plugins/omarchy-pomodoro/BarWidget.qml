@@ -21,7 +21,7 @@ BarWidget {
   readonly property bool showTimerInBar: setting("showTimerInBar", true)
   readonly property bool showIconInBar: setting("showIconInBar", true)
   readonly property bool showOnlyWhenRunning: setting("showOnlyWhenRunning", false)
-  readonly property bool autoStartOnBoot: setting("autoStartOnBoot", true)
+  readonly property bool autoStartOnBoot: setting("autoStartOnBoot", false)
   readonly property string home: Quickshell.env("HOME")
 
   // Pomodoro State
@@ -31,6 +31,7 @@ BarWidget {
   property int totalSeconds: durationForPhase(Model.PHASE_WORK)
   property int timeLeft: totalSeconds
 
+  readonly property string instanceId: "inst_" + Math.random().toString(36).substring(2, 9)
   property bool isMasterTimer: false
   property bool syncingFromShared: false
 
@@ -42,8 +43,8 @@ BarWidget {
   readonly property string iconString: Model.phaseIcon(phase)
   readonly property string phaseName: Model.phaseTitle(phase)
 
-  // Visibility: can hide on bar when idle if configured
-  visible: !showOnlyWhenRunning || isRunning || isPaused || opened
+  // Visibility: permanently visible on the top bar
+  visible: true
 
   // Label for horizontal bar
   readonly property string barLabel: {
@@ -144,13 +145,14 @@ BarWidget {
     var nextPhase = nextInfo.nextPhase
     completedSessions = nextInfo.completedSessions
 
-    // Desktop Notification
+    // Desktop Notification (Auto-Dismiss in 4 seconds)
     if (notifyEnabled) {
       var headline = Model.phaseNotificationHeadline(oldPhase)
       var desc = Model.phaseNotificationDescription(nextPhase)
       var glyph = Model.phaseIcon(oldPhase)
       Quickshell.execDetached([
         "omarchy-notification-send",
+        "-t", "4000",
         "-g", glyph,
         "-u", "normal",
         headline,
@@ -158,17 +160,23 @@ BarWidget {
       ])
     }
 
-    // Audio Chime
+    // Audio Chime (80% capped)
     playSound("stop")
+
+    // Auto-Lock Desktop when Focus Work ends!
+    if (oldPhase === Model.PHASE_WORK) {
+      Quickshell.execDetached(["omarchy", "system", "lock"])
+    }
 
     var autoStart = (nextPhase === Model.PHASE_WORK) ? autoStartWork : autoStartBreaks
     setPhase(nextPhase, autoStart)
   }
 
   function broadcastState() {
-    if (syncingFromShared) return
+    if (!isMasterTimer || syncingFromShared) return
     var isBreak = (phase === Model.PHASE_SHORT_BREAK || phase === Model.PHASE_LONG_BREAK)
     var stateJson = JSON.stringify({
+      masterId: instanceId,
       phase: phase,
       phaseTitle: Model.phaseTitle(phase),
       phaseIcon: Model.phaseIcon(phase),
@@ -180,7 +188,9 @@ BarWidget {
       progress: progress,
       timeString: timeString,
       isBreak: isBreak,
-      isRunning: isRunning
+      isRunning: isRunning,
+      isPaused: isPaused,
+      isIdle: isIdle
     })
     Quickshell.execDetached(["bash", "-c", "echo '" + stateJson.replace(/'/g, "'\\''") + "' > \"${XDG_RUNTIME_DIR:-/tmp}/omarchy-pomodoro-state.json\""])
   }
@@ -193,6 +203,7 @@ BarWidget {
         if (notifyEnabled) {
           Quickshell.execDetached([
             "omarchy-notification-send",
+            "-t", "4000",
             "-g", "☕",
             "-u", "normal",
             "Focus Session Complete in 5s",
@@ -224,12 +235,16 @@ BarWidget {
   }
 
   function syncFromSharedState(raw) {
-    if (isMasterTimer) return
     var content = String(raw || "").trim()
     if (!content) return
     try {
       var d = JSON.parse(content)
       if (!d) return
+      // If another bar widget published a state change, yield master status immediately
+      if (d.masterId && d.masterId !== root.instanceId) {
+        root.isMasterTimer = false
+      }
+      if (root.isMasterTimer) return
       syncingFromShared = true
       if (d.phase !== undefined && phase !== d.phase) phase = d.phase
       if (d.state !== undefined && state !== d.state) state = d.state
@@ -373,10 +388,10 @@ BarWidget {
     bar: root.bar
     text: root.vertical ? root.verticalBarLabel : root.barLabel
     hasVisualContent: true
-    active: root.isIdle
-    activeColor: "#f38ba8"
-    foreground: root.isIdle ? "#f38ba8" : (root.isRunning ? (root.isBreak ? "#a6e3a1" : "#89b4fa") : (root.bar ? root.bar.barForeground : Color.foreground))
-    dimmed: root.isPaused
+    active: root.isIdle || root.isPaused
+    activeColor: root.isIdle ? "#f38ba8" : (root.isPaused ? "#fab387" : "#89b4fa")
+    foreground: root.isIdle ? "#f38ba8" : (root.isPaused ? "#fab387" : (root.isRunning ? (root.isBreak ? "#a6e3a1" : "#89b4fa") : (root.bar ? root.bar.barForeground : Color.foreground)))
+    dimmed: false
     horizontalMargin: 8.5
     verticalPadding: 6
     tooltipText: ""

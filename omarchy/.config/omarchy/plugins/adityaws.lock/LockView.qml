@@ -39,9 +39,11 @@ Item {
   property int pomodoroLongBreakInterval: 4
   property bool pomodoroIsBreak: false
   property bool pomodoroIsRunning: false
+  property bool pomodoroIsPaused: false
+  property bool pomodoroIsIdle: true
 
   property var breakTasks: []
-  readonly property bool isUltrawideDualPane: (root.width > 2000 && root.pomodoroIsBreak)
+  readonly property bool isUltrawideDualPane: (root.width > 2000 && root.pomodoroIsBreak && root.pomodoroIsRunning)
 
   property string systemClockString: "00:00"
   property string systemDateString: ""
@@ -100,19 +102,33 @@ Item {
 
   function updatePomodoroState(raw) {
     var rawText = (typeof raw === "string") ? raw : (pomodoroStateFile.loaded ? pomodoroStateFile.text() : "")
-    if (!rawText) return
+    if (!rawText) {
+      pomodoroIsRunning = false
+      pomodoroIsPaused = false
+      pomodoroIsIdle = true
+      pomodoroIsBreak = false
+      return
+    }
     try {
       var data = JSON.parse(rawText)
+      var running = (data.isRunning === true && data.state === "running" && data.timeLeft > 0)
+      var paused = (data.isPaused === true || data.state === "paused") && (data.timeLeft > 0)
+      var idle = !running && !paused
       pomodoroPhase = data.phase || "work"
-      pomodoroPhaseTitle = data.phaseTitle || "Focus Session"
-      pomodoroPhaseIcon = data.phaseIcon || "󰔛"
-      pomodoroTimeString = data.timeString || ""
+      pomodoroPhaseTitle = data.phaseTitle || (pomodoroPhase === "work" ? "Focus Session" : "Break")
+      pomodoroPhaseIcon = data.phaseIcon || (pomodoroPhase === "work" ? "󰔛" : "☕")
+      pomodoroTimeString = data.timeString || "25:00"
       pomodoroCompletedSessions = data.completedSessions || 0
       pomodoroLongBreakInterval = data.longBreakInterval || 4
-      pomodoroIsBreak = data.isBreak || false
-      pomodoroIsRunning = data.isRunning || false
+      pomodoroIsBreak = (data.isBreak === true || data.phase === "short_break" || data.phase === "long_break")
+      pomodoroIsRunning = running
+      pomodoroIsPaused = paused
+      pomodoroIsIdle = idle
     } catch (e) {
-      // ignore
+      pomodoroIsRunning = false
+      pomodoroIsPaused = false
+      pomodoroIsIdle = true
+      pomodoroIsBreak = false
     }
   }
 
@@ -181,6 +197,58 @@ Item {
       hoverEnabled: true
       onClicked: { root.wakeRequested(); root.forcePasswordFocus() }
       onPositionChanged: root.wakeRequested()
+    }
+
+    // --- Top-Right Dedicated System Time & Date Pill ---
+    Rectangle {
+      id: systemClockPill
+      anchors.top: parent.top
+      anchors.topMargin: 24
+      anchors.right: parent.right
+      anchors.rightMargin: root.isUltrawideDualPane ? 40 : 28
+      height: 56
+      width: clockRow.implicitWidth + 36
+      color: "#181825ee"
+      border.color: "#313244"
+      border.width: 1.5
+      radius: 28
+      z: 20
+
+      Row {
+        id: clockRow
+        anchors.centerIn: parent
+        spacing: 12
+
+        Text {
+          text: "🕒"
+          font.pixelSize: 20
+          verticalAlignment: Text.AlignVCenter
+        }
+
+        Text {
+          text: root.systemClockString
+          font.family: Style.font.family
+          font.pixelSize: 24
+          font.bold: true
+          color: "#f5f5fa"
+          verticalAlignment: Text.AlignVCenter
+        }
+
+        Rectangle {
+          width: 1.5
+          height: 24
+          color: "#45475a"
+          anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Text {
+          text: root.systemDateString
+          font.family: Style.font.family
+          font.pixelSize: 16
+          color: "#cdd6f4"
+          verticalAlignment: Text.AlignVCenter
+        }
+      }
     }
 
     // --- Left Pane: Live Break Action Checklist (Ultrawide Landscape Only) ---
@@ -261,7 +329,6 @@ Item {
           clip: true
           spacing: 12
           model: root.breakTasks
-
           delegate: Rectangle {
             width: parent.width
             height: Math.max(52, taskTextItem.implicitHeight + 20)
@@ -300,7 +367,7 @@ Item {
       }
     }
 
-    // --- Colossal Responsive 3D Flip Clock ---
+    // --- Colossal Responsive 3D Flip Clock (100% Dedicated to Pomodoro) ---
     FlipClock {
       id: flipClock
       anchors.top: parent.top
@@ -315,13 +382,15 @@ Item {
       availableWidth: root.isUltrawideDualPane ? Math.round(root.width * 0.58) : root.width
       availableHeight: Math.max(300, root.height - root.fieldHeight - 70)
 
-      timeString: root.pomodoroIsRunning ? root.pomodoroTimeString : root.systemClockString
-      phaseTitle: root.pomodoroIsRunning ? root.pomodoroPhaseTitle : root.systemDateString
-      phaseIcon: root.pomodoroIsRunning ? root.pomodoroPhaseIcon : "🕒"
+      timeString: root.pomodoroTimeString || "25:00"
+      phaseTitle: root.pomodoroIsRunning ? root.pomodoroPhaseTitle : (root.pomodoroIsPaused ? (root.pomodoroPhaseTitle + " (Paused)") : (root.pomodoroPhaseTitle + " (Ready)"))
+      phaseIcon: root.pomodoroIsRunning ? root.pomodoroPhaseIcon : (root.pomodoroIsPaused ? "⏸" : root.pomodoroPhaseIcon)
       completedSessions: root.pomodoroCompletedSessions
-      totalCycleSessions: root.pomodoroIsRunning ? root.pomodoroLongBreakInterval : 0
-      isBreak: root.pomodoroIsRunning && root.pomodoroIsBreak
+      totalCycleSessions: root.pomodoroLongBreakInterval
+      isBreak: root.pomodoroIsBreak
       isRunning: root.pomodoroIsRunning
+      isPaused: root.pomodoroIsPaused
+      isIdle: root.pomodoroIsIdle
     }
 
     // --- Sleek Password Input Field (Anchored to Bottom Center) ---

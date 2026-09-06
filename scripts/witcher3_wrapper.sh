@@ -23,5 +23,10 @@ export DXVK_FRAME_RATE=72
 # Ensure Ultrawide DP-2 is set as Primary in XWayland so Proton exposes native 3440x1440p in multi-monitor mode
 xrandr --output DP-2 --primary 2>/dev/null || true
 
+# Enable NVIDIA NVAPI and Reflex
+export PROTON_ENABLE_NVAPI=1
+export PROTON_HIDE_NVIDIA_GPU=0
+export DXVK_NVAPI_ALLOW_OTHER_DRIVERS=1
+
 # Run the game launcher exactly as Steam intended
 exec "$@"

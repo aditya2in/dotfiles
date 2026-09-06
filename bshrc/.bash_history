@@ -2158,3 +2158,4 @@ agy
 agy 
 agy
 agy
+sudo systemctl stop sleep-enforcer.timer 
