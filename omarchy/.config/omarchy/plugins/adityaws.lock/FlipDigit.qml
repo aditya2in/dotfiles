@@ -14,6 +14,17 @@ Item {
   property color textColor: "#f5f5fa"
   property real fontSize: Math.floor(cardHeight * 0.62)
   property int animationDuration: 300
+  property bool isPulsing: false
+  property real digitOpacity: 1.0
+
+  SequentialAnimation {
+    id: pulseAnim
+    running: root.isPulsing
+    loops: Animation.Infinite
+    NumberAnimation { target: root; property: "digitOpacity"; to: 0.05; duration: 400; easing.type: Easing.InOutQuad }
+    NumberAnimation { target: root; property: "digitOpacity"; to: 1.0; duration: 400; easing.type: Easing.InOutQuad }
+    onStopped: root.digitOpacity = 1.0
+  }
 
   width: cardWidth
   height: cardHeight
@@ -56,6 +67,7 @@ Item {
         font.pixelSize: root.fontSize
         font.weight: Font.Bold
         color: root.textColor
+        opacity: root.digitOpacity
       }
     }
   }
@@ -84,6 +96,7 @@ Item {
         font.pixelSize: root.fontSize
         font.weight: Font.Bold
         color: root.textColor
+        opacity: root.digitOpacity
       }
     }
   }
@@ -121,6 +134,7 @@ Item {
         font.pixelSize: root.fontSize
         font.weight: Font.Bold
         color: root.textColor
+        opacity: root.digitOpacity
       }
     }
   }
@@ -160,6 +174,7 @@ Item {
         font.pixelSize: root.fontSize
         font.weight: Font.Bold
         color: root.textColor
+        opacity: root.digitOpacity
       }
     }
   }

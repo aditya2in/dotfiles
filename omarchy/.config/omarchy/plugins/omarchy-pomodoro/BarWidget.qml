@@ -21,7 +21,7 @@ BarWidget {
   readonly property bool showTimerInBar: setting("showTimerInBar", true)
   readonly property bool showIconInBar: setting("showIconInBar", true)
   readonly property bool showOnlyWhenRunning: setting("showOnlyWhenRunning", false)
-  readonly property bool autoStartOnBoot: setting("autoStartOnBoot", false)
+  readonly property bool autoStartOnBoot: setting("autoStartOnBoot", true)
   readonly property string home: Quickshell.env("HOME")
 
   // Pomodoro State

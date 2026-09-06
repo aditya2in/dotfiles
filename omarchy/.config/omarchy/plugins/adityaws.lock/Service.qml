@@ -34,6 +34,7 @@ Item {
   property bool strandedLock: false
   property bool strandedLockResolved: false
   property bool pomodoroBreakActive: false
+  property bool breakOverAlertActive: false
   readonly property string soundDispatcher: home + "/DOTfiles/scripts/Pomodoro_and_LockScreen_Integration/pomodoro_sound.sh"
 
   function playSound(action) {
@@ -52,6 +53,27 @@ Item {
     }
   }
 
+  // Endless Repeating Overdue Alarm (Sound 1: Alert Ringback Pings every 4s, triggered immediately)
+  Timer {
+    id: breakOverAlarmTimer
+    interval: 4000
+    repeat: true
+    running: false
+    onTriggered: {
+      if (root.locked && root.breakOverAlertActive) {
+        root.runWake()
+        playSound("block")
+      } else {
+        breakOverAlarmTimer.stop()
+      }
+    }
+  }
+
+  function stopBreakOverAlert() {
+    breakOverAlarmTimer.stop()
+    breakOverAlertActive = false
+  }
+
   function updatePomodoroState(raw) {
     var rawText = (typeof raw === "string") ? raw : (pomodoroStateFile.loaded ? pomodoroStateFile.text() : "")
     if (!rawText) {
@@ -62,9 +84,16 @@ Item {
     try {
       var d = JSON.parse(rawText)
       var active = (d && d.isBreak === true && d.isRunning === true && d.state === "running" && d.timeLeft > 0)
+      var wasBreakActive = pomodoroBreakActive
       pomodoroBreakActive = active
       if (!active) {
         breakRelockTimer.stop()
+        if (wasBreakActive && root.locked && !breakOverAlertActive) {
+          breakOverAlertActive = true
+          root.runWake()
+          playSound("block")
+          breakOverAlarmTimer.start()
+        }
       } else if (!root.locked && !root.lockRequested) {
         if (!breakRelockTimer.running) {
           playSound("block")
@@ -208,6 +237,7 @@ Item {
     sessionLockStabilizeTimer.stop()
     pendingSessionLockTimer.stop()
     breakRelockTimer.stop()
+    stopBreakOverAlert()
     resetAuthenticationState()
     idleBlankTimer.stop()
     sessionLock.locked = false
@@ -343,6 +373,7 @@ Item {
         backgroundVersion: root.backgroundVersion
         fingerprintConfigured: root.fingerprintConfigured
         authenticatingPassword: root.authenticatingPassword
+        breakOverAlertActive: root.breakOverAlertActive
         failureMessage: root.failureMessage
         failedAttempts: root.failedAttempts
         inputEnabled: root.lockRequested
@@ -373,6 +404,7 @@ Item {
       backgroundVersion: root.backgroundVersion
       fingerprintConfigured: root.fingerprintConfigured
       authenticatingPassword: false
+      breakOverAlertActive: root.breakOverAlertActive
       failureMessage: ""
       failedAttempts: 0
       inputEnabled: false
@@ -520,8 +552,8 @@ Item {
         root.armBlankTimer()
         return
       }
-      // Inhibit screen sleep if a Pomodoro break is actively running!
-      if (root.pomodoroInhibitBlank) {
+      // Inhibit screen sleep if a Pomodoro break is actively running OR overdue alert is active!
+      if (root.pomodoroInhibitBlank || root.pomodoroBreakActive || root.breakOverAlertActive) {
         root.armBlankTimer()
         return
       }

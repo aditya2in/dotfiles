@@ -38,8 +38,8 @@
         },
         {
           "id": "omarchy-pomodoro",
-          "autoStartBreaks": false,
-          "autoStartOnBoot": false,
+          "autoStartBreaks": true,
+          "autoStartOnBoot": true,
           "autoStartWork": false,
           "shortBreakMinutes": 5,
           "showIconInBar": true,

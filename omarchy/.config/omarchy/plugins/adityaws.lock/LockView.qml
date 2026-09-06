@@ -20,6 +20,7 @@ Item {
   property bool authenticatingPassword: false
   property bool fingerprintConfigured: false
   property bool previewMode: false
+  property bool breakOverAlertActive: false
 
   property real fieldWidth: 320
   property real fieldHeight: 48
@@ -391,6 +392,7 @@ Item {
       isRunning: root.pomodoroIsRunning
       isPaused: root.pomodoroIsPaused
       isIdle: root.pomodoroIsIdle
+      isBreakOver: root.breakOverAlertActive
     }
 
     // --- Sleek Password Input Field (Anchored to Bottom Center) ---

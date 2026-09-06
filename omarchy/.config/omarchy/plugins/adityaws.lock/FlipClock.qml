@@ -13,6 +13,11 @@ Item {
   property bool isRunning: false
   property bool isPaused: false
   property bool isIdle: false
+  property bool isBreakOver: false
+
+  readonly property color stateColor: root.isBreakOver ? "#f38ba8" : (root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa")))
+  readonly property string displayPhaseTitle: root.isBreakOver ? "BREAK COMPLETE (UNLOCK TO RESUME)" : root.phaseTitle
+  readonly property string displayPhaseIcon: root.isBreakOver ? "⏰" : root.phaseIcon
 
   property real availableWidth: 1000
   property real availableHeight: 800
@@ -34,7 +39,8 @@ Item {
 
   // Split timeString into M1, M2, S1, S2
   readonly property var parsedDigits: {
-    var parts = (timeString || "00:00").split(":")
+    var str = root.isBreakOver ? "00:00" : (timeString || "00:00")
+    var parts = str.split(":")
     var mins = parts[0] || "00"
     var secs = parts[1] || "00"
     if (mins.length === 1) mins = "0" + mins
@@ -45,6 +51,17 @@ Item {
       s1: secs.charAt(0),
       s2: secs.charAt(1)
     }
+  }
+
+  property real colonOpacity: 1.0
+
+  SequentialAnimation {
+    id: colonPulseAnim
+    running: root.isBreakOver
+    loops: Animation.Infinite
+    NumberAnimation { target: root; property: "colonOpacity"; to: 0.05; duration: 400; easing.type: Easing.InOutQuad }
+    NumberAnimation { target: root; property: "colonOpacity"; to: 1.0; duration: 400; easing.type: Easing.InOutQuad }
+    onStopped: root.colonOpacity = 1.0
   }
 
   Column {
@@ -58,8 +75,8 @@ Item {
       height: Math.max(40, Math.round(root.cardHeight * 0.09))
       width: badgeRow.implicitWidth + Math.max(36, Math.round(root.cardWidth * 0.18))
       radius: height / 2
-      color: root.isBreak ? "#a6e3a125" : (root.isPaused ? "#fab38725" : (root.isIdle ? "#f38ba825" : "#89b4fa25"))
-      border.color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+      color: Qt.rgba(root.stateColor.r, root.stateColor.g, root.stateColor.b, 0.15)
+      border.color: root.stateColor
       border.width: Math.max(1, Math.round(root.cardWidth * 0.008))
 
       Row {
@@ -68,20 +85,20 @@ Item {
         spacing: Math.max(10, Math.round(root.cardWidth * 0.04))
 
         Text {
-          text: root.phaseIcon
+          text: root.displayPhaseIcon
           font.family: Style.font.family
           font.pixelSize: Math.max(18, Math.round(root.cardHeight * 0.055))
-          color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+          color: root.stateColor
           verticalAlignment: Text.AlignVCenter
         }
 
         Text {
-          text: root.phaseTitle.toUpperCase()
+          text: root.displayPhaseTitle.toUpperCase()
           font.family: Style.font.family
           font.pixelSize: Math.max(15, Math.round(root.cardHeight * 0.045))
           font.weight: Font.DemiBold
           font.letterSpacing: 2.5
-          color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+          color: root.stateColor
           verticalAlignment: Text.AlignVCenter
         }
       }
@@ -98,7 +115,8 @@ Item {
         cardHeight: root.cardHeight
         fontSize: root.fontSize
         text: root.parsedDigits.m1
-        textColor: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+        textColor: root.stateColor
+        isPulsing: root.isBreakOver
       }
 
       // Minute 2
@@ -107,7 +125,8 @@ Item {
         cardHeight: root.cardHeight
         fontSize: root.fontSize
         text: root.parsedDigits.m2
-        textColor: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+        textColor: root.stateColor
+        isPulsing: root.isBreakOver
       }
 
       // Colon Divider
@@ -121,13 +140,15 @@ Item {
             width: Math.max(10, Math.round(root.cardWidth * 0.06))
             height: width
             radius: width / 2
-            color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+            color: root.stateColor
+            opacity: root.isBreakOver ? root.colonOpacity : 1.0
           }
           Rectangle {
             width: Math.max(10, Math.round(root.cardWidth * 0.06))
             height: width
             radius: width / 2
-            color: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+            color: root.stateColor
+            opacity: root.isBreakOver ? root.colonOpacity : 1.0
           }
         }
       }
@@ -138,7 +159,8 @@ Item {
         cardHeight: root.cardHeight
         fontSize: root.fontSize
         text: root.parsedDigits.s1
-        textColor: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+        textColor: root.stateColor
+        isPulsing: root.isBreakOver
       }
 
       // Second 2
@@ -147,7 +169,8 @@ Item {
         cardHeight: root.cardHeight
         fontSize: root.fontSize
         text: root.parsedDigits.s2
-        textColor: root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa"))
+        textColor: root.stateColor
+        isPulsing: root.isBreakOver
       }
     }
 
@@ -164,10 +187,10 @@ Item {
           height: width
           radius: width / 2
           color: index < (root.completedSessions % root.totalCycleSessions)
-            ? (root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa")))
+            ? root.stateColor
             : "#45475a"
           border.color: index < (root.completedSessions % root.totalCycleSessions)
-            ? (root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa")))
+            ? root.stateColor
             : "#585b70"
           border.width: 1
         }
