@@ -300,8 +300,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             height: 28
             width: taskBadgeText.implicitWidth + 20
-            color: "#1e3a29"
-            border.color: "#a6e3a1"
+            color: "#14332e"
+            border.color: "#73daca"
             border.width: 1
             radius: 14
 
@@ -309,7 +309,7 @@ Item {
               id: taskBadgeText
               anchors.centerIn: parent
               text: root.breakTasks.length + " Pending"
-              color: "#a6e3a1"
+              color: "#73daca"
               font.family: Style.font.family
               font.pixelSize: 13
               font.bold: true
@@ -345,7 +345,7 @@ Item {
 
               Text {
                 text: "○"
-                color: "#a6e3a1"
+                color: "#73daca"
                 font.family: Style.font.family
                 font.pixelSize: 20
                 font.bold: true

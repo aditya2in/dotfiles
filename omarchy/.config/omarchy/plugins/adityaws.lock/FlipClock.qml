@@ -15,7 +15,7 @@ Item {
   property bool isIdle: false
   property bool isBreakOver: false
 
-  readonly property color stateColor: root.isBreakOver ? "#f38ba8" : (root.isBreak ? "#a6e3a1" : (root.isPaused ? "#fab387" : (root.isIdle ? "#f38ba8" : "#89b4fa")))
+  readonly property color stateColor: root.isBreakOver ? "#f7768e" : (root.isBreak ? (root.phaseTitle.indexOf("Long") !== -1 ? "#bb9af7" : "#73daca") : (root.isPaused ? "#e0af68" : (root.isIdle ? "#f7768e" : "#7aa2f7")))
   readonly property string displayPhaseTitle: root.isBreakOver ? "BREAK COMPLETE (UNLOCK TO RESUME)" : root.phaseTitle
   readonly property string displayPhaseIcon: root.isBreakOver ? "⏰" : root.phaseIcon
 

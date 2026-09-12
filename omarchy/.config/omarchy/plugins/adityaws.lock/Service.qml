@@ -232,6 +232,9 @@ Item {
   function finishUnlock() {
     if (!root.locked && !lockRequested) return
 
+    var wasBreakOverAlert = root.breakOverAlertActive
+    var wasBreakActive = root.pomodoroBreakActive
+
     lockRequested = false
     pendingSessionLock = false
     sessionLockStabilizeTimer.stop()
@@ -251,6 +254,9 @@ Item {
     if (pomodoroBreakActive) {
       playSound("block")
       breakRelockTimer.start()
+    } else if (wasBreakOverAlert || wasBreakActive) {
+      // Auto-start next 25-minute focus work session upon unlocking from completed break!
+      Quickshell.execDetached(["omarchy-pomodoro", "start"])
     }
   }
 

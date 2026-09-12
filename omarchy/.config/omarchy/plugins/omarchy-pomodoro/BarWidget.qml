@@ -389,8 +389,8 @@ BarWidget {
     text: root.vertical ? root.verticalBarLabel : root.barLabel
     hasVisualContent: true
     active: root.isIdle || root.isPaused
-    activeColor: root.isIdle ? "#f38ba8" : (root.isPaused ? "#fab387" : "#89b4fa")
-    foreground: root.isIdle ? "#f38ba8" : (root.isPaused ? "#fab387" : (root.isRunning ? (root.isBreak ? "#a6e3a1" : "#89b4fa") : (root.bar ? root.bar.barForeground : Color.foreground)))
+    activeColor: root.isIdle ? "#f7768e" : (root.isPaused ? "#e0af68" : "#7aa2f7")
+    foreground: root.isIdle ? "#f7768e" : (root.isPaused ? "#e0af68" : (root.isRunning ? (root.isBreak ? (root.phase === Model.PHASE_LONG_BREAK ? "#bb9af7" : "#73daca") : "#7aa2f7") : (root.bar ? root.bar.barForeground : Color.foreground)))
     dimmed: false
     horizontalMargin: 8.5
     verticalPadding: 6
