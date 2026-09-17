@@ -25,6 +25,10 @@
 #    - wtype / tmux (for text injection)
 # ==============================================================================
 
+# Environment Fallbacks for Headless / Autostart contexts
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-1}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
+
 # Configuration
 PROJECT_DIR="/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation"
 VENV_PYTHON="/home/adityaws/venvs/whisper_turbo_stt/bin/python"
@@ -53,10 +57,11 @@ start_dictation() {
     rm -f "$PID_FILE" 2>/dev/null
     rm -f "$PAUSE_FILE" 2>/dev/null
     echo "Starting Nemotron Dictation..."
-    $VENV_PYTHON "$SCRIPT_PATH" > /dev/null 2>&1 &
+    setsid $VENV_PYTHON "$SCRIPT_PATH" > /tmp/nemotron_daemon.log 2>&1 &
     NEW_PID=$!
+    disown $NEW_PID 2>/dev/null
     echo $NEW_PID > "$PID_FILE"
-    sleep 1
+    sleep 2
     if ps -p $NEW_PID > /dev/null; then
         notify-send "Nemotron STT" "Status: STARTED (Loaded in VRAM)" -i microphone-sensitivity-high -t 3000
     else

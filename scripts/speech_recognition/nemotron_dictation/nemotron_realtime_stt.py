@@ -419,6 +419,13 @@ def main():
 
     except KeyboardInterrupt:
         pass
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        try:
+            subprocess.run(["notify-send", "Nemotron STT", f"Runtime Error: {e}", "-i", "dialog-error", "-t", "4000"])
+        except Exception:
+            pass
     finally:
         is_running = False
         stream.stop()
