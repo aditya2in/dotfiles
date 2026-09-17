@@ -9,18 +9,28 @@
 # ==============================================================================
 
 PAUSE_FILE="/tmp/nemotron_paused"
+GLOBAL_OVERRIDE_FILE="/tmp/nemotron_global_typing_override"
 
 if pgrep -f "nemotron_realtime_stt.py" >/dev/null; then
     if [ -f "$PAUSE_FILE" ]; then
         TEXT="󰍭"
         COLOR="#f9e2af" # 🟡 Amber Yellow (Traffic Light Pause)
         CLASS="paused"
-        TOOLTIP="Nemotron STT: PAUSED (F4 to Resume · Shift+F4 to Power Off)"
+        if [ -f "$GLOBAL_OVERRIDE_FILE" ]; then
+            TOOLTIP="Nemotron STT: PAUSED [🌐 Global Window] (F4 to Resume · Ctrl+F4 for Tmux K8)"
+        else
+            TOOLTIP="Nemotron STT: PAUSED [💻 Tmux K8] (F4 to Resume · Shift+F4 to Power Off)"
+        fi
     else
-        TEXT="󰍬"
         COLOR="#f38ba8" # 🔴 Vibrant Red (Recording / Listening Active)
         CLASS="recording"
-        TOOLTIP="Nemotron STT: RECORDING / LISTENING (F4 to Pause · Shift+F4 to Power Off)"
+        if [ -f "$GLOBAL_OVERRIDE_FILE" ]; then
+            TEXT="󰌌"
+            TOOLTIP="Nemotron STT: RECORDING [🌐 Global Window] (F4 to Pause · Ctrl+F4 for Tmux K8)"
+        else
+            TEXT="󰍬"
+            TOOLTIP="Nemotron STT: RECORDING [💻 Tmux K8] (F4 to Pause · Shift+F4 to Power Off)"
+        fi
     fi
 else
     TEXT=""

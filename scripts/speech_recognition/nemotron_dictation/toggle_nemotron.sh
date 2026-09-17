@@ -94,15 +94,16 @@ toggle_pause() {
     fi
 }
 
-# Function to toggle smart pause override
+GLOBAL_OVERRIDE_FILE="/tmp/nemotron_global_typing_override"
+
+# Function to toggle global focused window mode vs background ghostty mode (Ctrl + F4)
 override_dictation() {
-    OVERRIDE_FILE="/tmp/nemotron_smart_pause_override"
-    if [ -f "$OVERRIDE_FILE" ]; then
-        rm -f "$OVERRIDE_FILE" 2>/dev/null
-        notify-send "Nemotron STT" "Smart Pause: AUTO" -i dialog-information -t 2000
+    if [ -f "$GLOBAL_OVERRIDE_FILE" ]; then
+        rm -f "$GLOBAL_OVERRIDE_FILE" 2>/dev/null
+        notify-send "Nemotron Target" "💻 Ghostty / Tmux K8 (Background)" -i utilities-terminal -t 2000
     else
-        touch "$OVERRIDE_FILE"
-        notify-send "Nemotron STT" "Smart Pause: FORCED ON" -i dialog-information -t 2000
+        touch "$GLOBAL_OVERRIDE_FILE"
+        notify-send "Nemotron Target" "🌐 Global Focused Window (Active Cursor)" -i input-keyboard -t 2500
     fi
 }
 

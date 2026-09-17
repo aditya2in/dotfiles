@@ -28,6 +28,7 @@ from transformers.generation.streamers import BaseStreamer
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "nemotron_config.json")
 PID_FILE = "/tmp/nemotron_dictation.pid"
 PAUSE_FILE = "/tmp/nemotron_paused"
+GLOBAL_OVERRIDE_FILE = "/tmp/nemotron_global_typing_override"
 SAMPLE_RATE = 16000
 
 DEFAULT_CONFIG = {
@@ -186,21 +187,25 @@ def hyprland_event_listener():
 
 def inject_text(text, config):
     """
-    Direct Background Target Injection:
-    1. If Scratchpad is active -> type into Scratchpad via wtype.
-    2. If ghostty_background mode -> send keys directly into Ghostty/Tmux (Session K8) in background.
+    Dynamic Target Injection:
+    1. If Global Override (/tmp/nemotron_global_typing_override) is active OR Scratchpad is focused:
+       -> Type directly into whatever window/cursor is currently active via wtype.
+    2. If ghostty_background mode (default):
+       -> Send keys directly into Ghostty/Tmux (Session K8) in background.
     3. Fallback -> active window via wtype.
     """
-    typing_target = config.get("typing_target", "ghostty_background")
-    target_session = config.get("tmux_target_session", "K8")
+    is_global_override = os.path.exists(GLOBAL_OVERRIDE_FILE)
 
-    # 1. Scratchpad check
-    if is_scratchpad_focused:
+    # 1. Global Focused Window Override (Ctrl + F4) OR Obsidian Scratchpad focused
+    if is_global_override or is_scratchpad_focused:
         try:
             subprocess.run(["wtype", text], check=False)
             return
         except Exception:
             pass
+
+    typing_target = config.get("typing_target", "ghostty_background")
+    target_session = config.get("tmux_target_session", "K8")
 
     # 2. Direct injection into target tmux session (K8)
     if typing_target == "ghostty_background":
