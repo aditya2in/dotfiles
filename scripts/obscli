@@ -1,0 +1,37 @@
+#!/bin/bash
+# obscli — Obsidian CLI wrapper for the Hyprland/Wayland session
+# Hand-off wrapper: the Obsidian CLI must talk to the RUNNING Obsidian instance.
+# A bare second Electron launch crashes (SIGSEGV) without the display env vars.
+#
+# Usage: obscli <command> [args...]
+# Docs:  https://help.obsidian.md/cli
+#
+# History:
+#   2026-08-03  Created (hardcoded electron39 + static Hyprland signature).
+#   2026-09-17  FIX: electron39 was removed by an Obsidian/Arch upgrade
+#               (obsidian 1.13.4 -> 1.13.7 now ships electron43).
+#               Now auto-detects the newest installed Electron and the live
+#               Hyprland instance signature, so it survives upgrades/reboots.
+
+export DISPLAY="${DISPLAY:-:0}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/1000}"
+export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-1}"
+export ELECTRON_OZONE_PLATFORM_HINT="wayland"
+export OZONE_PLATFORM="wayland"
+export XDG_SESSION_TYPE="wayland"
+
+# Live Hyprland instance signature (was hardcoded -> broke every reboot)
+if [ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ] && [ -d "$XDG_RUNTIME_DIR/hypr" ]; then
+    HYPRLAND_INSTANCE_SIGNATURE="$(ls -1 "$XDG_RUNTIME_DIR/hypr" 2>/dev/null | head -1)"
+    export HYPRLAND_INSTANCE_SIGNATURE
+fi
+
+# Newest installed Electron (was hardcoded 'electron39' -> broke on upgrade)
+ELECTRON_BIN="$(ls -1 /usr/lib/electron*/electron 2>/dev/null | sort -V | tail -1)"
+if [ -z "$ELECTRON_BIN" ] || [ ! -x "$ELECTRON_BIN" ]; then
+    echo "obscli: no Electron binary found under /usr/lib/electron*/" >&2
+    echo "obscli: install 'electron' or set ELECTRON_BIN manually" >&2
+    exit 1
+fi
+
+exec "$ELECTRON_BIN" /usr/lib/obsidian/app.asar "$@"

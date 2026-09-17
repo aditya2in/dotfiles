@@ -9,6 +9,36 @@ Before making any file changes, configuration edits, deletions, or other actions
 Required confirmation wording: "Shall I proceed?"
 If the user has not clearly approved the action, stop and ask before proceeding.
 
+## 📂 Auto-Open-On-Write (2026-09-17)
+**Principle:** The user must be able to SEE every change without asking. After any turn in which the AI creates or edits files inside the Obsidian vault, the AI automatically opens those files in the running Obsidian instance.
+
+**Trigger:** End of any turn in which the AI wrote/edited >= 1 file inside the Obsidian vault.
+
+**Scope:** ALL vault files the AI created or modified using its own file tools. No exceptions, no filtering, no asking. (Option A — "open all".)
+
+**Exclusions:**
+- Files touched only by scripts, not authored by the AI (e.g. Break OS logs).
+- Files outside the Obsidian vault — they cannot be opened in Obsidian.
+
+**Workflow:**
+1. Collect the unique vault-relative paths written this turn.
+2. Open each: `obscli open path="<vault-relative-path>" newtab`
+3. Open the MOST IMPORTANT file LAST so it is the front-most tab.
+4. On failure, retry once; then fall back to the auto-detected Electron:
+   `"$(ls -1 /usr/lib/electron*/electron | sort -V | tail -1)" /usr/lib/obsidian/app.asar open path="<p>"`
+5. On persistent failure, print the paths in the chat report and continue. NEVER block the task.
+
+**Autonomy:** The AI MUST NOT ask permission to open files. Opening is read-only and non-destructive, so it is an explicit exception to `## Permission Before Action`.
+
+**Deletes / moves:** There is nothing to open — report the deleted/moved path in the chat report instead.
+
+**Plan mode:** Skipped (no writes occur in plan mode).
+
+**Conflict resolved:** Supersedes the earlier "deliverables only, not every file" proposal (2026-09-17). The user's final instruction: *"there is no such thing as which one to open."*
+
+**Process Evolution Log:**
+- 2026-09-17 — Rule created. Option A (open all) + `newtab` + global scope. Enabled by the `obscli` electron auto-detect fix.
+
 ## Workspace Context
 Omarchy (Arch Linux + Hyprland) user home directory, not a traditional code repo. Primary work: system configs, Hyprland rules, theme customization.
 
