@@ -12,6 +12,9 @@
       ],
       "center": [
         {
+          "id": "omarchy.system-update"
+        },
+        {
           "exec": "/home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/shell_status.sh",
           "id": "nemotron_stt",
           "interval": 1,
@@ -93,9 +96,6 @@
         },
         {
           "id": "crmne.hyprmoncfg"
-        },
-        {
-          "id": "omarchy.system-update"
         },
         {
           "id": "omarchy.agents"

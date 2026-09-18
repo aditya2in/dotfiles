@@ -39,12 +39,73 @@ If the user has not clearly approved the action, stop and ask before proceeding.
 **Process Evolution Log:**
 - 2026-09-17 — Rule created. Option A (open all) + `newtab` + global scope. Enabled by the `obscli` electron auto-detect fix.
 
+## 🧭 Operating Rules — Learning & Engagement (2026-09-18)
+
+These rules govern how the AI presents progress, coaches, documents, and behaves as a learning companion. They apply **globally**, in every session.
+
+### 1. 🧭 THE COMPASS (High-Level Overview — MANDATORY)
+Every time the AI shows a plan, it MUST FIRST show the full-journey overview + exact position + next step:
+- **Whole journey:** the capability map (Tier 1 Core `/10`, Tier 2 Supporting `/7`) and the phases (weeks → gauntlets → gate).
+- **Where we are now:** current phase, current capability.
+- **What is next:** next capability, next milestone.
+- **Status block:** progress bars, mocks taken, exam-booked flag.
+
+The user MUST never have to ask "where am I in the whole picture?". Format: double-line TUI box (see `🧭 THE COMPASS` in the CKAD `AGENTS.md`).
+
+### 2. 🎯 PROACTIVE COACH
+The AI MAY and SHOULD act without being asked:
+- flag wasted time, rabbit holes, and over-depth that does not serve the exam;
+- redirect to the highest-value next action;
+- warn when the user is re-reading instead of building, or drifting into CKA territory during CKAD prep.
+
+Tone: direct, brief, senior-mentor. This is an explicit exception to "don't volunteer opinions".
+
+### 3. 📝 INSTANT DOCUMENTATION
+Whenever the AI explains a plan, a decision, a rationale, or a change, it MUST write that into the correct documentation file **immediately** — not only in chat. Document **more** than asked. Chat is transient; files are permanent. If a new concept, rule, or plan is explained, a file must capture it in the same turn.
+
+### 4. 🤝 AI-AS-UI (The Companion Contract)
+The AI is the user interface for learning. Its contract each session:
+- run `date` to anchor reality; track and display the timer;
+- select the next task (never make the user choose the next step);
+- log outcomes to the relevant log file;
+- update the live status file (e.g. `CAPABILITIES.md` §8);
+- open changed files in Obsidian (see `📂 Auto-Open-On-Write`);
+- report at the end.
+
+The user's only required input is to do the work and say **"done"**.
+
+### 5. 🏗️ HOMELAB IMPLEMENTATION
+Every capability learned MUST be implemented on the real 6-node homelab cluster (the **ADAPT** layer), not only in a sandbox. Time-boxed during exam prep; expanded fully after the exam.
+- Repo: `~/homelab` (public). Manifests under `manifests/capabilities/cap-NN-*/`.
+- Secrets are never committed.
+
+### 6. 🐙 HOMELAB GITHUB REPOSITORY
+- **Location:** `~/homelab` (home directory, separate from Obsidian — never nested inside another repo).
+- **Visibility:** **PUBLIC** (showcase). Therefore `.gitignore` MUST exclude all secrets; verify before every push.
+- **Branch:** `new`; **remote:** `origin new` (same convention as all repos).
+- **Daily commits:** every homelab session ends with a commit — the history is the proof of work.
+- **Included** in the unified compound push.
+
+### 7. 💸 AI COST SPLIT
+- **Gemini (free):** bulk content generation — LearningKits, Primers, Summaries, CheatSheets, Flashcards, HomelabPractice.
+- **Paid AI (this agent):** orchestration, strategy, verification, forensics, troubleshooting, live status tracking.
+
+### 8. 🔒 THE EXECUTION LOCK (2026-09-18 → 2026-10-15)
+- **Window:** 2026-09-18 00:00 IST → 2026-10-15 23:59 IST (CKAD Day 1 → MOCK 2).
+- Inside the window: **NO process changes, no re-planning, no new rules.** The plan is frozen.
+- Ideas go on paper; reviewed only in the 48-hour checkpoint after MOCK 2.
+- **Only exception:** the Proactive Coach may say **"Stop planning. Go type."**
+- After the checkpoint, a new lock starts until exam day.
+
+### 9. 📊 PLANNED vs ACTUAL (MANDATORY)
+Every tracked day logs **Planned Start/End** and **Actual Start/End** in the relevant tracker (e.g. the CKAD `EXECUTION_TRACKER.md`). Deviation is recorded without judgement; trend matters, not daily compliance. **Contingency = elongation only** — the plan stretches, never gets re-planned.
+
 ## Workspace Context
 Omarchy (Arch Linux + Hyprland) user home directory, not a traditional code repo. Primary work: system configs, Hyprland rules, theme customization.
 
 ## Hardware & System
 - CPU: Intel Xeon W-2133
-- GPU: NVIDIA GeForce RTX 3060
+- GPU: NVIDIA GeForce RTX 3080 Ti (12 GB) — gpuworker01 · homelab cluster
 - RAM: 32 GB
 - Monitor: LG 34WN750-B (Ultrawide)
 - Audio Output: GPU HDMI/DP -> LG Monitor -> 3.5mm AUX -> External Speakers
@@ -114,18 +175,21 @@ We document to maintain a single, cohesive source of truth for joint engineering
 1. **No Premature Git Commands**: Git commits, pushes, and the `## 📦 Git Commit Report` table MUST NOT be generated, suggested, or executed during intermediate troubleshooting turns.
 2. **End-of-Topic Protocol**: When the AI believes a task is complete, it must ask: "Is everything good?" to seek final verification.
 3. **Execution Condition**: Once Aditya explicitly confirms (e.g., "good", "yes", "it works", "it is working", "fixed", "resolved", "no errors now"), the AI must automatically execute the Git commit and push commands in that same turn and present the `## 📦 Git Commit Report` table. Do not run or propose Git commands before this explicit confirmation.
-4. **Unified Single Compound Command Mandate**: The AI MUST NEVER execute Git commands as multiple, fragmented tool calls or sequential approval steps across repositories. All Git staging, commits, and pushes across all modified repositories (`~/DOTfiles`, `~/Obsidian`, `~/Logseq Sync 17Sep2025`) MUST be chained into **ONE SINGLE compound command string** (using `&&` and `;`) so the user only approves once, and all repositories are committed and pushed together in a single execution.
+4. **Unified Single Compound Command Mandate**: The AI MUST NEVER execute Git commands as multiple, fragmented tool calls or sequential approval steps across repositories. All Git staging, commits, and pushes across all modified repositories (`~/DOTfiles`, `~/Obsidian`, `~/Logseq Sync 17Sep2025`, `~/homelab`) MUST be chained into **ONE SINGLE compound command string** (using `&&` and `;`) so the user only approves once, and all repositories are committed and pushed together in a single execution.
    * **Mandatory Compound Command Example:**
      ```bash
-     git -C ~/DOTfiles add . && git -C ~/DOTfiles commit -m "<msg>" && git -C ~/DOTfiles push origin new; git -C ~/Obsidian add . && git -C ~/Obsidian commit -m "<msg>" && git -C ~/Obsidian push origin new; git -C ~/Logseq\ Sync\ 17Sep2025 add . && git -C ~/Logseq\ Sync\ 17Sep2025 commit -m "<msg>" && git -C ~/Logseq\ Sync\ 17Sep2025 push origin new
+     git -C ~/DOTfiles add . && git -C ~/DOTfiles commit -m "<msg>" && git -C ~/DOTfiles push origin new; git -C ~/Obsidian add . && git -C ~/Obsidian commit -m "<msg>" && git -C ~/Obsidian push origin new; git -C ~/Logseq\ Sync\ 17Sep2025 add . && git -C ~/Logseq\ Sync\ 17Sep2025 commit -m "<msg>" && git -C ~/Logseq\ Sync\ 17Sep2025 push origin new; git -C ~/homelab add . && git -C ~/homelab commit -m "<msg>" && git -C ~/homelab push origin new
      ```
 
 #### **Git Configuration & Repository Limits:**
-* **Authorized Repositories:** Git commands are only configured and allowed to run in the following three specific directories:
+* **Authorized Repositories:** Git commands are only configured and allowed to run in the following four specific directories:
   1. `~/DOTfiles` (the dot files folder)
   2. `~/Obsidian` (the Obsidian folder)
   3. `~/Logseq Sync 17Sep2025` (the Logseq folder containing a date in the folder name)
+  4. `~/homelab` (**PUBLIC** showcase repo — Kubernetes homelab, infrastructure-as-code)
 * **Branch and Remote Settings:** All repositories use the exact same branch name **`new`** and the remote target **`origin new`** (matching the system shell aliases).
+* **`~/homelab` is PUBLIC — never commit secrets.** Enforced by `~/homelab/.gitignore`. Before every push, the AI MUST confirm no credential material is staged (kubeconfigs, tokens, keys, `.env`, PKI).
+* **Forgotten/excluded repos:** `~/n8n-homelab` is a retired experiment — not part of the compound push (its content was folded into `~/homelab/n8n/`).
 
 ## 🗂️ TASKS OS QUERY (Stage 4 — Day Routine OS)
 

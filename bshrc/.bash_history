@@ -2165,3 +2165,15 @@ opencode
 agy
 sudo systemctl stop sleep-enforcer.timer 
 opencode
+agy
+deepseek-balance 
+opencode
+cd ckad
+ls
+cd Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_\(around_KUBESTRONAUT\)/
+cd ckad
+cd 2.\ Project_kubernetes/
+ls
+cd 2.\ CKAD_Certification_Course_-_Certified_Kubernetes_Application_Developer_Course/
+ls
+agy
