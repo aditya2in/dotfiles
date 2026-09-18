@@ -2163,3 +2163,5 @@ agy
 pkill witcher3.exe 
 opencode
 agy
+sudo systemctl stop sleep-enforcer.timer 
+opencode

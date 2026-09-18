@@ -9,4 +9,7 @@ o.launch_on_start("ghostty")
 o.launch_on_start("brave")
 o.launch_on_start("obsidian")
 
+-- AI Dictation Autostart (Nemotron STT - F4)
+o.exec_on_start("sleep 2 && /home/adityaws/DOTfiles/scripts/speech_recognition/nemotron_dictation/toggle_nemotron.sh --start")
+
 

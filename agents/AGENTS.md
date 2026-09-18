@@ -52,25 +52,34 @@ Omarchy (Arch Linux + Hyprland) user home directory, not a traditional code repo
 - Microphone: Maono PD300X Dynamic USB/XLR Microphone
 - Filesystem: Btrfs with Snapper snapshots
 
+## Omarchy v4 Hyprland Lua Configuration Mandate (CRITICAL)
+Omarchy v4 uses a modern **Lua-based Hyprland configuration system**. All user settings are loaded via `~/.config/hypr/hyprland.lua` (symlinked to `~/DOTfiles/hyprland All/.config/hypr/`).
+**NEVER edit or rely on legacy `.conf` files** (`autostart.conf`, `bindings.conf`, `monitors.conf`, `looknfeel.conf`, `input.conf`) for Hyprland desktop behavior, as Omarchy v4 completely ignores them on startup.
+
+### Active Lua Files in `~/.config/hypr/`:
+- `autostart.lua` — Startup applications (`o.exec_on_start(...)`, `o.launch_on_start(...)`)
+- `bindings.lua` — Keybindings (`o.bind(...)`, `hl.unbind(...)`)
+- `monitors.lua` — Display configuration (`hl.monitor(...)`)
+- `looknfeel.lua` — Appearance, gaps, borders, opacity, animations
+- `input.lua` — Keyboard, mouse, touchpad settings
+- `hyprland.lua` — Master bootstrap and loader
+
 ## Key Config Paths
-- Hyprland user configs: `~/.config/hypr/` (some symlinked to `~/DOTfiles/hyprland All/.config/hypr/`)
-- Omarchy defaults: `~/.local/share/omarchy/default/hypr/` (do not edit directly)
+- Hyprland user Lua configs: `~/.config/hypr/*.lua` (symlinked to `~/DOTfiles/hyprland All/.config/hypr/`)
+- Omarchy defaults: `/usr/share/omarchy/default/hypr/` (read-only, do not edit)
 - Terminal configs: `~/.config/alacritty/`, `~/.config/ghostty/`, `~/.config/kitty/`
 - Theme configs: `~/.config/omarchy/current/theme/`
-- Monitor settings: `~/.config/hypr/monitors.conf`
 
 ## Critical Commands
-- Reload Hyprland: `hyprctl reload`
-- Check Hyprland settings: `hyprctl getoption <option>` (e.g., `decoration:active_opacity`)
-- Omarchy commands: All start with `omarchy-` (e.g., `omarchy-refresh-config`)
+- Reload Hyprland: `SIG=$(ls /run/user/1000/hypr | head -n 1) && HYPRLAND_INSTANCE_SIGNATURE=$SIG WAYLAND_DISPLAY=wayland-1 XDG_RUNTIME_DIR=/run/user/1000 hyprctl reload`
+- Check config errors: `SIG=$(ls /run/user/1000/hypr | head -n 1) && HYPRLAND_INSTANCE_SIGNATURE=$SIG WAYLAND_DISPLAY=wayland-1 XDG_RUNTIME_DIR=/run/user/1000 hyprctl configerrors`
+- Omarchy commands: All start with `omarchy-` (e.g., `omarchy menu keybindings --print`)
 
 ## Config Precedence
-1. User `~/.config/hypr/*.conf` overrides Omarchy defaults
+1. User `~/.config/hypr/*.lua` overrides Omarchy defaults
 2. Theme configs override default theme settings
-3. Window rules (`windows.conf`, `apps/*.conf`) override `looknfeel.conf` opacity
+3. Window rules in `hyprland.lua` override `looknfeel.lua` defaults
 
-## Prior Changes
-Opacity rules set to `1.0 1.0` to disable transparency. To enable transparency/blur, edit `~/.config/hypr/looknfeel.conf`.
 
 ## Core Rule: Documentation for System Tweaks, Scripting, and Engineering Logs
 

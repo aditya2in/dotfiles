@@ -43,17 +43,16 @@ o.window(".*", { tag = "-terminal" })
 o.window(".*", { opacity = "1.0 1.0 override" })
 
 -- General App Mappings
-o.window("(Alacritty|kitty|org.wezfurlong.wezterm|com.mitchellh.ghostty)", { workspace = "1" })
+o.window("(Alacritty|kitty|org.wezfurlong.wezterm)", { workspace = "1" })
+o.window("^com.mitchellh.ghostty$", { workspace = "1", fullscreen = true, focus_on_activate = false })
 o.window("brave-browser", { workspace = "2" })
 o.window("(md.obsidian.Obsidian|org.omarchy.wiremix)", { workspace = "3" })
 o.window("steam", { workspace = "4" })
 
 -- Stability Rules
-o.window("(com.mitchellh.ghostty|brave-browser|obsidian)", { suppress_event = "maximize" })
-o.window("com.mitchellh.ghostty", { focus_on_activate = false })
-o.window({ class = "com.mitchellh.ghostty", workspace = "1" }, { fullscreen = 1 })
-o.window({ class = "brave-browser", workspace = "2" }, { fullscreen = 0 })
-o.window({ class = "md.obsidian.Obsidian", workspace = "3" }, { fullscreen = 0 })
+o.window("(brave-browser|obsidian)", { suppress_event = "maximize" })
+o.window({ class = "brave-browser" }, { fullscreen = 0 })
+o.window({ class = "md.obsidian.Obsidian" }, { fullscreen = 0 })
 
 -- Scratchpad Custom Look
 o.window({ title = ".*000_SCRATCHPAD_Brain_Dump.*" }, { opacity = "1.0 0.1 override" })
