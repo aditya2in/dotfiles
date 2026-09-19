@@ -29,7 +29,7 @@ export PROTON_HIDE_NVIDIA_GPU=0
 export DXVK_NVAPI_ALLOW_OTHER_DRIVERS=1
 
 # DLSS 5 / OptiScaler Experimental Sandbox Toggle (1=Test Mode, 0=Plan A Production)
-export ENABLE_DLSS5_TEST=0
+export ENABLE_DLSS5_TEST=1
 if [ "$ENABLE_DLSS5_TEST" = "1" ]; then
     export WINEDLLOVERRIDES="dxgi=n,b"
 fi

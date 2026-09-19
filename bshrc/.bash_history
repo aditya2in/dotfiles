@@ -2177,3 +2177,7 @@ ls
 cd 2.\ CKAD_Certification_Course_-_Certified_Kubernetes_Application_Developer_Course/
 ls
 agy
+pkill witcher3.exe 
+opencode
+opencode
+sudo systemctl stop sleep-enforcer.timer 

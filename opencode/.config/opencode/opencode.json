@@ -16,6 +16,23 @@
       "type": "remote",
       "url": "http://127.0.0.1:17493/mcp",
       "enabled": true
+    },
+    "playwright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp",
+        "--executable-path",
+        "/usr/bin/brave"
+      ],
+      "enabled": true,
+      "timeout": 60000
+    },
+    "ixlabs": {
+      "type": "remote",
+      "url": "https://labs.iximiuz.com/mcp",
+      "enabled": true
     }
   }
 }

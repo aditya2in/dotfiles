@@ -141,6 +141,12 @@ Omarchy v4 uses a modern **Lua-based Hyprland configuration system**. All user s
 2. Theme configs override default theme settings
 3. Window rules in `hyprland.lua` override `looknfeel.lua` defaults
 
+## 🔄 Omarchy Upstream Architecture & Native Subsystem Mandate
+Omarchy evolves rapidly with official migration scripts (`omarchy-migrate`), dedicated system daemons (e.g., `hyprmoncfgd` for monitor profiles, `quickshell` for UI, native plugins), and package updates.
+1. **Embrace Native Subsystems**: Always configure and leverage native Omarchy tools and profile managers (e.g., `hyprmoncfg` profiles under `~/.config/hyprmoncfg/`) rather than disabling, bypassing, or deleting official hooks.
+2. **Migration Alignment**: When Omarchy updates or migrations introduce new mechanisms, align user configurations to work harmoniously within the new architecture.
+3. **Clean Dotfile Integration**: Preserve user customization in `~/DOTfiles` while ensuring full compatibility with upstream Omarchy daemons.
+
 
 ## Core Rule: Documentation for System Tweaks, Scripting, and Engineering Logs
 
