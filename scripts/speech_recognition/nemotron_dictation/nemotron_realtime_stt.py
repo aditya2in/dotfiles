@@ -19,6 +19,8 @@ import queue
 import time
 import signal
 import socket
+import gc
+from collections import deque
 import numpy as np
 import sounddevice as sd
 import torch
@@ -332,7 +334,7 @@ def main():
         collected = []
         collected_len = 0
         start_t = time.time()
-        while is_running and collected_len < required_samples:
+        while is_running and not is_paused and collected_len < required_samples:
             try:
                 chunk = audio_queue.get(timeout=timeout)
                 collected.append(chunk)
@@ -353,74 +355,129 @@ def main():
             return arr
         return np.zeros(required_samples, dtype=np.float32)
 
-    # 3. Native Streaming Loop
+    # 3. Memory-Safe Native Streaming Loop
+    pre_roll_buffer = deque(maxlen=15)
+    streamer = DirectTokenStreamer(processor.tokenizer)
+
     try:
         while is_running:
-            # Collect first chunk
-            first_audio = get_audio_samples(first_chunk_size)
-            if not is_running:
-                break
+            if is_paused:
+                while not audio_queue.empty():
+                    try:
+                        audio_queue.get_nowait()
+                    except queue.Empty:
+                        break
+                pre_roll_buffer.clear()
+                time.sleep(0.15)
+                continue
 
-            first_inputs = processor(
-                first_audio,
-                sampling_rate=SAMPLE_RATE,
-                is_streaming=True,
-                is_first_audio_chunk=True,
-                return_tensors="pt"
-            ).to(device, dtype=model.dtype)
+            # Drain audio queue into pre_roll_buffer and detect speech onset
+            try:
+                chunk = audio_queue.get(timeout=0.1)
+                pre_roll_buffer.append(chunk)
+            except queue.Empty:
+                continue
 
-            def input_features_generator():
-                yield first_inputs.input_features[:, : processor.num_mel_frames_first_audio_chunk, :]
-
-                last_speech_time = time.time()
-                has_spoken = False
-                flushed = False
-
-                while is_running and not is_paused:
-                    next_audio = get_audio_samples(per_chunk_size)
-                    if not is_running or is_paused:
+            # Prevent queue build-up when idle
+            if audio_queue.qsize() > 25:
+                while audio_queue.qsize() > 10:
+                    try:
+                        c = audio_queue.get_nowait()
+                        pre_roll_buffer.append(c)
+                    except queue.Empty:
                         break
 
-                    energy = compute_rms(next_audio)
-                    if energy > silence_thresh:
-                        last_speech_time = time.time()
-                        has_spoken = True
-                        flushed = False
-                    
-                    next_inputs = processor(
-                        next_audio,
-                        sampling_rate=SAMPLE_RATE,
-                        is_streaming=True,
-                        is_first_audio_chunk=False,
-                        return_tensors="pt"
-                    ).to(device, dtype=model.dtype)
+            # Check for speech energy
+            energy = compute_rms(chunk)
+            if energy < silence_thresh:
+                continue
 
-                    yield next_inputs.input_features
+            # Speech detected! Construct first_audio using pre-roll buffer
+            pre_audio = np.concatenate(list(pre_roll_buffer)) if pre_roll_buffer else np.empty(0, dtype=np.float32)
+            pre_roll_buffer.clear()
 
-                    # Automatic silence flush to release trailing lookahead tokens
-                    if has_spoken and not flushed and (time.time() - last_speech_time) >= silence_flush_dur:
-                        silent_flush = np.zeros(per_chunk_size, dtype=np.float32)
-                        flush_inputs = processor(
-                            silent_flush,
+            if len(pre_audio) >= first_chunk_size:
+                first_audio = pre_audio[-first_chunk_size:]
+            else:
+                needed = first_chunk_size - len(pre_audio)
+                additional = get_audio_samples(needed, timeout=0.1)
+                first_audio = np.concatenate([pre_audio, additional])[:first_chunk_size]
+
+            # Run inference under torch.inference_mode()
+            with torch.inference_mode():
+                first_inputs = processor(
+                    first_audio,
+                    sampling_rate=SAMPLE_RATE,
+                    is_streaming=True,
+                    is_first_audio_chunk=True,
+                    return_tensors="pt"
+                ).to(device, dtype=model.dtype)
+
+                def input_features_generator():
+                    yield first_inputs.input_features[:, : processor.num_mel_frames_first_audio_chunk, :]
+
+                    last_speech_time = time.time()
+                    has_spoken = True
+                    flushed = False
+
+                    while is_running and not is_paused:
+                        next_audio = get_audio_samples(per_chunk_size, timeout=0.1)
+                        if not is_running or is_paused:
+                            break
+
+                        next_energy = compute_rms(next_audio)
+                        now = time.time()
+
+                        if next_energy > silence_thresh:
+                            last_speech_time = now
+                            has_spoken = True
+                            flushed = False
+
+                        next_inputs = processor(
+                            next_audio,
                             sampling_rate=SAMPLE_RATE,
                             is_streaming=True,
                             is_first_audio_chunk=False,
                             return_tensors="pt"
                         ).to(device, dtype=model.dtype)
-                        yield flush_inputs.input_features
-                        flushed = True
-                        has_spoken = False
 
-            streamer = DirectTokenStreamer(processor.tokenizer)
-            gen_kwargs = {
-                **first_inputs,
-                "input_features": input_features_generator(),
-                "streamer": streamer
-            }
+                        yield next_inputs.input_features
 
-            gen_thread = threading.Thread(target=model.generate, kwargs=gen_kwargs, daemon=True)
-            gen_thread.start()
-            gen_thread.join()
+                        # Silence flush frame to release trailing lookahead tokens
+                        if has_spoken and not flushed and (now - last_speech_time) >= silence_flush_dur:
+                            silent_flush = np.zeros(per_chunk_size, dtype=np.float32)
+                            flush_inputs = processor(
+                                silent_flush,
+                                sampling_rate=SAMPLE_RATE,
+                                is_streaming=True,
+                                is_first_audio_chunk=False,
+                                return_tensors="pt"
+                            ).to(device, dtype=model.dtype)
+                            yield flush_inputs.input_features
+                            flushed = True
+
+                        # Rolling utterance reset: If silence continues for 2.0s, end utterance cleanly and purge memory!
+                        if (now - last_speech_time) >= 2.0:
+                            break
+
+                gen_kwargs = {
+                    **first_inputs,
+                    "input_features": input_features_generator(),
+                    "streamer": streamer,
+                    "max_new_tokens": 4096
+                }
+
+                try:
+                    model.generate(**gen_kwargs)
+                except Exception:
+                    pass
+
+                # Explicit memory purge after every utterance
+                del first_inputs
+                del gen_kwargs
+                gc.collect()
+                if device == "cuda":
+                    torch.cuda.empty_cache()
 
     except KeyboardInterrupt:
         pass
@@ -441,6 +498,7 @@ def main():
                 os.remove(PID_FILE)
         except Exception:
             pass
+
 
 if __name__ == "__main__":
     main()

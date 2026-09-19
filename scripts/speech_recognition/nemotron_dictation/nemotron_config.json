@@ -1,7 +1,7 @@
 {
     "lookahead_latency_tokens": 6,
     "silence_flush_seconds": 0.35,
-    "silence_energy_threshold": 0.0015,
+    "silence_energy_threshold": 0.012,
     "device": "cuda",
     "compute_type": "float16",
     "model_path": "/home/adityaws/AI_MODELS/dictation_models/nemotron/en",

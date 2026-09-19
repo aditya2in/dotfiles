@@ -2206,3 +2206,35 @@ k get all
 k get all A
 k get all -A
 exit
+labctl
+labctl 
+labctl auth
+labctl auth login
+labctl
+labctl playground
+labctl playground list
+labctl playground status
+labctl playground 
+labctl playground  machines
+labctl playground  machine
+labctl playground 
+labctl playground  lifetime
+kube-homelab
+kubectl
+kubectl get all
+c
+kube-who
+kube-lab 
+kubectl get all
+ssh ixlabs
+kubectl get all
+kubectl get all -A
+k get nodes
+k get nodes -A
+k get nodes -A --showoptions
+k get nodes -A --show
+k get nodes -A
+ssh ixlabs
+kube-who
+kube-lab
+k get nodes

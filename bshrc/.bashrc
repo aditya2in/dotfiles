@@ -48,6 +48,16 @@ kube-who() {
     echo "server  : $(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}' 2>/dev/null)"
 }
 
+# iximiuz Labs tunnel manager (SSH into every machine + kubectl)
+#   kube-tunnels start|stop|status
+kube-tunnels() { "$HOME/DOTfiles/scripts/ixlabs-tunnels.sh" "$@"; }
+ixlabs-info() {
+    labctl playground list 2>/dev/null | head -5
+    echo
+    echo "SSH : ixlabs (dev-machine) · ixlabs-cp (cplane-01) · ixlabs-n1 (node-01) · ixlabs-n2 (node-02)"
+    echo "k8s : kube-lab  (iximiuz)   kube-homelab  (HomeLab)   kube-who  (show current)"
+}
+
 # --- [ 5. Custom Aliases & Exports ] ---
 export EDITOR="nvim"
 export VISUAL="nvim"

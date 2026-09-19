@@ -1,17 +1,17 @@
 #!/bin/bash
 # ==============================================================================
-# Focused Game Mode Manager (Gaming Environment, Single Monitor & VRAM Clearance)
+# Focused Game Mode Manager (Omarchy Quattro Native hyprmoncfg Architecture)
 # ==============================================================================
 # Snapshots the active status of F4 (Nemotron STT), Brave Browser, and default
 # audio sink. When entering Game Mode:
 #   1. Pauses the Omarchy Pomodoro timer
 #   2. Switches default audio output to Realme Studio H1 headphones
-#   3. Terminates F4 Nemotron and Brave to free VRAM & RAM
-#   4. Switches monitor layout to single Ultrawide (DP-2)
+#   3. Terminates F4 Nemotron and Brave to free VRAM & RAM (~1.2 GB VRAM / ~7.8 GB RAM)
+#   4. Applies native hyprmoncfg 'gaming' profile (isolates Center Ultrawide at 0x0)
 #   5. Switches Hyprland active workspace to Workspace 4
-#   6. Launches Steam & JamesDSP audio processing engine
+#   6. Launches / Focuses Steam & JamesDSP audio processing engine on Workspace 4
 # When exiting Game Mode (returning to Work Mode):
-#   1. Restores 3-monitor layout
+#   1. Applies native hyprmoncfg 'default' profile (restores 3-monitor 1-2-3 setup)
 #   2. Restores original default audio output sink
 #   3. Restores Brave browser and F4 Nemotron STT if they were active
 # ==============================================================================
@@ -71,43 +71,34 @@ EOF
 
     sync
 
-    # 5. Move workspaces and configure single Ultrawide monitor
-    for ws in {1..10}; do
-        hyprctl dispatch "hl.dsp.workspace.move({ workspace = \"$ws\", monitor = \"DP-2\" })" 2>/dev/null
-    done
+    # 5. Apply native hyprmoncfg gaming profile
+    hyprmoncfg apply gaming --confirm-timeout=0 >/dev/null 2>&1 || true
 
-    hyprctl eval 'hl.monitor({ output = "HDMI-A-1", disabled = true })'
-    hyprctl eval 'hl.monitor({ output = "DP-1", disabled = true })'
-    hyprctl eval 'hl.monitor({ output = "DP-2", mode = "3440x1440@75", position = "0x0", scale = 1 })'
+    # 6. Switch to Workspace 4 for Gaming via Lua dispatcher
+    hyprctl repl 'hl.dispatch(hl.dsp.focus({ workspace = "4" }))' >/dev/null 2>&1 || true
 
-    # 6. Switch to Workspace 4 for Gaming
-    hyprctl dispatch workspace 4 2>/dev/null || true
-
-    # 7. Launch Steam if not running
-    if ! pgrep -x "steam" >/dev/null; then
-        setsid uwsm-app -- steam >/dev/null 2>&1 &
-    fi
+    # 7. Launch or open Steam window on Workspace 4
+    setsid uwsm-app -- steam steam://open/main >/dev/null 2>&1 &
 
     # 8. Launch JamesDSP if not running
     if ! pgrep -x "jamesdsp" >/dev/null; then
         setsid uwsm-app -- jamesdsp >/dev/null 2>&1 &
     fi
 
-    notify-send -a "Game Mode" "🎮 Game Mode ON" "Workspace 4 · Steam & JamesDSP · Realme Audio · Pomodoro Paused"
+    notify-send -a "Game Mode" "🎮 Game Mode ON" "Workspace 4 · Steam & JamesDSP · Realme Audio · Single Ultrawide"
 
 else
     # --------------------------------------------------------------------------
     # 💼 ENTERING WORK MODE (Triple Monitors + Restoration)
     # --------------------------------------------------------------------------
 
-    # 1. Restore 3-Monitor Geometry
-    hyprctl eval 'hl.monitor({ output = "DP-2", mode = "3440x1440@75", position = "1080x240", scale = 1, disabled = false })'
-    hyprctl eval 'hl.monitor({ output = "HDMI-A-1", mode = "1920x1080@60", position = "0x0", scale = 1, transform = 1, disabled = false })'
-    hyprctl eval 'hl.monitor({ output = "DP-1", mode = "1920x1080@60", position = "4520x0", scale = 1, transform = 3, disabled = false })'
-    hyprctl reload
-    xrandr --output DP-2 --primary 2>/dev/null || true
+    # 1. Restore native hyprmoncfg default profile (3-monitor 1-2-3 setup)
+    hyprmoncfg apply default --confirm-timeout=0 >/dev/null 2>&1 || true
 
-    # 2. Restore previous Audio Sink, F4 and Brave from state snapshot
+    # 2. Focus Center Monitor (Workspace 2)
+    hyprctl repl 'hl.dispatch(hl.dsp.focus({ workspace = "2" }))' >/dev/null 2>&1 || true
+
+    # 3. Restore previous Audio Sink, F4 and Brave from state snapshot
     if [ -f "$STATE_FILE" ]; then
         SAVED_SINK=$(grep '"audio_sink":' "$STATE_FILE" | sed -E 's/.*"audio_sink": *"([^"]*)".*/\1/')
         if [ -n "$SAVED_SINK" ] && [ "$SAVED_SINK" != "null" ]; then
