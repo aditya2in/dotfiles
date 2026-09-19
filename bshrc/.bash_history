@@ -2196,3 +2196,13 @@ opencode
 opencode -s ses_f5029eb60ffeaCkZM2p6Nv5KOT
  opencode -s ses_f5029eb60ffeaCkZM2p6Nv5KOT
 opencode
+ssh ixlabs
+kubectl
+kubectl get nodes
+export KUBECONFIG=/home/adityaws/.iximiuz/labctl/plays/6aae575ce8910db140c58dfc-cplane-01-laborant/kubeconfig
+kubectl get nodes
+k getall
+k get all
+k get all A
+k get all -A
+exit

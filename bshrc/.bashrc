@@ -33,6 +33,13 @@ if command -v kubectl &> /dev/null; then
     source <(kubectl completion bash)
 fi
 
+# iximiuz Labs cluster (requires `labctl kube-proxy <PLAY_ID>` tunnel on 127.0.0.1:6443)
+#   klab get nodes     → talks to the iximiuz playground cluster
+#   kh get nodes       → talks to the HomeLab (default ~/.kube/config)
+klab() { kubectl --kubeconfig "$HOME/.kube/ixlabs-k8s-omni.yaml" "$@"; }
+kh()   { kubectl "$@"; }
+alias klab-nodes='kubectl --kubeconfig "$HOME/.kube/ixlabs-k8s-omni.yaml" get nodes'
+
 # --- [ 5. Custom Aliases & Exports ] ---
 export EDITOR="nvim"
 export VISUAL="nvim"
