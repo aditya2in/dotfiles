@@ -2181,3 +2181,18 @@ pkill witcher3.exe
 opencode
 opencode
 sudo systemctl stop sleep-enforcer.timer 
+mkdir -p ~/.config/mcp-secrets && chmod 700 ~/.config/mcp-secrets
+umask 077
+read -rs -p "Paste iximiuz token, then Enter: " TOK && printf '%s' "$TOK" > ~/.config/mcp-secrets/ixlabs-token && unset TOK
+chmod 600 ~/.config/mcp-secrets/ixlabs-token
+echo "stored: $(wc -c < ~/.config/mcp-secrets/ixlabs-token) bytes"
+hyprmoncfg tui
+agy
+agy --conversation=7759f0d9-274b-46be-98b9-2b042715e229
+
+agy --conversation=7759f0d9-274b-46be-98b9-2b042715e229
+agy
+opencode
+opencode -s ses_f5029eb60ffeaCkZM2p6Nv5KOT
+ opencode -s ses_f5029eb60ffeaCkZM2p6Nv5KOT
+opencode

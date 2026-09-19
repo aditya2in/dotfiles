@@ -32,7 +32,10 @@
     "ixlabs": {
       "type": "remote",
       "url": "https://labs.iximiuz.com/mcp",
-      "enabled": true
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer {file:/home/adityaws/.config/mcp-secrets/ixlabs-token}"
+      }
     }
   }
 }
