@@ -33,12 +33,20 @@ if command -v kubectl &> /dev/null; then
     source <(kubectl completion bash)
 fi
 
-# iximiuz Labs cluster (requires `labctl kube-proxy <PLAY_ID>` tunnel on 127.0.0.1:6443)
-#   klab get nodes     → talks to the iximiuz playground cluster
-#   kh get nodes       → talks to the HomeLab (default ~/.kube/config)
-klab() { kubectl --kubeconfig "$HOME/.kube/ixlabs-k8s-omni.yaml" "$@"; }
-kh()   { kubectl "$@"; }
-alias klab-nodes='kubectl --kubeconfig "$HOME/.kube/ixlabs-k8s-omni.yaml" get nodes'
+# --- Kubernetes cluster MODE SWITCH -------------------------------------
+#   kube-homelab   → kubectl talks to your HomeLab   (192.168.29.200)
+#   kube-lab       → kubectl talks to iximiuz Labs   (k8s-omni, needs the tunnel)
+#   kube-who       → which cluster is kubectl pointing at?
+export KUBE_HOMELAB_CONFIG="$HOME/.kube/config"
+export KUBE_LABS_CONFIG="$HOME/.kube/ixlabs-k8s-omni.yaml"
+
+kube-homelab() { export KUBECONFIG="$KUBE_HOMELAB_CONFIG"; echo "🔵 kubectl → HomeLab"; }
+kube-lab()     { export KUBECONFIG="$KUBE_LABS_CONFIG";     echo "🟢 kubectl → iximiuz Labs (k8s-omni)"; }
+kube-who() {
+    echo "KUBECONFIG=${KUBECONFIG:-(default ~/.kube/config)}"
+    echo "context : $(kubectl config current-context 2>/dev/null || echo '(none)')"
+    echo "server  : $(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}' 2>/dev/null)"
+}
 
 # --- [ 5. Custom Aliases & Exports ] ---
 export EDITOR="nvim"
