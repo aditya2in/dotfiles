@@ -33,6 +33,11 @@ if command -v kubectl &> /dev/null; then
     source <(kubectl completion bash)
 fi
 
+# labctl completion (iximiuz Labs CLI) — enables TAB autocomplete
+if command -v labctl &> /dev/null; then
+    source <(labctl completion bash)
+fi
+
 # --- Kubernetes cluster MODE SWITCH -------------------------------------
 #   kube-homelab   → kubectl talks to your HomeLab   (192.168.29.200)
 #   kube-lab       → kubectl talks to iximiuz Labs   (k8s-omni, needs the tunnel)

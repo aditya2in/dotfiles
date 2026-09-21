@@ -2238,3 +2238,4 @@ ssh ixlabs
 kube-who
 kube-lab
 k get nodes
+agy

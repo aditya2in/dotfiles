@@ -37,12 +37,15 @@ kubeconfig_path() {
   ls -1 "$KUBECONFIG_DIR"/"${1}"-*/kubeconfig 2>/dev/null | head -1
 }
 
-# ── arg parsing: `status` alone, or `[PLAY_ID] <action>` ──────────────────
-if [ "${1:-}" = "status" ]; then
-  PLAY_ID=""; ACTION="status"
-else
-  PLAY_ID="${1:-}"; ACTION="${2:-start}"
-fi
+# ── arg parsing ───────────────────────────────────────────────────────────
+#   `ixlabs-tunnels.sh <action>`            (no play id → auto-detect)
+#   `ixlabs-tunnels.sh <PLAY_ID> <action>`  (explicit play id)
+case "${1:-}" in
+  status|start|stop|kubeconfig)
+    PLAY_ID=""; ACTION="$1" ;;
+  *)
+    PLAY_ID="${1:-}"; ACTION="${2:-start}" ;;
+esac
 
 # ── actions ───────────────────────────────────────────────────────────────
 case "$ACTION" in

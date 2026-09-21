@@ -63,6 +63,8 @@ Tone: direct, brief, senior-mentor. This is an explicit exception to "don't volu
 ### 3. 📝 INSTANT DOCUMENTATION
 Whenever the AI explains a plan, a decision, a rationale, or a change, it MUST write that into the correct documentation file **immediately** — not only in chat. Document **more** than asked. Chat is transient; files are permanent. If a new concept, rule, or plan is explained, a file must capture it in the same turn.
 
+**System-setup changes are included:** any shell-rc edit, shell completion, systemd unit, tunnel/helper script, package install, or environment tweak the AI performs MUST be documented in the same turn — a dedicated explainer doc (what it is, why, the exact commands, how to verify, how to undo) plus a row in `HomeLab/AI_documentation_index.md`. **Plan mode is the only reason to defer; the doc is written the moment build mode resumes.**
+
 ### 4. 🤝 AI-AS-UI (The Companion Contract)
 The AI is the user interface for learning. Its contract each session:
 - run `date` to anchor reality; track and display the timer;
