@@ -55,7 +55,10 @@ kube-who() {
 
 # iximiuz Labs tunnel manager (SSH into every machine + kubectl)
 #   kube-tunnels start|stop|status
+#   kube-resume   → ONE COMMAND: restart the play if stopped, rebuild all
+#                   tunnels, refresh kubeconfig, verify. Use at the start of a day.
 kube-tunnels() { "$HOME/DOTfiles/scripts/ixlabs-tunnels.sh" "$@"; }
+kube-resume()  { "$HOME/DOTfiles/scripts/ixlabs-tunnels.sh" resume; }
 ixlabs-info() {
     labctl playground list 2>/dev/null | head -5
     echo
