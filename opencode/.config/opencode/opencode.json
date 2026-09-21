@@ -3,11 +3,9 @@
   "autoupdate": false,
   "agent": {
     "plan": {
-      "model": "deepseek/deepseek-flash",
       "reasoningEffort": "high"
     },
     "build": {
-      "model": "deepseek/deepseek-flash",
       "reasoningEffort": "low"
     }
   },
