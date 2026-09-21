@@ -2277,3 +2277,5 @@ labctl playground status 6aae575ce8910db140c58dfc
 labctl ssh 6aae575ce8910db140c58dfc 
 ssh ixlabs
 clear
+labctl ssh 6aae575ce8910db140c58dfc 
+tmux 
