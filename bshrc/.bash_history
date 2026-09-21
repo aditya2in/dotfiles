@@ -2247,3 +2247,33 @@ labctl playground status -h
 labctl auth whoamI
 labctl auth whoami
 labctl playground list
+labctl playground li
+labctl playground list 
+labctl playground status 
+labctl playground status 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc 
+labctl playground machines 6aae575ce8910db140c58dfc 
+labctl playground list 
+labctl playground machines 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc -m dev-machine
+labctl playground machines  '
+labctl playground machines
+labctl playground machines 6aae575ce8910db140c58dfc 
+labctl playground  6aae575ce8910db140c58dfc 
+labctl playground  6aae575ce8910db140c58dfc machines
+labctl playground machines 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc -m cplane-01
+labctl ssh 6aae575ce8910db140c58dfc -m node-01
+labctl ssh 6aae575ce8910db140c58dfc -m node-02
+labctl playground stop 6aae575ce8910db140c58dfc 
+labctl playground restart 6aae575ce8910db140c58dfc 
+labctl playground status 
+labctl playground status 6aae575ce8910db140c58dfc 
+labctl playground status 
+labctl playground status  6aae575ce8910db140c58dfc 
+labctl playground status 
+labctl playground status 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc 
+ssh ixlabs
+clear

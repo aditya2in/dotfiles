@@ -20,12 +20,66 @@ import time
 import signal
 import socket
 import gc
+import ctypes
 from collections import deque
+from datetime import datetime, timezone, timedelta
 import numpy as np
 import sounddevice as sd
 import torch
 from transformers import AutoProcessor, AutoModelForRNNT
 from transformers.generation.streamers import BaseStreamer
+
+TRANSCRIPT_DIR = os.path.expanduser("~/.local/share/nemotron_dictation/transcripts")
+os.makedirs(TRANSCRIPT_DIR, exist_ok=True)
+IST = timezone(timedelta(hours=5, minutes=30))
+
+def append_transcript_log(text_block):
+    """Appends completed speech utterance to a local daily transcript journal with IST timestamp."""
+    if not text_block or not text_block.strip():
+        return
+    try:
+        now = datetime.now(IST)
+        date_str = now.strftime("%Y-%m-%d")
+        time_str = now.strftime("%H:%M:%S")
+        log_file = os.path.join(TRANSCRIPT_DIR, f"{date_str}.md")
+        
+        if not os.path.exists(log_file):
+            with open(log_file, "w", encoding="utf-8") as f:
+                f.write(f"# 🎙️ Nemotron STT Speech Journal — {date_str} (IST)\n\n")
+        
+        clean_text = text_block.strip()
+        with open(log_file, "a", encoding="utf-8") as f:
+            f.write(f"- **[{time_str} IST]** {clean_text}\n\n")
+            f.flush()
+    except Exception:
+        pass
+
+try:
+    libc = ctypes.CDLL("libc.so.6")
+except Exception:
+    libc = None
+
+def get_current_rss_mb():
+    """Returns current Resident Set Size (physical RAM) in MB."""
+    try:
+        with open("/proc/self/status", "r") as f:
+            for line in f:
+                if line.startswith("VmRSS:"):
+                    return int(line.split()[1]) / 1024.0
+    except Exception:
+        pass
+    return 0.0
+
+def trim_memory():
+    """Forces immediate release of unused Python and PyTorch heap pages back to the Linux kernel."""
+    try:
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        if libc is not None:
+            libc.malloc_trim(0)
+    except Exception:
+        pass
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "nemotron_config.json")
 PID_FILE = "/tmp/nemotron_dictation.pid"
@@ -165,7 +219,7 @@ def hyprland_event_listener():
                             data = json.loads(res.stdout)
                             w_class = data.get("class", "")
                             w_title = data.get("title", "")
-                            is_scratchpad_focused = (w_class == "obsidian" and any(t in w_title for t in allowed_titles))
+                            is_scratchpad_focused = (w_class in ["obsidian", "md.obsidian.Obsidian"] and any(t in w_title for t in allowed_titles))
                         except Exception:
                             pass
 
@@ -178,7 +232,7 @@ def hyprland_event_listener():
                                 parts = payload.split(",")
                                 socket_class = parts[0].strip()
                                 socket_title = ",".join(parts[1:]).strip()
-                                if socket_class == "obsidian":
+                                if socket_class in ["obsidian", "md.obsidian.Obsidian"]:
                                     is_scratchpad_focused = any(t in socket_title for t in allowed_titles)
                                 else:
                                     is_scratchpad_focused = False
@@ -259,16 +313,33 @@ def inject_text(text, config):
         pass
 
 def typing_worker(config):
-    """Consumes real-time streaming tokens and dispatches to target."""
+    """Consumes real-time streaming tokens, dispatches to target, and auto-journals utterances to local disk."""
+    current_utterance = []
+    last_token_time = 0.0
+
     while is_running:
         try:
             text = typing_queue.get(timeout=0.1)
+            if text is None:
+                break
+            inject_text(text, config)
+            current_utterance.append(text)
+            last_token_time = time.time()
+            typing_queue.task_done()
         except queue.Empty:
+            # Check for pause in speech (1.2s silence) to flush paragraph to transcript journal
+            if current_utterance and (time.time() - last_token_time > 1.2):
+                full_text = "".join(current_utterance).strip()
+                if full_text:
+                    append_transcript_log(full_text)
+                current_utterance = []
             continue
-        if text is None:
-            break
-        inject_text(text, config)
-        typing_queue.task_done()
+
+    # Flush on shutdown
+    if current_utterance:
+        full_text = "".join(current_utterance).strip()
+        if full_text:
+            append_transcript_log(full_text)
 
 def compute_rms(audio_chunk):
     if len(audio_chunk) == 0:
@@ -278,6 +349,23 @@ def compute_rms(audio_chunk):
 def audio_callback(indata, frames, time_info, status):
     if not is_paused:
         audio_queue.put(indata[:, 0].copy())
+
+def memory_watchdog():
+    """Background watchdog: checks VmRSS every 15s and forces heap cleanup or clean restart if bloated."""
+    while is_running:
+        time.sleep(15)
+        if not is_running:
+            break
+        trim_memory()
+        rss_mb = get_current_rss_mb()
+        if rss_mb > 2500.0:
+            # Only recycle when not actively streaming speech
+            if audio_queue.empty() and typing_queue.empty():
+                print(f"⚠️ Memory ceiling crossed ({rss_mb:.1f} MB > 2500 MB). Recycling engine in-place...")
+                try:
+                    os.execv(sys.executable, [sys.executable] + sys.argv)
+                except Exception:
+                    pass
 
 def main():
     global is_running
@@ -304,6 +392,7 @@ def main():
     threading.Thread(target=pause_watcher, daemon=True).start()
     threading.Thread(target=hyprland_event_listener, daemon=True).start()
     threading.Thread(target=typing_worker, args=(config,), daemon=True).start()
+    threading.Thread(target=memory_watchdog, daemon=True).start()
 
     # 1. Load Official Model
     try:
@@ -358,6 +447,7 @@ def main():
     # 3. Memory-Safe Native Streaming Loop
     pre_roll_buffer = deque(maxlen=15)
     streamer = DirectTokenStreamer(processor.tokenizer)
+    MAX_UTTERANCE_SECONDS = 10.0
 
     try:
         while is_running:
@@ -368,6 +458,7 @@ def main():
                     except queue.Empty:
                         break
                 pre_roll_buffer.clear()
+                trim_memory()
                 time.sleep(0.15)
                 continue
 
@@ -416,7 +507,8 @@ def main():
                 def input_features_generator():
                     yield first_inputs.input_features[:, : processor.num_mel_frames_first_audio_chunk, :]
 
-                    last_speech_time = time.time()
+                    utterance_start_time = time.time()
+                    last_speech_time = utterance_start_time
                     has_spoken = True
                     flushed = False
 
@@ -456,8 +548,24 @@ def main():
                             yield flush_inputs.input_features
                             flushed = True
 
-                        # Rolling utterance reset: If silence continues for 2.0s, end utterance cleanly and purge memory!
-                        if (now - last_speech_time) >= 2.0:
+                        # 1. Silence reset: If silence continues for 1.2s, end utterance cleanly!
+                        if (now - last_speech_time) >= 1.2:
+                            break
+
+                        # 2. Hard Utterance Duration Cap (10.0s):
+                        # Cleanly close generator after 10s to purge tensors.
+                        # Real-time tokens are already typed; next chunk seamlessly begins next window.
+                        if (now - utterance_start_time) >= MAX_UTTERANCE_SECONDS:
+                            if has_spoken and not flushed:
+                                silent_flush = np.zeros(per_chunk_size, dtype=np.float32)
+                                flush_inputs = processor(
+                                    silent_flush,
+                                    sampling_rate=SAMPLE_RATE,
+                                    is_streaming=True,
+                                    is_first_audio_chunk=False,
+                                    return_tensors="pt"
+                                ).to(device, dtype=model.dtype)
+                                yield flush_inputs.input_features
                             break
 
                 gen_kwargs = {
@@ -475,9 +583,7 @@ def main():
                 # Explicit memory purge after every utterance
                 del first_inputs
                 del gen_kwargs
-                gc.collect()
-                if device == "cuda":
-                    torch.cuda.empty_cache()
+                trim_memory()
 
     except KeyboardInterrupt:
         pass

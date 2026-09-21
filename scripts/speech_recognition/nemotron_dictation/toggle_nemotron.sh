@@ -40,6 +40,7 @@ PAUSE_FILE="/tmp/nemotron_paused"
 # Function to stop (unloads VRAM)
 stop_dictation() {
     echo "Stopping Nemotron Dictation & Unloading VRAM..."
+    systemctl --user stop nemotron-stt.service 2>/dev/null
     if [ -f "$PID_FILE" ]; then
         PID=$(cat "$PID_FILE")
         kill -9 "$PID" 2>/dev/null
@@ -53,16 +54,21 @@ stop_dictation() {
 
 # Function to start (loads model into VRAM)
 start_dictation() {
-    pkill -9 -f "$SCRIPT_NAME" 2>/dev/null
-    rm -f "$PID_FILE" 2>/dev/null
-    rm -f "$PAUSE_FILE" 2>/dev/null
+    stop_dictation >/dev/null 2>&1
     echo "Starting Nemotron Dictation..."
-    setsid $VENV_PYTHON "$SCRIPT_PATH" > /tmp/nemotron_daemon.log 2>&1 &
-    NEW_PID=$!
-    disown $NEW_PID 2>/dev/null
-    echo $NEW_PID > "$PID_FILE"
-    sleep 2
-    if ps -p $NEW_PID > /dev/null; then
+    if command -v systemd-run >/dev/null 2>&1; then
+        systemd-run --user --unit=nemotron-stt --slice=app-dictation.slice \
+            --property=MemoryMax=3.5G --property=MemoryHigh=3.0G \
+            --description="Nemotron ASR Realtime STT" \
+            $VENV_PYTHON "$SCRIPT_PATH" > /dev/null 2>&1
+    else
+        setsid $VENV_PYTHON "$SCRIPT_PATH" > /tmp/nemotron_daemon.log 2>&1 &
+        disown $! 2>/dev/null
+    fi
+    sleep 3
+    REAL_PID=$(pgrep -f "$SCRIPT_NAME" | head -n 1)
+    if [ -n "$REAL_PID" ]; then
+        echo "$REAL_PID" > "$PID_FILE"
         notify-send "Nemotron STT" "Status: STARTED (Loaded in VRAM)" -i microphone-sensitivity-high -t 3000
     else
         notify-send "Nemotron STT" "Status: ERROR (Failed to Start)" -i dialog-error -t 4000

@@ -25,12 +25,5 @@ require("hypr.autostart")
 -- Toggle config flags dynamically.
 require("default.hypr.toggles")
 
--- Add any other personal Hyprland configuration below.
-o.window("com.mitchellh.ghostty", { workspace = "1" })
-o.window("brave-browser", { workspace = "2" })
-o.window("md.obsidian.Obsidian", { workspace = "3" })
-o.window("steam", { workspace = "4" })
-o.window("steam_app_.*", { workspace = "4" })
-
 -- Added by hyprmoncfg: its generated monitor rules load last, so nothing before this can override the applied layout.
 do local path = os.getenv("HOME") .. "/.config/hypr/hyprmoncfg-monitors.lua"; local file = io.open(path, "r"); if file then file:close(); dofile(path) end end

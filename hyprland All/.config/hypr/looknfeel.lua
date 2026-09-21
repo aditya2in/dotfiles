@@ -45,17 +45,18 @@ o.window(".*", { opacity = "1.0 1.0 override" })
 -- General App Mappings
 o.window("(Alacritty|kitty|org.wezfurlong.wezterm)", { workspace = "1" })
 o.window("^com.mitchellh.ghostty$", { workspace = "1", fullscreen = true, focus_on_activate = false })
+o.window("^com.mitchellh.ghostty\\.secondary$", { workspace = "2" })
 o.window("brave-browser", { workspace = "2" })
-o.window("(md.obsidian.Obsidian|org.omarchy.wiremix)", { workspace = "3" })
+o.window("(^md\\.obsidian\\.Obsidian$|^obsidian$)", { workspace = "3", fullscreen = true, focus_on_activate = false })
+o.window("org.omarchy.wiremix", { workspace = "3" })
 o.window("steam", { workspace = "4" })
 
 -- Stability Rules
-o.window("(brave-browser|obsidian)", { suppress_event = "maximize" })
+o.window("brave-browser", { suppress_event = "maximize" })
 o.window({ class = "brave-browser" }, { fullscreen = 0 })
-o.window({ class = "md.obsidian.Obsidian" }, { fullscreen = 0 })
 
 -- Scratchpad Custom Look
-o.window({ title = ".*000_SCRATCHPAD_Brain_Dump.*" }, { opacity = "1.0 0.1 override" })
+o.window({ title = ".*000_SCRATCHPAD_Brain_Dump.*" }, { opacity = "1.0 0.1 override", fullscreen = 0 })
 
 -- Spacious Floating TUI App Sizing
 o.window({ class = "org.omarchy.btop", tag = "floating-window" }, { size = { 1050, 700 } })

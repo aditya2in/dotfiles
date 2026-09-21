@@ -7,6 +7,8 @@
 -- ==============================================================================
 
 -- 1. Custom Application Overrides
+hl.unbind("SUPER + RETURN")
+o.bind("SUPER + RETURN", "Smart Terminal", "/home/adityaws/DOTfiles/scripts/smart_terminal_launcher.sh")
 o.bind("SUPER + ALT + RETURN", "Tmux", "env WAYLAND_DISPLAY= DISPLAY=:1 wezterm start --always-new-process --cwd \"$(omarchy-cmd-terminal-cwd)\"")
 o.bind("SUPER + SHIFT + W", "Typora", "uwsm-app -- typora --enable-wayland-ime")
 o.bind("SUPER + SHIFT + T", "Activity", "uwsm-app -- ghostty --class=org.omarchy.btop --font-size=10 -e btop")
