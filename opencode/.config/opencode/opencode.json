@@ -2,14 +2,6 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
   "model": "deepseek/deepseek-flash",
-  "agent": {
-    "plan": {
-      "reasoningEffort": "high"
-    },
-    "build": {
-      "reasoningEffort": "low"
-    }
-  },
   "instructions": [
     "AGENTS.md",
     "All Things/Agents/AGENTS.md",
