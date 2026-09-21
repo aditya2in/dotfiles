@@ -2239,3 +2239,11 @@ kube-who
 kube-lab
 k get nodes
 agy
+labctl --help
+labctl -h
+labctl playground 
+labctl playground status
+labctl playground status -h
+labctl auth whoamI
+labctl auth whoami
+labctl playground list

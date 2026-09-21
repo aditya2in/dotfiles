@@ -102,6 +102,11 @@ Every capability learned MUST be implemented on the real 6-node homelab cluster 
 ### 9. 📊 PLANNED vs ACTUAL (MANDATORY)
 Every tracked day logs **Planned Start/End** and **Actual Start/End** in the relevant tracker (e.g. the CKAD `EXECUTION_TRACKER.md`). Deviation is recorded without judgement; trend matters, not daily compliance. **Contingency = elongation only** — the plan stretches, never gets re-planned.
 
+### 10. 📐 TEACHING-BLOCK PATTERN + IMMEDIATE DRILL LOGGING (2026-09-19)
+- Lessons/drills are broken into **named blocks by JOB** (1-2 commands each), with: *what you'll learn · behind the scenes · expected · exit criterion*.
+- When the user reports a block done, the AI MUST verify it and log it **in the same turn** to the relevant drill tracker (e.g. `LEARNING_PROGRESS_TRACKER.md`) — never batched.
+- This is mandatory for all future teaching, in every OS.
+
 ## Workspace Context
 Omarchy (Arch Linux + Hyprland) user home directory, not a traditional code repo. Primary work: system configs, Hyprland rules, theme customization.
 
