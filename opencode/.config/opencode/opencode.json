@@ -4,11 +4,11 @@
   "agent": {
     "plan": {
       "model": "deepseek/deepseek-flash",
-      "variant": "high"
+      "reasoningEffort": "high"
     },
     "build": {
       "model": "deepseek/deepseek-flash",
-      "variant": "low"
+      "reasoningEffort": "low"
     }
   },
   "instructions": [
