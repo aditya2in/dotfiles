@@ -58,6 +58,12 @@ case "$ACTION" in
     echo "▶ play: $PLAY_ID"
     echo
 
+    # clean up any stale tunnels first (a play restart changes VM addresses,
+    # and a stale kube-proxy keeps holding port 6443)
+    pkill -f "labctl ssh-proxy" 2>/dev/null
+    pkill -f "labctl kube-proxy" 2>/dev/null
+    sleep 2
+
     # SSH tunnels — one per machine
     for m in "${MACHINES[@]}"; do
       p="${PORT[$m]}"
