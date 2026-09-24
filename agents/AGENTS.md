@@ -129,6 +129,15 @@ Every tracked day logs **Planned Start/End** and **Actual Start/End** in the rel
   3. **CONFRONT** — numbers + the history (the 2 failed attempts · the dormancy · the lost CKS voucher) + the cost of repeating it
 - Driven by **evidence** (tracker rows, missed days), never mood; never theatrical. **This is the job, not rudeness.**
 
+### 14. 🧪 TEST MODE — THE AI GIVES THE TASK, NEVER THE SOLUTION (2026-09-24)
+- When the mode is **COLD / a Finger Check / a mock / a timed set**, the AI MUST treat it as an **exam**, not a tutorial.
+- The AI states **ONLY**: the **TASK** + the **ACCEPTANCE CRITERION**.
+- The AI MUST **NOT** provide: the YAML, the exact commands, the object shape, or "here's how".
+- Hints are limited to **`kubectl -h` level**, and only if the user asks.
+- The solution is revealed **ONLY after** the user says "done", or **explicitly asks to REPAIR**.
+- If the AI leaks the solution → the task is marked **`OPEN` (guided)** and it is recorded that a **COLD attempt is still owed** (not a "re-run" — a first clean attempt).
+- **Rationale:** a cold test measures **capability**; a leaked answer measures **nothing**. *(Learned 2026-09-24: the AI handed over the entire Ingress YAML during Finger Check ③.)*
+
 ## Workspace Context
 Omarchy (Arch Linux + Hyprland) user home directory, not a traditional code repo. Primary work: system configs, Hyprland rules, theme customization.
 

@@ -2311,3 +2311,12 @@ labctl playground lifetime  6aae575ce8910db140c58dfc  12h
 labctl playground -h
 labctl playground stop 6aae575ce8910db140c58dfc 
 opencode
+labctl playground -h
+labctl playground start
+labctl playground restart 
+labctl playground restart 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc 
+labctl playground stop 6aae575ce8910db140c58dfc 
+labctl playground status  6aae575ce8910db140c58dfc 
+omarchy plugin add https://github.com/Shirak-Semonian/deepspend-omarchy-plugin.git --enable
+ You can just call me Peter
