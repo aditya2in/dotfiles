@@ -1,3 +1,4 @@
 .DS_Store
 GEMINI CLI/.gemini/oauth_creds.json
 .env
+omarchy/.config/omarchy/plugins/io.github.shirak-semonian.deepspend/
