@@ -246,13 +246,35 @@ At the very end of any final response where Git commands are suggested or execut
 - **Time:** ALL timestamps — without exception — MUST be in **IST (Indian Standard Time, UTC+5:30)**. Never display UTC, EST, or any other timezone. Always convert.
 - **Currency:** ALL prices/costs MUST be displayed in **INR (₹)**. Fetch the live exchange rate from exchangerate-api.com on every use. Every mention of USD MUST have the INR equivalent in brackets immediately after (e.g., "$330 (~₹31,716)"). The exchange rate (1 USD = X INR) MUST always be explicitly displayed alongside any balance or spend output so the user knows the exact conversion rate used.
 - **Balance Tracking (Automatic):** Every time the user asks for DeepSeek balance, the AI MUST automatically log it — no separate instruction needed.
-  1. Source `~/.config/deepseek/env`, then run the `deepseek-balance` alias
+  1. Source `~/.config/deepseek/env`, then run the `deepseek-balance` alias (or `~/DOTfiles/scripts/deepseek-runway.sh` for the full report)
   2. Show: remaining USD, INR equivalent, exchange rate (1 USD = X INR), and session cost estimate in both USD and INR
   3. **APPEND** an entry to the balance log with date (IST), USD balance, INR balance, change in USD, change in INR, and notes
-  4. **ANALYZE** after every balance check: AI computes total spend, avg per day, weekday vs weekend breakdown, heaviest day, and predicted depletion date using full log history. The exchange rate (1 USD = X INR) MUST be explicitly displayed alongside the analysis. Append an analysis row with `—` for monetary columns showing: usage days, total spent, avg/day, heaviest day, and predicted remaining days (e.g., `~25d left at current rate (est. Jun 26 — projection, not guaranteed)`).
+  4. **ANALYZE** after every balance check using the method below. The exchange rate MUST be displayed alongside the analysis.
   5. **Plan Mode handling:** If in read-only/plan mode, present the data and plan the log entry + analysis. Execute the append immediately when switched to build mode, including the present check and any pending ones.
 
-**Method:** AI-driven analysis (Python used only for arithmetic). No separate script needed.
+**THE HONEST METHOD (2026-09-24 — REPLACES calendar-day averaging).**
+The old "avg per calendar day" was WRONG for bursty use: **the balance only drops when the API is USED**, so idle days cost `$0.00`.
+
+- Spend = the **DIFFERENCES between samples**; only **negative** diffs are spend, **positive** diffs are top-ups.
+- A **"usage day"** = a day whose spend > 0. **Idle days = $0.00 and are NOT averaged in.**
+- **Gaps** (long periods with no samples) are **excluded**, never averaged.
+- Report runway in **usage-days** (and sessions) with a **CONFIDENCE** flag: `LOW` (<4 deltas) · `MED` (4–9) · `HIGH` (10+).
+- A **calendar date** is given ONLY with an explicitly stated cadence.
+
+**THE DATA SOURCE — our own sampler (there is NO usage API).**
+DeepSeek exposes ONLY `GET /user/balance`. There is **no** usage/token-history endpoint (verified 2026-09-24: `/user/usage`, `/usage`, `/user/token_usage`, `/billing/usage` → **404**). Per-day spend lives only in the private dashboard, which has no stable API. So we sample it ourselves:
+
+- `~/DOTfiles/scripts/deepseek-log.sh` → appends `timestamp_ist,balance_usd,tag` to **`~/DOTfiles/deepseek/usage.csv`**
+- Driven by **systemd USER units** (symlinked from `~/DOTfiles/services/`):
+  - `deepseek-log.timer` → **login/boot + every 1 hour**, `Persistent=true`
+  - `deepseek-logout.service` → logs once on **session logout** (`ExecStop`)
+- `~/DOTfiles/scripts/deepseek-runway.sh` → prints the **RUNWAY BAR**
+
+**THE OUTPUT FORMAT — the Runway Bar (user-chosen 2026-09-24):** emit it from `deepseek-runway.sh`.
+
+**THE LIVE WIDGET:** the **DeepSpend** omarchy plugin (bar widget) shows the live balance. **Audited safe 2026-09-24:** only 2 hosts (`api.deepseek.com/user/balance`, `platform.deepseek.com`), no telemetry/upload, key passed env→`curl --config -` stdin, writes confined to its config/state dirs. **RE-AUDIT after any `omarchy plugin update`.**
+
+**Method:** AI-driven analysis (the CSV + runway script do the arithmetic).
 - **Scope:** Applies to EVERY response — chat, study, labs, Q&A. Not just generated files.
 
 ### Balance Log Path

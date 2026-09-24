@@ -1,0 +1,15 @@
+[Unit]
+Description=Sample the DeepSeek balance at login and every hour
+
+[Timer]
+# at login / boot of the user manager (~90s after, so the network is up)
+OnStartupSec=90s
+# then once an hour
+OnUnitActiveSec=1h
+# catch up a missed run after the machine was off
+Persistent=true
+AccuracySec=1min
+Unit=deepseek-log.service
+
+[Install]
+WantedBy=timers.target

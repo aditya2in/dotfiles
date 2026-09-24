@@ -2279,3 +2279,35 @@ ssh ixlabs
 clear
 labctl ssh 6aae575ce8910db140c58dfc 
 tmux 
+complete -p labctl || echo NO_COMPLETION
+c
+labctl
+labctl ssh Checking [Z
+tmux
+source .bashrc
+labctl ssh 
+labctl ssh 6aae575ce8910db140c58dfc 
+complete -p labctl 
+labctl ssh 6aae575ce8910db140c58dfc 
+deepseek-balance 
+agy
+opencode
+sudo systemctl stop sleep-enforcer.timer 
+kube-resume
+labctl ssh 6aae575ce8910db140c58dfc 
+labctl -h
+labctl playground -g
+labctl playground -h
+labctl playground stop
+labctl playground stop 6aae575ce8910db140c58dfc 
+labctl playground start 
+labctl playground restart 6aae575ce8910db140c58dfc 
+c
+labctl playground status 
+labctl playground status 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc 
+labctl playground lifetime  6aae575ce8910db140c58dfc 
+labctl playground lifetime  6aae575ce8910db140c58dfc  12h
+labctl playground -h
+labctl playground stop 6aae575ce8910db140c58dfc 
+opencode

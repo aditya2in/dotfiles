@@ -1,0 +1,7 @@
+[Unit]
+Description=Log DeepSeek API balance to the usage CSV
+Documentation=https://api-docs.deepseek.com/api/deepseek-api
+
+[Service]
+Type=oneshot
+ExecStart=%h/DOTfiles/scripts/deepseek-log.sh auto

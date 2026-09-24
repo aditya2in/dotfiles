@@ -1,0 +1,45 @@
+pane	1	0	1	:*	0	laborant@dev-machine: ~	:/home/adityaws	1	labctl	:labctl ssh 6aae575ce8910db140c58dfc
+pane	1	1	0	:-	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	4	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	5	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	K8	0	0	:-	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Day_Routine_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Day_Routine_OS	1	bash	:
+pane	K8	1	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Break_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Break_OS	1	bash	:
+pane	K8	2	1	:*	0	OC | Kubernetes learning with CKED agent file	:/home/adityaws/Obsidian/All\ Things/Agents/Learning_&_HomeLab_OS	1	opencode	:opencode
+pane	K8	3	0	:Z	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents	:/home/adityaws/Obsidian/All\ Things/Agents	0	bash	:
+pane	K8	3	0	:Z	1	adityaws@gpuworker01:~/Obsidian/All Things/Agents	:/home/adityaws/Obsidian/All\ Things/Agents	1	bash	:
+pane	K8	4	0	:Z	0	adityaws@gpuworker01:~/DOTfiles	:/home/adityaws/DOTfiles	0	bash	:
+pane	K8	4	0	:Z	1	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	K8	5	0	:Z	0	adityaws@gpuworker01:~	:/home/adityaws	0	bash	:
+pane	K8	5	0	:Z	1	adityaws@gpuworker01:~	:/home/adityaws	0	bash	:
+pane	K8	5	0	:Z	2	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	K8	6	0	:Z	0	adityaws@gpuworker01:~	:/home/adityaws	0	bash	:
+pane	K8	6	0	:Z	1	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Learning_&_HomeLab_OS/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1. Project_Linux_&_CLI_Mastery/rwxrob	:/home/adityaws/Obsidian/All\ Things/Agents/Learning_&_HomeLab_OS/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1. Project_Linux_&_CLI_Mastery/rwxrob	1	bash	:
+pane	K8	7	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Kitchen_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Kitchen_OS	1	bash	:
+pane	K8	8	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Office_Tasks_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Office_Tasks_OS	1	bash	:
+pane	K8	9	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Ascent_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Ascent_OS	1	bash	:
+pane	K8	10	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Tasks_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Tasks_OS	1	bash	:
+pane	K8	11	0	:Z	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Idea_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Idea_OS	0	bash	:
+pane	K8	11	0	:Z	1	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Idea_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Idea_OS	1	bash	:
+pane	K8	12	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Fitness_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Fitness_OS	1	bash	:
+pane	K8	13	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Day_Routine_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Day_Routine_OS	1	bash	:
+pane	default	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+window	1	0	:labctl	1	:*	c6fe,128x46,0,0,1	:
+window	1	1	:bash	0	:-	c6ff,128x46,0,0,2	:
+window	4	0	:bash	1	:*	b6c0,152x52,0,0,3	:
+window	5	0	:bash	1	:*	b6c1,152x52,0,0,4	:
+window	K8	0	:Routines	0	:-	baa2,94x73,0,0,5	off
+window	K8	1	:Break	0	:	baa3,94x73,0,0,6	off
+window	K8	2	:Learning & HomeLab	1	:*	baa4,94x73,0,0,7	off
+window	K8	3	:Agents	0	:Z	47d3,94x73,0,0[94x47,0,0,8,94x25,0,48,9]	off
+window	K8	4	:AI	0	:Z	0dd3,94x73,0,0[94x35,0,0,10,94x37,0,36,11]	off
+window	K8	5	:HOME	0	:Z	7474,94x73,0,0[94x38,0,0,12,94x17,0,39,13,94x16,0,57,14]	off
+window	K8	6	:rwxrob	0	:Z	7a5f,94x73,0,0[94x34,0,0,15,94x38,0,35,16]	off
+window	K8	7	:Cook	0	:	5d86,94x73,0,0,17	off
+window	K8	8	:Office	0	:	60d7,309x54,0,0,18	off
+window	K8	9	:Ascent	0	:	5d88,94x73,0,0,19	off
+window	K8	10	:Tasks	0	:	dc8f,308x52,0,0,20	off
+window	K8	11	:Idea	0	:Z	ccd4,94x71,0,0[94x35,0,0,21,94x35,0,36,22]	off
+window	K8	12	:Fitness	0	:	dd82,94x73,0,0,23	off
+window	K8	13	:bash	0	:	dd83,94x73,0,0,24	:
+window	default	0	:bash	1	:*	db94,152x52,0,0,25	:
+state	1	

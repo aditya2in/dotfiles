@@ -1,0 +1,15 @@
+[Unit]
+Description=Log the DeepSeek balance on session logout
+# Companion to deepseek-log.timer: the timer covers login + hourly,
+# this service's ExecStop fires once when the user session ends,
+# so every session is bracketed by a sample.
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+ExecStop=%h/DOTfiles/scripts/deepseek-log.sh logout
+TimeoutStopSec=25
+
+[Install]
+WantedBy=default.target
