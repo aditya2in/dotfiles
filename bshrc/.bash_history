@@ -2320,3 +2320,12 @@ labctl playground stop 6aae575ce8910db140c58dfc
 labctl playground status  6aae575ce8910db140c58dfc 
 omarchy plugin add https://github.com/Shirak-Semonian/deepspend-omarchy-plugin.git --enable
  You can just call me Peter
+labctl playground restart 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc 
+labctl playground stop 6aae575ce8910db140c58dfc 
+sudo systemctl stop sleep-enforcer.timer 
+
+sudo pacman -S vlc
+agy
+ sudo pacman -S qbittorrent
+opencode

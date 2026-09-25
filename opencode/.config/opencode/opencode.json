@@ -4,8 +4,7 @@
   "model": "deepseek/deepseek-flash",
   "instructions": [
     "AGENTS.md",
-    "All Things/Agents/AGENTS.md",
-    "All Things/Agents/Routine_OS/AGENTS.md"
+    "All Things/Agents/AGENTS.md"
   ],
   "skills": {
     "paths": [
