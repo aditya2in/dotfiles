@@ -302,6 +302,14 @@ DeepSeek exposes ONLY `GET /user/balance`. There is **no** usage/token-history e
 - `~/DOTfiles/scripts/deepseek-runway.sh` → prints the **RUNWAY BAR**
 
 **THE OUTPUT FORMAT — the Runway Bar (user-chosen 2026-09-24):** emit it from `deepseek-runway.sh`.
+**PLUS the RUNWAY TABLE (mandatory since 2026-09-27):** every balance check ALSO shows the **pace table** — days remaining at different **daily** paces, with an approximate date. The user reads the **"if I use it every day"** framing.
+| Pace | Days left | ≈ until |
+| :--- | :---: | :--- |
+| 🟢 Light (~$0.15/day) | balance ÷ 0.15 | date |
+| 🟡 Current blended (usage-day avg) | balance ÷ avg | date |
+| 🔴 Heavy / CKAD (~$0.90/day) | balance ÷ 0.90 | date |
+| 🔴 Very heavy (~$1.50/day) | balance ÷ 1.50 | date |
+*Formula: `days = balance ÷ pace`; the date = today + `days`.*
 
 **THE LIVE WIDGET:** the **DeepSpend** omarchy plugin (bar widget) shows the live balance. **Audited safe 2026-09-24:** only 2 hosts (`api.deepseek.com/user/balance`, `platform.deepseek.com`), no telemetry/upload, key passed env→`curl --config -` stdin, writes confined to its config/state dirs. **RE-AUDIT after any `omarchy plugin update`.**
 

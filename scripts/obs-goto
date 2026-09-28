@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# obs-goto — the PROVEN Obsidian tab recipe (verified 2026-09-27).
+# Closes ALL markdown tabs, then opens each file AT its heading.
+# Usage:  obs-goto "vault/path.md#Heading text" [ "path2#H2" ... ]
+#   - open order = argument order; the LAST file becomes the front-most tab.
+#   - omit the "#Heading" to open at the top of the file.
+# Verify: obscli eval code="app.workspace.getLeavesOfType('markdown').map(l=>l.view.file?.basename).join(' | ')"
+set -euo pipefail
+
+obscli eval code="app.workspace.detachLeavesOfType('markdown');''" >/dev/null 2>&1
+sleep 1
+
+for arg in "$@"; do
+  obscli eval code="app.workspace.openLinkText(\"$arg\",\"\",true)" >/dev/null 2>&1
+  sleep 0.4
+done

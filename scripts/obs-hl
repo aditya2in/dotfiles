@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# obs-hl — select (highlight) a line range in the ACTIVE Obsidian editor.
+# Usage:  obs-hl L1 [L2]     (1-indexed, inclusive; defaults to L1..L1)
+# Notes: run it right after obs-goto has opened the target file (it is the active leaf).
+# Verify: obscli eval code="app.workspace.activeLeaf.view.editor.getSelection().slice(0,60)"
+set -euo pipefail
+
+l1=${1:?usage: obs-hl L1 [L2]}
+l2=${2:-$1}
+obscli eval code="(function(){var e=app.workspace.activeLeaf.view.editor;e.setSelection({line:$((l1-1)),ch:0},{line:$((l2-1)),ch:200});e.scrollIntoView({from:{line:$((l1-1)),ch:0},to:{line:$((l2-1)),ch:0}},true);return 'hl ${l1}-${l2}';})()"

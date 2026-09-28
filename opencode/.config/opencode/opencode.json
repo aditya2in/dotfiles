@@ -3,9 +3,20 @@
   "autoupdate": false,
   "model": "deepseek/deepseek-flash",
   "instructions": [
-    "AGENTS.md",
-    "All Things/Agents/AGENTS.md"
+    "AGENTS.md"
   ],
+  "permission": {
+    "playwright_*": "deny"
+  },
+  "agent": {
+    "browser-verify": {
+      "description": "Browser anchor-verification (Playwright). Fetch a page and read its real heading ids (h2/h3 [id]) before a #anchor link is handed to Brave. Use ONLY for anchor verification.",
+      "mode": "subagent",
+      "permission": {
+        "playwright_*": "allow"
+      }
+    }
+  },
   "skills": {
     "paths": [
       "/home/adityaws/.opencode/skills/obsidian-skills/skills"
