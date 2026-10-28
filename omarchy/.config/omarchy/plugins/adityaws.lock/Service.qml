@@ -256,7 +256,7 @@ Item {
       breakRelockTimer.start()
     } else if (wasBreakOverAlert || wasBreakActive) {
       // Auto-start next 25-minute focus work session upon unlocking from completed break!
-      Quickshell.execDetached(["omarchy-pomodoro", "start"])
+      Quickshell.execDetached(["bash", "-c", "export OMARCHY_PATH=/usr/share/omarchy; \"" + home + "/.local/bin/omarchy-pomodoro\" start"])
     }
   }
 

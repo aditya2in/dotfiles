@@ -1,0 +1,20 @@
+{
+    "saveMetadata": {
+        "initial buildID": "5.0.1048522  P4CL: 13413172  Stream: //Red_engine/Main.Lava.Release ",
+        "current buildID": "5.0.1048522  P4CL: 13413172  Stream: //Red_engine/Main.Lava.Release ",
+        "gameVersion": 29,
+        "saveVersion": 67,
+        "buildPatch": 0,
+        "platform": "PC",
+        "modsMetadata": {
+            "numMods": 1,
+            "modsList": {
+                "mod": {
+                    "modName": "modio_No Artificial Player Light",
+                    "modID": 5144727,
+                    "modGameVersion": 29
+                }
+            }
+        }
+    }
+}

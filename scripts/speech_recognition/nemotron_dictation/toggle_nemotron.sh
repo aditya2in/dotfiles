@@ -57,6 +57,7 @@ start_dictation() {
     stop_dictation >/dev/null 2>&1
     echo "Starting Nemotron Dictation..."
     if command -v systemd-run >/dev/null 2>&1; then
+        systemctl --user reset-failed nemotron-stt.service 2>/dev/null
         systemd-run --user --unit=nemotron-stt --slice=app-dictation.slice \
             --property=MemoryMax=3.5G --property=MemoryHigh=3.0G \
             --description="Nemotron ASR Realtime STT" \

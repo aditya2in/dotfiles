@@ -9,6 +9,11 @@ Before making any file changes, configuration edits, deletions, or other actions
 Required confirmation wording: "Shall I proceed?"
 If the user has not clearly approved the action, stop and ask before proceeding.
 
+## 🔐 Graphical Sudo Mandate: pkexec for Elevated Privileges (2026-09-30)
+Whenever elevated root or administrative privileges are required for system maintenance, package cache operations, Btrfs filesystem balance, or systemd services, the AI MUST ALWAYS trigger the graphical PolicyKit authentication dialog using `pkexec` with Wayland environment variables:
+`WAYLAND_DISPLAY=wayland-1 XDG_RUNTIME_DIR=/run/user/1000 DISPLAY=:0 pkexec bash -c "<command>"`
+This pops up the native floating graphical password modal on screen so the user can easily type their password, rather than blocking on CLI terminal password prompts.
+
 ## 📂 Auto-Open-On-Write (2026-09-17)
 **Principle:** The user must be able to SEE every change without asking. After any turn in which the AI creates or edits files inside the Obsidian vault, the AI automatically opens those files in the running Obsidian instance.
 

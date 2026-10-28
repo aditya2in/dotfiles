@@ -2329,3 +2329,106 @@ sudo pacman -S vlc
 agy
  sudo pacman -S qbittorrent
 opencode
+exit
+sudo pacman -S --needed vlc-plugins-all
+agy
+sudo pacman -S --needed vlc-plugins-all
+labctl playground restart 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc 
+labctl playground 
+opencode
+labctl playground status 6aae575ce8910db140c58dfc 
+labctl playground restart 6aae575ce8910db140c58dfc 
+exit
+labctl expose list
+labctl expose list  6aae575ce8910db140c58dfc 
+labctl expose shell -h
+labctl expose shell -o
+labctl expose shell -o 6aae575ce8910db140c58dfc 
+labctl expose shell 6aae575ce8910db140c58dfc -h
+labctl expose scan 6aae575ce8910db140c58dfc 
+labctl expose shell 6aae575ce8910db140c58dfc 
+labctl expose shell 6aae575ce8910db140c58dfc -h
+labctl get a;ll
+labctl get al
+labctl ssh 6aae575ce8910db140c58dfc 
+agy
+opencode
+labctl playground status 6aae575ce8910db140c58dfc 
+labctl ssh 6aae575ce8910db140c58dfc 
+pkill witcher3.exe 
+agy
+sudo systemctl stop sleep-enforcer.timer 
+agy
+   
+agy
+sudo systemctl stop sleep-enforcer.timer 
+pkill jamesdsp 
+opencode
+agy
+sudo systemctl stop sleep-enforcer.timer 
+opencode
+ You have kept the rice I told her to give Sir King, I'm using a internet. Are you okay Ah yes, your message is not getting your that's your your messages are not happening which means your Yes But do you have any particular Profile But there could be Yeah
+sudo systemctl stop sleep-enforcer.timer 
+agy
+opencode
+agy
+ Tangible things Or should I Clothes in the last do your primary thing first Standard yeah standard yes Yeah, both of both are closing that which green bag Huh, one suitcase you are taking. See, don't worry about what take one thing, keep filling up if it needed will in the last we'll take like take two Or one or whatever There are actually small, medium, large. What are you talking about One that I my mine is bigger because it staying how many three days Detected and with your stuff is needed Because stuff
+sudo systemctl restart logid.service 
+agy
+agy
+ls
+whoamio
+whoami
+snapper -h
+snapper list
+tmux
+cd
+tmux exit
+tmux list
+tmux ls
+antigravity
+agy
+sudo pacman -S opencode
+lsblk
+df -h
+du -sh
+df -h
+cd 
+df -h
+cd .local/share/Steam/steamapps//common/
+ls
+rm -rf Batman\ Arkham\ Knight/
+df -h
+reboot
+exir
+sudo reboot
+agy
+cd
+agy
+opencode
+omarchy 
+omarchy update 
+agy
+opencode
+snapper list
+snapper -h
+snapper ls
+snapper
+snapper -h
+snapper ls
+ 
+agy
+sudo shutdown -h now
+sudo systemctl stop sleep-enforcer.timer 
+snapper list
+omarchy-snapshot --help
+command -v omachy-snapshot
+sudo snapper list
+finsmnt -no FSTYPE/
+findmnt -no FSTYPE/
+findmnt -no FSTYPE /
+agy
+sudo systemctl stop sleep-enforcer.timer 
+tmux list-windows 
+agy

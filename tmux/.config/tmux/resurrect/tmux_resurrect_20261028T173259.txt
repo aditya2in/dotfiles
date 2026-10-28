@@ -1,0 +1,45 @@
+pane	1	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	4	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	5	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	K8	0	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Day_Routine_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Day_Routine_OS	1	bash	:
+pane	K8	1	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Break_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Break_OS	1	bash	:
+pane	K8	2	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Learning_&_HomeLab_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Learning_&_HomeLab_OS	1	bash	:
+pane	K8	3	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents	:/home/adityaws/Obsidian/All\ Things/Agents	0	bash	:
+pane	K8	3	0	:	1	adityaws@gpuworker01:~/Obsidian/All Things/Agents	:/home/adityaws/Obsidian/All\ Things/Agents	1	bash	:
+pane	K8	4	1	:*Z	0	adityaws@gpuworker01:~/DOTfiles	:/home/adityaws/DOTfiles	0	bash	:
+pane	K8	4	1	:*Z	1	adityaws@gpuworker01:~	:/home/adityaws	0	bash	:
+pane	K8	4	1	:*Z	2	adityaws@gpuworker01:~	:/home/adityaws	1	agy	:agy
+pane	K8	5	0	:	0	adityaws@gpuworker01:~	:/home/adityaws	0	bash	:
+pane	K8	5	0	:	1	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	K8	6	0	:-	0	adityaws@gpuworker01:~	:/home/adityaws	0	bash	:
+pane	K8	6	0	:-	1	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Learning_&_HomeLab_OS/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1. Project_Linux_&_CLI_Mastery/rwxrob	:/home/adityaws/Obsidian/All\ Things/Agents/Learning_&_HomeLab_OS/Project_K8s_-_KUBESTRONAUT/Tasks_or_Projects_(around_KUBESTRONAUT)/1. Project_Linux_&_CLI_Mastery/rwxrob	1	bash	:
+pane	K8	7	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Kitchen_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Kitchen_OS	1	bash	:
+pane	K8	8	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Office_Tasks_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Office_Tasks_OS	1	bash	:
+pane	K8	9	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Ascent_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Ascent_OS	1	bash	:
+pane	K8	10	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Tasks_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Tasks_OS	1	bash	:
+pane	K8	11	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Idea_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Idea_OS	0	bash	:
+pane	K8	11	0	:	1	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Idea_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Idea_OS	1	bash	:
+pane	K8	12	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Fitness_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Fitness_OS	1	bash	:
+pane	K8	13	0	:	0	adityaws@gpuworker01:~/Obsidian/All Things/Agents/Day_Routine_OS	:/home/adityaws/Obsidian/All\ Things/Agents/Day_Routine_OS	1	bash	:
+pane	default	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+pane	labctl	0	1	:*	0	adityaws@gpuworker01:~	:/home/adityaws	1	bash	:
+window	1	0	:bash	1	:*	{"V":2,"L":{"t":"p","w":80,"h":24,"x":0,"y":0,"a":true,"i":0,"I":"%1"}}	off
+window	4	0	:bash	1	:*	{"V":2,"L":{"t":"p","w":80,"h":24,"x":0,"y":0,"a":true,"i":0,"I":"%2"}}	off
+window	5	0	:bash	1	:*	{"V":2,"L":{"t":"p","w":152,"h":52,"x":0,"y":0,"a":true,"i":0,"I":"%3"}}	off
+window	K8	0	:Routines	0	:	{"V":2,"L":{"t":"p","w":309,"h":54,"x":0,"y":0,"a":true,"i":0,"I":"%4"}}	off
+window	K8	1	:Break	0	:	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%5"}}	off
+window	K8	2	:Learning & HomeLab	0	:	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%6"}}	off
+window	K8	3	:Agents	0	:	{"V":2,"L":{"t":"v","w":94,"h":73,"x":0,"y":0,"c":[{"t":"p","w":94,"h":1,"x":0,"y":0,"l":0,"i":0,"I":"%7"},{"t":"p","w":94,"h":71,"x":0,"y":2,"a":true,"i":1,"I":"%8"}]}}	off
+window	K8	4	:AI	1	:*Z	{"V":2,"L":{"t":"v","w":94,"h":73,"x":0,"y":0,"c":[{"t":"p","w":94,"h":8,"x":0,"y":0,"l":1,"i":0,"I":"%9"},{"t":"p","w":94,"h":31,"x":0,"y":9,"l":0,"i":1,"I":"%10"},{"t":"p","w":94,"h":32,"x":0,"y":41,"a":true,"i":2,"I":"%11"}]}}	off
+window	K8	5	:HOME	0	:	{"V":2,"L":{"t":"v","w":309,"h":54,"x":0,"y":0,"c":[{"t":"p","w":309,"h":1,"x":0,"y":0,"l":0,"i":0,"I":"%12"},{"t":"p","w":309,"h":52,"x":0,"y":2,"a":true,"i":1,"I":"%13"}]}}	off
+window	K8	6	:rwxrob	0	:-	{"V":2,"L":{"t":"v","w":309,"h":54,"x":0,"y":0,"c":[{"t":"p","w":309,"h":1,"x":0,"y":0,"l":0,"i":0,"I":"%14"},{"t":"p","w":309,"h":52,"x":0,"y":2,"a":true,"i":1,"I":"%15"}]}}	off
+window	K8	7	:Cook	0	:	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%16"}}	off
+window	K8	8	:Office	0	:	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%17"}}	off
+window	K8	9	:Ascent	0	:	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%18"}}	off
+window	K8	10	:Tasks	0	:	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%19"}}	off
+window	K8	11	:Idea	0	:	{"V":2,"L":{"t":"v","w":94,"h":73,"x":0,"y":0,"c":[{"t":"p","w":94,"h":1,"x":0,"y":0,"l":0,"i":0,"I":"%20"},{"t":"p","w":94,"h":71,"x":0,"y":2,"a":true,"i":1,"I":"%21"}]}}	off
+window	K8	12	:Fitness	0	:	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%22"}}	off
+window	K8	13	:Day_Routine	0	:	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%23"}}	off
+window	default	0	:bash	1	:*	{"V":2,"L":{"t":"p","w":94,"h":73,"x":0,"y":0,"a":true,"i":0,"I":"%24"}}	off
+window	labctl	0	:labctl	1	:*	{"V":2,"L":{"t":"p","w":80,"h":24,"x":0,"y":0,"a":true,"i":0,"I":"%25"}}	off
+state	K8	

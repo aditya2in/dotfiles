@@ -46,8 +46,8 @@ case "$1" in
     # 2. Timer Stop / End (Logout Descend)
     play_event_sound "$SOUND_DIR/2_timer_end_logout_descend.wav" "$2"
     ;;
-  block|alarm)
-    # 3. Anti-Unlock Break Blocker (Alert Chime)
+  block|alarm|overdue|shout)
+    # 3. Anti-Unlock Break Blocker / Overdue Calling Alarm
     play_event_sound "$SOUND_DIR/3_anti_unlock_blocker_ringback_pings.wav" "$2"
     ;;
   grace|tick)
